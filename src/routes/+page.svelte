@@ -157,13 +157,16 @@
   </Module>
 
   <Evaluation 
-    title="How You'll Be Evaluated"
+    title="Evaluation"
+    intro="Your grade will be determined based on three factors."
     criteria={evaluationCriteria}
+    background="white"
   />
 
   <GuestSpeakers 
     description="Throughout the semester, working professionals will join our class to share how they use code to tell compelling stories."
     speakers={guestSpeakers}
+    background="light-gray"
   />
 
   <Instructor 
@@ -172,6 +175,7 @@
     image="ben-welsh.jpg"
     link="https://palewi.re/who-is-ben-welsh/"
     bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk."
+    background="white"
   />
 </main>
 

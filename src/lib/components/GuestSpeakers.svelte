@@ -4,11 +4,12 @@
   let { 
     title = "Guest Speakers",
     description = "",
-    speakers = []
+    speakers = [],
+    background = 'white'
   } = $props();
 </script>
 
-<section class="guest-speakers">
+<section class="guest-speakers" class:bg-white={background === 'white'} class:bg-light-gray={background === 'light-gray'}>
   <div class="container">
     <div class="section-header">
       <h2>{title}</h2>
@@ -62,23 +63,33 @@
 <style>
   .guest-speakers {
     padding: var(--spacing-xxl) 0;
-    background-color: var(--color-gray);
-    color: var(--color-white);
+  }
+
+  .bg-white {
+    background-color: var(--color-white);
+  }
+
+  .bg-light-gray {
+    background-color: var(--color-light-gray);
   }
 
   .section-header {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
   }
 
   .section-header h2 {
-    color: var(--color-white);
-    margin-bottom: var(--spacing-sm);
+    border-left: 4px solid var(--color-primary-orange);
+    padding-left: var(--spacing-md);
+    margin-bottom: 0;
+    color: var(--color-dark);
   }
 
   .description {
-    color: var(--color-light-gray);
+    color: var(--color-dark-gray);
     font-size: 1.125rem;
-    max-width: 600px;
+    line-height: 1.6;
+    max-width: 800px;
+    margin-top: var(--spacing-md);
   }
 
   .speakers-grid {
@@ -111,7 +122,7 @@
   .placeholder-image {
     width: 100%;
     height: 100%;
-    background-color: var(--color-gray);
+    background-color: var(--color-light-gray);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -128,11 +139,11 @@
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 0.25rem;
-    color: var(--color-white);
+    color: var(--color-dark);
   }
 
   .speaker-name a {
-    color: var(--color-white);
+    color: var(--color-dark);
     text-decoration: none;
   }
 

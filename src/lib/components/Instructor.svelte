@@ -6,13 +6,16 @@
     title = "",
     image = "",
     bio = "",
-    link = ""
+    link = "",
+    background = 'light-gray'
   } = $props();
 </script>
 
-<section class="instructor">
+<section class="instructor" class:bg-white={background === 'white'} class:bg-light-gray={background === 'light-gray'}>
   <div class="container">
-    <h2>Your Instructor</h2>
+    <div class="section-header">
+      <h2>Your Instructor</h2>
+    </div>
     <div class="instructor-card">
       <div class="instructor-image">
         {#if link}
@@ -53,11 +56,24 @@
 <style>
   .instructor {
     padding: var(--spacing-xxl) 0;
+  }
+
+  .bg-white {
+    background-color: var(--color-white);
+  }
+
+  .bg-light-gray {
     background-color: var(--color-light-gray);
   }
 
-  .instructor h2 {
+  .section-header {
     margin-bottom: var(--spacing-lg);
+    border-left: 4px solid var(--color-primary-orange);
+    padding-left: var(--spacing-md);
+  }
+
+  .section-header h2 {
+    margin-bottom: 0;
     color: var(--color-dark);
   }
 
