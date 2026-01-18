@@ -49,6 +49,6 @@
   }
 
   .module-content {
-    max-width: 800px;
+    /* Width constraints handled by child elements */
   }
 </style>
