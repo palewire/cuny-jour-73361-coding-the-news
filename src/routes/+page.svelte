@@ -5,13 +5,20 @@
   import TopicCard from '$lib/components/TopicCard.svelte';
   import GuestSpeakers from '$lib/components/GuestSpeakers.svelte';
   import Instructor from '$lib/components/Instructor.svelte';
-  import { Monitor, Globe, BarChart3, Blocks, Layout, ScrollText, Layers, CircleHelp, Map, Lightbulb, Database, ClipboardList, Hammer, MessageCircle, Presentation } from 'lucide-svelte';
+  import Evaluation from '$lib/components/Evaluation.svelte';
+  import { Monitor, Globe, BarChart3, Blocks, Layout, ScrollText, Layers, CircleHelp, Map, Lightbulb, Database, ClipboardList, Hammer, MessageCircle, Presentation, MessageSquare, FileCheck, Trophy } from 'lucide-svelte';
 
   const courseMeta = [
     '<a href="https://palewi.re/who-is-ben-welsh/">Ben Welsh</a>, Adjunct Assistant Professor',
     'Spring 2026',
     'Mondays 6–9 p.m.',
     'Lab 436'
+  ];
+
+  const evaluationCriteria = [
+    { icon: MessageSquare, title: 'Participation', description: 'You should engage in seminar-style discussions and give thoughtful feedback to peers.' },
+    { icon: FileCheck, title: 'Homework', description: 'Your assignments should demonstrate effort and experimentation.' },
+    { icon: Trophy, title: 'Capstone', description: 'You should deliver a page that is ready to publish on a professional news site.' }
   ];
 
   const guestSpeakers = [
@@ -41,9 +48,13 @@
     meta={courseMeta}
   />
 
-  <Module number={1} title="Fundamental Tools" id="fundamentals">
-    <p class="module-intro">We will spend the first half of the semester familiarizing you with the software and skills that news developers use to write design and build interactive, data-driven stories.</p>
-    
+  <Module 
+    number={1} 
+    title="Fundamental Tools" 
+    id="fundamentals"
+    intro="We will spend the first half of the semester familiarizing you with the software and skills that news developers use to write design and build interactive, data-driven stories."
+    homework="Each week you'll be expected complete assignments that reinforce the skills covered in class. You'll create repositories, build and publish static sites, import real-world datasets, create visualizations and progressively strengthen your skills. Expect to research how professional newsrooms use these tools and present your findings to classmates."
+  >
     <div class="topic-grid">
       <TopicCard
         icon={Monitor}
@@ -71,16 +82,15 @@
         description="Apply CSS grid systems, typography hierarchies and responsive techniques to create polished presentations."
       />
     </div>
-
-    <div class="homework-summary">
-      <h3>Homework</h3>
-      <p>Each week you'll be expected complete assignments that reinforce the skills covered in class. You'll create repositories, build and publish static sites, import real-world datasets, create visualizations and progressively strengthen your skills. Expect to research how professional newsrooms use these tools and present your findings to classmates.</p>
-    </div>
   </Module>
 
-  <Module number={2} title="Simple Applications" id="applications">
-    <p class="module-intro">Now it's time to build. You will apply your new skills to create simplified versions of common digital story formats.</p>
-    
+  <Module 
+    number={2} 
+    title="Simple Applications" 
+    id="applications"
+    intro="Now it's time to build. You will apply your new skills to create simplified versions of common digital story formats."
+    homework="Each class begins with a folder of text, images, data and graphics that you'll assemble into a working prototype. After getting familiar with each formats, you'll design and publish your own version."
+  >
     <div class="topic-grid topic-grid-2x2">
       <TopicCard
         icon={ScrollText}
@@ -103,16 +113,15 @@
         description="A geographic visualization that lets readers explore location-based data."
       />
     </div>
-
-    <div class="homework-summary">
-      <h3>Homework</h3>
-      <p>Each class begins with a folder of text, images, data and graphics that you'll assemble into a working prototype. After getting familiar with each formats, you'll design and publish your own version.</p>
-    </div>
   </Module>
 
-  <Module number={3} title="Capstone Challenge" id="capstone">
-    <p class="module-intro">The final weeks will be dedicated to your capstone project—a custom designed story that showcases what you've learned. You'll propose an original idea or choose an instructor-provided challenge, then bring it to life.</p>
-    
+  <Module 
+    number={3} 
+    title="Capstone Challenge" 
+    id="capstone"
+    intro="The final weeks will be dedicated to your capstone project—a custom designed story that showcases what you've learned. You'll propose an original idea or choose an instructor-provided challenge, then bring it to life."
+    homework="Your capstone is the culmination of the semester—a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism."
+  >
     <div class="topic-grid">
       <TopicCard
         icon={Lightbulb}
@@ -145,12 +154,12 @@
         description="Deliver a polished presentation of your completed capstone to the class."
       />
     </div>
-
-    <div class="homework-summary">
-      <h3>Homework</h3>
-      <p>Your capstone is the culmination of the semester—a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism.</p>
-    </div>
   </Module>
+
+  <Evaluation 
+    title="How You'll Be Evaluated"
+    criteria={evaluationCriteria}
+  />
 
   <GuestSpeakers 
     description="Throughout the semester, working professionals will join our class to share how they use code to tell compelling stories."
@@ -167,24 +176,6 @@
 </main>
 
 <style>
-  .placeholder {
-    color: var(--color-medium-gray);
-    font-style: italic;
-    padding: var(--spacing-lg);
-    border: 2px dashed var(--color-border);
-    border-radius: 4px;
-    text-align: center;
-    max-width: 800px;
-  }
-
-  .module-intro {
-    font-size: 1.125rem;
-    line-height: 1.6;
-    color: var(--color-dark-gray);
-    margin-bottom: var(--spacing-lg);
-    max-width: 800px;
-  }
-
   .topic-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -218,24 +209,4 @@
     }
   }
 
-  .homework-summary {
-    background-color: var(--color-light-gray);
-    border-left: 4px solid var(--color-primary-orange);
-    padding: var(--spacing-lg);
-    border-radius: 0 8px 8px 0;
-    max-width: 800px;
-  }
-
-  .homework-summary h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--color-dark);
-    margin-bottom: var(--spacing-sm);
-  }
-
-  .homework-summary p {
-    color: var(--color-dark-gray);
-    margin-bottom: 0;
-    line-height: 1.6;
-  }
 </style>
