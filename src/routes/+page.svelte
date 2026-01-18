@@ -47,7 +47,7 @@
     <div class="topic-grid">
       <TopicCard
         icon={Monitor}
-        title="Today's Coding Environment"
+        title="Today's Toolbelt"
         description="Set up Visual Studio Code, connect to GitHub for version control and learn to collaborate with an AI coding assistant."
       />
       <TopicCard
@@ -57,7 +57,7 @@
       />
       <TopicCard
         icon={Blocks}
-        title="Building with Components"
+        title="Building Blocks"
         description="Write Node.JS and Svelte code to create pages using modular components and interactive elements."
       />
       <TopicCard
@@ -84,7 +84,7 @@
     <div class="topic-grid topic-grid-2x2">
       <TopicCard
         icon={ScrollText}
-        title="Longform Narrative"
+        title="Longform Story"
         description="A story page that weaves together multiple forms of media to guide readers through a lengthy narrative."
       />
       <TopicCard
@@ -126,7 +126,7 @@
       />
       <TopicCard
         icon={ClipboardList}
-        title="Create a Plan"
+        title="Make a Plan"
         description="Map out your project's structure with a detailed outline."
       />
       <TopicCard
@@ -137,7 +137,7 @@
       <TopicCard
         icon={MessageCircle}
         title="Take Feedback"
-        description="Present work-in-progress to peers and the instructor, incorporating constructive criticism."
+        description="Share your work-in-progress and incorporate constructive criticism."
       />
       <TopicCard
         icon={Presentation}

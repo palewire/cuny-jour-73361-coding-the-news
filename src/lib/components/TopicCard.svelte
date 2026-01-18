@@ -3,10 +3,12 @@
 </script>
 
 <div class="topic-card">
-  <div class="icon-wrapper">
-    <Icon size={32} strokeWidth={1.5} />
+  <div class="card-header">
+    <div class="icon-wrapper">
+      <Icon size={24} strokeWidth={1.5} />
+    </div>
+    <h3>{title}</h3>
   </div>
-  <h3>{title}</h3>
   <p>{description}</p>
 </div>
 
@@ -18,15 +20,23 @@
     padding: var(--spacing-lg);
   }
 
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+  }
+
   .icon-wrapper {
     color: var(--color-primary-orange);
-    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
   }
 
   h3 {
     font-size: 1.125rem;
     font-weight: 600;
-    margin-bottom: var(--spacing-xs);
+    margin: 0;
     color: var(--color-dark);
   }
 
