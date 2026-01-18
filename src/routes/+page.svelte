@@ -35,8 +35,8 @@
     <p class="placeholder">[Content for Simple Applications module]</p>
   </Module>
 
-  <Module number={3} title="The Capstone Challenge" id="capstone">
-    <p class="placeholder">[Content for The Capstone Challenge module]</p>
+  <Module number={3} title="Capstone Challenge" id="capstone">
+    <p class="placeholder">[Content for Capstone Challenge module]</p>
   </Module>
 </main>
 
