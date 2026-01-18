@@ -2,10 +2,6 @@
 
 The syllabus for JOUR 73361: "Coding the News" for the Craig Newmark Graduate School of Journalism at the City University of New York.
 
-## SvelteKit 5 Project
-
-This is a minimal SvelteKit 5 project configured for static site generation and deployment to GitHub Pages.
-
 ## Development
 
 Install dependencies:
@@ -37,13 +33,3 @@ Preview the production build locally:
 ```bash
 npm run preview
 ```
-
-## Deployment
-
-The site is automatically deployed to GitHub Pages when changes are pushed to the `main` branch. The deployment workflow is configured in `.github/workflows/deploy.yml`.
-
-To enable GitHub Pages:
-1. Go to your repository settings
-2. Navigate to Pages
-3. Set the source to "GitHub Actions"
-
