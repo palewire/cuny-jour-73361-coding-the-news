@@ -1,5 +1,4 @@
 <script>
-  import { base } from '$app/paths';
   import Masthead from '$lib/components/Masthead.svelte';
   import Hero from '$lib/components/Hero.svelte';
   import Module from '$lib/components/Module.svelte';
@@ -42,13 +41,13 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Coding the News | JOUR 73361" />
   <meta property="og:description" content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism" />
-  <meta property="og:image" content="https://palewi.re{base}/social-share.jpg" />
+  <meta property="og:image" content="https://palewi.re/docs/coding-the-news/social-share.jpg" />
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Coding the News | JOUR 73361" />
   <meta name="twitter:description" content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism" />
-  <meta name="twitter:image" content="https://palewi.re{base}/social-share.jpg" />
+  <meta name="twitter:image" content="https://palewi.re/docs/coding-the-news/social-share.jpg" />
 </svelte:head>
 
 <Masthead />
@@ -72,7 +71,7 @@
     <div class="topic-grid">
       <TopicCard
         icon={Monitor}
-        title="Today's Toolbelt"
+        title="Today's Tool Belt"
         description="Set up Visual Studio Code, connect to GitHub for version control and learn to collaborate with an AI coding assistant."
       />
       <TopicCard
