@@ -52,8 +52,8 @@
     number={1} 
     title="Fundamental Tools" 
     id="fundamentals"
-    intro="We will spend the first half of the semester familiarizing you with the software and skills that news developers use to write design and build interactive, data-driven stories."
-    homework="Each week you'll be expected complete assignments that reinforce the skills covered in class. You'll create repositories, build and publish static sites, import real-world datasets, create visualizations and progressively strengthen your skills. Expect to research how professional newsrooms use these tools and present your findings to classmates."
+    intro="The first half of the semester will familiarize you with the software and skills that news developers use to write, design and build interactive, data-driven stories."
+    homework="Each week you'll be expected to complete assignments that reinforce the skills covered in class. You'll create repositories, build and publish static sites, import real-world datasets, create visualizations and progressively strengthen your skills. Expect to research how professional newsrooms use these tools and present your findings to classmates."
   >
     <div class="topic-grid">
       <TopicCard
@@ -89,7 +89,7 @@
     title="Simple Applications" 
     id="applications"
     intro="Now it's time to build. You will apply your new skills to create simplified versions of common digital story formats."
-    homework="Each class begins with a folder of text, images, data and graphics that you'll assemble into a working prototype. After getting familiar with each formats, you'll design and publish your own version."
+    homework="Each class begins with a folder of text, images, data and graphics that you'll assemble into a working prototype. After getting familiar with each format, you'll design and publish your own version."
   >
     <div class="topic-grid topic-grid-2x2">
       <TopicCard
