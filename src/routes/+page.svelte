@@ -120,7 +120,7 @@
     number={3} 
     title="Capstone Challenge" 
     id="capstone"
-    intro="The final weeks will be dedicated to your capstone project—a custom designed story that showcases what you've learned. You'll propose an original idea or choose an instructor-provided challenge, then bring it to life."
+    intro="The final weeks will be dedicated to your capstone project — a custom designed story that showcases what you've learned. You'll propose an original idea or choose an instructor-provided challenge, then bring it to life."
     homework="Your capstone is the culmination of the semester—a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism."
   >
     <div class="topic-grid">
@@ -175,7 +175,7 @@
     title="Adjunct Assistant Professor"
     image="ben-welsh.jpg"
     link="https://palewi.re/who-is-ben-welsh/"
-    bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk."
+    bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk. You can reach me at <a href='mailto:b@palewi.re'>b@palewi.re</a>"
     background="white"
   />
 </main>

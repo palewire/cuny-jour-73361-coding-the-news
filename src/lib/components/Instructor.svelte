@@ -47,7 +47,7 @@
           {/if}
         </h3>
         <p class="instructor-title">{title}</p>
-        <p class="instructor-bio">{bio}</p>
+        <p class="instructor-bio">{@html bio}</p>
       </div>
     </div>
   </div>
