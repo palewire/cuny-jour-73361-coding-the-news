@@ -5,7 +5,7 @@
   import TopicCard from '$lib/components/TopicCard.svelte';
   import GuestSpeakers from '$lib/components/GuestSpeakers.svelte';
   import Instructor from '$lib/components/Instructor.svelte';
-  import { Monitor, Globe, BarChart3, Blocks, Layout } from 'lucide-svelte';
+  import { Monitor, Globe, BarChart3, Blocks, Layout, ScrollText, Layers, CircleHelp, Map, Lightbulb, Database, ClipboardList, Hammer, MessageCircle, Presentation } from 'lucide-svelte';
 
   const courseMeta = [
     '<a href="https://palewi.re/who-is-ben-welsh/">Ben Welsh</a>, Adjunct Assistant Professor',
@@ -79,11 +79,77 @@
   </Module>
 
   <Module number={2} title="Simple Applications" id="applications">
-    <p class="placeholder">[Content for Simple Applications module]</p>
+    <p class="module-intro">Now it's time to build. You will apply your new skills to create simplified versions of common digital story formats.</p>
+    
+    <div class="topic-grid topic-grid-2x2">
+      <TopicCard
+        icon={ScrollText}
+        title="Longform Narrative"
+        description="A story page that weaves together multiple forms of media to guide readers through a lengthy narrative."
+      />
+      <TopicCard
+        icon={Layers}
+        title="Data Story"
+        description="A stacked presentation that combines charts and analysis to walk readers through data-driven findings."
+      />
+      <TopicCard
+        icon={CircleHelp}
+        title="News Quiz"
+        description="An interactive test that challenges readers and provides instant feedback."
+      />
+      <TopicCard
+        icon={Map}
+        title="Interactive Map"
+        description="A geographic visualization that lets readers explore location-based data."
+      />
+    </div>
+
+    <div class="homework-summary">
+      <h3>Homework</h3>
+      <p>Each class begins with a folder of text, images, data and graphics that you'll assemble into a working prototype. After getting familiar with each formats, you'll design and publish your own version.</p>
+    </div>
   </Module>
 
   <Module number={3} title="Capstone Challenge" id="capstone">
-    <p class="placeholder">[Content for Capstone Challenge module]</p>
+    <p class="module-intro">The final weeks will be dedicated to your capstone project—a custom designed story that showcases what you've learned. You'll propose an original idea or choose an instructor-provided challenge, then bring it to life.</p>
+    
+    <div class="topic-grid">
+      <TopicCard
+        icon={Lightbulb}
+        title="Pitch Your Story"
+        description="Choose a project idea for an interactive data story."
+      />
+      <TopicCard
+        icon={Database}
+        title="Gather Assets"
+        description="Collect the text, images and data you need to make your story special."
+      />
+      <TopicCard
+        icon={ClipboardList}
+        title="Create a Plan"
+        description="Map out your project's structure with a detailed outline."
+      />
+      <TopicCard
+        icon={Hammer}
+        title="Build and Iterate"
+        description="Implement your outline and refine the presentation through multiple iterations."
+      />
+      <TopicCard
+        icon={MessageCircle}
+        title="Take Feedback"
+        description="Present work-in-progress to peers and the instructor, incorporating constructive criticism."
+      />
+      <TopicCard
+        icon={Presentation}
+        title="Hit the Deadline"
+        description="Deliver a polished presentation of your completed capstone to the class."
+      />
+    </div>
+
+    <div class="homework-summary">
+      <h3>Homework</h3>
+      <p>Your capstone is the culmination of the semester—a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism.</p>
+    </div>
   </Module>
 
   <GuestSpeakers 
@@ -127,14 +193,27 @@
     max-width: 1000px;
   }
 
+  .topic-grid-2x2 {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 700px;
+  }
+
   @media (max-width: 900px) {
     .topic-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .topic-grid-2x2 {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (max-width: 600px) {
     .topic-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .topic-grid-2x2 {
       grid-template-columns: 1fr;
     }
   }

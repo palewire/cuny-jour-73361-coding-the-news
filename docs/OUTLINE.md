@@ -2,7 +2,7 @@
 
 ---
 
-## Week 1 (Jan. 26): Where We Code
+## Week 1: Where We Code
 
 ### Introduction to VS Code
 - Install VS Code
@@ -53,7 +53,7 @@
 
 ---
 
-## Week 2 (Feb. 2): Building a Static Site
+## Week 2: Building a Static Site
 
 ### Students Share Their Repository Research
 - What did you get stuck on?
@@ -101,7 +101,7 @@ First "What are you hacking on?" guest
 
 ---
 
-## Week 3 (Feb. 9): Templating with Data
+## Week 3: Templating with Data
 
 ### Students Share Their Framework Experiments
 - What did you get stuck on?
@@ -137,7 +137,7 @@ Second "What are you hacking on?" guest
 
 ---
 
-## Week 4 (Feb. 23): Svelte Components
+## Week 4: Svelte Components
 
 ### Students Share Their Data Portal Experiments
 - What did you get stuck on?
@@ -168,7 +168,7 @@ Third "What are you hacking on?" guest
 
 ---
 
-## Week 5 (March 2): Getting Interactive with Reactive Code
+## Week 5: Getting Interactive with Reactive Code
 
 ### Students Share Their Component Experiments
 - What did you get stuck on?
@@ -194,7 +194,7 @@ Fourth "What are you hacking on?" guest
 
 ---
 
-## Week 6 (March 9): Layout and Design
+## Week 6: Layout and Design
 
 ### Students Share Their Component Experiments
 - What did you get stuck on?
@@ -219,6 +219,41 @@ Fifth "What are you hacking on?" guest
 
 ---
 
-## Week 7 (March 16): Module 1 Review and Consolidation
+# Module 2: Simple Applications
 
-TK ...
+## Week 7: Layout a longform story
+
+We start with a folder of assets, text, images, captions, a video and Datawrapper graphics.
+We gradually put a page together from these elements.
+
+## Week 8: Design a stacked standalone data story
+
+We start with a folder of graphics from our teammates and text written by the newsroom. Our job is to put it together into a cohesive story, and then make one graphic ourselves, which can be the homework assignment for the next week.
+
+## Week 9: Make an interactive quiz
+
+We start with a folder of questions, answers, and images. Our job is to put it together into an interactive quiz, where users can select answers and receive feedback.
+
+The assignment is to make a quiz about a topic of your choice.
+
+## Week 10: Make a map with MapLibre
+
+We start with a folder of geographic data and map assets. Our job is to put it together into an interactive map using MapLibre, where users can explore different locations and data points.
+
+The assignment is to create a map about a topic of your choice.
+
+---
+
+# Module 3: Capstone Challenge
+
+## Week 11 onward ...
+
+Students will begin their capstone projects, applying the skills and techniques learned throughout the course to create a comprehensive, interactive, data-driven story. If they don't have an idea of their own, they will choose one of the "challenge" projects provided by the instructor.
+
+They will:
+- Brainstorm and propose a capstone project idea
+- Begin gathering data and assets for the project
+- Create a project plan outlining the layout and goals for completing the capstone project
+- Start building the capstone project, implementing the planned layout and interactive elements
+- Get feedback from peers and the instructor on the progress of the capstone project
+- Make a final presentation of the completed capstone project
