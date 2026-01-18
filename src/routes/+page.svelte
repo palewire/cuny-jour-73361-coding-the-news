@@ -53,7 +53,7 @@
     number={1} 
     title="Fundamental Tools" 
     id="fundamentals"
-    intro="The first half of the semester will familiarize you with the software and skills that news developers use to write, design and build interactive, data-driven stories."
+    intro="The first half of the semester will familiarize you with the software and skills that news developers use to design and build interactive, data-driven stories."
     homework="Each week you'll be expected to complete assignments that reinforce the skills covered in class. You'll create repositories, build and publish static sites, import real-world datasets, create visualizations and progressively strengthen your skills. Expect to research how professional newsrooms use these tools and present your findings to classmates."
   >
     <div class="topic-grid">
