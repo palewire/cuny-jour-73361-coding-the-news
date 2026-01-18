@@ -83,7 +83,7 @@
       <TopicCard
         icon={Blocks}
         title="Building Blocks"
-        description="Write Node.JS and Svelte code to create pages using modular components and interactive elements."
+        description="Write Node.JS and Svelte to create pages with modular components and interactive elements."
       />
       <TopicCard
         icon={BarChart3}
