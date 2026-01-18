@@ -64,6 +64,7 @@
   .course-meta p:not(:last-child)::after {
     content: '•';
     color: var(--color-light-gray);
+    margin-left: var(--spacing-xs);
   }
 
   .course-meta :global(a) {
