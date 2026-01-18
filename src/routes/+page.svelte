@@ -6,6 +6,7 @@
   import GuestSpeakers from '$lib/components/GuestSpeakers.svelte';
   import Instructor from '$lib/components/Instructor.svelte';
   import Evaluation from '$lib/components/Evaluation.svelte';
+  import Footer from '$lib/components/Footer.svelte';
   import { Monitor, Globe, BarChart3, Blocks, Layout, ScrollText, Layers, CircleHelp, Map, Lightbulb, Database, ClipboardList, Hammer, MessageCircle, Presentation, MessageSquare, FileCheck, Trophy } from 'lucide-svelte';
 
   const courseMeta = [
@@ -178,6 +179,8 @@
     background="white"
   />
 </main>
+
+<Footer />
 
 <style>
   .topic-grid {

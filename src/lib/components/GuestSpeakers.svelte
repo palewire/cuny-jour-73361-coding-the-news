@@ -9,14 +9,14 @@
   } = $props();
 </script>
 
-<section class="guest-speakers" class:bg-white={background === 'white'} class:bg-light-gray={background === 'light-gray'}>
+<section class="guest-speakers section" class:bg-white={background === 'white'} class:bg-light-gray={background === 'light-gray'}>
   <div class="container">
     <div class="section-header">
       <h2>{title}</h2>
-      {#if description}
-        <p class="description">{description}</p>
-      {/if}
     </div>
+    {#if description}
+      <p class="section-intro">{description}</p>
+    {/if}
     <div class="speakers-grid">
       {#each speakers as speaker}
         <div class="speaker-card">
@@ -61,37 +61,6 @@
 </section>
 
 <style>
-  .guest-speakers {
-    padding: var(--spacing-xxl) 0;
-  }
-
-  .bg-white {
-    background-color: var(--color-white);
-  }
-
-  .bg-light-gray {
-    background-color: var(--color-light-gray);
-  }
-
-  .section-header {
-    margin-bottom: var(--spacing-lg);
-  }
-
-  .section-header h2 {
-    border-left: 4px solid var(--color-primary-orange);
-    padding-left: var(--spacing-md);
-    margin-bottom: 0;
-    color: var(--color-dark);
-  }
-
-  .description {
-    color: var(--color-dark-gray);
-    font-size: 1.125rem;
-    line-height: 1.6;
-    max-width: 800px;
-    margin-top: var(--spacing-md);
-  }
-
   .speakers-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

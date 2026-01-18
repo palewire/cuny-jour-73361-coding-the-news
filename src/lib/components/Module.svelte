@@ -2,15 +2,15 @@
   let { number, title, id, intro = '', homework = '', children } = $props();
 </script>
 
-<section class="module" {id}>
+<section class="module section" {id}>
   <div class="container">
-    <div class="module-header">
+    <div class="section-header">
       <span class="module-number">Module {number}</span>
       <h2>{title}</h2>
     </div>
     <div class="module-content">
       {#if intro}
-        <p class="module-intro">{intro}</p>
+        <p class="section-intro">{intro}</p>
       {/if}
       {@render children()}
       {#if homework}
@@ -24,22 +24,12 @@
 </section>
 
 <style>
-  .module {
-    padding: var(--spacing-xxl) 0;
-  }
-
   .module:nth-child(odd) {
     background-color: var(--color-white);
   }
 
   .module:nth-child(even) {
     background-color: var(--color-light-gray);
-  }
-
-  .module-header {
-    margin-bottom: var(--spacing-lg);
-    border-left: 4px solid var(--color-primary-orange);
-    padding-left: var(--spacing-md);
   }
 
   .module-number {
@@ -52,21 +42,8 @@
     margin-bottom: var(--spacing-xs);
   }
 
-  .module-header h2 {
-    margin-bottom: 0;
-    color: var(--color-dark);
-  }
-
   .module-content {
     /* Width constraints handled by child elements */
-  }
-
-  .module-intro {
-    font-size: 1.125rem;
-    line-height: 1.6;
-    color: var(--color-dark-gray);
-    margin-bottom: var(--spacing-lg);
-    max-width: 800px;
   }
 
   .homework-summary {

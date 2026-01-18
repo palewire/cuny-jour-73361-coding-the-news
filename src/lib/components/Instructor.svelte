@@ -11,7 +11,7 @@
   } = $props();
 </script>
 
-<section class="instructor" class:bg-white={background === 'white'} class:bg-light-gray={background === 'light-gray'}>
+<section class="instructor section" class:bg-white={background === 'white'} class:bg-light-gray={background === 'light-gray'}>
   <div class="container">
     <div class="section-header">
       <h2>Your Instructor</h2>
@@ -54,29 +54,6 @@
 </section>
 
 <style>
-  .instructor {
-    padding: var(--spacing-xxl) 0;
-  }
-
-  .bg-white {
-    background-color: var(--color-white);
-  }
-
-  .bg-light-gray {
-    background-color: var(--color-light-gray);
-  }
-
-  .section-header {
-    margin-bottom: var(--spacing-lg);
-    border-left: 4px solid var(--color-primary-orange);
-    padding-left: var(--spacing-md);
-  }
-
-  .section-header h2 {
-    margin-bottom: 0;
-    color: var(--color-dark);
-  }
-
   .instructor-card {
     display: flex;
     gap: var(--spacing-lg);
@@ -138,7 +115,7 @@
     font-size: 1rem;
     color: var(--color-primary-orange);
     font-weight: 600;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
   }
 
   .instructor-bio {
