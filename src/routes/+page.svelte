@@ -1,4 +1,5 @@
 <script>
+  import { base } from '$app/paths';
   import Masthead from '$lib/components/Masthead.svelte';
   import Hero from '$lib/components/Hero.svelte';
   import Module from '$lib/components/Module.svelte';
@@ -36,6 +37,18 @@
 <svelte:head>
   <title>Coding the News | JOUR 73361</title>
   <meta name="description" content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Coding the News | JOUR 73361" />
+  <meta property="og:description" content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism" />
+  <meta property="og:image" content="https://palewi.re{base}/social-share.jpg" />
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Coding the News | JOUR 73361" />
+  <meta name="twitter:description" content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism" />
+  <meta name="twitter:image" content="https://palewi.re{base}/social-share.jpg" />
 </svelte:head>
 
 <Masthead />
