@@ -5,6 +5,9 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
+		paths: {
+			base: '/docs/coding-the-news'
+		},
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',

@@ -4,7 +4,7 @@
   import Module from '$lib/components/Module.svelte';
 
   const courseMeta = [
-    'Ben Welsh, Adjunct Assistant Professor',
+    '<a href="https://palewi.re/who-is-ben-welsh/">Ben Welsh</a>, Adjunct Assistant Professor',
     'Spring 2026',
     'Mondays 6–9 p.m.',
     'Lab 436'
@@ -49,5 +49,4 @@
     border-radius: 4px;
     text-align: center;
   }
-
 </style>

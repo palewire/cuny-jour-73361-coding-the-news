@@ -12,15 +12,7 @@
     {#if meta.length > 0}
       <div class="course-meta">
         {#each meta as item}
-          <p>
-            {#if typeof item === 'string'}
-              {item}
-            {:else if item.label}
-              <strong>{item.label}:</strong> {item.value}
-            {:else}
-              {item.value}
-            {/if}
-          </p>
+          <p>{@html item}</p>
         {/each}
       </div>
     {/if}
@@ -67,9 +59,6 @@
 
   .course-meta p {
     margin: 0;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
   }
 
   .course-meta p:not(:last-child)::after {
@@ -77,15 +66,21 @@
     color: var(--color-light-gray);
   }
 
+  .course-meta :global(a) {
+    color: var(--color-white);
+    text-decoration: underline;
+    text-decoration-color: var(--color-primary-orange);
+    text-underline-offset: 2px;
+  }
+
+  .course-meta :global(a:hover) {
+    color: var(--color-primary-orange);
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     .course-title {
-      font-size: 2.5rem;
-    }
-
-    .course-meta {
-      flex-direction: column;
-      gap: var(--spacing-xs);
+      font-size: 3rem;
     }
   }
 </style>
