@@ -5,7 +5,8 @@
     name = "",
     title = "",
     image = "",
-    bio = ""
+    bio = "",
+    link = ""
   } = $props();
 </script>
 
@@ -14,16 +15,34 @@
     <h2>Your Instructor</h2>
     <div class="instructor-card">
       <div class="instructor-image">
-        {#if image}
-          <img src="{base}/{image}" alt={name} />
+        {#if link}
+          <a href={link} target="_blank" rel="noopener noreferrer">
+            {#if image}
+              <img src="{base}/{image}" alt={name} />
+            {:else}
+              <div class="placeholder-image">
+                <span>{name.split(' ').map(n => n[0]).join('')}</span>
+              </div>
+            {/if}
+          </a>
         {:else}
-          <div class="placeholder-image">
-            <span>{name.split(' ').map(n => n[0]).join('')}</span>
-          </div>
+          {#if image}
+            <img src="{base}/{image}" alt={name} />
+          {:else}
+            <div class="placeholder-image">
+              <span>{name.split(' ').map(n => n[0]).join('')}</span>
+            </div>
+          {/if}
         {/if}
       </div>
       <div class="instructor-info">
-        <h3 class="instructor-name">{name}</h3>
+        <h3 class="instructor-name">
+          {#if link}
+            <a href={link} target="_blank" rel="noopener noreferrer">{name}</a>
+          {:else}
+            {name}
+          {/if}
+        </h3>
         <p class="instructor-title">{title}</p>
         <p class="instructor-bio">{bio}</p>
       </div>
@@ -87,6 +106,16 @@
     font-weight: 700;
     margin-bottom: var(--spacing-xs);
     color: var(--color-dark);
+  }
+
+  .instructor-name a {
+    color: var(--color-dark);
+    text-decoration: none;
+  }
+
+  .instructor-name a:hover {
+    color: var(--color-primary-orange);
+    text-decoration: underline;
   }
 
   .instructor-title {

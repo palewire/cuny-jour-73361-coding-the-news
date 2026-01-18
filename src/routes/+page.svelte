@@ -60,6 +60,7 @@
     name="Ben Welsh"
     title="Adjunct Assistant Professor"
     image="ben-welsh.jpg"
+    link="https://palewi.re/who-is-ben-welsh/"
     bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk."
   />
 </main>
