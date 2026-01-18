@@ -120,7 +120,7 @@
     number={3} 
     title="Capstone Challenge" 
     id="capstone"
-    intro="The final weeks will be dedicated to your capstone project — a custom designed story that showcases what you've learned. You'll propose an original idea or choose an instructor-provided challenge, then bring it to life."
+    intro="The final weeks will be dedicated to a custom designed story that showcases what you've learned. You'll propose an original idea or choose an instructor-provided challenge, then bring it to life."
     homework="Your capstone is the culmination of the semester—a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism."
   >
     <div class="topic-grid">
