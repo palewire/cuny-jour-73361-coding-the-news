@@ -13,13 +13,13 @@
   ];
 
   const guestSpeakers = [
-    { name: 'Alvin Chang', org: 'The Pudding', image: 'alvin-chang.jpg' },
-    { name: 'Joe Fox', org: 'Washington Post', image: 'joe-fox.jpg' },
-    { name: 'Allison McCartney', org: 'New York Times', image: 'allison-mccartney.jpg' },
-    { name: 'Armand Emamdjomeh', org: 'Bloomberg', image: 'armand-emamdjomeh.jpg' },
-    { name: 'Andrew Briz', org: 'Politico', image: 'andrew-briz.jpg' },
-    { name: 'Tiana McGee', org: 'Reuters', image: 'tiana-mcgee.jpg' },
-    { name: 'Rhyannon Bartlett-Imadegawa', org: 'CNN', image: 'rhyannon-bartlett-imadegawa.jpg' }
+    { name: 'Alvin Chang', org: 'The Pudding', image: 'alvin-chang.jpg', linkedin: 'https://www.linkedin.com/in/alv9n/' },
+    { name: 'Joe Fox', org: 'Washington Post', image: 'joe-fox.jpg', linkedin: 'https://www.linkedin.com/in/joemfox/' },
+    { name: 'Allison McCartney', org: 'New York Times', image: 'allison-mccartney.jpg', linkedin: 'https://www.linkedin.com/in/allisonmccartney/' },
+    { name: 'Armand Emamdjomeh', org: 'Bloomberg', image: 'armand-emamdjomeh.jpg', linkedin: 'https://www.linkedin.com/in/armand-emamdjomeh/' },
+    { name: 'Andrew Briz', org: 'Politico', image: 'andrew-briz.jpg', linkedin: 'https://www.linkedin.com/in/andrewbriz/' },
+    { name: 'Tiana McGee', org: 'Reuters', image: 'tiana-mcgee.jpg', linkedin: 'https://www.linkedin.com/in/tiana-m-12b535217/' },
+    { name: 'Rhyannon Bartlett-Imadegawa', org: 'CNN', image: 'rhyannon-bartlett-imadegawa.jpg', linkedin: 'https://www.linkedin.com/in/r-bartlett-imadegawa/' }
   ];
 </script>
 

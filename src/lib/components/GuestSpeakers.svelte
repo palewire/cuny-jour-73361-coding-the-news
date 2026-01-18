@@ -20,16 +20,34 @@
       {#each speakers as speaker}
         <div class="speaker-card">
           <div class="speaker-image">
-            {#if speaker.image}
-              <img src="{base}/{speaker.image}" alt={speaker.name} />
+            {#if speaker.linkedin}
+              <a href={speaker.linkedin} target="_blank" rel="noopener noreferrer">
+                {#if speaker.image}
+                  <img src="{base}/{speaker.image}" alt={speaker.name} />
+                {:else}
+                  <div class="placeholder-image">
+                    <span>{speaker.name.split(' ').map(n => n[0]).join('')}</span>
+                  </div>
+                {/if}
+              </a>
             {:else}
-              <div class="placeholder-image">
-                <span>{speaker.name.split(' ').map(n => n[0]).join('')}</span>
-              </div>
+              {#if speaker.image}
+                <img src="{base}/{speaker.image}" alt={speaker.name} />
+              {:else}
+                <div class="placeholder-image">
+                  <span>{speaker.name.split(' ').map(n => n[0]).join('')}</span>
+                </div>
+              {/if}
             {/if}
           </div>
           <div class="speaker-info">
-            <h3 class="speaker-name">{speaker.name}</h3>
+            <h3 class="speaker-name">
+              {#if speaker.linkedin}
+                <a href={speaker.linkedin} target="_blank" rel="noopener noreferrer">{speaker.name}</a>
+              {:else}
+                {speaker.name}
+              {/if}
+            </h3>
             <p class="speaker-org">{speaker.org}</p>
             {#if speaker.note}
               <p class="speaker-note">{speaker.note}</p>
@@ -111,6 +129,16 @@
     font-weight: 600;
     margin-bottom: 0.25rem;
     color: var(--color-white);
+  }
+
+  .speaker-name a {
+    color: var(--color-white);
+    text-decoration: none;
+  }
+
+  .speaker-name a:hover {
+    color: var(--color-primary-orange);
+    text-decoration: underline;
   }
 
   .speaker-org {
