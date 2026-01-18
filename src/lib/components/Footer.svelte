@@ -132,6 +132,7 @@
     flex-direction: column;
     align-items: flex-start;
     flex: 1;
+    font-size: 1rem;
   }
 
   .footer-info address {
@@ -283,6 +284,7 @@
       flex-direction: row;
       align-items: flex-end;
       justify-content: flex-end;
+      font-size: 1rem;
     }
 
     .footer-info address {
