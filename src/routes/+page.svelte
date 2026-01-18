@@ -77,7 +77,7 @@
       <TopicCard
         icon={Globe}
         title="Static Site Publishing"
-        description="Explore SvelteKit and the page-building frameworks used by top newsrooms to publish your projects to the World Wide Web."
+        description="Explore SvelteKit and the page-building frameworks newsrooms use to publish to the World Wide Web."
       />
       <TopicCard
         icon={Blocks}
