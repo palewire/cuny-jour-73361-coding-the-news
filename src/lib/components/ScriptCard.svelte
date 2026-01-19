@@ -69,7 +69,6 @@
   .script-card-disabled:focus-visible {
     transform: none;
     box-shadow: none;
-    border-color: var(--color-border);
   }
 
   .script-card-disabled .script-date {

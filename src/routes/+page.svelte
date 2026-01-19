@@ -291,7 +291,7 @@
         </div>
         <p class="section-intro">
           A step-by-step guide to each week's work with commands, links and
-          assignments. New scripts publish after we finish class.
+          assignments. A new script is published after we finish each class.
         </p>
         <div class="grid grid-3">
           {#each scripts as script}
