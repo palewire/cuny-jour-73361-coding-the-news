@@ -151,6 +151,7 @@
     id="fundamentals"
     intro="The first half of the semester will familiarize you with the software and skills that news developers use to design and build interactive, data-driven stories."
     homework="Each week you'll be expected to complete assignments that reinforce the skills covered in class. Expect to research how professional newsrooms use these tools and present your findings to classmates."
+    background="white"
   >
     <div class="grid grid-3 grid-constrained grid-stack">
       <TopicCard
@@ -187,6 +188,7 @@
     id="applications"
     intro="Now it's time to build. You will apply your new skills to create simplified versions of common digital story formats."
     homework="Each class begins with a folder of text, images, data and graphics that you'll assemble into a working prototype. After getting familiar with each format, you'll design and publish your own version."
+    background="light-gray"
   >
     <div class="grid grid-2 grid-narrow grid-stack">
       <TopicCard
@@ -218,6 +220,7 @@
     id="capstone"
     intro="The final weeks will be dedicated to a custom designed story that showcases what you've learned. You'll propose an original idea or choose a challenge provided by the instructor, then bring it to life."
     homework="The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism."
+    background="white"
   >
     <div class="grid grid-3 grid-constrained grid-stack">
       <TopicCard

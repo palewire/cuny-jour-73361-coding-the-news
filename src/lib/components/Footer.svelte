@@ -159,17 +159,10 @@
 
 <style>
   footer {
-    background-color: #313131;
-    color: #fff;
+    background-color: var(--color-dark-gray);
+    color: var(--color-white);
     font-size: 16px;
     font-family: var(--font-family);
-  }
-
-  .container {
-    max-width: 1290px;
-    margin: 0 auto;
-    padding: 0 30px;
-    width: 100%;
   }
 
   address {
@@ -178,14 +171,14 @@
   }
 
   a {
-    color: #fff;
+    color: var(--color-white);
     text-decoration: none;
     transition: color 0.2s ease;
   }
 
   a:hover,
   a:focus {
-    color: #fe8807;
+    color: var(--color-primary-orange);
     text-decoration: none;
   }
 
@@ -253,15 +246,15 @@
   .title-ix-link {
     display: inline-block;
     padding: 10px 15px;
-    background: #000;
-    color: #fff;
+    background: var(--color-dark);
+    color: var(--color-white);
     font-size: 16px;
     width: fit-content;
   }
 
   .title-ix-link:hover {
-    background: #222;
-    color: #fff;
+    background: var(--color-dark-gray);
+    color: var(--color-white);
   }
 
   .footer-nav {
@@ -304,7 +297,7 @@
 
   /* Bottom Section */
   .footer-bottom {
-    border-top: 1px solid #414141;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
     padding: 30px 0;
   }
 
@@ -315,7 +308,7 @@
 
   .copyright {
     font-size: 12px;
-    color: #adadad;
+    color: rgba(255, 255, 255, 0.7);
     order: 2;
   }
 
@@ -333,11 +326,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--color-white);
   }
 
   .social a:hover {
-    color: #fe8807;
+    color: var(--color-primary-orange);
   }
 
   /* Desktop Responsive - 960px+ */

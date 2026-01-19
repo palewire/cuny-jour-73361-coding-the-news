@@ -1,5 +1,5 @@
 <script>
-  import { base } from '$app/paths';
+  import Avatar from './Avatar.svelte';
 
   let {
     name = '',
@@ -21,34 +21,17 @@
       <h2>Your Instructor</h2>
     </div>
     <div class="instructor-card">
-      <div class="instructor-image">
-        {#if link}
-          <a href={link} target="_blank" rel="noopener noreferrer">
-            {#if image}
-              <img src="{base}/{image}" alt={name} />
-            {:else}
-              <div class="placeholder-image">
-                <span
-                  >{name
-                    .split(' ')
-                    .map((n) => n[0])
-                    .join('')}</span
-                >
-              </div>
-            {/if}
-          </a>
-        {:else if image}
-          <img src="{base}/{image}" alt={name} />
-        {:else}
-          <div class="placeholder-image">
-            <span
-              >{name
-                .split(' ')
-                .map((n) => n[0])
-                .join('')}</span
-            >
-          </div>
-        {/if}
+      <div class="instructor-avatar">
+        <Avatar
+          {name}
+          {image}
+          {link}
+          size="var(--instructor-avatar-size)"
+          background="var(--color-gray)"
+          textColor="var(--color-primary-orange)"
+          fontSize="2rem"
+          borderColor="var(--color-primary-orange)"
+        />
       </div>
       <div class="instructor-info">
         <h3 class="instructor-name">
@@ -72,34 +55,9 @@
     align-items: flex-start;
   }
 
-  .instructor-image {
-    width: 150px;
-    height: 150px;
+  .instructor-avatar {
+    --instructor-avatar-size: 150px;
     flex-shrink: 0;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid var(--color-primary-orange);
-  }
-
-  .instructor-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .placeholder-image {
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-gray);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .placeholder-image span {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-primary-orange);
   }
 
   .instructor-info {
@@ -143,9 +101,8 @@
       align-items: flex-start;
     }
 
-    .instructor-image {
-      width: 120px;
-      height: 120px;
+    .instructor-avatar {
+      --instructor-avatar-size: 120px;
     }
   }
 </style>

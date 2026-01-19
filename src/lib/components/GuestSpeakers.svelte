@@ -1,5 +1,5 @@
 <script>
-  import { base } from '$app/paths';
+  import Avatar from './Avatar.svelte';
 
   let {
     title = 'Guest Speakers',
@@ -21,41 +21,20 @@
     {#if description}
       <p class="section-intro">{description}</p>
     {/if}
-    <div class="speakers-grid">
+    <div class="grid grid-4 speakers-grid">
       {#each speakers as speaker}
         <div class="speaker-card">
-          <div class="speaker-image">
-            {#if speaker.linkedin}
-              <a
-                href={speaker.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {#if speaker.image}
-                  <img src="{base}/{speaker.image}" alt={speaker.name} />
-                {:else}
-                  <div class="placeholder-image">
-                    <span
-                      >{speaker.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')}</span
-                    >
-                  </div>
-                {/if}
-              </a>
-            {:else if speaker.image}
-              <img src="{base}/{speaker.image}" alt={speaker.name} />
-            {:else}
-              <div class="placeholder-image">
-                <span
-                  >{speaker.name
-                    .split(' ')
-                    .map((n) => n[0])
-                    .join('')}</span
-                >
-              </div>
-            {/if}
+          <div class="speaker-avatar">
+            <Avatar
+              name={speaker.name}
+              image={speaker.image}
+              link={speaker.linkedin}
+              size="var(--speaker-avatar-size)"
+              background="var(--color-light-gray)"
+              textColor="var(--color-primary-orange)"
+              fontSize="1.5rem"
+              borderColor="var(--color-primary-orange)"
+            />
           </div>
           <div class="speaker-info">
             <h3 class="speaker-name">
@@ -81,47 +60,15 @@
 </section>
 
 <style>
-  .speakers-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-lg);
-  }
-
   .speaker-card {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
   }
 
-  .speaker-image {
-    width: 80px;
-    height: 80px;
+  .speaker-avatar {
+    --speaker-avatar-size: 80px;
     flex-shrink: 0;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid var(--color-primary-orange);
-  }
-
-  .speaker-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .placeholder-image {
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-light-gray);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .placeholder-image span {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-primary-orange);
-    letter-spacing: 0.05em;
   }
 
   .speaker-name {
@@ -147,27 +94,17 @@
     margin-bottom: 0;
   }
 
-  @media (max-width: 992px) {
-    .speakers-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .speakers-grid {
+    gap: var(--spacing-lg);
   }
 
   @media (max-width: 768px) {
     .speakers-grid {
-      grid-template-columns: repeat(2, 1fr);
       gap: var(--spacing-md);
     }
 
-    .speaker-image {
-      width: 60px;
-      height: 60px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .speakers-grid {
-      grid-template-columns: 1fr;
+    .speaker-avatar {
+      --speaker-avatar-size: 60px;
     }
   }
 </style>

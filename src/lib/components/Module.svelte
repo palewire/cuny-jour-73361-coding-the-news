@@ -1,8 +1,21 @@
 <script>
-  let { number, title, id, intro = '', homework = '', children } = $props();
+  let {
+    number,
+    title,
+    id,
+    intro = '',
+    homework = '',
+    children,
+    background = 'white',
+  } = $props();
 </script>
 
-<section class="module section" {id}>
+<section
+  class="module section"
+  class:bg-white={background === 'white'}
+  class:bg-light-gray={background === 'light-gray'}
+  {id}
+>
   <div class="container">
     <div class="section-header">
       <span class="module-number">Module {number}</span>
@@ -24,14 +37,6 @@
 </section>
 
 <style>
-  .module:nth-child(odd) {
-    background-color: var(--color-white);
-  }
-
-  .module:nth-child(even) {
-    background-color: var(--color-light-gray);
-  }
-
   .module-number {
     display: block;
     font-size: 0.875rem;
