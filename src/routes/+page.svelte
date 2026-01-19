@@ -7,47 +7,131 @@
   import Instructor from '$lib/components/Instructor.svelte';
   import Evaluation from '$lib/components/Evaluation.svelte';
   import Footer from '$lib/components/Footer.svelte';
-  import { Monitor, Globe, BarChart3, Blocks, Layout, ScrollText, Layers, CircleHelp, Map, Lightbulb, Database, ClipboardList, Hammer, MessageCircle, Presentation, MessageSquare, FileCheck, Trophy } from 'lucide-svelte';
+  import {
+    Monitor,
+    Globe,
+    BarChart3,
+    Blocks,
+    Layout,
+    ScrollText,
+    Layers,
+    CircleHelp,
+    Map,
+    Lightbulb,
+    Database,
+    ClipboardList,
+    Hammer,
+    MessageCircle,
+    Presentation,
+    MessageSquare,
+    FileCheck,
+    Trophy,
+  } from 'lucide-svelte';
 
   const courseMeta = [
     '<a href="https://palewi.re/who-is-ben-welsh/">Ben Welsh</a>, Adjunct Assistant Professor',
     'Spring 2026',
     'Mondays 6–9 p.m.',
-    'Lab 436'
+    'Lab 436',
   ];
 
   const evaluationCriteria = [
-    { icon: MessageSquare, title: 'Participation', description: 'You should engage in seminar-style discussions and give thoughtful feedback to peers.' },
-    { icon: FileCheck, title: 'Homework', description: 'Your assignments should demonstrate effort and experimentation.' },
-    { icon: Trophy, title: 'Capstone', description: 'You should deliver a page that is ready to publish on a professional news site.' }
+    {
+      icon: MessageSquare,
+      title: 'Participation',
+      description:
+        'You should engage in seminar-style discussions and give thoughtful feedback to peers.',
+    },
+    {
+      icon: FileCheck,
+      title: 'Homework',
+      description:
+        'Your assignments should demonstrate effort and experimentation.',
+    },
+    {
+      icon: Trophy,
+      title: 'Capstone',
+      description:
+        'You should deliver a page that is ready to publish on a professional news site.',
+    },
   ];
 
   const guestSpeakers = [
-    { name: 'Alvin Chang', org: 'The Pudding', image: 'alvin-chang.jpg', linkedin: 'https://www.linkedin.com/in/alv9n/' },
-    { name: 'Joe Fox', org: 'Washington Post', image: 'joe-fox.jpg', linkedin: 'https://www.linkedin.com/in/joemfox/' },
-    { name: 'Allison McCartney', org: 'New York Times', image: 'allison-mccartney.jpg', linkedin: 'https://www.linkedin.com/in/allisonmccartney/' },
-    { name: 'Armand Emamdjomeh', org: 'Bloomberg', image: 'armand-emamdjomeh.jpg', linkedin: 'https://www.linkedin.com/in/armand-emamdjomeh/' },
-    { name: 'Andrew Briz', org: 'Politico', image: 'andrew-briz.jpg', linkedin: 'https://www.linkedin.com/in/andrewbriz/' },
-    { name: 'Tiana McGee', org: 'Reuters', image: 'tiana-mcgee.jpg', linkedin: 'https://www.linkedin.com/in/tiana-m-12b535217/' },
-    { name: 'Rhyannon Bartlett-Imadegawa', org: 'CNN', image: 'rhyannon-bartlett-imadegawa.jpg', linkedin: 'https://www.linkedin.com/in/r-bartlett-imadegawa/' }
+    {
+      name: 'Rhyannon Bartlett-Imadegawa',
+      org: 'CNN',
+      image: 'rhyannon-bartlett-imadegawa.jpg',
+      linkedin: 'https://www.linkedin.com/in/r-bartlett-imadegawa/',
+    },
+    {
+      name: 'Andrew Briz',
+      org: 'Politico',
+      image: 'andrew-briz.jpg',
+      linkedin: 'https://www.linkedin.com/in/andrewbriz/',
+    },
+    {
+      name: 'Alvin Chang',
+      org: 'The Pudding',
+      image: 'alvin-chang.jpg',
+      linkedin: 'https://www.linkedin.com/in/alv9n/',
+    },
+    {
+      name: 'Armand Emamdjomeh',
+      org: 'Bloomberg',
+      image: 'armand-emamdjomeh.jpg',
+      linkedin: 'https://www.linkedin.com/in/armand-emamdjomeh/',
+    },
+    {
+      name: 'Joe Fox',
+      org: 'Washington Post',
+      image: 'joe-fox.jpg',
+      linkedin: 'https://www.linkedin.com/in/joemfox/',
+    },
+    {
+      name: 'Allison McCartney',
+      org: 'New York Times',
+      image: 'allison-mccartney.jpg',
+      linkedin: 'https://www.linkedin.com/in/allisonmccartney/',
+    },
+    {
+      name: 'Tiana McGee',
+      org: 'Reuters',
+      image: 'tiana-mcgee.jpg',
+      linkedin: 'https://www.linkedin.com/in/tiana-m-12b535217/',
+    },
   ];
 </script>
 
 <svelte:head>
   <title>Coding the News | JOUR 73361</title>
-  <meta name="description" content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism" />
-  
+  <meta
+    name="description"
+    content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism"
+  />
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Coding the News | JOUR 73361" />
-  <meta property="og:description" content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism" />
-  <meta property="og:image" content="https://palewi.re/docs/coding-the-news/social-share.jpg" />
-  
+  <meta
+    property="og:description"
+    content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism"
+  />
+  <meta
+    property="og:image"
+    content="https://palewi.re/docs/coding-the-news/social-share.jpg"
+  />
+
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Coding the News | JOUR 73361" />
-  <meta name="twitter:description" content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism" />
-  <meta name="twitter:image" content="https://palewi.re/docs/coding-the-news/social-share.jpg" />
+  <meta
+    name="twitter:description"
+    content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism"
+  />
+  <meta
+    name="twitter:image"
+    content="https://palewi.re/docs/coding-the-news/social-share.jpg"
+  />
 </svelte:head>
 
 <Masthead />
@@ -61,9 +145,9 @@
     meta={courseMeta}
   />
 
-  <Module 
-    number={1} 
-    title="Fundamental Tools" 
+  <Module
+    number={1}
+    title="Fundamental Tools"
     id="fundamentals"
     intro="The first half of the semester will familiarize you with the software and skills that news developers use to design and build interactive, data-driven stories."
     homework="Each week you'll be expected to complete assignments that reinforce the skills covered in class. Expect to research how professional newsrooms use these tools and present your findings to classmates."
@@ -97,9 +181,9 @@
     </div>
   </Module>
 
-  <Module 
-    number={2} 
-    title="Simple Applications" 
+  <Module
+    number={2}
+    title="Simple Applications"
     id="applications"
     intro="Now it's time to build. You will apply your new skills to create simplified versions of common digital story formats."
     homework="Each class begins with a folder of text, images, data and graphics that you'll assemble into a working prototype. After getting familiar with each format, you'll design and publish your own version."
@@ -128,9 +212,9 @@
     </div>
   </Module>
 
-  <Module 
-    number={3} 
-    title="Capstone Challenge" 
+  <Module
+    number={3}
+    title="Capstone Challenge"
     id="capstone"
     intro="The final weeks will be dedicated to a custom designed story that showcases what you've learned. You'll propose an original idea or choose a challenge provided by the instructor, then bring it to life."
     homework="The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism."
@@ -169,20 +253,20 @@
     </div>
   </Module>
 
-  <Evaluation 
+  <Evaluation
     title="Evaluation"
     intro="Your grade will be determined based on three factors."
     criteria={evaluationCriteria}
     background="white"
   />
 
-  <GuestSpeakers 
+  <GuestSpeakers
     description="Throughout the semester, working professionals will join our class to share how they use code to tell compelling stories."
     speakers={guestSpeakers}
     background="light-gray"
   />
 
-  <Instructor 
+  <Instructor
     name="Ben Welsh"
     title="Adjunct Assistant Professor"
     image="ben-welsh.jpg"

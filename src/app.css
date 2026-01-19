@@ -1,14 +1,15 @@
 /* MyFonts License Counter */
-@import url("//hello.myfonts.net/count/327f7d");
+@import url('//hello.myfonts.net/count/327f7d');
 
 /* Trade Gothic Font Families */
 @font-face {
   font-family: 'TradeGothicLT';
   src: url('/fonts/327F7D_0_0.eot');
-  src: url('/fonts/327F7D_0_0.eot?#iefix') format('embedded-opentype'),
-       url('/fonts/327F7D_0_0.woff2') format('woff2'),
-       url('/fonts/327F7D_0_0.woff') format('woff'),
-       url('/fonts/327F7D_0_0.ttf') format('truetype');
+  src:
+    url('/fonts/327F7D_0_0.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/327F7D_0_0.woff2') format('woff2'),
+    url('/fonts/327F7D_0_0.woff') format('woff'),
+    url('/fonts/327F7D_0_0.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
@@ -16,10 +17,11 @@
 @font-face {
   font-family: 'TradeGothicLT-Bold';
   src: url('/fonts/327F7D_2_0.eot');
-  src: url('/fonts/327F7D_2_0.eot?#iefix') format('embedded-opentype'),
-       url('/fonts/327F7D_2_0.woff2') format('woff2'),
-       url('/fonts/327F7D_2_0.woff') format('woff'),
-       url('/fonts/327F7D_2_0.ttf') format('truetype');
+  src:
+    url('/fonts/327F7D_2_0.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/327F7D_2_0.woff2') format('woff2'),
+    url('/fonts/327F7D_2_0.woff') format('woff'),
+    url('/fonts/327F7D_2_0.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
@@ -27,10 +29,11 @@
 @font-face {
   font-family: 'TradeGothicLT-BoldCondTwenty';
   src: url('/fonts/327F7D_1_0.eot');
-  src: url('/fonts/327F7D_1_0.eot?#iefix') format('embedded-opentype'),
-       url('/fonts/327F7D_1_0.woff2') format('woff2'),
-       url('/fonts/327F7D_1_0.woff') format('woff'),
-       url('/fonts/327F7D_1_0.ttf') format('truetype');
+  src:
+    url('/fonts/327F7D_1_0.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/327F7D_1_0.woff2') format('woff2'),
+    url('/fonts/327F7D_1_0.woff') format('woff'),
+    url('/fonts/327F7D_1_0.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
@@ -48,10 +51,14 @@
   --color-border: #e0e0e0;
 
   /* Typography */
-  --font-family: 'TradeGothicLT', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-family-bold: 'TradeGothicLT-Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-family-headline: 'TradeGothicLT-BoldCondTwenty', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  
+  --font-family:
+    'TradeGothicLT', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family-bold:
+    'TradeGothicLT-Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family-headline:
+    'TradeGothicLT-BoldCondTwenty', 'Helvetica Neue', Helvetica, Arial,
+    sans-serif;
+
   /* Spacing */
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
@@ -88,7 +95,12 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-family-bold);
   font-weight: 700;
   line-height: 1.2;
@@ -174,15 +186,15 @@ img {
   html {
     font-size: 14px;
   }
-  
+
   h1 {
     font-size: 2rem;
   }
-  
+
   h2 {
     font-size: 1.75rem;
   }
-  
+
   h3 {
     font-size: 1.25rem;
   }
