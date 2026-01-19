@@ -1,15 +1,19 @@
 <script>
   import { base } from '$app/paths';
-  
-  let { 
-    title = "Guest Speakers",
-    description = "",
+
+  let {
+    title = 'Guest Speakers',
+    description = '',
     speakers = [],
-    background = 'white'
+    background = 'white',
   } = $props();
 </script>
 
-<section class="guest-speakers section" class:bg-white={background === 'white'} class:bg-light-gray={background === 'light-gray'}>
+<section
+  class="guest-speakers section"
+  class:bg-white={background === 'white'}
+  class:bg-light-gray={background === 'light-gray'}
+>
   <div class="container">
     <div class="section-header">
       <h2>{title}</h2>
@@ -22,29 +26,45 @@
         <div class="speaker-card">
           <div class="speaker-image">
             {#if speaker.linkedin}
-              <a href={speaker.linkedin} target="_blank" rel="noopener noreferrer">
+              <a
+                href={speaker.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {#if speaker.image}
                   <img src="{base}/{speaker.image}" alt={speaker.name} />
                 {:else}
                   <div class="placeholder-image">
-                    <span>{speaker.name.split(' ').map(n => n[0]).join('')}</span>
+                    <span
+                      >{speaker.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')}</span
+                    >
                   </div>
                 {/if}
               </a>
+            {:else if speaker.image}
+              <img src="{base}/{speaker.image}" alt={speaker.name} />
             {:else}
-              {#if speaker.image}
-                <img src="{base}/{speaker.image}" alt={speaker.name} />
-              {:else}
-                <div class="placeholder-image">
-                  <span>{speaker.name.split(' ').map(n => n[0]).join('')}</span>
-                </div>
-              {/if}
+              <div class="placeholder-image">
+                <span
+                  >{speaker.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')}</span
+                >
+              </div>
             {/if}
           </div>
           <div class="speaker-info">
             <h3 class="speaker-name">
               {#if speaker.linkedin}
-                <a href={speaker.linkedin} target="_blank" rel="noopener noreferrer">{speaker.name}</a>
+                <a
+                  href={speaker.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer">{speaker.name}</a
+                >
               {:else}
                 {speaker.name}
               {/if}

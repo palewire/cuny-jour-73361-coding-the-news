@@ -1,8 +1,12 @@
 <script>
   import { base } from '$app/paths';
-  
-  let { logoSrc, logoAlt = 'Craig Newmark Graduate School of Journalism at CUNY', href = 'https://www.journalism.cuny.edu/' } = $props();
-  
+
+  let {
+    logoSrc,
+    logoAlt = 'Craig Newmark Graduate School of Journalism at CUNY',
+    href = 'https://www.journalism.cuny.edu/',
+  } = $props();
+
   // Default logo path uses base for subdirectory deployment
   const resolvedLogoSrc = logoSrc || `${base}/cuny-logo.svg`;
 </script>

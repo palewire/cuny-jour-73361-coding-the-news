@@ -6,7 +6,8 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "format": "prettier --write",
+    "format": "prettier --write \"src/**/*.{svelte,js,ts,jsx,tsx,css,md,json}\"",
+    "lint": "prettier --check \"src/**/*.{svelte,js,ts,jsx,tsx,css,md,json}\"",
     "prepare": "husky install"
   },
   "devDependencies": {

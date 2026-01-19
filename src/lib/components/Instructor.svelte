@@ -1,17 +1,21 @@
 <script>
   import { base } from '$app/paths';
-  
-  let { 
-    name = "",
-    title = "",
-    image = "",
-    bio = "",
-    link = "",
-    background = 'light-gray'
+
+  let {
+    name = '',
+    title = '',
+    image = '',
+    bio = '',
+    link = '',
+    background = 'light-gray',
   } = $props();
 </script>
 
-<section class="instructor section" class:bg-white={background === 'white'} class:bg-light-gray={background === 'light-gray'}>
+<section
+  class="instructor section"
+  class:bg-white={background === 'white'}
+  class:bg-light-gray={background === 'light-gray'}
+>
   <div class="container">
     <div class="section-header">
       <h2>Your Instructor</h2>
@@ -24,18 +28,26 @@
               <img src="{base}/{image}" alt={name} />
             {:else}
               <div class="placeholder-image">
-                <span>{name.split(' ').map(n => n[0]).join('')}</span>
+                <span
+                  >{name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')}</span
+                >
               </div>
             {/if}
           </a>
+        {:else if image}
+          <img src="{base}/{image}" alt={name} />
         {:else}
-          {#if image}
-            <img src="{base}/{image}" alt={name} />
-          {:else}
-            <div class="placeholder-image">
-              <span>{name.split(' ').map(n => n[0]).join('')}</span>
-            </div>
-          {/if}
+          <div class="placeholder-image">
+            <span
+              >{name
+                .split(' ')
+                .map((n) => n[0])
+                .join('')}</span
+            >
+          </div>
         {/if}
       </div>
       <div class="instructor-info">

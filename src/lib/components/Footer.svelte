@@ -1,6 +1,12 @@
 <script>
   import { base } from '$app/paths';
-  import { Facebook, Twitter, Youtube, Linkedin, Instagram } from 'lucide-svelte';
+  import {
+    Facebook,
+    Twitter,
+    Youtube,
+    Linkedin,
+    Instagram,
+  } from 'lucide-svelte';
 </script>
 
 <footer>
@@ -9,7 +15,10 @@
     <div class="container">
       <div class="footer-logo">
         <a href="https://www.journalism.cuny.edu/">
-          <img src="{base}/CraigNewmarkGraduateSchoolofJournalism_DarkGray.svg" alt="Craig Newmark Graduate School of Journalism" />
+          <img
+            src="{base}/CraigNewmarkGraduateSchoolofJournalism_DarkGray.svg"
+            alt="Craig Newmark Graduate School of Journalism"
+          />
         </a>
       </div>
 
@@ -30,23 +39,68 @@
   <div class="footer-middle">
     <div class="container">
       <div class="cuny-logo">
-        <img src="{base}/CUNY-Cube-DarkGray-Logo.svg" alt="The City University of New York" />
-        <a href="https://www.journalism.cuny.edu/title-ix/" class="title-ix-link">
+        <img
+          src="{base}/CUNY-Cube-DarkGray-Logo.svg"
+          alt="The City University of New York"
+        />
+        <a
+          href="https://www.journalism.cuny.edu/title-ix/"
+          class="title-ix-link"
+        >
           Enough is Enough: Combating Sexual Misconduct
         </a>
       </div>
 
       <nav class="footer-nav" aria-label="Footer Navigation">
         <ul>
-          <li><a href="https://www.journalism.cuny.edu/campus-hours/">Campus Hours</a></li>
-          <li><a href="https://www.journalism.cuny.edu/public-safety-department/">Public Safety</a></li>
-          <li><a href="https://www.journalism.cuny.edu/contact-newmark-j-school/">Contact Us</a></li>
-          <li><a href="https://www.journalism.cuny.edu/about-us/facilities-rentals/">Facilities Rentals</a></li>
-          <li><a href="https://www.journalism.cuny.edu/give-to-the-j-school/" target="_blank" rel="noopener">Give to the J-School</a></li>
-          <li><a href="https://cuny.jobs/campus/school-of-journalism/jobs/">Job Opportunities</a></li>
-          <li><a href="https://www.journalism.cuny.edu/map-and-directions/">Map and Directions</a></li>
-          <li><a href="https://www.journalism.cuny.edu/privacy-policy/">Privacy Policy</a></li>
-          <li><a href="https://www.journalism.cuny.edu/text-version/">Text Version</a></li>
+          <li>
+            <a href="https://www.journalism.cuny.edu/campus-hours/"
+              >Campus Hours</a
+            >
+          </li>
+          <li>
+            <a href="https://www.journalism.cuny.edu/public-safety-department/"
+              >Public Safety</a
+            >
+          </li>
+          <li>
+            <a href="https://www.journalism.cuny.edu/contact-newmark-j-school/"
+              >Contact Us</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.journalism.cuny.edu/about-us/facilities-rentals/"
+              >Facilities Rentals</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.journalism.cuny.edu/give-to-the-j-school/"
+              target="_blank"
+              rel="noopener">Give to the J-School</a
+            >
+          </li>
+          <li>
+            <a href="https://cuny.jobs/campus/school-of-journalism/jobs/"
+              >Job Opportunities</a
+            >
+          </li>
+          <li>
+            <a href="https://www.journalism.cuny.edu/map-and-directions/"
+              >Map and Directions</a
+            >
+          </li>
+          <li>
+            <a href="https://www.journalism.cuny.edu/privacy-policy/"
+              >Privacy Policy</a
+            >
+          </li>
+          <li>
+            <a href="https://www.journalism.cuny.edu/text-version/"
+              >Text Version</a
+            >
+          </li>
         </ul>
       </nav>
     </div>
@@ -55,24 +109,47 @@
   <!-- Bottom Section: Copyright + Social -->
   <div class="footer-bottom">
     <div class="container">
-      <div class="copyright">
-        Copyright © 2026 Newmark J-School
-      </div>
+      <div class="copyright">Copyright © 2026 Newmark J-School</div>
 
       <div class="social">
-        <a href="https://www.facebook.com/newmarkjschool" title="Follow us on Facebook" target="_blank" rel="noopener">
+        <a
+          href="https://www.facebook.com/newmarkjschool"
+          title="Follow us on Facebook"
+          target="_blank"
+          rel="noopener"
+        >
           <Facebook size={24} />
         </a>
-        <a href="http://twitter.com/newmarkjschool" title="Follow us on Twitter" target="_blank" rel="noopener">
+        <a
+          href="http://twitter.com/newmarkjschool"
+          title="Follow us on Twitter"
+          target="_blank"
+          rel="noopener"
+        >
           <Twitter size={24} />
         </a>
-        <a href="https://www.youtube.com/newmarkjschool" title="Follow us on YouTube" target="_blank" rel="noopener">
+        <a
+          href="https://www.youtube.com/newmarkjschool"
+          title="Follow us on YouTube"
+          target="_blank"
+          rel="noopener"
+        >
           <Youtube size={24} />
         </a>
-        <a href="https://www.linkedin.com/school/newmark-graduate-school-of-journalism-at-cuny/" title="Follow us on LinkedIn" target="_blank" rel="noopener">
+        <a
+          href="https://www.linkedin.com/school/newmark-graduate-school-of-journalism-at-cuny/"
+          title="Follow us on LinkedIn"
+          target="_blank"
+          rel="noopener"
+        >
           <Linkedin size={24} />
         </a>
-        <a href="https://instagram.com/newmarkjschool/" title="Follow us on Instagram" target="_blank" rel="noopener">
+        <a
+          href="https://instagram.com/newmarkjschool/"
+          title="Follow us on Instagram"
+          target="_blank"
+          rel="noopener"
+        >
           <Instagram size={24} />
         </a>
       </div>
