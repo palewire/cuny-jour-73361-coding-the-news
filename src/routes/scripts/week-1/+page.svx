@@ -119,10 +119,14 @@ Here's a [link to GitHub](https://github.com).
 
 ### Step 6: Log in to GitHub
 
-1. Open your browser and go to:
-   ```
-   https://github.com
-   ```
+1. Open your browser and go to [github.com](https://github.com).
+
+<Screenshot
+  src="/screenshots/week-1/github-homepage.png"
+  alt="GitHub homepage with sign in and sign up options"
+  chromeTitle="GitHub"
+  chromeUrl="https://github.com"
+/>
 
 2. If you don't have an account:
    - Click **Sign up**
