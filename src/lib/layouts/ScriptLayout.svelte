@@ -43,10 +43,22 @@
 </section>
 
 <style>
-  .script-body :global(h2),
-  .script-body :global(h3),
-  .script-body :global(h4) {
+  .section.script {
+    margin-top: var(--spacing-sm);
+  }
+
+  .script-body {
+    max-width: 720px;
+  }
+
+  .script-body h2,
+  .script-body h3,
+  .script-body h4 {
     margin-top: var(--spacing-lg);
+  }
+
+  .script-body h2:first-of-type {
+    margin-top: 0;
   }
 
   .script-body :global(ul),

@@ -25,7 +25,7 @@
   .script-header {
     border-left: 4px solid var(--color-primary-orange);
     padding-left: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
   }
 
   .script-title {
@@ -40,7 +40,7 @@
     font-size: 1.25rem;
     line-height: 1.6;
     color: var(--color-dark-gray);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
     max-width: 800px;
   }
 

@@ -7,7 +7,6 @@ locked: true
 ---
 
 ## Part 1: Introduction to VS Code
-**Time estimate: 25 minutes**
 
 ### Step 1: Install VS Code
 
@@ -125,7 +124,6 @@ Here's a [link to GitHub](https://github.com).
 ---
 
 ## Part 2: Introduction to GitHub
-**Time estimate: 35 minutes**
 
 ### Step 6: Log in to GitHub
 
@@ -289,7 +287,6 @@ Here's a [link to GitHub](https://github.com).
 ---
 
 ## Part 3: Introduction to GitHub Copilot
-**Time estimate: 25 minutes**
 
 ### Step 14: Set up GitHub for Students
 
@@ -407,7 +404,6 @@ Here's a [link to GitHub](https://github.com).
 ---
 
 ## Part 4: Clone an Existing Repository
-**Time estimate: 20 minutes**
 
 ### Step 21: Find a news organization's GitHub page
 
@@ -502,7 +498,6 @@ If you hit an error:
 ---
 
 ## Wrap-Up
-**Time estimate: 10 minutes**
 
 ### Recap what we learned:
 
