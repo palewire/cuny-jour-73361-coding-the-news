@@ -2,6 +2,7 @@
   import { base } from '$app/paths';
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
+  import TableOfContents from '$lib/components/TableOfContents.svelte';
 
   let { children, title, summary, date, week } = $props();
 
@@ -37,6 +38,7 @@
 <section class="section script">
   <div class="container">
     <div class="script-body">
+      <TableOfContents />
       {@render children()}
     </div>
   </div>
@@ -44,28 +46,42 @@
 
 <style>
   .section.script {
-    margin-top: var(--spacing-sm);
+    margin-top: 0;
+    padding-top: 0;
   }
 
   .script-body {
     max-width: 720px;
   }
 
-  .script-body h2,
-  .script-body h3,
-  .script-body h4 {
+  :global(.script-body h2),
+  :global(.script-body h3),
+  :global(.script-body h4) {
     margin-top: var(--spacing-lg);
   }
 
-  .script-body h2:first-of-type {
+  :global(.script-body h2:first-of-type) {
     margin-top: 0;
   }
 
   .script-body :global(ul),
   .script-body :global(ol) {
-    margin-left: var(--spacing-lg);
+    margin-left: 0;
+    padding-left: 1.5em;
     margin-bottom: var(--spacing-md);
     line-height: 1.7;
+    list-style-position: outside;
+  }
+
+  .script-body :global(.table-of-contents ul) {
+    margin-left: 0;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  .script-body :global(li) {
+    margin-left: 0;
+    padding-left: 0;
   }
 
   .script-body :global(code) {
@@ -80,5 +96,7 @@
     padding: var(--spacing-md);
     border-radius: 8px;
     overflow-x: auto;
+    margin-left: 0;
+    margin-bottom: var(--spacing-sm);
   }
 </style>
