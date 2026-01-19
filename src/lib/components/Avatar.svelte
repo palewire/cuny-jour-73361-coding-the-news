@@ -27,7 +27,7 @@
     href={link}
     target="_blank"
     rel="noopener noreferrer"
-    class="avatar"
+    class="avatar avatar-link"
     {style}
   >
     {#if image}
@@ -54,6 +54,10 @@
     overflow: hidden;
     border: 3px solid var(--avatar-border);
     display: block;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease,
+      border-color 0.15s ease;
   }
 
   .avatar img {
@@ -77,5 +81,17 @@
     font-weight: 700;
     color: var(--avatar-text);
     letter-spacing: 0.05em;
+  }
+
+  .avatar-link:hover,
+  .avatar-link:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--color-primary-orange);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  }
+
+  .avatar-link:hover img,
+  .avatar-link:focus-visible img {
+    filter: brightness(1.05);
   }
 </style>
