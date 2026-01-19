@@ -1,7 +1,9 @@
 --- title: "Week 1: Where We Code" summary: "How to install, configure and use
 Visual Studio Code, GitHub and Copilot" date: "Jan. 26, 2026" locked: true --- #
-Week 1: Where We Code ## Part 1: Introduction to VS Code **Time estimate: 25
-minutes** ### Step 1: Install VS Code 1. Open your browser and go to: ```
+Week 1: Where We Code ## Instructor Step-by-Step Guide *Keep this document open
+while you share your screen. Students will follow along slowly, step by step.*
+--- ## Part 1: Introduction to VS Code **Time estimate: 25 minutes** ### Step 1:
+Install VS Code 1. Open your browser and go to: ```
 https://code.visualstudio.com ``` 2. Click the big **Download** button - macOS
 users: Download the Mac version - Windows users: Download the Windows version 3.
 **Mac users:** - Open the downloaded `.zip` file - Drag **Visual Studio Code**

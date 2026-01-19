@@ -82,12 +82,13 @@
   }
 
   h3 {
+    font-size: 1.25rem;
     margin-bottom: var(--spacing-xs);
   }
 
   .script-date {
     color: var(--color-medium-gray);
     margin-bottom: var(--spacing-xs);
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 </style>
