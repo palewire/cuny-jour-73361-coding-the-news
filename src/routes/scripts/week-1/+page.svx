@@ -6,17 +6,22 @@ week: 1
 locked: true
 ---
 
+<script>
+  import Screenshot from '$lib/components/Screenshot.svelte';
+</script>
+
 ## Part 1: Introduction to Visual Studio Code
 
-### Install VS Code
+Open your browser and go to [code.visualstudio.com](https://code.visualstudio.com).
 
-Open your browser and go to:
+<Screenshot
+  src="/screenshots/week-1/vscode-homepage.png"
+  alt="Visual Studio Code homepage showing the download button"
+  chromeTitle="Visual Studio Code"
+  chromeUrl="https://code.visualstudio.com"
+/>
 
-```
-https://code.visualstudio.com
-```
-
-Click the big **Download** button
+Click the big **Download button.
 
 **Mac users:**
 - Open the downloaded `.zip` file
