@@ -1,18 +1,41 @@
 <script>
-  let { children, metadata = {} } = $props();
+  import { base } from '$app/paths';
+  import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
+  import ScriptHero from '$lib/components/ScriptHero.svelte';
+
+  let { children, title, summary, date, week } = $props();
+
+  // Generate breadcrumb label from week number
+  const breadcrumbLabel = $derived(week ? `Week ${week} Script` : 'Script');
 </script>
+
+<svelte:head>
+  <title>{title} | Coding the News</title>
+  <meta
+    name="description"
+    content={summary || `${title} - JOUR 73361: Coding the News`}
+  />
+  <meta property="og:title" content={title} />
+  <meta
+    property="og:description"
+    content={summary || `${title} - JOUR 73361: Coding the News`}
+  />
+  <meta property="og:image" content="{base}/social-share.jpg" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta
+    name="twitter:description"
+    content={summary || `${title} - JOUR 73361: Coding the News`}
+  />
+  <meta name="twitter:image" content="{base}/social-share.jpg" />
+</svelte:head>
+
+<Breadcrumbs items={[{ label: breadcrumbLabel }]} />
+<ScriptHero {title} {summary} {date} />
 
 <section class="section script">
   <div class="container">
-    <div class="section-header">
-      <h2>{metadata.title ?? 'Script'}</h2>
-    </div>
-    {#if metadata.summary}
-      <p class="section-intro">{metadata.summary}</p>
-    {/if}
-    {#if metadata.date}
-      <p class="script-meta">{metadata.date}</p>
-    {/if}
     <div class="script-body">
       {@render children()}
     </div>
@@ -20,11 +43,6 @@
 </section>
 
 <style>
-  .script-meta {
-    color: var(--color-medium-gray);
-    margin-bottom: var(--spacing-lg);
-  }
-
   .script-body :global(h2),
   .script-body :global(h3),
   .script-body :global(h4) {

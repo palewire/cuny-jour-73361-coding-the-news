@@ -22,7 +22,7 @@
     gap: var(--spacing-xs);
     align-items: center;
     margin-top: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 0;
     font-size: 0.95rem;
     color: var(--color-medium-gray);
     clear: both;
