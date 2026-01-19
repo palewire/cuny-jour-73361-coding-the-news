@@ -1,4 +1,6 @@
 <script>
+  import { base } from '$app/paths';
+
   let { data } = $props();
 
   const weeks = $derived(data.weeks);
@@ -23,7 +25,7 @@
     </p>
     <div class="grid grid-3">
       {#each weeks as week}
-        <a class="script-card" href={`/scripts/${week.slug}`}>
+        <a class="script-card" href={`${base}/scripts/${week.slug}`}>
           <h3>{week.title}</h3>
           {#if week.date}
             <p class="script-date">{week.date}</p>
