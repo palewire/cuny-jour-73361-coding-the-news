@@ -12,14 +12,18 @@
     fontSize = '1.5rem',
   } = $props();
 
-  const initials = name
-    ? name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-    : '';
+  const initials = $derived(
+    name
+      ? name
+          .split(' ')
+          .map((n) => n[0])
+          .join('')
+      : ''
+  );
 
-  const style = `--avatar-size: ${size}; --avatar-bg: ${background}; --avatar-border: ${borderColor}; --avatar-text: ${textColor}; --avatar-font: ${fontSize};`;
+  const style = $derived(
+    `--avatar-size: ${size}; --avatar-bg: ${background}; --avatar-border: ${borderColor}; --avatar-text: ${textColor}; --avatar-font: ${fontSize};`
+  );
 </script>
 
 {#if link}

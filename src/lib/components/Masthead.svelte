@@ -8,7 +8,7 @@
   } = $props();
 
   // Default logo path uses base for subdirectory deployment
-  const resolvedLogoSrc = logoSrc || `${base}/cuny-logo.svg`;
+  const resolvedLogoSrc = $derived(logoSrc || `${base}/cuny-logo.svg`);
 </script>
 
 <header class="masthead">
