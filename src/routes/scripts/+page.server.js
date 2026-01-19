@@ -13,6 +13,7 @@ export async function load() {
       title: meta.title ?? slug,
       summary: meta.summary ?? '',
       date: meta.date ?? null,
+      locked: Boolean(meta.locked),
     };
   });
 

@@ -1,5 +1,14 @@
 <script>
-  let { courseCode, courseTitle, subtitle, meta = [] } = $props();
+  const courseCode = 'JOUR 73361';
+  const courseTitle = 'Coding the News';
+  const subtitle =
+    "Learn how America's top news organizations escape rigid publishing systems to design beautiful data-driven stories on deadline.";
+  const meta = [
+    '<a href="https://palewi.re/who-is-ben-welsh/">Ben Welsh</a>, Adjunct Assistant Professor',
+    'Spring 2026',
+    'Mondays 6–9 p.m.',
+    'Lab 436',
+  ];
 </script>
 
 <section class="hero">

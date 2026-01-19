@@ -1,6 +1,7 @@
 <script>
   let {
-    number,
+    number = null,
+    kicker = null,
     title,
     id,
     intro = '',
@@ -8,6 +9,8 @@
     children,
     background = 'white',
   } = $props();
+
+  let displayKicker = $derived(kicker ?? (number ? `Module ${number}` : ''));
 </script>
 
 <section
@@ -18,7 +21,9 @@
 >
   <div class="container">
     <div class="section-header">
-      <span class="module-number">Module {number}</span>
+      {#if displayKicker}
+        <span class="module-number">{displayKicker}</span>
+      {/if}
       <h2>{title}</h2>
     </div>
     <div class="module-content">

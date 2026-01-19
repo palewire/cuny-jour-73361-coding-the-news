@@ -1,5 +1,5 @@
 <script>
-  import { base } from '$app/paths';
+  import ScriptCard from '$lib/components/ScriptCard.svelte';
 
   let { data } = $props();
 
@@ -25,49 +25,14 @@
     </p>
     <div class="grid grid-3">
       {#each weeks as week}
-        <a class="script-card" href={`${base}/scripts/${week.slug}`}>
-          <h3>{week.title}</h3>
-          {#if week.date}
-            <p class="script-date">{week.date}</p>
-          {/if}
-          {#if week.summary}
-            <p>{week.summary}</p>
-          {/if}
-        </a>
+        <ScriptCard
+          title={week.title}
+          summary={week.summary}
+          date={week.date}
+          slug={week.slug}
+          locked={week.locked}
+        />
       {/each}
     </div>
   </div>
 </section>
-
-<style>
-  .script-card {
-    display: block;
-    padding: var(--spacing-lg);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    background: var(--color-white);
-    color: var(--color-dark);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
-    transition:
-      transform 0.15s ease,
-      box-shadow 0.15s ease,
-      border-color 0.15s ease;
-  }
-
-  .script-card:hover,
-  .script-card:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-    border-color: var(--color-primary-orange);
-  }
-
-  .script-card h3 {
-    margin-bottom: var(--spacing-xs);
-  }
-
-  .script-date {
-    color: var(--color-medium-gray);
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.95rem;
-  }
-</style>

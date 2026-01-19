@@ -33,13 +33,6 @@
 
   const scripts = $derived(data.scripts);
 
-  const courseMeta = [
-    '<a href="https://palewi.re/who-is-ben-welsh/">Ben Welsh</a>, Adjunct Assistant Professor',
-    'Spring 2026',
-    'Mondays 6–9 p.m.',
-    'Lab 436',
-  ];
-
   const evaluationCriteria = [
     {
       icon: MessageSquare,
@@ -141,14 +134,8 @@
 
 <Masthead />
 
-<!-- Main Content -->
 <main>
-  <Hero
-    courseCode="JOUR 73361"
-    courseTitle="Coding the News"
-    subtitle="Learn how America's top news organizations escape rigid publishing systems to design beautiful data-driven stories on deadline."
-    meta={courseMeta}
-  />
+  <Hero />
 
   <Module
     number={1}
@@ -284,22 +271,19 @@
   />
 
   {#if scripts?.length}
-    <section class="section bg-light-gray">
-      <div class="container">
-        <div class="section-header">
-          <h2>Classroom Scripts</h2>
-        </div>
-        <p class="section-intro">
-          A step-by-step guide to each week's work with commands, links and
-          assignments. A new script is published after we finish each class.
-        </p>
-        <div class="grid grid-3">
-          {#each scripts as script}
-            <ScriptCard {...script} />
-          {/each}
-        </div>
+    <Module
+      kicker="Documentation"
+      title="Classroom Scripts"
+      id="scripts"
+      intro="A step-by-step guide with all of the commands, links and assignments is published after we finish each class."
+      background="light-gray"
+    >
+      <div class="grid grid-3">
+        {#each scripts as script}
+          <ScriptCard {...script} />
+        {/each}
       </div>
-    </section>
+    </Module>
   {/if}
 </main>
 
