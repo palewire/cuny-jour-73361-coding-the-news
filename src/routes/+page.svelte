@@ -249,25 +249,30 @@
   </Module>
 
   <Evaluation
-    title="Evaluation"
+    kicker="Grading"
+    title="Evaluation Criteria"
     intro="Your grade will be determined based on three factors."
     criteria={evaluationCriteria}
-    background="white"
-  />
-
-  <GuestSpeakers
-    description="Throughout the semester, working professionals will join our class to share how they use code to tell compelling stories."
-    speakers={guestSpeakers}
     background="light-gray"
   />
 
+  <GuestSpeakers
+    kicker="Experts"
+    title="Meet Our Guest Speakers"
+    description="Throughout the semester, working professionals will join our class to share how they use code to tell compelling stories."
+    speakers={guestSpeakers}
+    background="white"
+  />
+
   <Instructor
+    kicker="Faculty"
+    headline="Meet Your Instructor"
     name="Ben Welsh"
     title="Adjunct Assistant Professor"
     image="ben-welsh.jpg"
     link="https://palewi.re/who-is-ben-welsh/"
-    bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk. You can reach me at <a href='mailto:b@palewi.re'>b@palewi.re</a>"
-    background="white"
+    bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk. You can reach me at <a href='mailto:b@palewi.re'>b@palewi.re</a>."
+    background="light-gray"
   />
 
   {#if scripts?.length}
@@ -276,7 +281,7 @@
       title="Classroom Scripts"
       id="scripts"
       intro="A step-by-step guide with all of the commands, links and assignments is published after we finish each class."
-      background="light-gray"
+      background="white"
     >
       <div class="grid grid-3">
         {#each scripts as script}

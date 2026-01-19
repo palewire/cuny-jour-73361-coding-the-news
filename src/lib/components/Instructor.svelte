@@ -2,6 +2,8 @@
   import Avatar from './Avatar.svelte';
 
   let {
+    kicker = '',
+    headline = 'Your Instructor',
     name = '',
     title = '',
     image = '',
@@ -18,7 +20,10 @@
 >
   <div class="container">
     <div class="section-header">
-      <h2>Your Instructor</h2>
+      {#if kicker}
+        <span class="section-kicker">{kicker}</span>
+      {/if}
+      <h2>{headline}</h2>
     </div>
     <div class="instructor-card">
       <div class="instructor-avatar">

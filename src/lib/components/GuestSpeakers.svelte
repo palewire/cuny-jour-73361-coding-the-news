@@ -2,6 +2,7 @@
   import Avatar from './Avatar.svelte';
 
   let {
+    kicker = '',
     title = 'Guest Speakers',
     description = '',
     speakers = [],
@@ -16,6 +17,9 @@
 >
   <div class="container">
     <div class="section-header">
+      {#if kicker}
+        <span class="section-kicker">{kicker}</span>
+      {/if}
       <h2>{title}</h2>
     </div>
     {#if description}
