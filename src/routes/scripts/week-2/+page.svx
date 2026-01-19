@@ -1,3 +1,10 @@
---- title: "Week 2: Building a Static Site" summary: "How to create and publish
-a website with Node.JS and GitHub Actions" date: "Feb. 2, 2026" locked: true ---
-# Week 2: Building a Static Site _Content coming soon._
+---
+title: "Week 2: Building a Static Site"
+summary: "How to create and publish a website with Node.JS and GitHub Actions"
+date: "Feb. 2, 2026"
+locked: true
+---
+
+# Week 2: Building a Static Site
+
+_Content coming soon._
