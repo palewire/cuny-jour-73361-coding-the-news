@@ -16,7 +16,7 @@
     {#if intro}
       <p class="section-intro">{intro}</p>
     {/if}
-    <div class="evaluation-grid">
+    <div class="grid grid-3">
       {#each criteria as criterion}
         <TopicCard
           icon={criterion.icon}
@@ -27,23 +27,3 @@
     </div>
   </div>
 </section>
-
-<style>
-  .evaluation-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-md);
-  }
-
-  @media (max-width: 900px) {
-    .evaluation-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .evaluation-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>

@@ -152,7 +152,7 @@
     intro="The first half of the semester will familiarize you with the software and skills that news developers use to design and build interactive, data-driven stories."
     homework="Each week you'll be expected to complete assignments that reinforce the skills covered in class. Expect to research how professional newsrooms use these tools and present your findings to classmates."
   >
-    <div class="topic-grid">
+    <div class="grid grid-3 grid-constrained grid-stack">
       <TopicCard
         icon={Monitor}
         title="Today's Tool Belt"
@@ -188,7 +188,7 @@
     intro="Now it's time to build. You will apply your new skills to create simplified versions of common digital story formats."
     homework="Each class begins with a folder of text, images, data and graphics that you'll assemble into a working prototype. After getting familiar with each format, you'll design and publish your own version."
   >
-    <div class="topic-grid topic-grid-2x2">
+    <div class="grid grid-2 grid-narrow grid-stack">
       <TopicCard
         icon={ScrollText}
         title="Longform Story"
@@ -219,7 +219,7 @@
     intro="The final weeks will be dedicated to a custom designed story that showcases what you've learned. You'll propose an original idea or choose a challenge provided by the instructor, then bring it to life."
     homework="The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism."
   >
-    <div class="topic-grid">
+    <div class="grid grid-3 grid-constrained grid-stack">
       <TopicCard
         icon={Lightbulb}
         title="Pitch Your Story"
@@ -277,38 +277,3 @@
 </main>
 
 <Footer />
-
-<style>
-  .topic-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-xl);
-    max-width: 1000px;
-  }
-
-  .topic-grid-2x2 {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 700px;
-  }
-
-  @media (max-width: 900px) {
-    .topic-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .topic-grid-2x2 {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .topic-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .topic-grid-2x2 {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
