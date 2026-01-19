@@ -7,6 +7,7 @@
   import Instructor from '$lib/components/Instructor.svelte';
   import Evaluation from '$lib/components/Evaluation.svelte';
   import Footer from '$lib/components/Footer.svelte';
+  import ScriptCard from '$lib/components/ScriptCard.svelte';
   import {
     Monitor,
     Globe,
@@ -27,6 +28,10 @@
     FileCheck,
     Trophy,
   } from 'lucide-svelte';
+
+  let { data } = $props();
+
+  const scripts = $derived(data.scripts);
 
   const courseMeta = [
     '<a href="https://palewi.re/who-is-ben-welsh/">Ben Welsh</a>, Adjunct Assistant Professor',
@@ -277,6 +282,25 @@
     bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk. You can reach me at <a href='mailto:b@palewi.re'>b@palewi.re</a>"
     background="white"
   />
+
+  {#if scripts?.length}
+    <section class="section bg-light-gray">
+      <div class="container">
+        <div class="section-header">
+          <h2>Classroom Scripts</h2>
+        </div>
+        <p class="section-intro">
+          A step-by-step guide to each week's work with commands, links and
+          assignments. New scripts publish after we finish class.
+        </p>
+        <div class="grid grid-3">
+          {#each scripts as script}
+            <ScriptCard {...script} />
+          {/each}
+        </div>
+      </div>
+    </section>
+  {/if}
 </main>
 
 <Footer />

@@ -47,10 +47,6 @@
     margin-bottom: var(--spacing-xs);
   }
 
-  .module-content {
-    /* Width constraints handled by child elements */
-  }
-
   .homework-summary {
     background-color: var(--color-light-gray);
     border-left: 4px solid var(--color-primary-orange);

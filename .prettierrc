@@ -11,5 +11,13 @@
   "tabWidth": 2,
   "trailingComma": "es5",
   "useTabs": false,
-  "plugins": ["prettier-plugin-svelte"]
+  "plugins": ["prettier-plugin-svelte"],
+  "overrides": [
+    {
+      "files": ["*.svelte", "*.svx"],
+      "options": {
+        "parser": "svelte"
+      }
+    }
+  ]
 }

@@ -1,0 +1,196 @@
+--- title: "Week 1: Where We Code" summary: "How to install, configure and use
+Visual Studio Code, GitHub and Copilot" date: "Jan. 26, 2026" locked: true --- #
+Week 1: Where We Code ## Part 1: Introduction to VS Code **Time estimate: 25
+minutes** ### Step 1: Install VS Code 1. Open your browser and go to: ```
+https://code.visualstudio.com ``` 2. Click the big **Download** button - macOS
+users: Download the Mac version - Windows users: Download the Windows version 3.
+**Mac users:** - Open the downloaded `.zip` file - Drag **Visual Studio Code**
+to your **Applications** folder - Open it from Applications (not from Downloads)
+4. **Windows users:** - Run the installer - Accept the defaults - Check "Add to
+PATH" if prompted 5. Launch VS Code. You should see the Welcome tab. > **Pause
+here.** Make sure everyone has VS Code open before continuing. --- ### Step 2:
+Create a code folder 1. Open **Finder** (Mac) or **File Explorer** (Windows) 2.
+Navigate to your home folder: - **Mac:** Click your username in the sidebar, or
+press `Cmd + Shift + H` - **Windows:** Click "This PC" then your user folder 3.
+Create a new folder called `code` - **Mac:** `Cmd + Shift + N` → type `code` →
+press Enter - **Windows:** Right-click → New → Folder → type `code` → press
+Enter > **Tell students:** "This `code` folder is where all your projects will
+live this semester. Keep it tidy." --- ### Step 3: Open a folder as a project 1.
+In VS Code, go to **File → Open Folder** (or `Cmd + O` on Mac / `Ctrl + K, Ctrl
++ O` on Windows) 2. Navigate to your new `code` folder 3. Click **Open** (Mac)
+or **Select Folder** (Windows) 4. Look at the left sidebar—it should say `CODE`
+at the top with nothing inside yet > **Explain:** "In VS Code, we always work
+inside folders, not individual files. This folder is your 'project.' Everything
+related to one project lives together." --- ### Step 4: Create a README.md file
+1. In the left sidebar, hover over the word `CODE` 2. Click the **New File**
+icon (looks like a page with a plus sign) 3. Type `README.md` and press Enter 4.
+The file opens in the editor. Type this: ```markdown # My First Project Hello,
+world! This is my first README file. ## About Me I'm learning to code at CUNY.
+``` 5. Save the file: `Cmd + S` (Mac) or `Ctrl + S` (Windows) --- ### Step 5:
+Learn a little Markdown **Explain while typing in the file:** 1. Add a blank
+line, then type: ```markdown ## What I'm Learning - VS Code - GitHub - Svelte
+``` 2. Show them the **Preview**: - Right-click the tab → **Open Preview** - Or
+click the preview icon in the top-right (looks like a split window with
+magnifying glass) 3. Demonstrate more Markdown: ```markdown ## Formatting
+Examples This is **bold text** and this is *italic text*. Here's a [link to
+GitHub](https://github.com). > This is a blockquote. Use it for notes or quotes.
+``` 4. Save again with `Cmd + S` / `Ctrl + S` > **Pause here.** Walk around (or
+check screens) to make sure everyone has their README.md looking correct. --- ##
+Part 2: Introduction to GitHub **Time estimate: 35 minutes** ### Step 6: Log in
+to GitHub 1. Open your browser and go to: ``` https://github.com ``` 2. If you
+don't have an account: - Click **Sign up** - Use your CUNY email or personal
+email - Choose a professional username (you'll use this publicly) 3. If you have
+an account, click **Sign in** > **Important:** Make sure everyone is logged in
+before continuing. --- ### Step 7: Create a blank code repository 1. On GitHub,
+click the **+** icon in the top-right corner 2. Click **New repository** 3. Fill
+in the form: - **Repository name:** `my-first-repo` - **Description:** `My first
+GitHub repository for Coding the News` - **Public** (leave selected) - **DO
+NOT** check "Add a README file" (we already made one!) - **DO NOT** add
+.gitignore or license 4. Click **Create repository** 5. You'll see a page with
+setup instructions. **Leave this tab open—we'll need it!** --- ### Step 8:
+Connect VS Code to GitHub **First, let's set up Git credentials in VS Code:** 1.
+In VS Code, open the Terminal: - **Mac:** `Ctrl + ~` (backtick) or **View →
+Terminal** - **Windows:** `Ctrl + ~` or **View → Terminal** 2. Configure your
+Git identity (type each line and press Enter): ```bash git config --global
+user.name "Your Name" ``` ```bash git config --global user.email
+"your.email@example.com" ``` > **Use the same email you used for GitHub!** ---
+### Step 9: Initialize and link your repository 1. In the VS Code terminal, make
+sure you're in your `code` folder: ```bash pwd ``` It should show something like
+`/Users/yourname/code` 2. Initialize Git in this folder: ```bash git init ``` 3.
+Now we'll connect to GitHub. **Go back to your GitHub tab** and copy the
+commands from the "…or push an existing repository" section. 4. Run these
+commands one at a time: ```bash git remote add origin
+https://github.com/YOUR-USERNAME/my-first-repo.git ``` ```bash git branch -M
+main ``` > **Pause.** Help anyone who gets stuck on this step. --- ### Step 10:
+Commit and push the README file 1. Stage your file: ```bash git add README.md
+``` 2. Commit with a message: ```bash git commit -m "Add my first README" ``` 3.
+Push to GitHub: ```bash git push -u origin main ``` 4. **If prompted for
+credentials:** - GitHub may open a browser window to authenticate - Click
+**Authorize** and sign in - Or you may need to enter your username and a
+**Personal Access Token** (not your password) > **Note for instructor:** If
+students hit authentication issues, we'll cover Personal Access Tokens in the
+Copilot section. --- ### Step 11: See your file on GitHub 1. Go back to your
+GitHub tab 2. Refresh the page (`Cmd + R` or `Ctrl + R`) 3. You should see your
+`README.md` file! 4. Click on it to see the formatted content > **Celebrate!**
+"You just published code to the internet. This is how professionals share and
+collaborate on code." --- ### Step 12: Make a change and push again 1. Back in
+VS Code, edit your `README.md`: ```markdown ## Today's Date I created this on
+[today's date]. ``` 2. Save the file: `Cmd + S` / `Ctrl + S` 3. In the terminal,
+stage and commit: ```bash git add README.md git commit -m "Add today's date" git
+push ``` 4. Go to GitHub and refresh—you'll see the update! --- ### Step 13:
+Review the diff 1. On GitHub, click on **"2 commits"** (or similar number) near
+the top 2. Click on your most recent commit message 3. **Explain the diff
+view:** - Red lines (with `-`) = deleted - Green lines (with `+`) = added - This
+is how you track changes over time > **Key concept:** "Every change you make is
+recorded forever. You can always go back. This is called version control." ---
+## Part 3: Introduction to GitHub Copilot **Time estimate: 25 minutes** ### Step
+14: Set up GitHub for Students 1. Go to: ``` https://education.github.com/pack
+``` 2. Click **Get your pack** or **Sign up for Student Developer Pack** 3.
+Verify your student status: - Use your `.cuny.edu` email - You may need to
+upload proof of enrollment (ID card, enrollment letter) - Approval can take a
+few hours to a few days > **If not approved yet:** Students can still follow
+along and try Copilot with the free tier, or watch your demo. --- ### Step 15:
+Install GitHub Copilot extension 1. In VS Code, click the **Extensions** icon in
+the left sidebar (looks like four squares) 2. Search for `GitHub Copilot` 3.
+Install **GitHub Copilot** (the main one by GitHub) 4. Also install **GitHub
+Copilot Chat** 5. **Sign in to GitHub:** - A popup should appear asking you to
+sign in - Click **Sign in to GitHub** - Authorize in the browser - Return to VS
+Code 6. Look for the Copilot icon in the bottom-right status bar (looks like a
+two-blade propeller). It should show a checkmark when active. --- ### Step 16:
+Open the Copilot Chat panel 1. Click the **Chat icon** in the left sidebar
+(speech bubble icon) - Or use `Cmd + Shift + I` (Mac) / `Ctrl + Shift + I`
+(Windows) 2. The Copilot Chat panel opens on the right side 3. **Try a simple
+chat:** Type: `What is a README file?` Press Enter 4. Copilot will explain. This
+is your AI coding assistant! --- ### Step 17: Experiment with chatting **Have
+students try these prompts:** 1. `What is Markdown?` 2. `How do I make a
+numbered list in Markdown?` 3. `Write me a short bio for a journalism student` >
+**Explain:** "Copilot knows about coding, but it also knows general knowledge.
+You can ask it anything." --- ### Step 18: Demonstrate "Ask" mode (planning) 1.
+In the chat, type: ``` How should I structure a portfolio website for a
+journalist? ``` 2. Copilot gives you a plan—it doesn't write code yet, just
+advises > **Explain:** "This is 'Ask' mode—good for planning and learning.
+Copilot thinks with you." --- ### Step 19: Demonstrate "Edit" mode 1. Open your
+`README.md` file 2. Select all the text (`Cmd + A` / `Ctrl + A`) 3. Press `Cmd +
+I` (Mac) / `Ctrl + I` (Windows) to open inline Copilot 4. Type: `Add a section
+about my favorite news websites with three bullet points` 5. Press Enter.
+Copilot will suggest changes inline. 6. Click **Accept** to apply the changes >
+**Explain:** "Edit mode lets Copilot change your actual code. Always review
+before accepting!" --- ### Step 20: Have Copilot write the commit message 1.
+Click the **Source Control** icon in the left sidebar (looks like a branch/fork)
+2. You'll see your changed file listed 3. In the **Message** box at the top,
+click the **sparkle icon** (✨) next to the text field - Or right-click and
+choose "Generate Commit Message with Copilot" 4. Copilot suggests a commit
+message based on your changes 5. If it looks good, click the **checkmark** to
+accept 6. Click **Commit** then **Push** (or **Sync Changes**) --- ## Part 4:
+Clone an Existing Repository **Time estimate: 20 minutes** ### Step 21: Find a
+news organization's GitHub page 1. Open your browser and go to one of these: ```
+https://github.com/nytimes https://github.com/washingtonpost
+https://github.com/latimes-datadesk https://github.com/reuters-graphics
+https://github.com/fivethirtyeight ``` 2. Browse their repositories. Look for
+ones with good README files. 3. **For this demo, let's use:** ```
+https://github.com/datadesk/baker-example-page-template ``` *(or choose another
+simple one)* --- ### Step 22: Clone the repository 1. On the GitHub repository
+page, click the green **Code** button 2. Copy the HTTPS URL (click the clipboard
+icon) 3. In VS Code, press `Cmd + Shift + P` (Mac) / `Ctrl + Shift + P`
+(Windows) to open the Command Palette 4. Type `Git: Clone` and select it 5.
+Paste the URL you copied 6. Choose a location (your `code` folder or a
+subfolder) 7. Click **Open** when asked to open the cloned repository --- ###
+Step 23: Ask Copilot to explain the project 1. Open the Copilot Chat panel 2.
+Type: ``` @workspace Explain what this project does and how it's structured ```
+3. Copilot analyzes the files and gives you an overview > **Explain:** "The
+`@workspace` tag tells Copilot to look at all the files in your project, not
+just the one you have open." --- ### Step 24: Ask Copilot how to install it 1.
+In the chat, type: ``` @workspace How do I install and run this project? ``` 2.
+Copilot reads the README and gives you step-by-step instructions 3. Follow those
+steps in your terminal! **Common steps might include:** ```bash npm install npm
+start ``` > **Note:** Some projects may fail to install due to missing
+dependencies. That's okay! The point is learning the process. --- ### Step 25:
+Troubleshoot with Copilot If you hit an error: 1. Copy the error message 2.
+Paste it into Copilot Chat: ``` I got this error: [paste error here]. How do I
+fix it? ``` 3. Follow Copilot's suggestions > **Key lesson:** "Errors are
+normal. The skill is learning to read them and fix them—Copilot helps with
+that." --- ## Wrap-Up **Time estimate: 10 minutes** ### Recap what we learned:
+1. **VS Code** is our code editor—where we write and organize code 2. **GitHub**
+is our cloud storage and collaboration platform—where we save and share code 3.
+**Git** is the version control system that tracks every change 4. **Copilot** is
+our AI assistant—it helps us write, understand, and fix code ### Preview next
+week: Next class, we'll install Node.js and create our first web page using a
+professional framework. --- ## Homework Assignments **Read this aloud and
+display on screen:** ### Part 1: Repository Practice Create **five different
+repositories** on GitHub, each with a simple README.md file. Ideas: - A
+repository about yourself - A repository about your favorite topic for reporting
+- A repository listing tools you want to learn - A repository with notes from
+another class - A repository with a recipe or how-to guide ### Part 2: News
+Organization Exploration Find and clone **three repositories**: - Two from
+**news organizations** (NYT, WaPo, LA Times, Reuters, etc.) - One from a
+**non-news tech company** (Google, Microsoft, Meta, etc.) For each: 1. Use VS
+Code to clone it 2. Ask Copilot to explain what it does 3. Try to install and
+run it (it's okay if it fails!) ### Part 3: Write a Report Write a **one-page
+report** (in a README.md file!) that includes: - A couple paragraphs about each
+repository you explored - What worked, what didn't, what you learned - Which
+repository was most interesting and why ### Part 4: Prepare to Present Pick your
+**most interesting repository** from Part 2. Be ready to share your screen for
+2-3 minutes and tell the class: - What the project does - What you found
+interesting about it - One thing you learned from exploring it --- ## Quick
+Reference: Common Commands ### Terminal / Git Commands | Command | What it does
+| |---------|-------------| | `pwd` | Print working directory (where am I?) | |
+`cd foldername` | Change directory into a folder | | `cd ..` | Go up one folder
+| | `ls` | List files in current folder | | `git init` | Initialize a new Git
+repository | | `git add filename` | Stage a file for commit | | `git add .` |
+Stage all changed files | | `git commit -m "message"` | Save staged changes with
+a message | | `git push` | Upload commits to GitHub | | `git pull` | Download
+updates from GitHub | | `git status` | See what's changed | | `git clone URL` |
+Download a repository | ### VS Code Shortcuts (Mac / Windows) | Action | Mac |
+Windows | |--------|-----|---------| | Save file | `Cmd + S` | `Ctrl + S` | |
+Open terminal | `Ctrl + ~` | `Ctrl + ~` | | Command palette | `Cmd + Shift + P`
+| `Ctrl + Shift + P` | | Copilot inline edit | `Cmd + I` | `Ctrl + I` | |
+Copilot chat | `Cmd + Shift + I` | `Ctrl + Shift + I` | --- ## Troubleshooting
+Common Issues ### "Permission denied" when pushing - You need to authenticate
+with GitHub - Try: `git push` and follow the prompts - May need to create a
+Personal Access Token at github.com/settings/tokens ### "Repository not found" -
+Check the URL is correct - Make sure you created the repo on GitHub first -
+Verify you're logged into the right GitHub account ### Copilot not working -
+Check the icon in the bottom-right status bar - Try signing out and back in -
+Make sure your Student Developer Pack is approved ### "Command not found: git" -
+**Mac:** Install Xcode Command Line Tools: `xcode-select --install` -
+**Windows:** Download Git from https://git-scm.com --- *End of Week 1 Guide*

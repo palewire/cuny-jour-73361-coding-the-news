@@ -6,7 +6,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{svelte,js,ts,jsx,tsx,css,md,json}\"",
+    "format": "prettier --write \"src/**/*.{svelte,svx,js,ts,jsx,tsx,css,md,json}\"",
     "lint": "svelte-check",
     "prepare": "husky install"
   },
@@ -16,6 +16,7 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.10",
+    "mdsvex": "^0.11.0",
     "svelte-check": "^4.0.0",
     "prettier-plugin-svelte": "^3.3.2",
     "svelte": "^5.0.0",
@@ -27,6 +28,6 @@
     "prettier": "^3.8.0"
   },
   "lint-staged": {
-    "src/**/*.{svelte,js,ts,jsx,tsx,css,md,json}": "npm run format --"
+    "src/**/*.{svelte,svx,js,ts,jsx,tsx,css,md,json}": "npm run format --"
   }
 }

@@ -1,21 +1,31 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import { mdsvex } from 'mdsvex';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	preprocess: vitePreprocess(),
-	kit: {
-		paths: {
-			base: '/docs/coding-the-news'
-		},
-		adapter: adapter({
-			pages: 'build',
-			assets: 'build',
-			fallback: undefined,
-			precompress: false,
-			strict: true
-		})
-	}
+  extensions: ['.svelte', '.svx'],
+  preprocess: [
+    vitePreprocess(),
+    mdsvex({
+      extensions: ['.svx'],
+      layout: {
+        _: './src/lib/layouts/ScriptLayout.svelte',
+      },
+    }),
+  ],
+  kit: {
+    paths: {
+      base: '/docs/coding-the-news',
+    },
+    adapter: adapter({
+      pages: 'build',
+      assets: 'build',
+      fallback: undefined,
+      precompress: false,
+      strict: true,
+    }),
+  },
 };
 
 export default config;
