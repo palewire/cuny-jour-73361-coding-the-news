@@ -257,7 +257,7 @@
   />
 
   <GuestSpeakers
-    kicker="Experts"
+    kicker="Outside Experts"
     title="Meet Our Guest Speakers"
     description="Throughout the semester, working professionals will join our class to share how they use code to tell compelling stories."
     speakers={guestSpeakers}
