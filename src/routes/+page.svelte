@@ -48,7 +48,7 @@
     },
     {
       icon: Trophy,
-      title: 'Capstone',
+      title: 'Final Project',
       description:
         'You should deliver a page that is ready to publish on a professional news site.',
     },
@@ -142,7 +142,7 @@
     title="Fundamental Tools"
     id="fundamentals"
     intro="The first half of the semester will familiarize you with the software and skills that news developers use to design and build interactive, data-driven stories."
-    homework="Each week you'll be expected to complete assignments that reinforce the skills covered in class. Expect to research how professional newsrooms use these tools and present your findings to classmates."
+    homework="Each week you'll be expected to complete assignments that reinforce the skills covered in class. You will be expected to research how professional newsrooms use these tools and present your findings to classmates."
     background="white"
   >
     <div class="grid grid-3 grid-constrained grid-stack">
@@ -178,8 +178,8 @@
     number={2}
     title="Simple Applications"
     id="applications"
-    intro="Now it's time to build. You will apply your new skills to create simplified versions of common digital story formats."
-    homework="Each class begins with a folder of text, images, data and graphics that you'll assemble into a working prototype. After getting familiar with each format, you'll design and publish your own version."
+    intro="Now it's time to build. You will practice your new skills by creating simplified versions of common digital story formats."
+    homework="Each class begins with a folder of text, images, data and graphics that we will assemble together into a working prototype. After getting familiar with each format, you will be asked to develop and publish an original variation on the example."
     background="light-gray"
   >
     <div class="grid grid-2 grid-narrow grid-stack">
@@ -208,10 +208,10 @@
 
   <Module
     number={3}
-    title="Capstone Challenge"
-    id="capstone"
-    intro="The final weeks will be dedicated to a custom designed story that showcases what you've learned. You'll propose an original idea or choose a challenge provided by the instructor, then bring it to life."
-    homework="The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism."
+    title="Final Project"
+    id="final-project"
+    intro="The last weeks will be dedicated to a custom application that showcases what you've learned. You'll propose an idea or choose a challenge provided by the instructor, then bring it to life."
+    homework="The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism. You will present it to your peers on the last day of class. An A grade will demonstrate mastery of the skills we've covered."
     background="white"
   >
     <div class="grid grid-3 grid-constrained grid-stack">
@@ -271,7 +271,7 @@
     title="Adjunct Assistant Professor"
     image="ben-welsh.jpg"
     link="https://palewi.re/who-is-ben-welsh/"
-    bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk. You can reach me at <a href='mailto:b@palewi.re'>b@palewi.re</a>."
+    bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk. My office hours are on Monday afternoons before class. Schedule a meeting by emailing me at <a href='mailto:b@palewi.re'>b@palewi.re</a>."
     background="light-gray"
   />
 
