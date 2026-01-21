@@ -208,9 +208,9 @@
 
   <Module
     number={3}
-    title="Final Project"
-    id="final-project"
-    intro="The last weeks will be dedicated to a custom application that showcases what you've learned. You'll propose an idea or choose a challenge provided by the instructor, then bring it to life."
+    title="The Real Deal"
+    id="real-deal"
+    intro="The final weeks will be dedicated to creating a custom application that showcases what you've learned. You'll propose an idea or choose a challenge provided by the instructor, then bring it to life."
     homework="The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism. You will present it to your peers on the last day of class. An A grade will demonstrate mastery of the skills we've covered."
     background="white"
   >
