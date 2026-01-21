@@ -38,19 +38,19 @@
       icon: MessageSquare,
       title: 'Participation',
       description:
-        'You should engage in seminar-style discussions and give thoughtful feedback to peers.',
+        'Engage in seminar-style discussions and give thoughtful feedback to peers.',
     },
     {
       icon: FileCheck,
       title: 'Homework',
       description:
-        'Your assignments should demonstrate effort and experimentation.',
+        'Demonstrate a professional level of effort and experimentation.',
     },
     {
       icon: Trophy,
-      title: 'Final Project',
+      title: 'The Real Deal',
       description:
-        'You should deliver a page that is ready to publish on a professional news site.',
+        'Deliver a page that is ready to publish on a professional news site.',
     },
   ];
 
@@ -141,8 +141,8 @@
     number={1}
     title="Fundamental Tools"
     id="fundamentals"
-    intro="The first half of the semester will familiarize you with the software and skills that news developers use to design and build interactive, data-driven stories."
-    homework="Each week you'll be expected to complete assignments that reinforce the skills covered in class. You will be expected to research how professional newsrooms use these tools and present your findings to classmates."
+    intro="In the first half of the semester, you will learn the software and skills that news developers use to design and build interactive, data-driven stories."
+    homework="Each week you will be expected to complete assignments that reinforce the skills covered in class. You will be expected to research how professional newsrooms use these tools and present your findings to classmates."
     background="white"
   >
     <div class="grid grid-3 grid-constrained grid-stack">
@@ -186,7 +186,7 @@
       <TopicCard
         icon={ScrollText}
         title="Longform Story"
-        description="A story page that weaves together multiple forms of media to guide readers through a lengthy narrative."
+        description="A story page that weaves together text, images and other media to guide readers through a lengthy narrative."
       />
       <TopicCard
         icon={Layers}
@@ -210,7 +210,7 @@
     number={3}
     title="The Real Deal"
     id="real-deal"
-    intro="The final weeks will be dedicated to creating a custom application that showcases what you've learned. You'll propose an idea or choose a challenge provided by the instructor, then bring it to life."
+    intro="The final weeks will be dedicated to creating a custom application that showcases what you've learned. You will propose an idea or choose from a set of challenges, then bring it to life."
     homework="The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism. You will present it to your peers on the last day of class. An A grade will demonstrate mastery of the skills we've covered."
     background="white"
   >
@@ -243,7 +243,7 @@
       <TopicCard
         icon={Presentation}
         title="Hit the Deadline"
-        description="Deliver a polished presentation of your completed capstone to the class."
+        description="Deliver a polished presentation of your project to the class."
       />
     </div>
   </Module>
