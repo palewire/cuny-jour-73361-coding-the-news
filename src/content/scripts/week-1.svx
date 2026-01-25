@@ -59,11 +59,11 @@ Hit the **Open** button to select that empty folder as your project in VS Code. 
 
 ### Create a README.md file
 
-1. In the left sidebar, hover over the word `CODE`
+The top right-hand corner of the **Explorer** sidebar has a small icon that looks like a page with a plus sign. This is the **New File** button. It will create a blank file in your project.
 
-2. Click the **New File** icon (looks like a page with a plus sign)
+Click it and type `README.md` as the file name, then press Enter. The new file will open in the main editor area.
 
-3. Type `README.md` and press Enter
+TK
 
 4. The file opens in the editor. Type this:
 
