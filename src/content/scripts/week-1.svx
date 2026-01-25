@@ -23,7 +23,7 @@ Open your browser and go to <a href="https://code.visualstudio.com" target="_bla
 
 Depending on your operating system, follow the installation instructions for [macOS](https://code.visualstudio.com/docs/setup/mac#_install-vs-code-on-macos), [Windows](https://code.visualstudio.com/docs/setup/windows#_install-vs-code-on-windows) or [Linux](https://code.visualstudio.com/docs/setup/linux#_install-vs-code-on-linux). On Windows, you should check the box to "Add to PATH" during installation if it is offered.
 
-Open the program by selecting **Visual Studio Code** from your macOS **Applications** folder, Windows **Start Menu** or via another method. You should consider making a shortcut to your dock or desktop for easy access later.
+Open the program by selecting Visual Studio Code from your macOS Applications folder, Windows Start Menu or via another method. You should consider making a shortcut to your dock or desktop for easy access later.
 
 The program should open in a new window that looks something like this. You may be greeted by a welcome message in the center. Feel free to close it for now.
 
@@ -33,7 +33,7 @@ The program should open in a new window that looks something like this. You may 
   showChrome={false}
 />
 
-The far left-hand sidebar is called the **Activity Bar**. It has icons for different views like **Explorer**, **Search**, **Source Control** and **Extensions**. You can hover over each icon to see its name. Click on the top icon that looks like two files stacked on top of each other. This is the **Explorer** view, where you can see and manage your project files. It should pop out a sidebar on the left side of the window
+The far left-hand sidebar is called the Activity Bar. It has icons for different views like Explorer, Search, Source Control and Extensions. You can hover over each icon to see its name. Click on the top icon that looks like two files stacked on top of each other. This is the Explorer view, where you can see and manage your project files. It should pop out a sidebar on the left side of the window
 
 <Screenshot
    src="/screenshots/week-1/vscode-file-explorer.png"
@@ -43,13 +43,13 @@ The far left-hand sidebar is called the **Activity Bar**. It has icons for diffe
 
 ### Create a code folder
 
-Click the **Open Folder** button in the **Explorer** sidebar. A file dialog will open.
+Click the open folder button in the Explorer sidebar. A file dialog will open.
 
-Create a new folder in your user's root directory called **Code**. This is where you will keep all your coding projects for this class.
+Create a new folder in your user's root directory called Code. This is where you will keep all your coding projects for this class.
 
-Inside of that directory, create another new folder called **coding-the-news-week-1**. This is where you will keep the files for this week's exercises.
+Inside of that directory, create another new folder called `coding-the-news-week-1`. This is where you will keep the files for this week's exercises.
 
-Hit the **Open** button to select that empty folder as your project in VS Code. The Explorer sidebar should now show the name of your folder at the top, with no files inside yet.
+Hit the open button to select that empty folder as your project in VS Code. The Explorer sidebar should now show the name of your folder at the top, with no files inside yet.
 
 <Screenshot
    src="/screenshots/week-1/vscode-empty-project.png"
@@ -59,61 +59,43 @@ Hit the **Open** button to select that empty folder as your project in VS Code. 
 
 ### Create a README.md file
 
-The top right-hand corner of the **Explorer** sidebar has a small icon that looks like a page with a plus sign. This is the **New File** button. It will create a blank file in your project.
+The top right-hand corner of the Explorer sidebar has a small icon that looks like a page with a plus sign. This is the new file button. It will create a blank file in your project.
 
 Click it and type `README.md` as the file name, then press Enter. The new file will open in the main editor area.
 
-TK
+<Screenshot
+   src="/screenshots/week-1/vscode-readme-created.png"
+   alt="Visual Studio Code Explorer showing README.md in the coding-the-news-week-1 folder"
+   showChrome={false}
+/>
 
-4. The file opens in the editor. Type this:
+Since the 1970s, software developers have included an explanatory files named [README](https://en.wikipedia.org/wiki/README) to describe their projects. Today, those files are commonly called README.md to signal that they are formatted in [Markdown](https://en.wikipedia.org/wiki/Markdown), which provides a simple way to add headings, lists and links.
+
+Add a little content to your README. Start by adding a headline at the top, which is done in Markdown by using the `#` symbol followed by a space and the headline text. Body copy can be written in plan text. The `##` symbols create a subheading. Hyperlinks are created by wrapping the link text in square brackets `[]` followed by the URL in parentheses `()`.
 
 ```markdown
-# My First Project
+# Coding the News Week 1
 
 Live from New York, this is my first README file.
 
 ## About Me
 
-I'm learning to code at CUNY.
+I'm learning to code at CUNY. You can reach me at [your.email@journalism.cuny.com](mailto:your.email@journalism.cuny.com).
 ```
 
-5. Save the file: `Cmd + S` (Mac) or `Ctrl + S` (Windows)
+You'll see a circular dot to right of the file's name in the tab bar at the top of the editor area. This means there are unsaved changes.
 
-### Step 5: Learn a little Markdown
+<Screenshot
+   src="/screenshots/week-1/vscode-readme-unsaved.png"
+   alt="Visual Studio Code showing README.md with the unsaved changes dot on the tab"
+   showChrome={false}
+/>
 
-**Explain while typing in the file:**
-
-1. Add a blank line, then type:
-```markdown
-## What I'm Learning
-
-- VS Code
-- GitHub
-- Svelte
-```
-
-2. Show them the **Preview**:
-   - Right-click the tab → **Open Preview**
-   - Or click the preview icon in the top-right (looks like a split window with magnifying glass)
-
-3. Demonstrate more Markdown:
-```markdown
-## Formatting Examples
-
-This is **bold text** and this is *italic text*.
-
-Here's a [link to GitHub](https://github.com).
-
-> This is a blockquote. Use it for notes or quotes.
-```
-
-4. Save again with `Cmd + S` / `Ctrl + S`
-
-> **Pause here.** Walk around (or check screens) to make sure everyone has their README.md looking correct.
+You can save the file by pressing `Cmd + S` on macOS or `Ctrl + S` on Windows.
 
 ## Part 2: Introduction to GitHub
 
-### Step 6: Sign in to GitHub from VS Code
+### Sign in to GitHub from VS Code
 
 Before we can publish our code, we need to connect VS Code to your GitHub account.
 
