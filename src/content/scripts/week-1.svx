@@ -35,6 +35,12 @@ Click the big **Download button.
 
 Launch VS Code. You should see the Welcome tab.
 
+<Screenshot
+  src="/screenshots/week-1/vscode-test-countdown.png"
+  alt="Visual Studio Code homepage showing the download button"
+  showChrome={false}
+/>
+
 ### Create a code folder
 
 Open **Finder** (Mac) or **File Explorer** (Windows)
