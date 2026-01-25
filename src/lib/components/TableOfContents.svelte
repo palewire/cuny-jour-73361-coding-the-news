@@ -29,8 +29,8 @@
 <style>
   .table-of-contents {
     background: var(--color-light-gray);
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    padding: 0 var(--spacing-md);
+    margin: var(--spacing-sm) 0;
     border-left: 4px solid var(--color-primary-orange);
   }
 
@@ -39,7 +39,8 @@
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin: 0 0 var(--spacing-sm) 0;
+    margin: var(--spacing-sm) 0 var(--spacing-sm) 0;
+    padding-top: var(--spacing-xs);
     color: var(--color-dark);
   }
 
@@ -50,7 +51,7 @@
   }
 
   .table-of-contents li {
-    margin-bottom: 0.5rem;
+    margin-top: var(--spacing-xs);
     font-size: 0.95rem;
   }
 

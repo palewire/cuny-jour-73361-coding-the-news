@@ -23,12 +23,12 @@ modules:
       - icon: 'Blocks'
         title: 'Building Blocks'
         description: 'Use Node.JS and Svelte to craft pages with modular components and interactive elements.'
-      - icon: 'BarChart3'
-        title: 'Data-Driven Storytelling'
-        description: 'Import datasets and use templating techniques to create tables, charts and other visualizations.'
       - icon: 'Layout'
         title: 'Layout and Design'
         description: 'Apply CSS grid systems, typography hierarchies and responsive techniques to create polished presentations.'
+      - icon: 'BarChart3'
+        title: 'Data-Driven Storytelling'
+        description: 'Import datasets and use templating techniques to create tables, charts and other visualizations.'
 
   - number: 2
     title: 'Simple Applications'

@@ -9,12 +9,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export async function load() {
-  // Load scripts from .svx files
-  const modules = import.meta.glob('./scripts/*/+page.svx', { eager: true });
+  // Load scripts from .svx files in content folder
+  const modules = import.meta.glob('/src/content/scripts/*.svx', {
+    eager: true,
+  });
 
   const scripts = Object.entries(modules).map(([path, module]) => {
-    const segments = path.split('/');
-    const slug = segments[2]; // scripts/<slug>/+page.svx
+    // Extract slug from path: /src/content/scripts/week-1.svx -> week-1
+    const slug = path.split('/').pop().replace('.svx', '');
     const meta = module?.metadata ?? {};
 
     return {

@@ -1,0 +1,3 @@
+--- title: "Building a Static Site" summary: "How to create and publish a
+website with Node.JS and GitHub Actions" date: "Feb. 2, 2026" week: 2 locked:
+true --- _Content coming soon._

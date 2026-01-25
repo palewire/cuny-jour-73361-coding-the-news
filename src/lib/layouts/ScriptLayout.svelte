@@ -35,19 +35,31 @@
 <Breadcrumbs items={[{ label: breadcrumbLabel }]} />
 <ScriptHero {title} {summary} {date} />
 
+<section class="section toc">
+  <div class="container">
+    <TableOfContents />
+  </div>
+</section>
+
 <section class="section script">
   <div class="container">
     <div class="script-body">
-      <TableOfContents />
       {@render children()}
     </div>
   </div>
 </section>
 
 <style>
+  .section.toc {
+    padding-top: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    background: var(--color-light-gray);
+    margin: 0;
+  }
+
   .section.script {
     margin-top: 0;
-    padding-top: 0;
+    padding-top: var(--spacing-lg);
   }
 
   .script-body {
@@ -71,12 +83,6 @@
     margin-bottom: var(--spacing-md);
     line-height: 1.7;
     list-style-position: outside;
-  }
-
-  .script-body :global(.table-of-contents ul) {
-    margin-left: 0;
-    padding-left: 0;
-    margin-bottom: 0;
   }
 
   .script-body :global(li) {
