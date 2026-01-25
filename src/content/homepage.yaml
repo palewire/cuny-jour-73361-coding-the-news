@@ -1,0 +1,146 @@
+# Homepage Content for JOUR 73361: Coding the News
+# This file manages all the copy and structured data for the syllabus homepage
+
+meta:
+  title: 'Coding the News | JOUR 73361 | Craig Newmark Graduate School of Journalism'
+  description: "Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism"
+  ogImage: 'https://palewi.re/docs/coding-the-news/social-share.jpg'
+
+modules:
+  - number: 1
+    title: 'Fundamental Tools'
+    id: 'fundamentals'
+    intro: 'In the first half of the semester, you will learn the software and skills that news developers use to design and build interactive, data-driven stories.'
+    homework: 'Each week you will be expected to complete assignments that reinforce the skills covered in class. You will be expected to research how professional newsrooms use these tools and present your findings to classmates.'
+    background: 'white'
+    topics:
+      - icon: 'Monitor'
+        title: "Today's Tool Belt"
+        description: 'Set up Visual Studio Code, connect to GitHub for version control and learn to collaborate with an AI coding assistant.'
+      - icon: 'Globe'
+        title: 'Static Site Publishing'
+        description: 'Explore SvelteKit and the page-building frameworks newsrooms use to publish to the World Wide Web.'
+      - icon: 'Blocks'
+        title: 'Building Blocks'
+        description: 'Use Node.JS and Svelte to craft pages with modular components and interactive elements.'
+      - icon: 'BarChart3'
+        title: 'Data-Driven Storytelling'
+        description: 'Import datasets and use templating techniques to create tables, charts and other visualizations.'
+      - icon: 'Layout'
+        title: 'Layout and Design'
+        description: 'Apply CSS grid systems, typography hierarchies and responsive techniques to create polished presentations.'
+
+  - number: 2
+    title: 'Simple Applications'
+    id: 'applications'
+    intro: "It's time to build. You will practice your new skills by creating simplified versions of common digital story formats."
+    homework: 'Each class begins with a folder of text, images, data and graphics that we will assemble together into a working prototype. After getting familiar with each format, you will be asked to develop and publish a variation on the example.'
+    background: 'light-gray'
+    gridClass: 'grid-2 grid-narrow'
+    topics:
+      - icon: 'ScrollText'
+        title: 'Longform Story'
+        description: 'A story page that weaves together text, images and other media to guide readers through a lengthy narrative.'
+      - icon: 'Layers'
+        title: 'Data Story'
+        description: 'A stacked presentation that combines charts and analysis to walk readers through data-driven findings.'
+      - icon: 'CircleHelp'
+        title: 'News Quiz'
+        description: 'An interactive test that challenges readers and provides instant feedback.'
+      - icon: 'Map'
+        title: 'Interactive Map'
+        description: 'A geographic visualization that lets readers explore location-based data.'
+
+  - number: 3
+    title: 'The Real Deal'
+    id: 'real-deal'
+    intro: "The final weeks will be dedicated to creating a custom application that showcases what you've learned. You will propose an idea or choose from a set of challenges, then bring it to life."
+    homework: "The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism. You will present it to your peers on the last day of class. An A grade will demonstrate mastery of the skills we've covered."
+    background: 'white'
+    topics:
+      - icon: 'Lightbulb'
+        title: 'Pitch Your Story'
+        description: 'Choose a project idea for an interactive data story.'
+      - icon: 'Database'
+        title: 'Gather Assets'
+        description: 'Collect the text, images and data you need to make your story special.'
+      - icon: 'ClipboardList'
+        title: 'Make a Plan'
+        description: "Map out your project's structure with a detailed outline."
+      - icon: 'Hammer'
+        title: 'Build and Iterate'
+        description: 'Implement your outline and refine the presentation through multiple iterations.'
+      - icon: 'MessageCircle'
+        title: 'Take Feedback'
+        description: 'Share your work-in-progress and incorporate constructive criticism.'
+      - icon: 'Presentation'
+        title: 'Hit the Deadline'
+        description: 'Deliver a polished presentation of your project to the class.'
+
+evaluation:
+  kicker: 'Grading'
+  title: 'Evaluation Criteria'
+  intro: 'Your grade will be determined based on three factors.'
+  background: 'light-gray'
+  criteria:
+    - icon: 'MessageSquare'
+      title: 'Participation'
+      description: 'Engage in seminar-style discussions and give thoughtful feedback to peers.'
+    - icon: 'FileCheck'
+      title: 'Homework'
+      description: 'Demonstrate a professional level of effort and experimentation.'
+    - icon: 'Trophy'
+      title: 'The Real Deal'
+      description: 'Deliver a page that is ready to publish on a professional news site.'
+
+guestSpeakers:
+  kicker: 'Outside Experts'
+  title: 'Meet Our Guest Speakers'
+  description: 'Throughout the semester, working professionals will join our class to share how they use code to tell compelling stories.'
+  background: 'white'
+  speakers:
+    - name: 'Rhyannon Bartlett-Imadegawa'
+      org: 'CNN'
+      image: 'rhyannon-bartlett-imadegawa.jpg'
+      linkedin: 'https://www.linkedin.com/in/r-bartlett-imadegawa/'
+    - name: 'Andrew Briz'
+      org: 'Politico'
+      image: 'andrew-briz.jpg'
+      linkedin: 'https://www.linkedin.com/in/andrewbriz/'
+    - name: 'Alvin Chang'
+      org: 'The Pudding'
+      image: 'alvin-chang.jpg'
+      linkedin: 'https://www.linkedin.com/in/alv9n/'
+    - name: 'Armand Emamdjomeh'
+      org: 'Bloomberg'
+      image: 'armand-emamdjomeh.jpg'
+      linkedin: 'https://www.linkedin.com/in/armand-emamdjomeh/'
+    - name: 'Joe Fox'
+      org: 'Washington Post'
+      image: 'joe-fox.jpg'
+      linkedin: 'https://www.linkedin.com/in/joemfox/'
+    - name: 'Allison McCartney'
+      org: 'New York Times'
+      image: 'allison-mccartney.jpg'
+      linkedin: 'https://www.linkedin.com/in/allisonmccartney/'
+    - name: 'Tiana McGee'
+      org: 'Reuters'
+      image: 'tiana-mcgee.jpg'
+      linkedin: 'https://www.linkedin.com/in/tiana-m-12b535217/'
+
+instructor:
+  kicker: 'Faculty'
+  headline: 'Meet Your Instructor'
+  name: 'Ben Welsh'
+  title: 'Adjunct Assistant Professor'
+  image: 'ben-welsh.jpg'
+  link: 'https://palewi.re/who-is-ben-welsh/'
+  bio: "I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk. My office hours are on Monday afternoons before class. Schedule a meeting by emailing me at <a href='mailto:b@palewi.re'>b@palewi.re</a>."
+  background: 'light-gray'
+
+scripts:
+  kicker: 'Documentation'
+  title: 'Classroom Scripts'
+  id: 'scripts'
+  intro: 'A step-by-step guide with all of the commands, links and assignments is published after we finish each class.'
+  background: 'white'

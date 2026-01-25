@@ -8,128 +8,42 @@
   import Evaluation from '$lib/components/Evaluation.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import ScriptCard from '$lib/components/ScriptCard.svelte';
-  import {
-    Monitor,
-    Globe,
-    BarChart3,
-    Blocks,
-    Layout,
-    ScrollText,
-    Layers,
-    CircleHelp,
-    Map,
-    Lightbulb,
-    Database,
-    ClipboardList,
-    Hammer,
-    MessageCircle,
-    Presentation,
-    MessageSquare,
-    FileCheck,
-    Trophy,
-  } from 'lucide-svelte';
+  import * as icons from 'lucide-svelte';
 
   let { data } = $props();
 
   const scripts = $derived(data.scripts);
+  const content = $derived(data.content);
 
-  const evaluationCriteria = [
-    {
-      icon: MessageSquare,
-      title: 'Participation',
-      description:
-        'Engage in seminar-style discussions and give thoughtful feedback to peers.',
-    },
-    {
-      icon: FileCheck,
-      title: 'Homework',
-      description:
-        'Demonstrate a professional level of effort and experimentation.',
-    },
-    {
-      icon: Trophy,
-      title: 'The Real Deal',
-      description:
-        'Deliver a page that is ready to publish on a professional news site.',
-    },
-  ];
+  // Helper to get icon component by name
+  function getIcon(iconName) {
+    return icons[iconName];
+  }
 
-  const guestSpeakers = [
-    {
-      name: 'Rhyannon Bartlett-Imadegawa',
-      org: 'CNN',
-      image: 'rhyannon-bartlett-imadegawa.jpg',
-      linkedin: 'https://www.linkedin.com/in/r-bartlett-imadegawa/',
-    },
-    {
-      name: 'Andrew Briz',
-      org: 'Politico',
-      image: 'andrew-briz.jpg',
-      linkedin: 'https://www.linkedin.com/in/andrewbriz/',
-    },
-    {
-      name: 'Alvin Chang',
-      org: 'The Pudding',
-      image: 'alvin-chang.jpg',
-      linkedin: 'https://www.linkedin.com/in/alv9n/',
-    },
-    {
-      name: 'Armand Emamdjomeh',
-      org: 'Bloomberg',
-      image: 'armand-emamdjomeh.jpg',
-      linkedin: 'https://www.linkedin.com/in/armand-emamdjomeh/',
-    },
-    {
-      name: 'Joe Fox',
-      org: 'Washington Post',
-      image: 'joe-fox.jpg',
-      linkedin: 'https://www.linkedin.com/in/joemfox/',
-    },
-    {
-      name: 'Allison McCartney',
-      org: 'New York Times',
-      image: 'allison-mccartney.jpg',
-      linkedin: 'https://www.linkedin.com/in/allisonmccartney/',
-    },
-    {
-      name: 'Tiana McGee',
-      org: 'Reuters',
-      image: 'tiana-mcgee.jpg',
-      linkedin: 'https://www.linkedin.com/in/tiana-m-12b535217/',
-    },
-  ];
+  // Transform evaluation criteria with icon components
+  const evaluationCriteria = $derived(
+    content.evaluation.criteria.map((item) => ({
+      ...item,
+      icon: getIcon(item.icon),
+    }))
+  );
 </script>
 
 <svelte:head>
-  <title>Coding the News | JOUR 73361</title>
-  <meta
-    name="description"
-    content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism"
-  />
+  <title>{content.meta.title}</title>
+  <meta name="description" content={content.meta.description} />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Coding the News | JOUR 73361" />
-  <meta
-    property="og:description"
-    content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism"
-  />
-  <meta
-    property="og:image"
-    content="https://palewi.re/docs/coding-the-news/social-share.jpg"
-  />
+  <meta property="og:description" content={content.meta.description} />
+  <meta property="og:image" content={content.meta.ogImage} />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Coding the News | JOUR 73361" />
-  <meta
-    name="twitter:description"
-    content="Syllabus for JOUR 73361: Coding the News at the City University of New York's Craig Newmark Graduate School of Journalism"
-  />
-  <meta
-    name="twitter:image"
-    content="https://palewi.re/docs/coding-the-news/social-share.jpg"
-  />
+  <meta name="twitter:description" content={content.meta.description} />
+  <meta name="twitter:image" content={content.meta.ogImage} />
 </svelte:head>
 
 <Masthead />
@@ -137,151 +51,63 @@
 <main>
   <Hero />
 
-  <Module
-    number={1}
-    title="Fundamental Tools"
-    id="fundamentals"
-    intro="In the first half of the semester, you will learn the software and skills that news developers use to design and build interactive, data-driven stories."
-    homework="Each week you will be expected to complete assignments that reinforce the skills covered in class. You will be expected to research how professional newsrooms use these tools and present your findings to classmates."
-    background="white"
-  >
-    <div class="grid grid-3 grid-constrained grid-stack">
-      <TopicCard
-        icon={Monitor}
-        title="Today's Tool Belt"
-        description="Set up Visual Studio Code, connect to GitHub for version control and learn to collaborate with an AI coding assistant."
-      />
-      <TopicCard
-        icon={Globe}
-        title="Static Site Publishing"
-        description="Explore SvelteKit and the page-building frameworks newsrooms use to publish to the World Wide Web."
-      />
-      <TopicCard
-        icon={Blocks}
-        title="Building Blocks"
-        description="Use Node.JS and Svelte to craft pages with modular components and interactive elements."
-      />
-      <TopicCard
-        icon={BarChart3}
-        title="Data-Driven Storytelling"
-        description="Import datasets into your projects and use templating techniques to create tables, charts and other visualizations."
-      />
-      <TopicCard
-        icon={Layout}
-        title="Layout and Design"
-        description="Apply CSS grid systems, typography hierarchies and responsive techniques to create polished presentations."
-      />
-    </div>
-  </Module>
-
-  <Module
-    number={2}
-    title="Simple Applications"
-    id="applications"
-    intro="Now it's time to build. You will practice your new skills by creating simplified versions of common digital story formats."
-    homework="Each class begins with a folder of text, images, data and graphics that we will assemble together into a working prototype. After getting familiar with each format, you will be asked to develop and publish an original variation on the example."
-    background="light-gray"
-  >
-    <div class="grid grid-2 grid-narrow grid-stack">
-      <TopicCard
-        icon={ScrollText}
-        title="Longform Story"
-        description="A story page that weaves together text, images and other media to guide readers through a lengthy narrative."
-      />
-      <TopicCard
-        icon={Layers}
-        title="Data Story"
-        description="A stacked presentation that combines charts and analysis to walk readers through data-driven findings."
-      />
-      <TopicCard
-        icon={CircleHelp}
-        title="News Quiz"
-        description="An interactive test that challenges readers and provides instant feedback."
-      />
-      <TopicCard
-        icon={Map}
-        title="Interactive Map"
-        description="A geographic visualization that lets readers explore location-based data."
-      />
-    </div>
-  </Module>
-
-  <Module
-    number={3}
-    title="The Real Deal"
-    id="real-deal"
-    intro="The final weeks will be dedicated to creating a custom application that showcases what you've learned. You will propose an idea or choose from a set of challenges, then bring it to life."
-    homework="The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism. You will present it to your peers on the last day of class. An A grade will demonstrate mastery of the skills we've covered."
-    background="white"
-  >
-    <div class="grid grid-3 grid-constrained grid-stack">
-      <TopicCard
-        icon={Lightbulb}
-        title="Pitch Your Story"
-        description="Choose a project idea for an interactive data story."
-      />
-      <TopicCard
-        icon={Database}
-        title="Gather Assets"
-        description="Collect the text, images and data you need to make your story special."
-      />
-      <TopicCard
-        icon={ClipboardList}
-        title="Make a Plan"
-        description="Map out your project's structure with a detailed outline."
-      />
-      <TopicCard
-        icon={Hammer}
-        title="Build and Iterate"
-        description="Implement your outline and refine the presentation through multiple iterations."
-      />
-      <TopicCard
-        icon={MessageCircle}
-        title="Take Feedback"
-        description="Share your work-in-progress and incorporate constructive criticism."
-      />
-      <TopicCard
-        icon={Presentation}
-        title="Hit the Deadline"
-        description="Deliver a polished presentation of your project to the class."
-      />
-    </div>
-  </Module>
+  {#each content.modules as module}
+    <Module
+      number={module.number}
+      title={module.title}
+      id={module.id}
+      intro={module.intro}
+      homework={module.homework}
+      background={module.background}
+    >
+      <div
+        class="grid {module.gridClass || 'grid-3 grid-constrained'} grid-stack"
+      >
+        {#each module.topics as topic}
+          <TopicCard
+            icon={getIcon(topic.icon)}
+            title={topic.title}
+            description={topic.description}
+          />
+        {/each}
+      </div>
+    </Module>
+  {/each}
 
   <Evaluation
-    kicker="Grading"
-    title="Evaluation Criteria"
-    intro="Your grade will be determined based on three factors."
+    kicker={content.evaluation.kicker}
+    title={content.evaluation.title}
+    intro={content.evaluation.intro}
     criteria={evaluationCriteria}
-    background="light-gray"
+    background={content.evaluation.background}
   />
 
   <GuestSpeakers
-    kicker="Outside Experts"
-    title="Meet Our Guest Speakers"
-    description="Throughout the semester, working professionals will join our class to share how they use code to tell compelling stories."
-    speakers={guestSpeakers}
-    background="white"
+    kicker={content.guestSpeakers.kicker}
+    title={content.guestSpeakers.title}
+    description={content.guestSpeakers.description}
+    speakers={content.guestSpeakers.speakers}
+    background={content.guestSpeakers.background}
   />
 
   <Instructor
-    kicker="Faculty"
-    headline="Meet Your Instructor"
-    name="Ben Welsh"
-    title="Adjunct Assistant Professor"
-    image="ben-welsh.jpg"
-    link="https://palewi.re/who-is-ben-welsh/"
-    bio="I am a reporter, editor and computer programmer with more than 20 years of journalism experience. I work at Reuters, the world's largest multimedia news provider, where I founded the organization's News Applications Desk. My office hours are on Monday afternoons before class. Schedule a meeting by emailing me at <a href='mailto:b@palewi.re'>b@palewi.re</a>."
-    background="light-gray"
+    kicker={content.instructor.kicker}
+    headline={content.instructor.headline}
+    name={content.instructor.name}
+    title={content.instructor.title}
+    image={content.instructor.image}
+    link={content.instructor.link}
+    bio={content.instructor.bio}
+    background={content.instructor.background}
   />
 
   {#if scripts?.length}
     <Module
-      kicker="Documentation"
-      title="Classroom Scripts"
-      id="scripts"
-      intro="A step-by-step guide with all of the commands, links and assignments is published after we finish each class."
-      background="white"
+      kicker={content.scripts.kicker}
+      title={content.scripts.title}
+      id={content.scripts.id}
+      intro={content.scripts.intro}
+      background={content.scripts.background}
     >
       <div class="grid grid-3">
         {#each scripts as script}
