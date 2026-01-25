@@ -1,6 +1,6 @@
 ---
 name: browser-screenshots
-description: Captures browser screenshots on request using Playwright for embedding in tutorials.
+description: Captures browser screenshots on request using Playwright for embedding in tutorials. Use this when asked to capture, document, or screenshot a web page or locally running development server.
 ---
 
 # Browser Screenshot Capture
@@ -17,12 +17,12 @@ Use this skill when the user asks you to:
 
 ## How to Capture
 
-Use the Playwright capture script located at `skills/browser-screenshots/scripts/capture.cjs`.
+Use the Playwright capture script located at `.github/skills/browser-screenshots/scripts/capture.cjs`.
 
 ### Basic Screenshot
 
 ```bash
-node skills/browser-screenshots/scripts/capture.cjs \
+node .github/skills/browser-screenshots/scripts/capture.cjs \
   --url https://example.com \
   --output static/screenshots/week-1/example-homepage.png
 ```
@@ -46,7 +46,7 @@ node skills/browser-screenshots/scripts/capture.cjs \
 
 **Capture with dark mode:**
 ```bash
-node skills/browser-screenshots/scripts/capture.cjs \
+node .github/skills/browser-screenshots/scripts/capture.cjs \
   --url https://code.visualstudio.com \
   --dark \
   --output static/screenshots/week-1/vscode-homepage.png
@@ -54,7 +54,7 @@ node skills/browser-screenshots/scripts/capture.cjs \
 
 **Highlight a specific element:**
 ```bash
-node skills/browser-screenshots/scripts/capture.cjs \
+node .github/skills/browser-screenshots/scripts/capture.cjs \
   --url https://github.com/new \
   --highlight ".repo-name-input" \
   --output static/screenshots/week-1/github-repo-name.png
@@ -62,7 +62,7 @@ node skills/browser-screenshots/scripts/capture.cjs \
 
 **Capture a specific element only:**
 ```bash
-node skills/browser-screenshots/scripts/capture.cjs \
+node .github/skills/browser-screenshots/scripts/capture.cjs \
   --url https://example.com \
   --element ".hero-section" \
   --output static/screenshots/week-1/hero-only.png
@@ -70,7 +70,7 @@ node skills/browser-screenshots/scripts/capture.cjs \
 
 **Execute JavaScript before capture (e.g., click a button):**
 ```bash
-node skills/browser-screenshots/scripts/capture.cjs \
+node .github/skills/browser-screenshots/scripts/capture.cjs \
   --url https://example.com \
   --execute "document.querySelector('button').click()" \
   --wait 1000 \
@@ -79,7 +79,7 @@ node skills/browser-screenshots/scripts/capture.cjs \
 
 **Full page screenshot:**
 ```bash
-node skills/browser-screenshots/scripts/capture.cjs \
+node .github/skills/browser-screenshots/scripts/capture.cjs \
   --url https://example.com \
   --fullpage \
   --output static/screenshots/week-1/full-page.png
@@ -90,9 +90,9 @@ node skills/browser-screenshots/scripts/capture.cjs \
 Save to `/static/screenshots/week-{week}/` with descriptive kebab-case filenames.
 
 **Naming convention:** Use kebab-case:
--  `github-new-repo.png`
--  `homepage-hero-section.png`
--  `GitHubNewRepo.png`
+- ✅ `github-new-repo.png`
+- ✅ `homepage-hero-section.png`
+- ❌ `GitHubNewRepo.png`
 
 **Directory structure:**
 ```
