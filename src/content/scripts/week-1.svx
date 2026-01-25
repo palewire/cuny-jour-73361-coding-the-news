@@ -33,7 +33,7 @@ The program should open in a new window that looks something like this. You may 
   showChrome={false}
 />
 
-The far left-hand sidebar is called the Activity Bar. It has icons for different views like Explorer, Search, Source Control and Extensions. You can hover over each icon to see its name. Click on the top icon that looks like two files stacked on top of each other. This is the Explorer view, where you can see and manage your project files. It should pop out a sidebar on the left side of the window
+The far left-hand sidebar is called the Activity Bar. It has icons for different views like Explorer, Search, Source Control and Extensions. You can hover over each icon to see its name. Click on the top icon that looks like two files stacked on top of each other. This is the Explorer view, where you can see and manage your project files. It should pop out a sidebar on the left side of the window.
 
 <Screenshot
    src="/screenshots/week-1/vscode-file-explorer.png"
@@ -69,7 +69,7 @@ Click it and type `README.md` as the file name, then press Enter. The new file w
    showChrome={false}
 />
 
-Since the 1970s, software developers have included an explanatory files named [README](https://en.wikipedia.org/wiki/README) to describe their projects. Today, those files are commonly called README.md to signal that they are formatted in [Markdown](https://en.wikipedia.org/wiki/Markdown), which provides a simple way to add headings, lists and links.
+Since the 1970s, software developers have included an explanatory file named [README](https://en.wikipedia.org/wiki/README) to describe their projects. Today, those files are commonly called README.md to signal that they are formatted in [Markdown](https://en.wikipedia.org/wiki/Markdown), which provides a simple way to add headings, lists and links.
 
 Add a little content to your README. Start by adding a headline at the top, which is done in Markdown by using the `#` symbol followed by a space and the headline text. Body copy can be written in plan text. The `##` symbols create a subheading. Hyperlinks are created by wrapping the link text in square brackets `[]` followed by the URL in parentheses `()`.
 
@@ -83,7 +83,7 @@ Live from New York, this is my first README file.
 I'm learning to code at CUNY. You can reach me at [your.email@journalism.cuny.com](mailto:your.email@journalism.cuny.com).
 ```
 
-You'll see a circular dot to right of the file's name in the tab bar at the top of the editor area. This means there are unsaved changes.
+You'll see a circular dot to the right of the file's name in the tab bar at the top of the editor area. This means there are unsaved changes.
 
 <Screenshot
    src="/screenshots/week-1/vscode-readme-unsaved.png"
@@ -108,11 +108,11 @@ The [`git`](https://git-scm.com/) program allows you to carefully track the chan
 
 You can think of git as an air traffic controller. It makes sure the code you’re writing at your desk and the code your colleague is writing in her home office don’t clobber each other like two wayward Boeings. If you each make changes to the same lines of code, git steps in and forces you to reconcile the work before it can be combined into the published version.
 
-Git does this by keeping a flight log. Every change to your code recorded in a series of entries known as commits. Not only does it keep you from crashing into your colleagues, it provides a comprehensive record of the project’s history, which you can use to identify when bugs are introduced, and by whom.
+Git does this by keeping a flight log. Every change to your code is recorded in a series of entries known as commits. Not only does it keep you from crashing into your colleagues, it provides a comprehensive record of the project’s history, which you can use to identify when bugs are introduced, and by whom.
 
 Before we can use git, we need to make sure you have it installed on your computer. You can do this by opening a terminal window in Visual Studio Code, where you'll be able to issue commands directly to your computer's operating system.
 
-You can do this by clicking on the **Terminal** menu at the top of the screen and selecting **New Terminal**. A new panel should open, either at the bottom of the VS Code window or in a separate tab.
+Click on the Terminal menu at the top of the screen and select New Terminal. A new panel should open, either at the bottom of the VS Code window or in a separate tab.
 
 <Screenshot
    src="/screenshots/week-1/vscode-terminal-panel.png"
@@ -155,7 +155,7 @@ On Windows, you can download and install [Git for Windows](https://git-scm.com/d
 
 If git is an air traffic controller, then you can think of GitHub as an airport. It’s a central, systemized place to launch and land code. It has become an integral part of development at most newsrooms. In addition to code management, it offers an array of other services for project tracking, file hosting, task scheduling and more.
 
-If you don't already have a GitHub account, go to [github.com](https://github.com) and fill out the registration form at the center the page. Use your CUNY email to create the account. It will earn you access to free student tools.
+If you don't already have a GitHub account, go to [github.com](https://github.com) and fill out the registration form at the center of the page. Use your CUNY email to create the account. It will earn you access to free student tools.
 
 If you already have an account, log in and make sure that your CUNY email is added to your profile. You will receive a verification email to confirm the address.
 
@@ -163,7 +163,7 @@ If you already have an account, log in and make sure that your CUNY email is add
 
 Visual Studio Code can act as a communication channel between your local project, managed by git, and your GitHub account, which will store your code on the web.
 
-You can connect the two by clicking on the Account icon in the lower left-hand corner of the window. It looks like a the silhouette of a person with a circle around it. Click it and select "Sign in to Sync Settings."
+You can connect the two by clicking on the Account icon in the lower left-hand corner of the window. It looks like the silhouette of a person with a circle around it. Click it and select "Sign in to Sync Settings."
 
 That will open up a web browser window asking you to authorize Visual Studio Code to access your GitHub account. Do it. After a few moments, the process will complete and your code editor will be authorized to communicate with GitHub.
 
@@ -209,7 +209,7 @@ Click the green button with the checkmark icon to commit your changes. This comp
 
 ### Publish to GitHub
 
-You can see your first commit logged in the Graph window at the bottom of the Source Control tab. It shows the commit message, author and timestamp. The button in the Changes window now says "Publish Branch." Click it to create a new project on GitHub and push your local commits to up to the web.
+You can see your first commit logged in the Graph window at the bottom of the Source Control tab. It shows the commit message, author and timestamp. The button in the Changes window now says Publish Branch. Click it to create a new project on GitHub and push your local commits up to the web.
 
 You may be asked to authorize Visual Studio Code to access your GitHub account again. Do it.
 
@@ -278,7 +278,7 @@ You should select the Extensions icon in the left sidebar. It looks like four sq
 
 You may be asked to restart your extensions or Visual Studio Code. Go for it.
 
-Now click on the Toggle Secondary Sidebar icon in the far upper-right corner of the window. It looks like a dark vertical bar at the right edge of a box. This will open a new sidebar on the right side of the window. A tab a the top of it should say "Chat." This is where you'll interact with Copilot.
+Now click on the Toggle Secondary Sidebar icon in the far upper-right corner of the window. It looks like a dark vertical bar at the right edge of a box. This will open a new sidebar on the right side of the window. A tab at the top of it should say Chat. This is where you'll interact with Copilot.
 
 <Screenshot
    src="/screenshots/week-1/vscode-chat-sidebar.png"
@@ -296,7 +296,7 @@ Start off with something simple, a question about computer programming you might
    showChrome={false}
 />
 
-Now let's try editing a file. Return on the Explorer sidebar icon, the one at the top left, to open your project files. Click on the `README.md` file to open it in the editor. Now return to the chat and provide Copilot with your name and it to add a biography of your journalism career to the README file.
+Now let's try editing a file. Return to the Explorer sidebar icon, the one at the top left, to open your project files. Click on the `README.md` file to open it in the editor. Now return to the chat and provide Copilot with your name and ask it to add a biography of your journalism career to the README file.
 
 Something like, "Expand the README by adding a short biography about [Your Name], a journalism student at CUNY." Hit the paper airplane icon to send the message.
 
@@ -360,11 +360,11 @@ You'll now see all of the same project files we saw on GitHub in the Explorer si
 
 It's thousands of lines of code written by someone else. How could we ever make sense of it?
 
-Here's where Copilot can work wonders. Return the chat sidebar and ask Copilot to explain how the project works, and what it would take to run it on your computer.
+Here's where Copilot can work wonders. Return to the chat sidebar and ask Copilot to explain how the project works, and what it would take to run it on your computer.
 
 <Screenshot
    src="/screenshots/week-1/vscode-workspace-explain.png"
-   alt="Visual Studio Code Copilot Chat showing an xplanation of the kpop-survey repository"
+   alt="Visual Studio Code Copilot Chat showing an explanation of the kpop-survey repository"
    showChrome={false}
 />
 
@@ -380,7 +380,7 @@ You'll see a clear, direct explanation of the project structure and purpose. I g
 
 Not great. But, hey, it's a start! And there are error messages in my terminal that I can ask Copilot about to try to debug the problem.
 
-We won't try dive down that rabbit hole today, but you could almost certainly use Copilot to help you get this project running if you put in a little time and effort.
+We won't try to dive down that rabbit hole today, but you could almost certainly use Copilot to help you get this project running if you put in a little time and effort.
 
 ## Homework Assignments
 
@@ -398,6 +398,6 @@ Use Visual Studio Code to clone and use Copilot to help you understand what each
 
 Copy the text from each chat panel and paste it into a Markdown file. Commit the text to a fourth public project on GitHub. Send me the repository link before next Monday's class.
 
-### Task 3: Installing
+### Task 3: Exploring
 
 You should try to install and run one project using Copilot and what you can learn from the project's README. It's okay if you don't know what you're doing and if you can't get it to work. Be bold at asking Copilot for help. Document what you tried and what you encountered. Be prepared to present your experience to the class next week. You'll be expected to share what the project does, what it would take to install it and what you encountered when you tried.
