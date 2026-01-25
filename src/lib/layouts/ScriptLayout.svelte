@@ -1,10 +1,11 @@
 <script>
-  import { base } from '$app/paths';
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
 
   let { children, title, summary, date, week } = $props();
+
+  const shareImage = 'https://palewi.re/docs/coding-the-news/social-share.jpg';
 
   // Generate breadcrumb label from week number
   const breadcrumbLabel = $derived(week ? `Week ${week} Script` : 'Script');
@@ -21,7 +22,7 @@
     property="og:description"
     content={summary || `${title} - JOUR 73361: Coding the News`}
   />
-  <meta property="og:image" content="{base}/social-share.jpg" />
+  <meta property="og:image" content={shareImage} />
   <meta property="og:type" content="article" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
@@ -29,7 +30,7 @@
     name="twitter:description"
     content={summary || `${title} - JOUR 73361: Coding the News`}
   />
-  <meta name="twitter:image" content="{base}/social-share.jpg" />
+  <meta name="twitter:image" content={shareImage} />
 </svelte:head>
 
 <Breadcrumbs items={[{ label: breadcrumbLabel }]} />
