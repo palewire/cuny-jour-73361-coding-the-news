@@ -10,7 +10,7 @@ modules:
   - number: 1
     title: 'Fundamental Tools'
     id: 'fundamentals'
-    intro: 'In the first half of the semester, you will learn the software and skills that news developers use to design and build interactive, data-driven stories.'
+    intro: 'In the first half of the semester, you will learn the software and skills that news developers use to build interactive, data-driven stories.'
     homework: 'Each week you will be expected to complete assignments that reinforce the skills covered in class. You will be expected to research how professional newsrooms use these tools and present your findings to classmates.'
     background: 'white'
     topics:
