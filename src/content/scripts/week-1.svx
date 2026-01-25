@@ -240,6 +240,8 @@ If you're looking to get creative, consult [GitHub's guide to Markdown](https://
 
 ## Part 3: Introduction to GitHub Copilot
 
+[GitHub Copilot](https://github.com/features/copilot) is an AI coding assistant that can help you write code. It uses machine learning to suggest snippets, correct errors and even write entire files based on your input.
+
 <Screenshot
    src="/screenshots/week-1/github-copilot-hero.png"
    alt="GitHub Copilot features page hero section"
@@ -247,12 +249,13 @@ If you're looking to get creative, consult [GitHub's guide to Markdown](https://
    chromeUrl="https://github.com/features/copilot"
 />
 
-### Step 14: Set up GitHub for Students
+In a very short time, Copilot and similar tools have become widely adopted in the software development industry. News organizations like Reuters are already using AI tools every day to write, vet and improve their code.
 
-1. Go to:
-   ```
-   https://education.github.com/pack
-   ```
+One strength of Copilot is that it can be configured in Visual Studio Code as an extension that integrates directly into your coding workflow.
+
+### Access GitHub Copilot for free
+
+Students at CUNY are eligible for free access to GitHub Copilot through the [GitHub Student Developer Pack](https://education.github.com/pack). Go to [education.github.com/pack](https://education.github.com/pack) to sign up with your university email. You may need to provide proof of enrollment by uploading a picture of your student ID.
 
 <Screenshot
    src="/screenshots/week-1/github-student-developer-pack-hero.png"
@@ -261,216 +264,140 @@ If you're looking to get creative, consult [GitHub's guide to Markdown](https://
    chromeUrl="https://education.github.com/pack"
 />
 
-2. Click **Get your pack** or **Sign up for Student Developer Pack**
+Once you have Copilot authorized for your account, return to Visual Studio Code to install the necessary extension.
 
-3. Verify your student status:
-   - Use your `.cuny.edu` email
-   - You may need to upload proof of enrollment (ID card, enrollment letter)
-   - Approval can take a few hours to a few days
+### Install the GitHub Copilot Chat extension
 
-> **If not approved yet:** Students can still follow along and try Copilot with the free tier, or watch your demo.
-
+You should select the Extensions icon in the left sidebar. It looks like four squares. Then search for "GitHub Copilot Chat" in the search bar at the top of the sidebar. Select the main extension by GitHub from the list and click the Enable button.
 
 <Screenshot
-   src="/screenshots/week-1/github-copilot-ai-code-editor-hero.png"
-   alt="GitHub Copilot AI code editor feature page hero section"
-   chromeTitle="GitHub Copilot"
-   chromeUrl="https://github.com/features/copilot/ai-code-editor"
+   src="/screenshots/week-1/vscode-copilot-extension.png"
+   alt="Visual Studio Code Extensions sidebar showing GitHub Copilot Chat extension"
+   showChrome={false}
 />
 
-### Step 15: Install GitHub Copilot extension
+You may be asked to restart your extensions or Visual Studio Code. Go for it.
 
-1. In VS Code, click the **Extensions** icon in the left sidebar (looks like four squares)
+Now click on the Toggle Secondary Sidebar icon in the far upper-right corner of the window. It looks like a dark vertical bar at the right edge of a box. This will open a new sidebar on the right side of the window. A tab a the top of it should say "Chat." This is where you'll interact with Copilot.
 
-2. Search for `GitHub Copilot`
+<Screenshot
+   src="/screenshots/week-1/vscode-chat-sidebar.png"
+   alt="Visual Studio Code with GitHub Copilot Chat panel open on the right side"
+   showChrome={false}
+/>
 
-3. Install **GitHub Copilot** (the main one by GitHub)
+### Chat with Copilot
 
-4. Also install **GitHub Copilot Chat**
+Start off with something simple, a question about computer programming you might ask a teacher or a large-language model. Ask Copilot, "What is a README file?" Then hit the paper airplane icon to send the message.
 
-5. **Sign in to GitHub:**
-   - A popup should appear asking you to sign in
-   - Click **Sign in to GitHub**
-   - Authorize in the browser
-   - Return to VS Code
+<Screenshot
+   src="/screenshots/week-1/vscode-first-chat.png"
+   alt="Visual Studio Code Copilot Chat answering the question 'What is a README file?'"
+   showChrome={false}
+/>
 
-6. Look for the Copilot icon in the bottom-right status bar (looks like a two-blade propeller). It should show a checkmark when active.
+Now let's try editing a file. Return on the Explorer sidebar icon, the one at the top left, to open your project files. Click on the `README.md` file to open it in the editor. Now return to the chat and provide Copilot with your name and it to add a biography of your journalism career to the README file.
 
-### Step 16: Open the Copilot Chat panel
+Something like, "Expand the README by adding a short biography about [Your Name], a journalism student at CUNY." Hit the paper airplane icon to send the message.
 
-1. Click the **Chat icon** in the left sidebar (speech bubble icon)
-   - Or use `Cmd + Shift + I` (Mac) / `Ctrl + Shift + I` (Windows)
+<Screenshot
+   src="/screenshots/week-1/vscode-chat-edit-prompt.png"
+   alt="Visual Studio Code Copilot Chat with prompt to expand README with biography"
+   showChrome={false}
+/>
 
-2. The Copilot Chat panel opens on the right side
+Click the Keep button to accept Copilot's changes to the file, or hit the undo button to reject them.
 
-3. **Try a simple chat:**
-   Type: `What is a README file?`
-   Press Enter
+Now let's log those changes, but this time let Copilot help write the commit message. Click the Source Control icon in the left sidebar again. Stage your changes by clicking the + icon next to "Changes."
 
-4. Copilot will explain. This is your AI coding assistant!
+Now, in the Message box at the top, click the sparkle icon next to the text field. Copilot will suggest a commit message based on your changes. If it looks good, click the checkmark to accept.
 
-### Step 17: Experiment with chatting
+<Screenshot
+   src="/screenshots/week-1/vscode-commit-message.png"
+   alt="Visual Studio Code Source Control tab showing a Copilot-generated commit message"
+   showChrome={false}
+/>
 
-**Have students try these prompts:**
+These simple examples just scratch the surface of what Copilot can do, but they demonstrate how the chat assistant is integrated into your coding environment. You should experiment with it as much as you can as you work on projects this semester.
 
-1. `What is Markdown?`
+## Part 4: Clone an Existing Project
 
-2. `How do I make a numbered list in Markdown?`
+You won't always be starting projects from scratch. Early in your career, you're more likely to be starting off with an existing codebase created by a colleague.
 
-3. `Write me a short bio for a journalism student`
+While most code written in newsrooms is hidden away in private projects, many organizations publish open-source code on GitHub for others to use and learn from. These are great opportunities to learn from real-world projects.
 
-### Step 18: Demonstrate "Ask" mode (planning)
+One leader in open-source journalism is The Pudding, a creative digital magazine that uses data visualization and experimental storytelling techniques to cover culture. A recent example is their [K-pop fan survey](https://pudding.cool/2024/05/kpop-survey/).
 
-1. In the chat, type:
-   ```
-   How should I structure a portfolio website for a journalist?
-   ```
+<Screenshot
+   src="/screenshots/week-1/kpop-survey-article.png"
+   alt="The Pudding K-pop fan survey article hero section"
+   chromeTitle="The Pudding — K-pop fan survey"
+   chromeUrl="https://pudding.cool/2024/10/kpop-survey/"
+/>
 
-2. Copilot gives you a plan—it doesn't write code yet, just advises
+All of the code that powers the page is open on GitHub at [github.com/the-pudding/kpop-survey](https://github.com/the-pudding/kpop-survey).
 
-### Step 19: Demonstrate "Edit" mode
+<Screenshot
+   src="/screenshots/week-1/kpop-survey-github.png"
+   alt="GitHub repository page for the-pudding/kpop-survey"
+   chromeTitle="GitHub — kpop-survey"
+   chromeUrl="https://github.com/the-pudding/kpop-survey/"
+/>
 
-1. Open your `README.md` file
+Let's use Visual Studio Code and Copilot to explore this project. Start by selecting New Window from the File menu to open a fresh instance of VS Code.
 
-2. Select all the text (`Cmd + A` / `Ctrl + A`)
+Select the Source Control icon in the left sidebar and click the Clone Repository button. A popup will appear at the top of the window asking for a repository URL. Paste in `https://github.com/the-pudding/kpop-survey/`, then press Enter.
 
-3. Press `Cmd + I` (Mac) / `Ctrl + I` (Windows) to open inline Copilot
+<Screenshot
+   src="/screenshots/week-1/vscode-clone-repo.png"
+   alt="Visual Studio Code Command Palette showing Git: Clone prompt"
+   showChrome={false}
+/>
 
-4. Type: `Add a section about my favorite news websites with three bullet points`
+A file dialog will open asking where to save the project. Navigate to your Code folder and tell Visual Studio Code to clone the project there. After a few moments, another popup will appear asking if you'd like to open the cloned repository. Do it.
 
-5. Press Enter. Copilot will suggest changes inline.
+You'll now see all of the same project files we saw on GitHub in the Explorer sidebar, like `README.md`, `package.json` and the `src` folder.
 
-6. Click **Accept** to apply the changes
+It's thousands of lines of code written by someone else. How could we ever make sense of it?
 
-### Step 20: Have Copilot write the commit message
+Here's where Copilot can work wonders. Return the chat sidebar and ask Copilot to explain how the project works, and what it would take to run it on your computer.
 
-1. Click the **Source Control** icon in the left sidebar (looks like a branch/fork)
+<Screenshot
+   src="/screenshots/week-1/vscode-workspace-explain.png"
+   alt="Visual Studio Code Copilot Chat showing an xplanation of the kpop-survey repository"
+   showChrome={false}
+/>
 
-2. You'll see your changed file listed
+You'll see a clear, direct explanation of the project structure and purpose. I gave the instructions a try on my computer and here's what I encountered:
 
-3. In the **Message** box at the top, click the **sparkle icon** (✨) next to the text field
-   - Or right-click and choose "Generate Commit Message with Copilot"
+<Screenshot
+   src="/screenshots/week-1/local-home.png"
+   alt="Local Coding the News homepage served at localhost"
+   chromeTitle="localhost:5173"
+   chromeUrl="http://localhost:5173/"
+   showChrome={true}
+/>
 
-4. Copilot suggests a commit message based on your changes
+Not great. But, hey, it's a start! And there are error messages in my terminal that I can ask Copilot about to try to debug the problem.
 
-5. If it looks good, click the **checkmark** to accept
-
-6. Click **Commit** then **Push** (or **Sync Changes**)
-
-## Part 4: Clone an Existing Repository
-
-### Step 21: Find a news organization's GitHub page
-
-1. Open your browser and go to one of these:
-   ```
-   https://github.com/nytimes
-   https://github.com/washingtonpost
-   https://github.com/latimes-datadesk
-   https://github.com/reuters-graphics
-   https://github.com/fivethirtyeight
-   ```
-
-2. Browse their repositories. Look for ones with good README files.
-
-3. **For this demo, let's use:**
-   ```
-   https://github.com/datadesk/baker-example-page-template
-   ```
-   *(or choose another simple one)*
-
-### Step 22: Clone the repository
-
-1. On the GitHub repository page, click the green **Code** button
-
-2. Copy the HTTPS URL (click the clipboard icon)
-
-3. In VS Code, press `Cmd + Shift + P` (Mac) / `Ctrl + Shift + P` (Windows) to open the Command Palette
-
-4. Type `Git: Clone` and select it
-
-5. Paste the URL you copied
-
-6. Choose a location (your `code` folder or a subfolder)
-
-7. Click **Open** when asked to open the cloned repository
-
-### Step 23: Ask Copilot to explain the project
-
-1. Open the Copilot Chat panel
-
-2. Type:
-   ```
-   @workspace Explain what this project does and how it's structured
-   ```
-
-3. Copilot analyzes the files and gives you an overview
-
-> **Explain:** "The `@workspace` tag tells Copilot to look at all the files in your project, not just the one you have open."
-
-### Step 24: Ask Copilot how to install it
-
-1. In the chat, type:
-   ```
-   @workspace How do I install and run this project?
-   ```
-
-2. Copilot reads the README and gives you step-by-step instructions
-
-3. Follow those steps in your terminal!
-
-**Common steps might include:**
-```bash
-npm install
-npm start
-```
-
-> **Note:** Some projects may fail to install due to missing dependencies. That's okay! The point is learning the process.
-
-### Step 25: Troubleshoot with Copilot
-
-If you hit an error:
-
-1. Copy the error message
-
-2. Paste it into Copilot Chat:
-   ```
-   I got this error: [paste error here]. How do I fix it?
-   ```
-
-3. Follow Copilot's suggestions
-
-> **Key lesson:** "Errors are normal. The skill is learning to read them and fix them—Copilot helps with that."
+We won't try dive down that rabbit hole today, but you could almost certainly use Copilot to help you get this project running if you put in a little time and effort.
 
 ## Homework Assignments
 
-**Read this aloud and display on screen:**
+Your first homework assignments are to get practice creating new projects, cloning existing projects and using Copilot to explore code.
 
-### Part 1: Repository Practice
-Create **five different repositories** on GitHub, each with a simple README.md file. Ideas:
-- A repository about yourself
-- A repository about your favorite topic for reporting
-- A repository listing tools you want to learn
-- A repository with notes from another class
-- A repository with a recipe or how-to guide
+### Task 1: Creating
 
-### Part 2: News Organization Exploration
-Find and clone **three repositories**:
-- Two from **news organizations** (NYT, WaPo, LA Times, Reuters, etc.)
-- One from a **non-news tech company** (Google, Microsoft, Meta, etc.)
+Create three projects on GitHub using Visual Studio Code, each with a README.md. They must be public. It doesn't matter what's in them, the point is to get practice at the workflow. You should send me links to all three before next Monday's class.
 
-For each:
-1. Use VS Code to clone it
-2. Ask Copilot to explain what it does
-3. Try to install and run it (it's okay if it fails!)
+### Task 2: Cloning
 
-### Part 3: Write a Report
-Write a **one-page report** (in a README.md file!) that includes:
-- A couple paragraphs about each repository you explored
-- What worked, what didn't, what you learned
-- Which repository was most interesting and why
+You should find three GitHub projects created by news organizations. If you need help finding them, an index of more than 300 news organizations on the platform is available at [github.com/silva-shih/open-journalism/](https://github.com/silva-shih/open-journalism/blob/master/orgs.csv).
 
-### Part 4: Prepare to Present
-Pick your **most interesting repository** from Part 2. Be ready to share your screen for 2-3 minutes and tell the class:
-- What the project does
-- What you found interesting about it
-- One thing you learned from exploring it
+Use Visual Studio Code to clone and use Copilot to help you understand what each project does. Ask at least four questions in the chat panel for each project. Be curious!
+
+Copy the text from each chat panel and paste it into a Markdown file. Commit the text to a fourth public project on GitHub. Send me the repository link before next Monday's class.
+
+### Task 3: Installing
+
+You should try to install and run one project using Copilot and what you can learn from the project's README. It's okay if you don't know what you're doing and if you can't get it to work. Be bold at asking Copilot for help. Document what you tried and what you encountered. Be prepared to present your experience to the class next week. You'll be expected to share what the project does, what it would take to install it and what you encountered when you tried.
