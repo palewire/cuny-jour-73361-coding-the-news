@@ -23,9 +23,7 @@
   .masthead {
     background-color: var(--color-gray);
     height: var(--masthead-height);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: static;
   }
 
   .masthead-container {
