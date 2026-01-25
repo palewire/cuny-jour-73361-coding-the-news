@@ -51,11 +51,28 @@
     "**/.coverage": true
   },
 
+  "cSpell.dictionaryDefinitions": [
+    {
+      "name": "project-terms",
+      "path": "${workspaceFolder}/.codespell-ignore-words.txt",
+      "addWords": true
+    }
+  ],
+  "cSpell.dictionaries": ["project-terms"],
+  "cSpell.ignorePaths": [
+    "package-lock.json",
+    "node_modules",
+    "build",
+    ".svelte-kit"
+  ],
+
   "search.exclude": {
     "**/build": true,
     "**/node_modules": true,
     "**/.venv": true,
     "**/package-lock.json": true,
-    ".husky": true
+    ".husky": true,
+    ".git": true,
+    ".svelte-kit": true
   }
 }
