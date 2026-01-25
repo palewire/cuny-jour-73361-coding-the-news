@@ -166,3 +166,4 @@ Agent Skills are stored in `.github/skills/` following the [VS Code Agent Skills
 Available skills:
 - **browser-screenshots** - Captures browser screenshots using Playwright for embedding in tutorials
 - **vscode-screenshots** - Captures VSCode window screenshots using a semi-automated workflow with countdown timer
+- **page-scroll-video** - Records scrolling videos of web pages with browser chrome for social media promotion

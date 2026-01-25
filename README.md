@@ -2,6 +2,8 @@ The syllabus for "JOUR 73361: Coding the News," a course taught at the City Univ
 
 Published at [palewi.re/docs/coding-the-news/](https://palewi.re/docs/coding-the-news/)
 
+[![Coding the News scrolling preview](static/videos/homepage-scroll.gif)](https://palewi.re/docs/coding-the-news/)
+
 ## Content
 
 All editorial content lives in `src/content/`:
