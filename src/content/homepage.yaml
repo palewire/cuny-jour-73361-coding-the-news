@@ -32,7 +32,7 @@ modules:
 
   - number: 2
     title: 'Simple Applications'
-    id: 'applications'
+    id: 'simple-applications'
     intro: "It's time to build. You will practice your new skills by creating simplified versions of common digital story formats."
     homework: 'Each class begins with a folder of text, images, data and graphics that we will assemble together into a working prototype. After getting familiar with each format, you will be asked to develop and publish a variation on the example.'
     background: 'light-gray'
@@ -54,7 +54,7 @@ modules:
   - number: 3
     title: 'The Real Deal'
     id: 'real-deal'
-    intro: "The final weeks will be dedicated to creating a custom application that showcases what you've learned. You will propose an idea or choose from a set of challenges, then bring it to life."
+    intro: "The final weeks will be dedicated to designing, developing and deploying an application that showcases what you've learned. You will propose an idea or choose from a set of challenges, then bring it to life."
     homework: "The culmination of the semester will be a portfolio-ready piece that demonstrates your ability to design, build and publish interactive journalism. You will present it to your peers on the last day of class. An A grade will demonstrate mastery of the skills we've covered."
     background: 'white'
     topics:
