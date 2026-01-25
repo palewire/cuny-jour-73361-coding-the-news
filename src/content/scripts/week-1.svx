@@ -43,29 +43,19 @@ The far left-hand sidebar is called the **Activity Bar**. It has icons for diffe
 
 ### Create a code folder
 
-Open **Finder** (Mac) or **File Explorer** (Windows)
+Click the **Open Folder** button in the **Explorer** sidebar. A file dialog will open.
 
-Navigate to your home folder:
-- **Mac:** Click your username in the sidebar, or press `Cmd + Shift + H`
-- **Windows:** Click "This PC" then your user folder
+Create a new folder in your user's root directory called **Code**. This is where you will keep all your coding projects for this class.
 
-Create a new folder called `code`
-   - **Mac:** `Cmd + Shift + N` → type `code` → press Enter
-   - **Windows:** Right-click → New → Folder → type `code` → press Enter
+Inside of that directory, create another new folder called **coding-the-news-week-1**. This is where you will keep the files for this week's exercises.
 
-> **Tell students:** "This `code` folder is where all your projects will live this semester. Keep it tidy."
+Hit the **Open** button to select that empty folder as your project in VS Code. The Explorer sidebar should now show the name of your folder at the top, with no files inside yet.
 
-### Open a folder as a project
-
-1. In VS Code, go to **File → Open Folder** (or `Cmd + O` on Mac / `Ctrl + K, Ctrl + O` on Windows)
-
-2. Navigate to your new `code` folder
-
-3. Click **Open** (Mac) or **Select Folder** (Windows)
-
-4. Look at the left sidebar—it should say `CODE` at the top with nothing inside yet
-
-> **Explain:** "In VS Code, we always work inside folders, not individual files. This folder is your 'project.' Everything related to one project lives together."
+<Screenshot
+   src="/screenshots/week-1/vscode-empty-project.png"
+   alt="Visual Studio Code Explorer showing an empty coding-the-news-week-1 folder"
+   showChrome={false}
+/>
 
 ### Create a README.md file
 
