@@ -21,7 +21,7 @@ Open your browser and go to <a href="https://code.visualstudio.com" target="_bla
   chromeUrl="https://code.visualstudio.com"
 />
 
-Depending on your operating system, follow the installation instructions for [macOS](https://code.visualstudio.com/docs/setup/mac#_install-vs-code-on-macos), [Windows](https://code.visualstudio.com/docs/setup/windows#_install-vs-code-on-windows) or [Linux](https://code.visualstudio.com/docs/setup/linux#_install-vs-code-on-linux). On Windows, you should check the box to "Add to PATH" during installation if it is offered.
+Depending on your operating system, follow the installation instructions for [macOS](https://code.visualstudio.com/docs/setup/mac#_install-vs-code-on-macos), [Windows](https://code.visualstudio.com/docs/setup/windows#_install-vs-code-on-windows) or [Linux](https://code.visualstudio.com/docs/setup/linux#_install-vs-code-on-linux). On Windows, you should check the box to add to the PATH during installation if it is offered.
 
 Open the program by selecting Visual Studio Code from your macOS Applications folder, Windows Start Menu or via another method. You should consider making a shortcut to your dock or desktop for easy access later.
 
@@ -163,7 +163,7 @@ If you already have an account, log in and make sure that your CUNY email is add
 
 Visual Studio Code can act as a communication channel between your local project, managed by git, and your GitHub account, which will store your code on the web.
 
-You can connect the two by clicking on the Account icon in the lower left-hand corner of the window. It looks like the silhouette of a person with a circle around it. Click it and select "Sign in to Sync Settings."
+You can connect the two by clicking on the Account icon in the lower left-hand corner of the window. It looks like the silhouette of a person with a circle around it. Click it and select Sign in to Sync Settings.
 
 That will open up a web browser window asking you to authorize Visual Studio Code to access your GitHub account. Do it. After a few moments, the process will complete and your code editor will be authorized to communicate with GitHub.
 
@@ -175,11 +175,11 @@ Now let's set up your first project on GitHub. Click on the Source Control icon 
    showChrome={false}
 />
 
-This will display two buttons, one of which says "Initialize Repository." Click it to set up git for your project. This will create a hidden folder called `.git` in your project directory, which will store all the information git needs to track your changes.
+This will display two buttons, one of which says Initialize Repository. Click it to set up git for your project. This will create a hidden folder called `.git` in your project directory, which will store all the information git needs to track your changes.
 
 ### Commit your work
 
-The Source Control tab will now show your `README.md` file under "Changes" with a U next to it. U means "untracked." This means that git sees it but isn't logging changes to it yet.
+The Source Control tab will now show your `README.md` file under Changes with a U next to it. U means "untracked." This means that git sees it but isn't logging changes to it yet.
 
 <Screenshot
    src="/screenshots/week-1/vscode-source-control-untracked.png"
@@ -189,9 +189,9 @@ The Source Control tab will now show your `README.md` file under "Changes" with 
 
 Git won't log changes until you tell it to do so. This is done through a process called committing. A commit is like a snapshot of your project at a specific moment. Every commit includes a bundle of changes along with a message describing what was changed.
 
-The Source Control tab makes it easy to log your work with its user interface. You should hover your mouse over the word "Changes" and click the + icon that appears. This "stages" all your changes, moving your file from "Changes" to "Staged Changes." The letter changes from U to A. A means "added."
+The Source Control tab makes it easy to log your work with its user interface. You should hover your mouse over the word Changes and click the + icon that appears. This stages all your changes, moving your file from Changes to Staged Changes. The letter changes from U to A. A means added.
 
-Type a brief message into the box at the top of the Source Control tab. This is your commit message that will be logged in git's history. It should be short and descriptive, like a headline. For example, you could write "Added README.md."
+Type a brief message into the box at the top of the Source Control tab. This is your commit message that will be logged in git's history. It should be short and descriptive, like a headline. For example, you could write Added README.md.
 
 <Screenshot
    src="/screenshots/week-1/vscode-source-control-staged.png"
@@ -221,7 +221,7 @@ A popup at the top of Visual Studio Code will then present you with two options,
    showChrome={false}
 />
 
-A popup will appear in the lower-right corner of the window reporting that your GitHub project has been created. Click the "Open on GitHub" button to view it in your web browser. That will take you to a page like this one, linked to your GitHub account instead of mine.
+A popup will appear in the lower-right corner of the window reporting that your GitHub project has been created. Click the Open on GitHub button to view it in your web browser. That will take you to a page like this one, linked to your GitHub account instead of mine.
 
 <Screenshot
    src="/screenshots/week-1/github-coding-the-news-week-1.png"
@@ -268,7 +268,7 @@ Once you have Copilot authorized for your account, return to Visual Studio Code 
 
 ### Install the GitHub Copilot Chat extension
 
-You should select the Extensions icon in the left sidebar. It looks like four squares. Then search for "GitHub Copilot Chat" in the search bar at the top of the sidebar. Select the main extension by GitHub from the list and click the Enable button.
+You should select the Extensions icon in the left sidebar. It looks like four squares. Then search for GitHub Copilot Chat in the search bar at the top of the sidebar. Select the main extension by GitHub from the list and click the Enable button.
 
 <Screenshot
    src="/screenshots/week-1/vscode-copilot-extension.png"
