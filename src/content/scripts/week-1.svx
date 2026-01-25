@@ -12,7 +12,7 @@ locked: true
 
 ## Part 1: Introduction to Visual Studio Code
 
-Open your browser and go to [code.visualstudio.com](https://code.visualstudio.com).
+Open your browser and go to <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a>. Click the big download button.
 
 <Screenshot
   src="/screenshots/week-1/vscode-homepage.png"
@@ -21,24 +21,24 @@ Open your browser and go to [code.visualstudio.com](https://code.visualstudio.co
   chromeUrl="https://code.visualstudio.com"
 />
 
-Click the big **Download button.
+Depending on your operating system, follow the installation instructions for [macOS](https://code.visualstudio.com/docs/setup/mac#_install-vs-code-on-macos), [Windows](https://code.visualstudio.com/docs/setup/windows#_install-vs-code-on-windows) or [Linux](https://code.visualstudio.com/docs/setup/linux#_install-vs-code-on-linux). On Windows, you should check the box to "Add to PATH" during installation if it is offered.
 
-**Mac users:**
-- Open the downloaded `.zip` file
-- Drag **Visual Studio Code** to your **Applications** folder
-- Open it from Applications (not from Downloads)
+Open the program by selecting **Visual Studio Code** from your macOS **Applications** folder, Windows **Start Menu** or via another method. You should consider making a shortcut to your dock or desktop for easy access later.
 
-**Windows users:**
-   - Run the installer
-   - Accept the defaults
-   - Check "Add to PATH" if prompted
-
-Launch VS Code. You should see the Welcome tab.
+The program should open in a new window that looks something like this. You may be greeted by a welcome message in the center. Feel free to close it for now.
 
 <Screenshot
-  src="/screenshots/week-1/vscode-test-countdown.png"
-  alt="Visual Studio Code homepage showing the download button"
+  src="/screenshots/week-1/vscode-blank.png"
+  alt="Visual Studio Code blank window after installation"
   showChrome={false}
+/>
+
+The far left-hand sidebar is called the **Activity Bar**. It has icons for different views like **Explorer**, **Search**, **Source Control** and **Extensions**. You can hover over each icon to see its name. Click on the top icon that looks like two files stacked on top of each other. This is the **Explorer** view, where you can see and manage your project files. It should pop out a sidebar on the left side of the window
+
+<Screenshot
+   src="/screenshots/week-1/vscode-file-explorer.png"
+   alt="Visual Studio Code Explorer sidebar open in a blank window"
+   showChrome={false}
 />
 
 ### Create a code folder
