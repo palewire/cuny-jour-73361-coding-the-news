@@ -177,6 +177,8 @@ Now let's set up your first project on GitHub. Click on the Source Control icon 
 
 This will display two buttons, one of which says "Initialize Repository." Click it to set up git for your project. This will create a hidden folder called `.git` in your project directory, which will store all the information git needs to track your changes.
 
+### Commit your work
+
 The Source Control tab will now show your `README.md` file under "Changes" with a U next to it. U means "untracked." This means that git sees it but isn't logging changes to it yet.
 
 <Screenshot
@@ -205,6 +207,8 @@ Click the green button with the checkmark icon to commit your changes. This comp
    showChrome={false}
 />
 
+### Publish to GitHub
+
 You can see your first commit logged in the Graph window at the bottom of the Source Control tab. It shows the commit message, author and timestamp. The button in the Changes window now says "Publish Branch." Click it to create a new project on GitHub and push your local commits to up to the web.
 
 You may be asked to authorize Visual Studio Code to access your GitHub account again. Do it.
@@ -230,9 +234,18 @@ This cycle of editing files, committing changes and syncing them to GitHub is th
 
 So it's a good idea to get some practice.
 
-Let's all pause here and create a few more commits to our README.md file. Try to make at least three more commits before we move on. If you're looking to get creative, consult [GitHub's guide to Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) and try adding some formatting options we haven't covered yet, like images, blockquotes or code snippets.
+Let's all pause here and create a few more commits to our README.md file. Try to make at least three more commits before we move on. Push them to GitHub and refresh the page to see them appear online.
+
+If you're looking to get creative, consult [GitHub's guide to Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) and try adding some formatting options we haven't covered yet, like images, blockquotes or code snippets.
 
 ## Part 3: Introduction to GitHub Copilot
+
+<Screenshot
+   src="/screenshots/week-1/github-copilot-hero.png"
+   alt="GitHub Copilot features page hero section"
+   chromeTitle="GitHub Copilot"
+   chromeUrl="https://github.com/features/copilot"
+/>
 
 ### Step 14: Set up GitHub for Students
 
@@ -240,6 +253,13 @@ Let's all pause here and create a few more commits to our README.md file. Try to
    ```
    https://education.github.com/pack
    ```
+
+<Screenshot
+   src="/screenshots/week-1/github-student-developer-pack-hero.png"
+   alt="GitHub Education Student Developer Pack hero section"
+   chromeTitle="GitHub Education"
+   chromeUrl="https://education.github.com/pack"
+/>
 
 2. Click **Get your pack** or **Sign up for Student Developer Pack**
 
@@ -249,6 +269,14 @@ Let's all pause here and create a few more commits to our README.md file. Try to
    - Approval can take a few hours to a few days
 
 > **If not approved yet:** Students can still follow along and try Copilot with the free tier, or watch your demo.
+
+
+<Screenshot
+   src="/screenshots/week-1/github-copilot-ai-code-editor-hero.png"
+   alt="GitHub Copilot AI code editor feature page hero section"
+   chromeTitle="GitHub Copilot"
+   chromeUrl="https://github.com/features/copilot/ai-code-editor"
+/>
 
 ### Step 15: Install GitHub Copilot extension
 
