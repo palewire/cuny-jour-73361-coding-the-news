@@ -1,4 +1,6 @@
 <script>
+  import { base } from '$app/paths';
+
   const courseCode = 'JOUR 73361';
   const courseTitle = 'Coding the News';
   const subtitle =
@@ -9,12 +11,20 @@
     'Mondays 6–9 p.m.',
     'Lab 436',
   ];
+
+  let { linkToHome = false } = $props();
 </script>
 
 <section class="hero">
   <div class="container">
     <p class="course-code">{courseCode}</p>
-    <h1 class="course-title">{courseTitle}</h1>
+    <h1 class="course-title">
+      {#if linkToHome}
+        <a class="course-title-link" href={`${base}/`}>{courseTitle}</a>
+      {:else}
+        {courseTitle}
+      {/if}
+    </h1>
     {#if subtitle}
       <p class="course-subtitle">{subtitle}</p>
     {/if}
@@ -49,6 +59,16 @@
     font-weight: 800;
     margin-bottom: var(--spacing-xs);
     color: var(--color-white);
+  }
+
+  .course-title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .course-title-link:hover,
+  .course-title-link:focus {
+    color: var(--color-primary-orange);
   }
 
   .course-subtitle {

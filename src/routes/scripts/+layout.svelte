@@ -9,7 +9,7 @@
 <Masthead />
 
 <main>
-  <Hero />
+  <Hero linkToHome={true} />
   {@render children()}
 </main>
 
