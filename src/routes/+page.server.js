@@ -1,12 +1,6 @@
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 import yaml from 'js-yaml';
 
 export const prerender = true;
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export async function load() {
   // Load scripts from .svx files in content folder
@@ -30,10 +24,15 @@ export async function load() {
 
   scripts.sort((a, b) => a.slug.localeCompare(b.slug));
 
-  // Load homepage content from YAML
-  const yamlPath = join(__dirname, '../content/homepage.yaml');
-  const yamlContent = readFileSync(yamlPath, 'utf-8');
-  const content = yaml.load(yamlContent);
+  // Load homepage content from YAML via Vite's glob import to avoid fs path issues
+  const homepageFiles = import.meta.glob('/src/content/homepage.yaml', {
+    eager: true,
+    import: 'default',
+    query: '?raw',
+  });
+
+  const homepageSource = homepageFiles['/src/content/homepage.yaml'];
+  const content = yaml.load(homepageSource ?? '');
 
   return {
     scripts,

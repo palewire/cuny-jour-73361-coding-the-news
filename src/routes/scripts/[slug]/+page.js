@@ -1,12 +1,10 @@
 export const prerender = true;
 
+const scriptModules = import.meta.glob('/src/content/scripts/*.svx');
+
 // Generate static paths for all scripts
 export async function entries() {
-  const modules = import.meta.glob('/src/content/scripts/*.svx', {
-    eager: true,
-  });
-
-  return Object.keys(modules).map((path) => {
+  return Object.keys(scriptModules).map((path) => {
     const slug = path.split('/').pop().replace('.svx', '');
     return { slug };
   });
@@ -14,16 +12,16 @@ export async function entries() {
 
 export async function load({ params }) {
   const { slug } = params;
+  const loader = scriptModules[`/src/content/scripts/${slug}.svx`];
 
-  try {
-    // Dynamically import the .svx file from content folder
-    const module = await import(`../../../content/scripts/${slug}.svx`);
-
-    return {
-      content: module.default,
-      metadata: module.metadata ?? {},
-    };
-  } catch (e) {
+  if (!loader) {
     throw new Error(`Script not found: ${slug}`);
   }
+
+  const module = await loader();
+
+  return {
+    content: module.default,
+    metadata: module.metadata ?? {},
+  };
 }
