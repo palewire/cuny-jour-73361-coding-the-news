@@ -52,12 +52,34 @@
         </div>
       {/if}
       <div class="chrome-content">
-        <img src={imageSrc} {alt} loading="lazy" />
+        {#if chromeUrl}
+          <a
+            class="screenshot-link"
+            href={chromeUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img src={imageSrc} {alt} loading="lazy" />
+          </a>
+        {:else}
+          <img src={imageSrc} {alt} loading="lazy" />
+        {/if}
       </div>
     </div>
   {:else}
     <div class="screenshot-simple">
-      <img src={imageSrc} {alt} loading="lazy" />
+      {#if chromeUrl}
+        <a
+          class="screenshot-link"
+          href={chromeUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <img src={imageSrc} {alt} loading="lazy" />
+        </a>
+      {:else}
+        <img src={imageSrc} {alt} loading="lazy" />
+      {/if}
     </div>
   {/if}
 </figure>
@@ -163,6 +185,10 @@
     display: block;
     width: 100%;
     height: auto;
+  }
+
+  .screenshot-link {
+    display: block;
   }
 
   /* Simple Screenshot (no chrome) */

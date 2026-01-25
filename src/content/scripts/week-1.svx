@@ -95,157 +95,142 @@ You can save the file by pressing `Cmd + S` on macOS or `Ctrl + S` on Windows.
 
 ## Part 2: Introduction to GitHub
 
-### Sign in to GitHub from VS Code
+### Install git
 
-Before we can publish our code, we need to connect VS Code to your GitHub account.
+The [`git`](https://git-scm.com/) program allows you to carefully track the changes you make to files over time. This can be useful when you’re working on your own, but quickly becomes essential when you work with other developers.
 
-1. Look at the bottom-left corner of VS Code for the **Accounts** icon (looks like a person silhouette)
+<Screenshot
+   src="/screenshots/week-1/git-homepage.png"
+   alt="Homepage of git-scm.com showing the Git logo and download button"
+   chromeTitle="Git"
+   chromeUrl="https://git-scm.com"
+/>
 
-2. Click the **Accounts** icon
+You can think of git as an air traffic controller. It makes sure the code you’re writing at your desk and the code your colleague is writing in her home office don’t clobber each other like two wayward Boeings. If you each make changes to the same lines of code, git steps in and forces you to reconcile the work before it can be combined into the published version.
 
-3. Click **Sign in with GitHub to use GitHub Copilot**
-   - If you see multiple options, choose any GitHub sign-in option
+Git does this by keeping a flight log. Every change to your code recorded in a series of entries known as commits. Not only does it keep you from crashing into your colleagues, it provides a comprehensive record of the project’s history, which you can use to identify when bugs are introduced, and by whom.
 
-4. A browser window will open asking you to authorize VS Code
+Before we can use git, we need to make sure you have it installed on your computer. You can do this by opening a terminal window in Visual Studio Code, where you'll be able to issue commands directly to your computer's operating system.
 
-5. Click **Authorize Visual-Studio-Code**
+You can do this by clicking on the **Terminal** menu at the top of the screen and selecting **New Terminal**. A new panel should open, either at the bottom of the VS Code window or in a separate tab.
 
-6. You may be asked to enter your GitHub password or confirm with two-factor authentication
+<Screenshot
+   src="/screenshots/week-1/vscode-terminal-panel.png"
+   alt="Visual Studio Code with a new terminal tab open at the bottom"
+   showChrome={false}
+/>
 
-7. When you see "You can close this tab," return to VS Code
+You can check if git is installed by typing the following command into the terminal and pressing Enter:
 
-8. Back in VS Code, the Accounts icon should now show your GitHub profile picture or a checkmark
-
-> **Important:** If you don't have a GitHub account yet:
-> - Go to [github.com](https://github.com) and click **Sign up**
-> - Use your CUNY email or personal email
-> - Choose a professional username (you'll use this publicly)
-> - Then return here and sign in from VS Code
-
-### Step 7: Open the Source Control sidebar
-
-1. Look at the left sidebar in VS Code for the **Source Control** icon (looks like a branch with dots, or a Y shape)
-   - You can also press `Ctrl + Shift + G` (Windows) or `Cmd + Shift + G` (Mac)
-
-2. Click the Source Control icon
-
-3. You'll see a message that says **"No source control providers registered"** or **"Open a folder that contains a repository"** — that's okay!
-
-4. Click the **Initialize Repository** button
-
-5. VS Code now shows your `README.md` file under **"Changes"** with a **U** next to it (U means "untracked" — Git sees it but isn't tracking it yet)
-
-> **Explain:** "Source Control is where we track changes to our files and share them with GitHub. The sidebar shows us which files have changed."
-
-### Step 8: Commit your first change
-
-A **commit** is like a snapshot of your project at a specific moment. Let's create our first commit.
-
-1. In the Source Control sidebar, hover over the word **"Changes"**
-
-2. Click the **+** icon that appears (this "stages" all your changes)
-   - Your file moves from "Changes" to "Staged Changes"
-   - The letter changes from **U** to **A** (A means "added")
-
-3. At the top of the Source Control sidebar, find the **Message** text box
-
-4. Type a commit message: `Add my first README`
-
-5. Click the **Commit** button (the checkmark icon) or press `Cmd + Enter` (Mac) / `Ctrl + Enter` (Windows)
-
-> **Explain:** "A commit message describes what you changed. Write it like a headline — short and clear. Future you will thank present you for good commit messages."
-
-### Step 9: Publish to GitHub
-
-Now let's put this project on GitHub so the world can see it!
-
-1. After committing, the **Commit** button changes to say **Publish Branch**
-
-2. Click **Publish Branch**
-
-3. VS Code asks what to name your repository:
-   - The default name will be your folder name (`code`)
-   - Change it to something more descriptive like `my-first-repo`
-
-4. Choose **Publish to GitHub Public repository**
-   - Public means anyone can see your code (this is normal for learning!)
-   - You can also choose Private if you prefer
-
-5. VS Code creates the repository on GitHub and pushes your code automatically!
-
-6. You may see a notification saying **"Would you like to open the repository on GitHub?"** — click **Open on GitHub**
-
-> **Celebrate!** "You just published code to the internet. This is how professionals share and collaborate on code."
-
-### Step 10: See your repository on GitHub
-
-1. If you didn't click the notification, open your browser and go to [github.com](https://github.com)
-
-2. Click on your profile picture in the top-right corner
-
-3. Click **Your repositories**
-
-4. Click on **my-first-repo** (or whatever you named it)
-
-5. You should see your `README.md` file displayed beautifully!
-
-> **Point out:** "GitHub automatically renders your Markdown file. The `# My First Project` became a big heading, and your bullet points became a nice list."
-
-### Step 11: Make a change and sync again
-
-Let's practice the workflow of editing, committing, and syncing.
-
-1. Back in VS Code, click on your `README.md` file to open it
-
-2. Add a new section at the bottom:
-
-```markdown
-## Today's Date
-
-I created this repository on January 26, 2026.
+```bash
+git --version
 ```
 
-3. Save the file: `Cmd + S` (Mac) / `Ctrl + S` (Windows)
+If git is installed, you should see a version number like `git version 2.42.1` or similar.
 
-4. Look at the Source Control sidebar — your file now shows with an **M** (M means "modified")
+<Screenshot
+   src="/screenshots/week-1/vscode-git-version.png"
+   alt="Visual Studio Code terminal showing git --version output"
+   showChrome={false}
+/>
 
-5. **Review the changes before committing:**
-   - Click on `README.md` in the Source Control sidebar
-   - VS Code opens a "diff view" showing what you changed
-   - Red/pink background = old content (removed)
-   - Green background = new content (added)
+If you see an error message instead, you'll need to install git first. On macOS, this can be done by installing the official [Xcode Command Line Tools](https://developer.apple.com/xcode/features/). You can do that by typing the following command into the terminal and pressing Enter:
 
-6. Click the **+** icon next to `README.md` to stage the change
+```bash
+xcode-select --install
+```
 
-7. Type a commit message: `Add today's date`
+On Windows, you can download and install [Git for Windows](https://git-scm.com/download/win). After installing, restart VS Code and try the `git --version` command again. You should now see the version number.
 
-8. Click **Commit**
+### Log in to GitHub
 
-9. The button now says **Sync Changes** — click it to push your changes to GitHub
+[GitHub](https://github.com/) is a popular website for hosting git projects online. It allows you to share and collaborate with other developers.
 
-10. Go to GitHub in your browser and refresh the page — you'll see the update!
+<Screenshot
+   src="/screenshots/week-1/github-homepage.png"
+   alt="Homepage of github.com showing the GitHub logo and sign up button"
+   chromeTitle="GitHub"
+   chromeUrl="https://github.com"
+/>
 
-> **Key concept:** "The workflow is: Edit → Save → Stage → Commit → Sync. You'll do this hundreds of times."
+If git is an air traffic controller, then you can think of GitHub as an airport. It’s a central, systemized place to launch and land code. It has become an integral part of development at most newsrooms. In addition to code management, it offers an array of other services for project tracking, file hosting, task scheduling and more.
 
-### Step 12: View your commit history
+If you don't already have a GitHub account, go to [github.com](https://github.com) and fill out the registration form at the center the page. Use your CUNY email to create the account. It will earn you access to free student tools.
 
-1. On GitHub, look for a link that says **"2 commits"** (or similar) near the top of the file list
+If you already have an account, log in and make sure that your CUNY email is added to your profile. You will receive a verification email to confirm the address.
 
-2. Click it to see your **commit history**
+### Connect Visual Studio Code to GitHub
 
-3. Click on your most recent commit message (**"Add today's date"**)
+Visual Studio Code can act as a communication channel between your local project, managed by git, and your GitHub account, which will store your code on the web.
 
-4. **Explain the diff view:**
-   - Red lines (with `-`) = content that was removed
-   - Green lines (with `+`) = content that was added
-   - This is how you track every change over time
+You can connect the two by clicking on the Account icon in the lower left-hand corner of the window. It looks like a the silhouette of a person with a circle around it. Click it and select "Sign in to Sync Settings."
 
-5. Back in VS Code, you can also see history:
-   - Right-click on your `README.md` file
-   - Click **Open Timeline**
-   - The Timeline panel shows all your commits for this file
+That will open up a web browser window asking you to authorize Visual Studio Code to access your GitHub account. Do it. After a few moments, the process will complete and your code editor will be authorized to communicate with GitHub.
 
-> **Key concept:** "Every change you make is recorded forever. You can always go back to any previous version. This is called version control."
+Now let's set up your first project on GitHub. Click on the Source Control icon in the left sidebar. It looks like a branch with dots, or a Y shape.
+
+<Screenshot
+   src="/screenshots/week-1/vscode-source-control.png"
+   alt="Visual Studio Code Source Control tab showing Initialize Repository button"
+   showChrome={false}
+/>
+
+This will display two buttons, one of which says "Initialize Repository." Click it to set up git for your project. This will create a hidden folder called `.git` in your project directory, which will store all the information git needs to track your changes.
+
+The Source Control tab will now show your `README.md` file under "Changes" with a U next to it. U means "untracked." This means that git sees it but isn't logging changes to it yet.
+
+<Screenshot
+   src="/screenshots/week-1/vscode-source-control-untracked.png"
+   alt="Visual Studio Code Source Control tab showing README.md listed as untracked"
+   showChrome={false}
+/>
+
+Git won't log changes until you tell it to do so. This is done through a process called committing. A commit is like a snapshot of your project at a specific moment. Every commit includes a bundle of changes along with a message describing what was changed.
+
+The Source Control tab makes it easy to log your work with its user interface. You should hover your mouse over the word "Changes" and click the + icon that appears. This "stages" all your changes, moving your file from "Changes" to "Staged Changes." The letter changes from U to A. A means "added."
+
+Type a brief message into the box at the top of the Source Control tab. This is your commit message that will be logged in git's history. It should be short and descriptive, like a headline. For example, you could write "Added README.md."
+
+<Screenshot
+   src="/screenshots/week-1/vscode-source-control-staged.png"
+   alt="Visual Studio Code Source Control tab with README.md staged and commit message filled"
+   showChrome={false}
+/>
+
+Click the green button with the checkmark icon to commit your changes. This completes a snapshot of your project in your local git repository.
+
+<Screenshot
+   src="/screenshots/week-1/vscode-source-control-committed.png"
+   alt="Visual Studio Code Source Control tab after commit showing clean working tree"
+   showChrome={false}
+/>
+
+You can see your first commit logged in the Graph window at the bottom of the Source Control tab. It shows the commit message, author and timestamp. The button in the Changes window now says "Publish Branch." Click it to create a new project on GitHub and push your local commits to up to the web.
+
+You may be asked to authorize Visual Studio Code to access your GitHub account again. Do it.
+
+A popup at the top of Visual Studio Code will then present you with two options, which are asking whether you'd like your new repository to be public or private. Choose public. This means anyone can see your code. If that makes you uncomfortable, you can always delete it later.
+
+<Screenshot
+   src="/screenshots/week-1/vscode-source-control-publish.png"
+   alt="Visual Studio Code Source Control tab showing the publish repository options"
+   showChrome={false}
+/>
+
+A popup will appear in the lower-right corner of the window reporting that your GitHub project has been created. Click the "Open on GitHub" button to view it in your web browser. That will take you to a page like this one, linked to your GitHub account instead of mine.
+
+<Screenshot
+   src="/screenshots/week-1/github-coding-the-news-week-1.png"
+   alt="GitHub repository page for coding-the-news-week-1"
+   chromeTitle="coding-the-news-week-1"
+   chromeUrl="https://github.com/palewire/coding-the-news-week-1"
+/>
+
+This cycle of editing files, committing changes and syncing them to GitHub is the core workflow of using git and GitHub. You'll do it hundreds of times in this class.
+
+So it's a good idea to get some practice.
+
+Let's all pause here and create a few more commits to our README.md file. Try to make at least three more commits before we move on. If you're looking to get creative, consult [GitHub's guide to Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) and try adding some formatting options we haven't covered yet, like images, blockquotes or code snippets.
 
 ## Part 3: Introduction to GitHub Copilot
 
