@@ -394,7 +394,7 @@ Create three projects on GitHub using Visual Studio Code, each with a README.md.
 
 You should find three GitHub projects created by news organizations. If you need help finding them, an index of more than 300 news organizations on the platform is available at [github.com/silva-shih/open-journalism/](https://github.com/silva-shih/open-journalism/blob/master/orgs.csv).
 
-Use Visual Studio Code to clone and use Copilot to help you understand what each project does. Ask at least four questions in the chat panel for each project. Be curious!
+Use Visual Studio Code to clone and use Copilot to help you understand what each project does. Ask at least four questions in the chat panel for each project. You could ask about the technology tools used to build the project, or inquire who made the biggest contributions. Be curious!
 
 Copy the text from each chat panel and paste it into a Markdown file. Commit the text to a fourth public project on GitHub. Send me the repository link before next Monday's class.
 
