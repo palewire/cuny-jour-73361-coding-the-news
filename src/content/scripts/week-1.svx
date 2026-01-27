@@ -407,6 +407,6 @@ Use Visual Studio Code to clone and use Copilot to help you understand what each
 
 Copy the text from each chat panel and paste it into a Markdown file. Commit the text to a fourth public project on GitHub. Send me the repository link before next Monday's class.
 
-### Task 3: Exploring
+### Task 3: Sharing
 
-You should try to install and run one project using Copilot and what you can learn from the project's README. It's okay if you don't know what you're doing and if you can't get it to work. Be bold at asking Copilot for help. Document what you tried and what you encountered. Be prepared to present your experience to the class next week. You'll be expected to share what the project does, what it would take to install it and what you encountered when you tried.
+Be prepared to present what you learned about one of the repositories to the class next week. You'll be expected to share what the project does, what it would take to install it and who contributed to it.
