@@ -207,6 +207,15 @@ Click the green button with the checkmark icon to commit your changes. This comp
    showChrome={false}
 />
 
+You may receive an error message about setting your user name and email for git. If so, you can set those by typing the following commands into the terminal, replacing the example name and email with your own.
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+After you do that, return to the Source Control tab and try committing again. It should work.
+
 ### Publish to GitHub
 
 You can see your first commit logged in the Graph window at the bottom of the Source Control tab. It shows the commit message, author and timestamp. The button in the Changes window now says Publish Branch. Click it to create a new project on GitHub and push your local commits up to the web.
