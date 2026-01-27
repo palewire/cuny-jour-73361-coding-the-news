@@ -3,7 +3,7 @@ title: "Where We Code"
 summary: "How to install, configure and use Visual Studio Code, GitHub and Copilot"
 date: "Jan. 26, 2026"
 week: 1
-locked: true
+locked: false
 ---
 
 <script>
