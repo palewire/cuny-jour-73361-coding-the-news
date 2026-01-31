@@ -71,6 +71,14 @@
 
 First "What are you hacking on?" guest
 
+### Introduction to Frameworks
+
+- Explain what frameworks are
+- Show four or five examples from different news organizations
+- Show the simplified version we're going to use in class
+- Explain what GitHub templates are
+- Walk through making a new repo based on our class template
+
 ### Introduction to Node.js
 
 - Explain what Node.js is
@@ -80,14 +88,6 @@ First "What are you hacking on?" guest
 - Install nvm with Homebrew
 - Install Node LTS with nvm
 - Check that it's installed
-
-### Introduction to Frameworks
-
-- Explain what frameworks are
-- Show four or five examples from different news organizations
-- Show the simplified version we're going to use in class
-- Explain what GitHub templates are
-- Walk through making a new repo based on our class template
 
 ### The Basics of a Static-Site Framework
 

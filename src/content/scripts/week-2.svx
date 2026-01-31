@@ -6,4 +6,42 @@ week: 2
 locked: true
 ---
 
-_Content coming soon._
+### Introduction to Frameworks
+
+- Explain what frameworks are
+- Show four or five examples from different news organizations
+- Show the simplified version we're going to use in class
+- Explain what GitHub templates are
+- Walk through making a new repo based on our class template
+
+### Introduction to Node.js
+
+- Explain what Node.js is
+- Show the website
+- Show how to check if it's installed in your VS Code terminal
+- Install nvm
+- Install Node LTS with nvm
+- Check that it's installed
+
+### The Basics of a Static-Site Framework
+
+- Show how to start the test server
+- Show how to make an edit and see it in your browser
+- Show how to build the project as static files
+
+### Introduction to GitHub Actions and Pages
+
+- Explain briefly what they are
+- Show how our repo already includes an Action file that runs the same commands we've been running locally
+- Turn on Pages in the repo settings
+- Uncomment the build action
+- Push and watch it build
+- Check the page on the web
+
+### Homework Assignments
+
+- Create three different repositories based on our class template
+- Build each of them to different web URLs using GitHub Actions and GitHub Pages
+- Pick one of the other templates I showed you from another news organization
+- Try to create a new project based on it
+- Talk to Copilot about how it works; try to get it to build to Pages
