@@ -20,7 +20,7 @@ There are a lot of different frameworks out there. Maybe you've heard of some of
 
 Each newsroom tends to go its own way, picking and choosing among the most popular tools. While the programming languages and the details vary from shop to shop, the fundamentals are almost all the same.
 
-Many newsroom frameworks are published as open source software, including templates you can use to get started quickly. Here are a few examples:
+Many newsroom frameworks are published as open source software, including templates you can use to get started quickly.
 
 <Screenshot
   src="/screenshots/week-2/newsroom-frameworks.gif"
@@ -29,10 +29,12 @@ Many newsroom frameworks are published as open source software, including templa
   chromeUrl="github.com"
 />
 
+Examples include:
+
 - Reuters' [graphics-kit](https://github.com/reuters-graphics/bluprint_graphics-kit)
 - The Los Angeles Times' [baker](https://github.com/datadesk/baker-example-page-template)
 - The Pudding's [svelte-starter](https://github.com/the-pudding/svelte-starter)
-- The City's [react-template](https://github.com/thecityny/react-template)
+- The City's [fullpage-react-template](https://github.com/thecityny/fullpage-react-template)
 - The Texas Tribune's [data-visuals-create](https://github.com/texastribune/data-visuals-create)
 - The Seattle Times' [newsapp-template](https://github.com/seattletimes/newsapp-template/)
 - NPR's [dailygraphics](https://github.com/nprapps/dailygraphics)
