@@ -22,6 +22,13 @@ Each newsroom tends to go its own way, picking and choosing among the most popul
 
 Many newsroom frameworks are published as open source software, including templates you can use to get started quickly. Here are a few examples:
 
+<Screenshot
+  src="/screenshots/week-2/newsroom-frameworks.gif"
+  alt="Animated showcase of newsroom framework repositories on GitHub, cycling through Reuters graphics-kit, LA Times baker, The Pudding svelte-starter, The City react-template, Texas Tribune data-visuals-create, Seattle Times newsapp-template, and NPR dailygraphics"
+  chromeTitle="Newsroom Frameworks"
+  chromeUrl="github.com"
+/>
+
 - Reuters' [graphics-kit](https://github.com/reuters-graphics/bluprint_graphics-kit)
 - The Los Angeles Times' [baker](https://github.com/datadesk/baker-example-page-template)
 - The Pudding's [svelte-starter](https://github.com/the-pudding/svelte-starter)
