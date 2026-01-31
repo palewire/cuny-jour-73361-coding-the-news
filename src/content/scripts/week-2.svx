@@ -1,6 +1,6 @@
 ---
-title: "Building a Static Site"
-summary: "How to create and publish a website with Node.JS and GitHub Actions"
+title: "Static-Site Frameworks"
+summary: "How to publish a website with Node.JS and GitHub Actions"
 date: "Feb. 2, 2026"
 week: 2
 locked: true
@@ -196,7 +196,7 @@ You should see a version number like `10.2.4`.
 
 Excellent! You now have Node.js installed and ready to use. This is the foundation that will power all the web development tools we'll use throughout the rest of this course.
 
-## Part 3: Introduction to our static-site framework
+## Part 3: Creating a page from a static-site template
 
 Now that you have Node.js installed, let's put it to work. We're going to use a GitHub template I've created for this class. It's a minimal SvelteKit project configured to build static websites that can be hosted anywhere.
 
@@ -395,7 +395,7 @@ When you're done working, you can stop the development server by clicking in the
 
 You can restart it anytime by running `npm run dev` again.
 
-## Part 4: Introduction to GitHub Actions and Pages
+## Part 4: Publishing with GitHub Actions and Pages
 
 You have a website running on your computer, but how do you share it with the world? That's where GitHub Pages comes in. It's a free hosting service that publishes static websites directly from your GitHub repository.
 

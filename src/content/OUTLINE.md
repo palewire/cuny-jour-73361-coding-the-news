@@ -114,9 +114,65 @@ First "What are you hacking on?" guest
 
 ---
 
-## Week 3: Templating with Data
+## Week 3: Svelte Components
 
 ### Students Share Their Framework Experiments
+
+- What did you get stuck on?
+- How did you solve the problem?
+- What new trick did you learn?
+
+### Outside Guest #3
+
+Third "What are you hacking on?" guest
+
+### Introduce Svelte and Components
+
+- Tell the creation myth of Svelte in newsrooms
+- Explain what components are and why people use them (modularity, discipline, reuse, interactivity)
+- Show examples of simple components from the Reuters graphics kit
+- Look at the headline and image components already in our template
+
+### Build a Blockquote Component
+
+- Create a new component file from scratch
+- Accept quote text and attribution as props
+- Add scoped CSS styling
+- Use it on the page
+
+### Build a Big Number Component
+
+- Create a component with number, label, and optional context
+- Show how to handle optional props
+- Style it as a standalone stat box
+
+### Build a Row Component
+
+- Introduce slots — how components can wrap other components
+- Create a Row component that uses flexbox internally
+- Place multiple big number components inside it
+- Discuss how this pattern appears in real news graphics
+
+### Homework Assignments
+
+- Invent and build two original components that could be useful in a news story
+- Write a brief explanation of what each component does and why you made the choices you did
+- Use your new components on a page alongside the ones we built in class
+- Deploy the page to GitHub Pages and submit the link
+
+Some ideas to consider:
+
+- A "before and after" image slider that compares two photos
+- A timeline entry with a date, headline, and description
+- An author bio box with photo, name, and social links
+- A "read more" card that links out to another story
+- A warning or correction box for editor's notes
+
+---
+
+## Week 4: Templating with Data
+
+### Students Share Their Data Portal Experiments
 
 - What did you get stuck on?
 - How did you solve the problem?
@@ -153,43 +209,6 @@ Second "What are you hacking on?" guest
 - Use Observable Plot to make a chart
 - Create a headline, byline, and dateline above it
 - Write a lead summarizing your findings
-
----
-
-## Week 4: Svelte Components
-
-### Students Share Their Data Portal Experiments
-
-- What did you get stuck on?
-- How did you solve the problem?
-- What new trick did you learn?
-
-### Outside Guest #3
-
-Third "What are you hacking on?" guest
-
-### Introduce Svelte and Components
-
-- Tell the creation myth of Svelte in newsrooms
-- Explain what components are and why people use them (modularity, discipline, reuse, interactivity)
-- Show examples of simple components from the Reuters graphics kit
-- Make our own headline component from scratch
-- Emphasize how it has imports, variable inputs, and its own packaged JS and CSS
-
-### Demonstrate Reusability
-
-- Write a component that creates an image tag
-- Demonstrate an example of how we can reuse the same component more than once in our layout with different inputs
-
-### Introduce Data
-
-- Write a component that accepts a data list and prints a generic bar chart on the page with Plot
-- Make more than one with different datasets
-
-### Homework Assignments
-
-- Rewrite your previous data portal page to use as many components as possible
-- Create a fork of your repository and then create and publish a second demo page with a different dataset and different charts
 
 ---
 

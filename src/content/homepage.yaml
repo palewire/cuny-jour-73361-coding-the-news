@@ -142,5 +142,5 @@ scripts:
   kicker: 'Documentation'
   title: 'Classroom Scripts'
   id: 'scripts'
-  intro: 'A step-by-step guide with all of the commands, links and assignments is published after we finish each class.'
+  intro: 'A step-by-step guide with all of the commands, links and assignments is published for each class.'
   background: 'white'
