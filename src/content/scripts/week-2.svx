@@ -6,42 +6,636 @@ week: 2
 locked: true
 ---
 
-### Introduction to Frameworks
+<script>
+  import Screenshot from '$lib/components/Screenshot.svelte';
+</script>
 
-- Explain what frameworks are
-- Show four or five examples from different news organizations
-- Show the simplified version we're going to use in class
-- Explain what GitHub templates are
-- Walk through making a new repo based on our class template
+## Part 1: Introduction to Frameworks
 
-### Introduction to Node.js
+Our focus this week is on frameworks. What's that? Nothing more than fancy name for a set of software tools that, working together, can stand up a website.
 
-- Explain what Node.js is
-- Show the website
-- Show how to check if it's installed in your VS Code terminal
-- Install nvm
-- Install Node LTS with nvm
-- Check that it's installed
+It takes dozens of different software tricks to pull a good site together. Frameworks aim to make the challenge easier by curating a set of time-saving tools.
 
-### The Basics of a Static-Site Framework
+There are a lot of different frameworks out there. Maybe you've heard of some of them, like React, Next.js, Svelte, Django, or Ruby on Rails.
 
-- Show how to start the test server
-- Show how to make an edit and see it in your browser
-- Show how to build the project as static files
+Each newsroom tends to go its own way, picking and choosing among the most popular tools. While the programming languages and the details vary from shop to shop, the fundamentals are almost all the same.
 
-### Introduction to GitHub Actions and Pages
+Many newsroom frameworks are published as open source software, including templates you can use to get started quickly. Here are a few examples:
 
-- Explain briefly what they are
-- Show how our repo already includes an Action file that runs the same commands we've been running locally
-- Turn on Pages in the repo settings
-- Uncomment the build action
-- Push and watch it build
-- Check the page on the web
+- Reuters' [graphics-kit](https://github.com/reuters-graphics/bluprint_graphics-kit)
+- The Los Angeles Times' [baker](https://github.com/datadesk/baker-example-page-template)
+- The Pudding's [svelte-starter](https://github.com/the-pudding/svelte-starter)
+- The City's [react-template](https://github.com/thecityny/react-template)
+- The Texas Tribune's [data-visuals-create](https://github.com/texastribune/data-visuals-create)
+- The Seattle Times' [newsapp-template](https://github.com/seattletimes/newsapp-template/)
+- NPR's [dailygraphics](https://github.com/nprapps/dailygraphics)
 
-### Homework Assignments
+These templates all have two things in common.
 
-- Create three different repositories based on our class template
-- Build each of them to different web URLs using GitHub Actions and GitHub Pages
-- Pick one of the other templates I showed you from another news organization
-- Try to create a new project based on it
-- Talk to Copilot about how it works; try to get it to build to Pages
+One, they follow a web development approach known as static-site generation. This means that, regardless of what programming language or framework they use, they ultimately build a set of static HTML, CSS, and JavaScript files that can be served by any web server. That's unlike dynamic sites that generate pages on the fly using server-side code and databases, like WordPress or Drupal.
+
+It's a popular development pattern for simple sites, and it dominates newsroom projects. Static sites are cheaper, more secure, more stable and easier to archive than sites that rely on dy­nam­ic systems.
+
+Two, they all use the Node.js programming system, which will be the first thing we need to install.
+
+## Part 2: Introduction to Node.js
+
+Node.js is a programming system that lets you run JavaScript on your computer, not just in a web browser. It's the engine that powers most modern web development tools, including all of the newsroom frameworks we just discussed.
+
+You can learn more about it at <a href="https://nodejs.org/" target="_blank">nodejs.org</a>.
+
+<Screenshot
+  src="/screenshots/week-2/nodejs-homepage.png"
+  alt="Node.js homepage showing download options"
+  chromeTitle="Node.js"
+  chromeUrl="https://nodejs.org"
+/>
+
+We're going to install Node.js using a tool called **nvm** (Node Version Manager). This approach makes it easy to install, update, and switch between different versions of Node.js when needed.
+
+### Check if Node.js is already installed
+
+Before we install anything, let's check if you already have Node.js on your computer. Some of you may have installed it for another class or project.
+
+Open Visual Studio Code. If you don't have a project open, that's fine. Click **Terminal** in the menu bar and select **New Terminal**.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-terminal-check.png"
+  alt="Visual Studio Code with terminal panel open"
+  showChrome={false}
+/>
+
+In the terminal, type this command and press Enter:
+
+```bash
+node --version
+```
+
+If Node.js is installed, you'll see a version number like `v20.11.0` or similar. If you see a version starting with `v18`, `v20`, or higher, you're all set! You can skip ahead to Part 3.
+
+<Screenshot
+  src="/screenshots/week-2/node-version-installed.png"
+  alt="Terminal showing Node.js version number"
+  showChrome={false}
+/>
+
+If you see an error message like `command not found: node`, that means Node.js isn't installed yet. Let's fix that.
+
+<Screenshot
+  src="/screenshots/week-2/node-not-found.png"
+  alt="Terminal showing command not found error for node"
+  showChrome={false}
+/>
+
+### Install nvm
+
+We'll use nvm to install Node.js. First, we need to install nvm itself.
+
+Copy and paste this command into your terminal and press Enter:
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+```
+
+<Screenshot
+  src="/screenshots/week-2/nvm-install-curl.png"
+  alt="Terminal showing nvm installation command running"
+  showChrome={false}
+/>
+
+This downloads and runs the official nvm installation script. You'll see some output as it installs. When it's done, you'll see a message about adding nvm to your shell configuration.
+
+<Screenshot
+  src="/screenshots/week-2/nvm-install-complete.png"
+  alt="Terminal showing nvm installation complete"
+  showChrome={false}
+/>
+
+**Important:** After the installation completes, you need to close and reopen your terminal for the changes to take effect. In VS Code, you can do this by clicking the trash can icon in the terminal panel to close it, then opening a new terminal with **Terminal > New Terminal**.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-close-terminal.png"
+  alt="Visual Studio Code terminal panel showing close button"
+  showChrome={false}
+/>
+
+Open a new terminal and verify nvm is installed by typing:
+
+```bash
+nvm --version
+```
+
+You should see a version number like `0.40.1`.
+
+<Screenshot
+  src="/screenshots/week-2/nvm-version.png"
+  alt="Terminal showing nvm version number"
+  showChrome={false}
+/>
+
+### Install Node.js with nvm
+
+Now we can use nvm to install Node.js. Type this command:
+
+```bash
+nvm install --lts
+```
+
+<Screenshot
+  src="/screenshots/week-2/nvm-install-lts.png"
+  alt="Terminal showing nvm installing Node.js LTS"
+  showChrome={false}
+/>
+
+The `--lts` flag tells nvm to install the Long Term Support version of Node.js. This is the stable, recommended version for most users. You'll see progress as it downloads and installs.
+
+<Screenshot
+  src="/screenshots/week-2/nvm-install-lts-complete.png"
+  alt="Terminal showing Node.js LTS installation complete"
+  showChrome={false}
+/>
+
+### Verify the installation
+
+Let's confirm everything worked. Type this command:
+
+```bash
+node --version
+```
+
+You should now see a version number like `v20.11.0` (or whatever the current LTS version is).
+
+<Screenshot
+  src="/screenshots/week-2/node-version-success.png"
+  alt="Terminal showing Node.js version after successful installation"
+  showChrome={false}
+/>
+
+You can also check that npm (Node Package Manager) was installed alongside Node.js:
+
+```bash
+npm --version
+```
+
+You should see a version number like `10.2.4`.
+
+<Screenshot
+  src="/screenshots/week-2/npm-version.png"
+  alt="Terminal showing npm version"
+  showChrome={false}
+/>
+
+Excellent! You now have Node.js installed and ready to use. This is the foundation that will power all the web development tools we'll use throughout the rest of this course.
+
+## Part 3: Introduction to our static-site framework
+
+Now that you have Node.js installed, let's put it to work. We're going to use a GitHub template I've created for this class. It's a minimal SvelteKit project configured to build static websites that can be hosted anywhere.
+
+### Create a new repository from the template
+
+Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+
+<Screenshot
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
+
+Click the green **Use this template** button near the top right of the page. Select **Create a new repository** from the dropdown menu.
+
+<Screenshot
+  src="/screenshots/week-2/template-use-dropdown.png"
+  alt="GitHub Use this template dropdown showing Create a new repository option"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
+
+You'll be taken to a page where you can name your new repository. Enter `my-first-static-site` as the repository name. Make sure "Public" is selected so your site can be published. Then click **Create repository**.
+
+<Screenshot
+  src="/screenshots/week-2/template-create-repo.png"
+  alt="GitHub Create a new repository form with my-first-static-site as the name"
+  chromeTitle="Create a new repository"
+  chromeUrl="https://github.com/new"
+/>
+
+GitHub will create a copy of the template in your account. After a moment, you'll be redirected to your new repository's page.
+
+<Screenshot
+  src="/screenshots/week-2/new-repo-created.png"
+  alt="GitHub page showing the newly created my-first-static-site repository"
+  chromeTitle="my-first-static-site"
+  chromeUrl="https://github.com/yourusername/my-first-static-site"
+/>
+
+### Clone the repository to your computer
+
+Now let's get this code onto your computer. Open Visual Studio Code. If you have another project open, select **New Window** from the File menu to start fresh.
+
+Click on the **Source Control** icon in the left sidebar (the one that looks like a Y or a branch). Click the **Clone Repository** button.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-clone-button.png"
+  alt="Visual Studio Code Source Control panel showing Clone Repository button"
+  showChrome={false}
+/>
+
+A popup will appear at the top of the window asking for a repository URL. Go back to your browser, click the green **Code** button on your repository page, and copy the HTTPS URL.
+
+<Screenshot
+  src="/screenshots/week-2/github-code-button.png"
+  alt="GitHub Code button dropdown showing HTTPS clone URL"
+  chromeTitle="my-first-static-site"
+  chromeUrl="https://github.com/yourusername/my-first-static-site"
+/>
+
+Paste that URL into Visual Studio Code and press Enter. A file dialog will open asking where to save the project. Navigate to your `Code` folder (the one you created in Week 1) and click **Select Repository Location**.
+
+After a few moments, VS Code will ask if you want to open the cloned repository. Click **Open**.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-open-cloned.png"
+  alt="Visual Studio Code prompt asking to open the cloned repository"
+  showChrome={false}
+/>
+
+You should now see the project files in the Explorer sidebar. Take a moment to look around. You'll see folders like `src` and `static`, and files like `package.json` and `svelte.config.js`.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-project-explorer.png"
+  alt="Visual Studio Code Explorer showing the template project structure"
+  showChrome={false}
+/>
+
+### Install the project dependencies
+
+Before we can run the project, we need to install its dependencies. These are external packages of code that the project needs to work. They're listed in the `package.json` file.
+
+Open a terminal in VS Code by clicking **Terminal** in the menu bar and selecting **New Terminal**. A terminal panel will open at the bottom of the window.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-terminal-open.png"
+  alt="Visual Studio Code with terminal panel open"
+  showChrome={false}
+/>
+
+Type the following command and press Enter:
+
+```bash
+npm install
+```
+
+This tells npm (Node Package Manager) to read the `package.json` file and download all the packages listed there. You'll see a progress indicator as packages are downloaded. This may take a minute or two the first time.
+
+<Screenshot
+  src="/screenshots/week-2/npm-install-progress.png"
+  alt="Terminal showing npm install progress"
+  showChrome={false}
+/>
+
+When it's done, you'll see a summary of what was installed. You'll also notice a new `node_modules` folder has appeared in the Explorer. This contains all the downloaded packages. You don't need to look inside it  in fact, it's best to ignore it entirely.
+
+<Screenshot
+  src="/screenshots/week-2/npm-install-complete.png"
+  alt="Terminal showing npm install complete with node_modules folder visible"
+  showChrome={false}
+/>
+
+### Start the development server
+
+Now for the fun part. Type this command in the terminal:
+
+```bash
+npm run dev
+```
+
+This starts a local development server on your computer. After a moment, you'll see a message saying the server is running, with a URL like `http://localhost:5173`.
+
+<Screenshot
+  src="/screenshots/week-2/npm-run-dev.png"
+  alt="Terminal showing Vite dev server running at localhost:5173"
+  showChrome={false}
+/>
+
+Hold down the Command key (Mac) or Control key (Windows) and click on that URL. Your default browser will open and display your site.
+
+<Screenshot
+  src="/screenshots/week-2/localhost-homepage.png"
+  alt="Browser showing the template homepage at localhost:5173"
+  chromeTitle="My Static Site"
+  chromeUrl="http://localhost:5173"
+/>
+
+Congratulations! You're running a local web server. The page you see is being generated by the code in your project folder.
+
+### Make your first edit
+
+Let's change something. In VS Code's Explorer sidebar, navigate to `src/routes/+page.svelte` and click to open it.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-page-svelte.png"
+  alt="Visual Studio Code showing +page.svelte file content"
+  showChrome={false}
+/>
+
+This is the homepage of your site. Find the line that says:
+
+```svelte
+let projectName = 'My Static Site';
+```
+
+Change it to something more personal, like:
+
+```svelte
+let projectName = 'Hello from CUNY';
+```
+
+Save the file with `Cmd + S` (Mac) or `Ctrl + S` (Windows).
+
+Now look at your browser. Without refreshing, the page has automatically updated to show your new text!
+
+<Screenshot
+  src="/screenshots/week-2/localhost-edited.png"
+  alt="Browser showing the updated homepage with 'Hello from CUNY'"
+  chromeTitle="Hello from CUNY"
+  chromeUrl="http://localhost:5173"
+/>
+
+This is called **hot module replacement**. The development server watches for changes to your files and automatically updates the browser. It makes the edit-preview cycle incredibly fast.
+
+Try making a few more changes. Edit the paragraph text. Change the heading. Get a feel for how quickly you can see your changes reflected.
+
+### Explore the project structure
+
+Before we move on, let's understand what these files do. Here's a quick tour:
+
+- **`src/routes/+page.svelte`**  This is your homepage. The `+page.svelte` file in any folder becomes a page on your site.
+- **`src/routes/+layout.svelte`**  This wraps every page. It's where you'd put headers, footers, or navigation that appears on all pages.
+- **`src/app.css`**  Global styles that apply to your entire site.
+- **`src/app.html`**  The HTML shell that wraps everything.
+- **`static/`**  A folder for static files like images. Anything here is copied directly to your built site.
+- **`package.json`**  Lists your project's dependencies and scripts.
+- **`svelte.config.js`**  Configuration for SvelteKit, including how to build your site.
+
+You can ask Copilot to explain any of these files in more detail. Just open the file and ask in the chat panel, "What does this file do?"
+
+### Stop the development server
+
+When you're done working, you can stop the development server by clicking in the terminal and pressing `Ctrl + C`. You'll see a message confirming the server has stopped.
+
+You can restart it anytime by running `npm run dev` again.
+
+## Part 4: Introduction to GitHub Actions and Pages
+
+You have a website running on your computer, but how do you share it with the world? That's where GitHub Pages comes in. It's a free hosting service that publishes static websites directly from your GitHub repository.
+
+The magic happens through GitHub Actions  an automation system that can run tasks whenever you push code to your repository. Our template includes a pre-configured workflow that builds your site and deploys it to GitHub Pages automatically.
+
+### Enable GitHub Pages
+
+First, we need to tell GitHub to serve your repository as a website. Go to your repository on GitHub in your browser.
+
+Click on **Settings** in the top navigation bar (you may need to scroll right to see it).
+
+<Screenshot
+  src="/screenshots/week-2/github-settings-tab.png"
+  alt="GitHub repository page with Settings tab highlighted"
+  chromeTitle="my-first-static-site"
+  chromeUrl="https://github.com/yourusername/my-first-static-site"
+/>
+
+In the left sidebar, scroll down and click on **Pages**.
+
+<Screenshot
+  src="/screenshots/week-2/github-pages-settings.png"
+  alt="GitHub repository Settings page showing Pages option in sidebar"
+  chromeTitle="Settings - Pages"
+  chromeUrl="https://github.com/yourusername/my-first-static-site/settings/pages"
+/>
+
+Under **Source**, you'll see a dropdown that likely says "Deploy from a branch." Click it and select **GitHub Actions** instead.
+
+<Screenshot
+  src="/screenshots/week-2/github-pages-source.png"
+  alt="GitHub Pages settings showing Source dropdown with GitHub Actions selected"
+  chromeTitle="Settings - Pages"
+  chromeUrl="https://github.com/yourusername/my-first-static-site/settings/pages"
+/>
+
+That's it for the GitHub side. Now we need to activate the workflow in our code.
+
+### Uncomment the GitHub Actions workflow
+
+Return to Visual Studio Code. In the Explorer sidebar, navigate to `.github/workflows/deploy.yml` and open it.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-deploy-yml.png"
+  alt="Visual Studio Code showing deploy.yml file with commented workflow"
+  showChrome={false}
+/>
+
+You'll see that most of the file is commented out  every line starts with a `#` symbol. These comments explain what the workflow does and provide instructions for enabling it.
+
+We need to uncomment the workflow code. Select all the lines starting from `# name: Deploy to GitHub Pages` down to the end of the file.
+
+The easiest way to do this is:
+1. Click at the start of the line `# name: Deploy to GitHub Pages`
+2. Scroll down to the bottom of the file
+3. Hold Shift and click after the last line
+4. This selects all the workflow code
+
+Now we need to remove the `# ` from the beginning of each line. With the text selected, press `Cmd + /` (Mac) or `Ctrl + /` (Windows). This is the toggle comment shortcut  it will remove the comment markers from all selected lines.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-deploy-uncommented.png"
+  alt="Visual Studio Code showing deploy.yml with workflow uncommented"
+  showChrome={false}
+/>
+
+Your file should now look like this, with the YAML code no longer commented:
+
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'build'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+Save the file.
+
+### Commit and push your changes
+
+Now let's commit these changes and push them to GitHub. Click on the **Source Control** icon in the left sidebar.
+
+You'll see two changed files: `deploy.yml` and `+page.svelte`. Click the **+** icon next to "Changes" to stage both files.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-stage-changes.png"
+  alt="Visual Studio Code Source Control showing staged changes"
+  showChrome={false}
+/>
+
+Type a commit message like "Enable GitHub Pages deployment" and click the checkmark button to commit.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-commit-deploy.png"
+  alt="Visual Studio Code Source Control with commit message entered"
+  showChrome={false}
+/>
+
+Now click **Sync Changes** to push your commit to GitHub. You may see a popup asking to confirm  click OK.
+
+<Screenshot
+  src="/screenshots/week-2/vscode-sync-changes.png"
+  alt="Visual Studio Code Source Control showing Sync Changes button"
+  showChrome={false}
+/>
+
+### Watch the workflow run
+
+Go back to your repository on GitHub in your browser. Click on the **Actions** tab.
+
+<Screenshot
+  src="/screenshots/week-2/github-actions-tab.png"
+  alt="GitHub repository page with Actions tab highlighted"
+  chromeTitle="my-first-static-site"
+  chromeUrl="https://github.com/yourusername/my-first-static-site"
+/>
+
+You should see a workflow run in progress, triggered by your push. It's running through the same steps you ran locally  installing dependencies and building the site  but on GitHub's servers.
+
+<Screenshot
+  src="/screenshots/week-2/github-actions-running.png"
+  alt="GitHub Actions page showing workflow in progress"
+  chromeTitle="Actions"
+  chromeUrl="https://github.com/yourusername/my-first-static-site/actions"
+/>
+
+Click on the workflow run to see more details. You can expand each step to see its output. This is useful for debugging if something goes wrong.
+
+<Screenshot
+  src="/screenshots/week-2/github-actions-details.png"
+  alt="GitHub Actions workflow details showing build steps"
+  chromeTitle="Deploy to GitHub Pages"
+  chromeUrl="https://github.com/yourusername/my-first-static-site/actions/runs/123456789"
+/>
+
+After a minute or two, both the "build" and "deploy" jobs should complete with green checkmarks.
+
+<Screenshot
+  src="/screenshots/week-2/github-actions-complete.png"
+  alt="GitHub Actions page showing completed workflow with green checkmarks"
+  chromeTitle="Actions"
+  chromeUrl="https://github.com/yourusername/my-first-static-site/actions"
+/>
+
+### View your published site
+
+Your site is now live on the internet! Click on the **deploy** job to expand it, and you'll see a link to your published site.
+
+You can also find the URL by going back to **Settings > Pages**. The URL will be in the format:
+
+```
+https://yourusername.github.io/my-first-static-site/
+```
+
+<Screenshot
+  src="/screenshots/week-2/github-pages-live.png"
+  alt="GitHub Pages settings showing the live site URL"
+  chromeTitle="Settings - Pages"
+  chromeUrl="https://github.com/yourusername/my-first-static-site/settings/pages"
+/>
+
+Click the link to visit your site. You should see the same page you were editing locally, now available to anyone on the internet.
+
+<Screenshot
+  src="/screenshots/week-2/live-site.png"
+  alt="Browser showing the live published site on GitHub Pages"
+  chromeTitle="Hello from CUNY"
+  chromeUrl="https://yourusername.github.io/my-first-static-site/"
+/>
+
+From now on, every time you push changes to your repository, GitHub Actions will automatically rebuild and redeploy your site. The whole process takes just a minute or two.
+
+### The deployment workflow explained
+
+Let's take a moment to understand what the workflow file does:
+
+- **`on: push: branches: ['main']`**  Triggers the workflow whenever you push to the main branch
+- **`npm ci`**  Installs dependencies (like `npm install`, but faster and stricter for automated builds)
+- **`npm run build`**  Builds your site into static HTML, CSS, and JavaScript files
+- **`BASE_PATH`**  Sets the correct path for your site's assets (since it's not at the root of a domain)
+- **`upload-pages-artifact`**  Uploads the built files to GitHub
+- **`deploy-pages`**  Publishes those files to GitHub Pages
+
+This workflow is doing automatically what you did manually when running `npm install` and `npm run dev`  but it also runs `npm run build` to create optimized production files, and deploys them to the web.
+
+## Homework Assignments
+
+### Task 1: Create three static sites
+
+Create three different repositories using the class template. Each should have a different name and personalized content. Deploy all three to GitHub Pages.
+
+You should send me links to all three live sites before next Monday's class. The URLs should look like:
+- `https://yourusername.github.io/site-one/`
+- `https://yourusername.github.io/site-two/`
+- `https://yourusername.github.io/site-three/`
+
+### Task 2: Explore another template
+
+Find a static site template from a news organization (check the repositories you explored in Week 1) and try to create a new project from it. Use Copilot to help you understand how it works and how to deploy it.
+
+Document your process in a README file. What worked? What didn't? What did you learn?
+
+### Task 3: Be prepared to present
+
+Come to class ready to share one of your three sites. Explain what you changed from the template and any challenges you encountered during deployment.
