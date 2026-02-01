@@ -12,7 +12,7 @@ locked: false
 
 ## Part 1: Introduction to Frameworks
 
-What's a [framework](https://en.wikipedia.org/wiki/Web_framework)? Nothing more than fancy name for a set of software tools that, working together, can create and publish a website.
+What's a [framework](https://en.wikipedia.org/wiki/Web_framework)? Nothing more than a fancy name for a set of software tools that, working together, can create and publish a website.
 
 It takes dozens of different software tricks to pull a good site together. Frameworks aim to make the challenge easier by curating a set of time-saving tools that can work in harmony.
 
@@ -351,26 +351,31 @@ When you're done working, you can stop the development server by clicking in the
 
 You can restart it anytime by running `npm run dev` again.
 
-## Part 4: Publishing with GitHub Actions and Pages
+## Part 4: Publishing with GitHub Pages and Actions
 
-You have a website running on your computer, but how do you share it with the world? That's where GitHub Pages comes in. It's a free hosting service that publishes static websites directly from your GitHub repository.
-
-The magic happens through GitHub Actions  an automation system that can run tasks whenever you push code to your repository. Our template includes a pre-configured workflow that builds your site and deploys it to GitHub Pages automatically.
-
-### Enable GitHub Pages
-
-First, we need to tell GitHub to serve your repository as a website. Go to your repository on GitHub in your browser.
-
-Click on **Settings** in the top navigation bar (you may need to scroll right to see it).
+You have a website running on your computer, but how do you share it with the world? That's where GitHub Pages comes in. It's a free hosting service that can publish static websites directly from any GitHub repository.
 
 <Screenshot
-  src="/screenshots/week-2/github-settings-tab.png"
-  alt="GitHub repository page with Settings tab highlighted"
-  chromeTitle="my-first-static-site"
-  chromeUrl="https://github.com/yourusername/my-first-static-site"
+  src="/screenshots/week-2/github-pages-homepage.png"
+  alt="GitHub Pages homepage showing 'Websites for you and your projects' tagline with a laptop displaying a sample project site"
+  chromeTitle="GitHub Pages"
+  chromeUrl="https://pages.github.com"
 />
 
-In the left sidebar, scroll down and click on **Pages**.
+It might not sound like much, but this simple, generous service is used by developers to host a gigantic number of websites, ranging from personal portfolios and open-source documentation to highly sophisticated commercial sites.
+
+I routinely use to publish hobby projects, like [cummings.ee](https://cummings.ee/), [moneyinpolitics.wtf](https://moneyinpolitics.wtf) and [studs.show](https://studs.show/).
+
+<Screenshot
+  src="/screenshots/week-2/hobby-sites.gif"
+  alt="Animated showcase of hobby websites built with GitHub Pages: cummings.ee, moneyinpolitics.wtf, and studs.show"
+  chromeTitle="Hobby Sites"
+  chromeUrl="github.io"
+/>
+
+To take advantage of it, we need to tell GitHub to serve your repository as a website. Go to your `my-first-static-site` repository on GitHub in your browser.
+
+Click on "Settings" in the top navigation bar and then select "Pages" from the left sidebar.
 
 <Screenshot
   src="/screenshots/week-2/github-pages-settings.png"
@@ -379,7 +384,7 @@ In the left sidebar, scroll down and click on **Pages**.
   chromeUrl="https://github.com/yourusername/my-first-static-site/settings/pages"
 />
 
-Under **Source**, you'll see a dropdown that likely says "Deploy from a branch." Click it and select **GitHub Actions** instead.
+Under "Source," you'll see a dropdown that likely says "Deploy from a branch." Click it and select **GitHub Actions** instead.
 
 <Screenshot
   src="/screenshots/week-2/github-pages-source.png"
@@ -388,201 +393,88 @@ Under **Source**, you'll see a dropdown that likely says "Deploy from a branch."
   chromeUrl="https://github.com/yourusername/my-first-static-site/settings/pages"
 />
 
-That's it for the GitHub side. Now we need to activate the workflow in our code.
+That's it. GitHub will now look for a GitHub Actions workflow in your repository that builds and deploys your site whenever you push changes.
 
-### Uncomment the GitHub Actions workflow
+But, wait, what are GitHub Actions?
 
-Return to Visual Studio Code. In the Explorer sidebar, navigate to `.github/workflows/deploy.yml` and open it.
+### Introduction to GitHub Actions
+
+[GitHub Actions](https://docs.github.com/en/actions) is a powerful automation platform built into GitHub. It allows you to create custom workflows that automate tasks like building, testing, and deploying code whenever certain events occur in your repository. It's yet another reason that GitHub is so popular.
+
+<Screenshot
+  src="/screenshots/week-2/github-actions-homepage.png"
+  alt="GitHub Actions homepage showing 'Automate your workflow from idea to production' with workflow automation features"
+  chromeTitle="GitHub Actions"
+  chromeUrl="https://github.com/features/actions"
+/>
+
+We won't cover it in great detail in this class, but Actions is quickly becoming an essential tool in the data journalism toolbox. You can learn more about it in "Go big with GitHub Actions," an open-source textbook I developed with [Iris Lee](https://www.irisslee.com/) and [Dana Chiueh](https://dana.computer/).
+
+<Screenshot
+  src="/screenshots/week-2/go-big-with-github-actions.png"
+  alt="'Go big with GitHub Actions' tutorial homepage showing the course title and description"
+  chromeTitle="Go big with GitHub Actions"
+  chromeUrl="https://palewi.re/docs/go-big-with-github-actions/"
+/>
+
+GitHub Actions are configured by workflow files stored in your repository's `.github/workflows/` folder. Each workflow is written in the [YAML](https://en.wikipedia.org/wiki/YAML) format, which is yet another arcane way that humans like to boss computers around.
+
+Open the `.github/workflows/deploy.yml` file in your project. This file defines a workflow that builds and deploys your static site to GitHub Pages whenever you push changes.
 
 <Screenshot
   src="/screenshots/week-2/vscode-deploy-yml.png"
-  alt="Visual Studio Code showing deploy.yml file with commented workflow"
+  alt="Visual Studio Code showing deploy.yml workflow file with GitHub Actions configuration"
   showChrome={false}
 />
-
-You'll see that most of the file is commented out  every line starts with a `#` symbol. These comments explain what the workflow does and provide instructions for enabling it.
-
-We need to uncomment the workflow code. Select all the lines starting from `# name: Deploy to GitHub Pages` down to the end of the file.
-
-The easiest way to do this is:
-1. Click at the start of the line `# name: Deploy to GitHub Pages`
-2. Scroll down to the bottom of the file
-3. Hold Shift and click after the last line
-4. This selects all the workflow code
-
-Now we need to remove the `# ` from the beginning of each line. With the text selected, press `Cmd + /` (Mac) or `Ctrl + /` (Windows). This is the toggle comment shortcut  it will remove the comment markers from all selected lines.
-
-<Screenshot
-  src="/screenshots/week-2/vscode-deploy-uncommented.png"
-  alt="Visual Studio Code showing deploy.yml with workflow uncommented"
-  showChrome={false}
-/>
-
-Your file should now look like this, with the YAML code no longer commented:
-
-```yaml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: ['main']
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: 'pages'
-  cancel-in-progress: true
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-        env:
-          BASE_PATH: /${{ github.event.repository.name }}
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'build'
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-```
-
-Save the file.
 
 ### Commit and push your changes
 
-Now let's commit these changes and push them to GitHub. Click on the **Source Control** icon in the left sidebar.
+That means all you have to do to publish your page is commit and push the changes you made earlier to `+page.svelte`.
 
-You'll see two changed files: `deploy.yml` and `+page.svelte`. Click the **+** icon next to "Changes" to stage both files.
-
-<Screenshot
-  src="/screenshots/week-2/vscode-stage-changes.png"
-  alt="Visual Studio Code Source Control showing staged changes"
-  showChrome={false}
-/>
-
-Type a commit message like "Enable GitHub Pages deployment" and click the checkmark button to commit.
-
-<Screenshot
-  src="/screenshots/week-2/vscode-commit-deploy.png"
-  alt="Visual Studio Code Source Control with commit message entered"
-  showChrome={false}
-/>
-
-Now click **Sync Changes** to push your commit to GitHub. You may see a popup asking to confirm  click OK.
-
-<Screenshot
-  src="/screenshots/week-2/vscode-sync-changes.png"
-  alt="Visual Studio Code Source Control showing Sync Changes button"
-  showChrome={false}
-/>
+In Visual Studio Code, open the "Source Control" panel we learned about last week. Commit your changes with a message like "Updated headline" and push them to GitHub.
 
 ### Watch the workflow run
 
-Go back to your repository on GitHub in your browser. Click on the **Actions** tab.
+Go back to your repository on GitHub in your browser. Click on the "Actions" tab.
+
+You should see a workflow run with your commit message as its title. It's running through the same steps you ran locally, installing dependencies and building the site, but on GitHub's servers. It will spin for a few minutes and then, if all goes well, resolve as a green check mark.
 
 <Screenshot
   src="/screenshots/week-2/github-actions-tab.png"
-  alt="GitHub repository page with Actions tab highlighted"
-  chromeTitle="my-first-static-site"
-  chromeUrl="https://github.com/yourusername/my-first-static-site"
+  alt="GitHub repository page with Actions tab showing workflow runs"
+  chromeTitle="my-first-static-site - Actions"
+  chromeUrl="https://github.com/palewire/my-first-static-site/actions"
 />
 
-You should see a workflow run in progress, triggered by your push. It's running through the same steps you ran locally  installing dependencies and building the site  but on GitHub's servers.
-
-<Screenshot
-  src="/screenshots/week-2/github-actions-running.png"
-  alt="GitHub Actions page showing workflow in progress"
-  chromeTitle="Actions"
-  chromeUrl="https://github.com/yourusername/my-first-static-site/actions"
-/>
-
-Click on the workflow run to see more details. You can expand each step to see its output. This is useful for debugging if something goes wrong.
-
-<Screenshot
-  src="/screenshots/week-2/github-actions-details.png"
-  alt="GitHub Actions workflow details showing build steps"
-  chromeTitle="Deploy to GitHub Pages"
-  chromeUrl="https://github.com/yourusername/my-first-static-site/actions/runs/123456789"
-/>
-
-After a minute or two, both the "build" and "deploy" jobs should complete with green checkmarks.
-
-<Screenshot
-  src="/screenshots/week-2/github-actions-complete.png"
-  alt="GitHub Actions page showing completed workflow with green checkmarks"
-  chromeTitle="Actions"
-  chromeUrl="https://github.com/yourusername/my-first-static-site/actions"
-/>
+The first commit's run at the bottom of the list will likely have failed, because Pages wasn't set up yet. Don't worry about that one. Focus on the most recent run at the top of the list.
 
 ### View your published site
 
-Your site is now live on the internet! Click on the **deploy** job to expand it, and you'll see a link to your published site.
-
-You can also find the URL by going back to **Settings > Pages**. The URL will be in the format:
-
-```
-https://yourusername.github.io/my-first-static-site/
-```
+Click into the most recent workflow run to see its details. The "Deploy" step should have a URL to your live site.
 
 <Screenshot
-  src="/screenshots/week-2/github-pages-live.png"
-  alt="GitHub Pages settings showing the live site URL"
-  chromeTitle="Settings - Pages"
-  chromeUrl="https://github.com/yourusername/my-first-static-site/settings/pages"
+  src="/screenshots/week-2/github-actions-details.png"
+  alt="GitHub Actions workflow run details showing build and deploy jobs with green checkmarks"
+  chromeTitle="Deploy to GitHub Pages"
+  chromeUrl="https://github.com/palewire/my-first-static-site/actions/runs/21569912931"
 />
 
-Click the link to visit your site. You should see the same page you were editing locally, now available to anyone on the internet.
+You can also figure out your URL on your own by following GitHub's standard Pages URL format:
+
+```
+https://<your-username>.github.io/<your-repo-name>/
+```
+
+Hit the link to visit your site. You should see the same page you were editing locally, now available to anyone on the internet.
 
 <Screenshot
-  src="/screenshots/week-2/live-site.png"
-  alt="Browser showing the live published site on GitHub Pages"
-  chromeTitle="Hello from CUNY"
-  chromeUrl="https://yourusername.github.io/my-first-static-site/"
+  src="/screenshots/week-2/live-site.gif"
+  alt="The published static site live on GitHub Pages showing the edited headline"
+  chromeTitle="My First Static Site"
+  chromeUrl="https://palewire.github.io/my-first-static-site/"
 />
 
 From now on, every time you push changes to your repository, GitHub Actions will automatically rebuild and redeploy your site. The whole process takes just a minute or two.
-
-### The deployment workflow explained
-
-Let's take a moment to understand what the workflow file does:
-
-- **`on: push: branches: ['main']`**  Triggers the workflow whenever you push to the main branch
-- **`npm ci`**  Installs dependencies (like `npm install`, but faster and stricter for automated builds)
-- **`npm run build`**  Builds your site into static HTML, CSS, and JavaScript files
-- **`BASE_PATH`**  Sets the correct path for your site's assets (since it's not at the root of a domain)
-- **`upload-pages-artifact`**  Uploads the built files to GitHub
-- **`deploy-pages`**  Publishes those files to GitHub Pages
-
-This workflow is doing automatically what you did manually when running `npm install` and `npm run dev`  but it also runs `npm run build` to create optimized production files, and deploys them to the web.
 
 ## Homework Assignments
 
