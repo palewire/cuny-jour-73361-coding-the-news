@@ -480,19 +480,20 @@ From now on, every time you push changes to your repository, GitHub Actions will
 
 ### Task 1: Create three static sites
 
-Create three different repositories using the class template. Each should have a different name and personalized content. Deploy all three to GitHub Pages.
+Create three different repositories using the class template. Each should have a different name and personalized content.
 
-You should send me links to all three live sites before next Monday's class. The URLs should look like:
-- `https://yourusername.github.io/site-one/`
-- `https://yourusername.github.io/site-two/`
-- `https://yourusername.github.io/site-three/`
+They don't have to do much. The point is to get practice. Swap out the image, rewrite the body text, change the byline to your own name, or whatever you like.
 
-### Task 2: Explore another template
+Deploy all three to GitHub Pages. Send me links to all three live sites before next Monday's class.
 
-Find a static site template from a news organization (check the repositories you explored in Week 1) and try to create a new project from it. Use Copilot to help you understand how it works and how to deploy it.
+### Task 2: Explore another newsroom's template
+
+Find a static site template from a news organization and try to create a new project from it. Use Copilot to help you understand how it works and how to deploy it.
+
+Don't spend more than an hour or two on it. It's okay if you fail. These tools are complex, and frequently undocumented. When you get stuck, ask Copilot for help.
 
 Document your process in a README file. What worked? What didn't? What did you learn?
 
 ### Task 3: Be prepared to present
 
-Come to class ready to share one of your three sites. Explain what you changed from the template and any challenges you encountered during deployment.
+Be ready to present one of your three static sites to the class and talk about your experience exploring another newsroom's template. What challenges did you face? What did you learn?
