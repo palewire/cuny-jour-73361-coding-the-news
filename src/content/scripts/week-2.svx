@@ -26,7 +26,7 @@ Many newsroom frameworks are published as open source software, including templa
   src="/screenshots/week-2/newsroom-frameworks.gif"
   alt="Animated showcase of newsroom framework repositories on GitHub, cycling through Reuters graphics-kit, LA Times baker, The Pudding svelte-starter, The City react-template, Texas Tribune data-visuals-create, Seattle Times newsapp-template, and NPR dailygraphics"
   chromeTitle="Newsroom Frameworks"
-  chromeUrl="github.com"
+  chromeUrl="https://github.com"
 />
 
 Examples include:
@@ -370,7 +370,7 @@ I routinely use to publish hobby projects, like [cummings.ee](https://cummings.e
   src="/screenshots/week-2/hobby-sites.gif"
   alt="Animated showcase of hobby websites built with GitHub Pages: cummings.ee, moneyinpolitics.wtf, and studs.show"
   chromeTitle="Hobby Sites"
-  chromeUrl="github.io"
+  chromeUrl="https://github.io"
 />
 
 To take advantage of it, we need to tell GitHub to serve your repository as a website. Go to your `my-first-static-site` repository on GitHub in your browser.
