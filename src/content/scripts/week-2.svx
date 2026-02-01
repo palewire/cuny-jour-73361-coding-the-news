@@ -345,7 +345,7 @@ We'll dig into more later, but let's pause briefly for an overview of the main f
 
 You can ask Copilot to explain any of these files in more detail. Just open the file and ask in the chat panel, "What does this file do?"
 
-### Stopping the development server
+### Stop the development server
 
 When you're done working, you can stop the development server by clicking in the terminal and pressing `Ctrl + C`. You'll see a message confirming the server has stopped.
 
