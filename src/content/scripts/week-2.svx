@@ -3,7 +3,7 @@ title: "Static-Site Frameworks"
 summary: "How to publish a website with Node.JS and GitHub Actions"
 date: "Feb. 2, 2026"
 week: 2
-locked: true
+locked: false
 ---
 
 <script>
@@ -12,9 +12,9 @@ locked: true
 
 ## Part 1: Introduction to Frameworks
 
-Our focus this week is on frameworks. What's that? Nothing more than fancy name for a set of software tools that, working together, can stand up a website.
+What's a [framework](https://en.wikipedia.org/wiki/Web_framework)? Nothing more than fancy name for a set of software tools that, working together, can create and publish a website.
 
-It takes dozens of different software tricks to pull a good site together. Frameworks aim to make the challenge easier by curating a set of time-saving tools.
+It takes dozens of different software tricks to pull a good site together. Frameworks aim to make the challenge easier by curating a set of time-saving tools that can work in harmony.
 
 There are a lot of different frameworks out there. Maybe you've heard of some of them, like React, Next.js, Svelte, Django, or Ruby on Rails.
 
@@ -39,7 +39,7 @@ Examples include:
 - The Seattle Times' [newsapp-template](https://github.com/seattletimes/newsapp-template/)
 - NPR's [dailygraphics](https://github.com/nprapps/dailygraphics)
 
-These templates all have two things in common.
+While they were developed separately, they all have two things in common.
 
 One, they follow a web development approach known as static-site generation. This means that, regardless of what programming language or framework they use, they ultimately build a set of static HTML, CSS, and JavaScript files that can be served by any web server. That's unlike dynamic sites that generate pages on the fly using server-side code and databases, like WordPress or Drupal.
 
@@ -49,9 +49,7 @@ Two, they all use the Node.js programming system, which will be the first thing 
 
 ## Part 2: Introduction to Node.js
 
-Node.js is a programming system that lets you run JavaScript on your computer, not just in a web browser. It's the engine that powers most modern web development tools, including all of the newsroom frameworks we just discussed.
-
-You can learn more about it at <a href="https://nodejs.org/" target="_blank">nodejs.org</a>.
+[Node.js](https://en.wikipedia.org/wiki/Node.js) is a programming system that lets you run JavaScript on your computer, not just in a web browser. It's the engine that powers most modern web development tools, including all of the newsroom frameworks we just discussed.
 
 <Screenshot
   src="/screenshots/week-2/nodejs-homepage.png"
@@ -60,21 +58,17 @@ You can learn more about it at <a href="https://nodejs.org/" target="_blank">nod
   chromeUrl="https://nodejs.org"
 />
 
-We're going to install Node.js using a tool called **nvm** (Node Version Manager). This approach makes it easy to install, update, and switch between different versions of Node.js when needed.
+Its massive ecosystem of open-source packages, accessible via the [Node Package Manager](https://en.wikipedia.org/wiki/Npm), provides developers with a vast array of tools and libraries to build applications quickly and efficiently. Those tools include static-site frameworks invented and supported by major tech companies, as well as countless smaller projects maintained by individual developers.
+
+You can learn more about it at <a href="https://nodejs.org/" target="_blank">nodejs.org</a>.
 
 ### Check if Node.js is already installed
 
 Before we install anything, let's check if you already have Node.js on your computer. Some of you may have installed it for another class or project.
 
-Open Visual Studio Code. If you don't have a project open, that's fine. Click **Terminal** in the menu bar and select **New Terminal**.
+Open Visual Studio Code. If you don't have a project open, that's fine. Click Terminal in the menu bar and select New Terminal.
 
-<Screenshot
-  src="/screenshots/week-2/vscode-terminal-check.png"
-  alt="Visual Studio Code with terminal panel open"
-  showChrome={false}
-/>
-
-In the terminal, type this command and press Enter:
+Type this command and press Enter:
 
 ```bash
 node --version
@@ -82,119 +76,107 @@ node --version
 
 If Node.js is installed, you'll see a version number like `v20.11.0` or similar. If you see a version starting with `v18`, `v20`, or higher, you're all set! You can skip ahead to Part 3.
 
-<Screenshot
-  src="/screenshots/week-2/node-version-installed.png"
-  alt="Terminal showing Node.js version number"
-  showChrome={false}
-/>
+If you see an error message like `command not found: node`, that means Node.js isn't installed yet.
 
-If you see an error message like `command not found: node`, that means Node.js isn't installed yet. Let's fix that.
-
-<Screenshot
-  src="/screenshots/week-2/node-not-found.png"
-  alt="Terminal showing command not found error for node"
-  showChrome={false}
-/>
+We'll fix that with a tool called [Node Version Manager](https://www.nvmnode.com/).
 
 ### Install nvm
 
-We'll use nvm to install Node.js. First, we need to install nvm itself.
+Node Version Manager, also known as `nvm`, is a command-line tool that makes it easy to install and manage multiple versions of Node.js on your computer. It's especially useful for developers who need to switch between different Node.js versions for different projects.
+
+<Screenshot
+  src="/screenshots/week-2/nvm-homepage.png"
+  alt="Node Version Manager homepage showing installation instructions"
+  chromeTitle="nvm"
+  chromeUrl="https://www.nvmnode.com"
+/>
+
+Before we can use it to install Node.js, we need to install nvm itself.
 
 Copy and paste this command into your terminal and press Enter:
 
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 ```
 
-<Screenshot
-  src="/screenshots/week-2/nvm-install-curl.png"
-  alt="Terminal showing nvm installation command running"
-  showChrome={false}
-/>
+This downloads and runs the official nvm installation script. You'll see some output as it installs. It should look something like:
 
-This downloads and runs the official nvm installation script. You'll see some output as it installs. When it's done, you'll see a message about adding nvm to your shell configuration.
+```bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 16774  100 16774    0     0  45969      0 --:--:-- --:--:-- --:--:-- 45956
+=> Downloading nvm from git to '/Users/U6122976/.nvm'
+=> Cloning into '/Users/U6122976/.nvm'...
+remote: Enumerating objects: 403, done.
+remote: Counting objects: 100% (403/403), done.
+remote: Compressing objects: 100% (332/332), done.
+remote: Total 403 (delta 56), reused 168 (delta 43), pack-reused 0 (from 0)
+Receiving objects: 100% (403/403), 404.19 KiB | 2.41 MiB/s, done.
+Resolving deltas: 100% (56/56), done.
+* (HEAD detached at FETCH_HEAD)
+  master
+=> Compressing and cleaning up git repository
 
-<Screenshot
-  src="/screenshots/week-2/nvm-install-complete.png"
-  alt="Terminal showing nvm installation complete"
-  showChrome={false}
-/>
+=> Appending nvm source string to /Users/U6122976/.zshrc
+=> Appending bash_completion source string to /Users/U6122976/.zshrc
+=> Close and reopen your terminal to start using nvm or run the following to use it now:
 
-**Important:** After the installation completes, you need to close and reopen your terminal for the changes to take effect. In VS Code, you can do this by clicking the trash can icon in the terminal panel to close it, then opening a new terminal with **Terminal > New Terminal**.
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+```
 
-<Screenshot
-  src="/screenshots/week-2/vscode-close-terminal.png"
-  alt="Visual Studio Code terminal panel showing close button"
-  showChrome={false}
-/>
+At the very bottom there, you'll see a message about adding nvm to your terminal's configuration file. In my case, it's called the `.zshrc` file, because I'm using the [Z shell](https://en.wikipedia.org/wiki/Z_shell) terminal program. Yours might be called `.bashrc` or `.bash_profile` if you're using [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)), or another name if you're using a different terminal program.
 
-Open a new terminal and verify nvm is installed by typing:
+This is important, because it is how nvm is booted up whenever you open a terminal. And it won't take effect until you restart your terminal, so do that now before you proceed.
+
+In the new terminal you should verify nvm is installed by typing:
 
 ```bash
 nvm --version
 ```
 
-You should see a version number like `0.40.1`.
-
-<Screenshot
-  src="/screenshots/week-2/nvm-version.png"
-  alt="Terminal showing nvm version number"
-  showChrome={false}
-/>
+You should see a version number like `0.40.4`. Now you're ready to install Node.js.
 
 ### Install Node.js with nvm
 
-Now we can use nvm to install Node.js. Type this command:
+Now we can use nvm to install Node.js by typing this command:
 
 ```bash
 nvm install --lts
 ```
 
-<Screenshot
-  src="/screenshots/week-2/nvm-install-lts.png"
-  alt="Terminal showing nvm installing Node.js LTS"
-  showChrome={false}
-/>
+The `--lts` option tells nvm to install the "Long Term Support" version of Node.js. This is the stable, recommended version for most users. You'll see progress as it downloads and installs. It should look something like this:
 
-The `--lts` flag tells nvm to install the Long Term Support version of Node.js. This is the stable, recommended version for most users. You'll see progress as it downloads and installs.
+```bash
+Installing latest LTS version.
+Downloading and installing node v24.13.0...
+Downloading https://nodejs.org/dist/v24.13.0/node-v24.13.0-darwin-arm64.tar.xz...
+################################################################################# 100.0%
+Computing checksum with sha256sum
+Checksums matched!
+Now using node v24.13.0 (npm v11.6.2)
+Creating default alias: default -> lts/* (-> v24.13.0 *)
+```
 
-<Screenshot
-  src="/screenshots/week-2/nvm-install-lts-complete.png"
-  alt="Terminal showing Node.js LTS installation complete"
-  showChrome={false}
-/>
-
-### Verify the installation
-
-Let's confirm everything worked. Type this command:
+Let's confirm everything worked by running the same command as before:
 
 ```bash
 node --version
 ```
 
-You should now see a version number like `v20.11.0` (or whatever the current LTS version is).
+You should now see a version number like `v24.13.0`, or whatever the current LTS version is.
+>
 
-<Screenshot
-  src="/screenshots/week-2/node-version-success.png"
-  alt="Terminal showing Node.js version after successful installation"
-  showChrome={false}
-/>
-
-You can also check that npm (Node Package Manager) was installed alongside Node.js:
+You should also check that the Node Package Manager was installed alongside Node.js, which is the tool we'll use to install additional packages.
 
 ```bash
 npm --version
 ```
 
-You should see a version number like `10.2.4`.
+You should see a version number like `11.6.2`.
 
-<Screenshot
-  src="/screenshots/week-2/npm-version.png"
-  alt="Terminal showing npm version"
-  showChrome={false}
-/>
-
-Excellent! You now have Node.js installed and ready to use. This is the foundation that will power all the web development tools we'll use throughout the rest of this course.
+You now have Node.js installed and ready to use. This is the foundation that will power all the web development tools we'll use throughout the rest of this course.
 
 ## Part 3: Creating a page from a static-site template
 

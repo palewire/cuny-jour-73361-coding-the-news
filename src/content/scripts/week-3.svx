@@ -1,8 +1,8 @@
 ---
 title: "Building Blocks"
 summary: "How to create and combine reusable components with Svelte"
-date: "Feb. 2, 2026"
-week: 2
+date: "Feb. 9, 2026"
+week: 3
 locked: true
 ---
 
