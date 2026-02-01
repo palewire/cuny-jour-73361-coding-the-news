@@ -41,7 +41,7 @@ Examples include:
 
 While they were developed separately, they all have two things in common.
 
-One, they follow a web development approach known as static-site generation. This means that, regardless of what programming language or framework they use, they ultimately build a set of static HTML, CSS, and JavaScript files that can be served by any web server. That's unlike dynamic sites that generate pages on the fly using server-side code and databases, like WordPress or Drupal.
+One, they follow a web development approach known as static-site generation. This means that, regardless of what tools they use, they ultimately build a set of static HTML, CSS, and JavaScript files that can be served by any web server. That's unlike dynamic sites that generate pages on the fly using server-side code and databases, like WordPress or Drupal.
 
 It's a popular development pattern for simple sites, and it dominates newsroom projects. Static sites are cheaper, more secure, more stable and easier to archive than sites that rely on dy­nam­ic systems.
 
