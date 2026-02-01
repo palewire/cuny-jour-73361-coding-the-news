@@ -166,7 +166,6 @@ node --version
 ```
 
 You should now see a version number like `v24.13.0`, or whatever the current LTS version is.
->
 
 You should also check that the Node Package Manager was installed alongside Node.js, which is the tool we'll use to install additional packages.
 
@@ -180,7 +179,14 @@ You now have Node.js installed and ready to use. This is the foundation that wil
 
 ## Part 3: Creating a page from a static-site template
 
-Now that you have Node.js installed, let's put it to work. We're going to use a GitHub template I've created for this class. It's a minimal SvelteKit project configured to build static websites that can be hosted anywhere.
+Now that you have Node.js installed, let's put it to work. We're going to use a GitHub template I've created for this class. It's a minimal framework configured to build static websites in the style of CUNY's [NYCity News Service](https://nycitynewsservice.com/).
+
+<Screenshot
+  src="/screenshots/week-2/template-live-preview.gif"
+  alt="Animated preview of the CUNY static site template showing a sample news story layout with hero image"
+  chromeTitle="CUNY Static Site Template"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/"
+/>
 
 ### Create a new repository from the template
 
@@ -193,16 +199,7 @@ Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour
   chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
 />
 
-Click the green **Use this template** button near the top right of the page. Select **Create a new repository** from the dropdown menu.
-
-<Screenshot
-  src="/screenshots/week-2/template-use-dropdown.png"
-  alt="GitHub Use this template dropdown showing Create a new repository option"
-  chromeTitle="cuny-jour-static-site-template"
-  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
-/>
-
-You'll be taken to a page where you can name your new repository. Enter `my-first-static-site` as the repository name. Make sure "Public" is selected so your site can be published. Then click **Create repository**.
+Click the green "Use this template" button near the top right of the page. Select "Create a new repository" from the dropdown menu. You'll be taken to a page where you can name your new repository.
 
 <Screenshot
   src="/screenshots/week-2/template-create-repo.png"
@@ -211,7 +208,9 @@ You'll be taken to a page where you can name your new repository. Enter `my-firs
   chromeUrl="https://github.com/new"
 />
 
-GitHub will create a copy of the template in your account. After a moment, you'll be redirected to your new repository's page.
+Select your account as the owner. Enter `my-first-static-site` as the repository name. Make sure "Public" is selected in the visibility options. Then click the green "Create repository" button.
+
+After a moment, you'll be redirected to your new repository's page.
 
 <Screenshot
   src="/screenshots/week-2/new-repo-created.png"
@@ -222,34 +221,13 @@ GitHub will create a copy of the template in your account. After a moment, you'l
 
 ### Clone the repository to your computer
 
-Now let's get this code onto your computer. Open Visual Studio Code. If you have another project open, select **New Window** from the File menu to start fresh.
+Now let's get this code onto your computer using the techniques we covered in week one.
 
-Click on the **Source Control** icon in the left sidebar (the one that looks like a Y or a branch). Click the **Clone Repository** button.
+Open a new window in Visual Studio Code. Click on the "Source Control" icon in the left sidebar, the one that looks like a Y or a branch, and click the "Clone Repository" button.
 
-<Screenshot
-  src="/screenshots/week-2/vscode-clone-button.png"
-  alt="Visual Studio Code Source Control panel showing Clone Repository button"
-  showChrome={false}
-/>
+A popup will appear at the top of the window asking for a repository URL. Go back to your browser, copy the URL to your new repository and paste it into the popup. Press enter.
 
-A popup will appear at the top of the window asking for a repository URL. Go back to your browser, click the green **Code** button on your repository page, and copy the HTTPS URL.
-
-<Screenshot
-  src="/screenshots/week-2/github-code-button.png"
-  alt="GitHub Code button dropdown showing HTTPS clone URL"
-  chromeTitle="my-first-static-site"
-  chromeUrl="https://github.com/yourusername/my-first-static-site"
-/>
-
-Paste that URL into Visual Studio Code and press Enter. A file dialog will open asking where to save the project. Navigate to your `Code` folder (the one you created in Week 1) and click **Select Repository Location**.
-
-After a few moments, VS Code will ask if you want to open the cloned repository. Click **Open**.
-
-<Screenshot
-  src="/screenshots/week-2/vscode-open-cloned.png"
-  alt="Visual Studio Code prompt asking to open the cloned repository"
-  showChrome={false}
-/>
+A file dialog will open asking where to save the project. Navigate to your `Code` folder we made last week and click "Select Repository Location." After a few moments, VS Code will ask if you want to open the cloned repository. Click "Open."
 
 You should now see the project files in the Explorer sidebar. Take a moment to look around. You'll see folders like `src` and `static`, and files like `package.json` and `svelte.config.js`.
 
@@ -263,35 +241,31 @@ You should now see the project files in the Explorer sidebar. Take a moment to l
 
 Before we can run the project, we need to install its dependencies. These are external packages of code that the project needs to work. They're listed in the `package.json` file.
 
-Open a terminal in VS Code by clicking **Terminal** in the menu bar and selecting **New Terminal**. A terminal panel will open at the bottom of the window.
-
 <Screenshot
-  src="/screenshots/week-2/vscode-terminal-open.png"
-  alt="Visual Studio Code with terminal panel open"
+  src="/screenshots/week-2/vscode-package-json.png"
+  alt="Visual Studio Code showing package.json file with project dependencies"
   showChrome={false}
 />
 
-Type the following command and press Enter:
+Open a terminal in VS Code by clicking "Terminal" in the menu bar and selecting "New Terminal". Type the following command and press Enter:
 
 ```bash
 npm install
 ```
 
-This tells npm (Node Package Manager) to read the `package.json` file and download all the packages listed there. You'll see a progress indicator as packages are downloaded. This may take a minute or two the first time.
+This tells Node Package Manager to read the `package.json` file and download all the packages listed there. You'll see a progress indicator as packages are downloaded. This may take a minute or two the first time.
 
-<Screenshot
-  src="/screenshots/week-2/npm-install-progress.png"
-  alt="Terminal showing npm install progress"
-  showChrome={false}
-/>
-
-When it's done, you'll see a summary of what was installed. You'll also notice a new `node_modules` folder has appeared in the Explorer. This contains all the downloaded packages. You don't need to look inside it  in fact, it's best to ignore it entirely.
+When it's done, you'll see a summary of what was installed.
 
 <Screenshot
   src="/screenshots/week-2/npm-install-complete.png"
   alt="Terminal showing npm install complete with node_modules folder visible"
   showChrome={false}
 />
+
+You'll notice a new `node_modules` folder has appeared in the Explorer. This contains all the downloaded packages. You don't need to look inside it and, in fact, it's best to ignore it entirely.
+
+Another new file is called `package-lock.json`. This file locks the exact versions of the installed packages to ensure consistency across different environments. You also don't need to edit this file manually. It's for computers, not humans.
 
 ### Start the development server
 
@@ -309,16 +283,16 @@ This starts a local development server on your computer. After a moment, you'll 
   showChrome={false}
 />
 
-Hold down the Command key (Mac) or Control key (Windows) and click on that URL. Your default browser will open and display your site.
+Open your browser and navigate to that URL, `http://localhost:5173`. You should see the template homepage.
 
 <Screenshot
-  src="/screenshots/week-2/localhost-homepage.png"
+  src="/screenshots/week-2/template-live-preview.gif"
   alt="Browser showing the template homepage at localhost:5173"
   chromeTitle="My Static Site"
   chromeUrl="http://localhost:5173"
 />
 
-Congratulations! You're running a local web server. The page you see is being generated by the code in your project folder.
+Congratulations! You're running a local web server. Unlike the demonstration page we saw earlier, this page you see is being generated by the code in your project folder.
 
 ### Make your first edit
 
@@ -330,48 +304,48 @@ Let's change something. In VS Code's Explorer sidebar, navigate to `src/routes/+
   showChrome={false}
 />
 
-This is the homepage of your site. Find the line that says:
+This is the homepage of your site. There's a lot going on here. We'll cover it all in detail later. For now, just focus on the top part of the file, the part inside the script tags.
 
-```svelte
-let projectName = 'My Static Site';
+Find the line that says:
+
+```js
+let headline = 'Become a force for good. Join our next class.';
 ```
 
 Change it to something more personal, like:
 
-```svelte
-let projectName = 'Hello from CUNY';
+```js
+let headline = 'Breaking News: This is my first static site!';
 ```
 
-Save the file with `Cmd + S` (Mac) or `Ctrl + S` (Windows).
-
-Now look at your browser. Without refreshing, the page has automatically updated to show your new text!
+Save the file. Now look at your browser. Without refreshing, the page has automatically updated to show your new text!
 
 <Screenshot
-  src="/screenshots/week-2/localhost-edited.png"
+  src="/screenshots/week-2/localhost-edited.gif"
   alt="Browser showing the updated homepage with 'Hello from CUNY'"
   chromeTitle="Hello from CUNY"
   chromeUrl="http://localhost:5173"
 />
 
-This is called **hot module replacement**. The development server watches for changes to your files and automatically updates the browser. It makes the edit-preview cycle incredibly fast.
+Try making a few more changes. Edit the byline and publication date. Get a feel for how quickly you can see your changes reflected.
 
-Try making a few more changes. Edit the paragraph text. Change the heading. Get a feel for how quickly you can see your changes reflected.
+### The project structure
 
-### Explore the project structure
+We'll dig into more later, but let's pause briefly for an overview of the main files and folders in this project:
 
-Before we move on, let's understand what these files do. Here's a quick tour:
-
-- **`src/routes/+page.svelte`**  This is your homepage. The `+page.svelte` file in any folder becomes a page on your site.
-- **`src/routes/+layout.svelte`**  This wraps every page. It's where you'd put headers, footers, or navigation that appears on all pages.
-- **`src/app.css`**  Global styles that apply to your entire site.
-- **`src/app.html`**  The HTML shell that wraps everything.
-- **`static/`**  A folder for static files like images. Anything here is copied directly to your built site.
-- **`package.json`**  Lists your project's dependencies and scripts.
-- **`svelte.config.js`**  Configuration for SvelteKit, including how to build your site.
+| Files | Description |
+|-------------|-------------|
+| `src/routes/+page.svelte` | Your homepage. The `+page.svelte` file in any folder becomes a page on your site. |
+| `src/routes/+layout.svelte` | Wraps every page. It's where you'd put headers, footers, or navigation that appears on all pages. |
+| `src/app.css` | Global styles that apply to your entire site. |
+| `src/app.html` | The HTML shell that wraps everything. |
+| `static/` | A folder for static files like images. Anything here is copied directly to your built site. |
+| `package.json` | Lists your project's dependencies and scripts. |
+| `svelte.config.js` | Configuration for SvelteKit, including how to build your site. |
 
 You can ask Copilot to explain any of these files in more detail. Just open the file and ask in the chat panel, "What does this file do?"
 
-### Stop the development server
+### Stopping the development server
 
 When you're done working, you can stop the development server by clicking in the terminal and pressing `Ctrl + C`. You'll see a message confirming the server has stopped.
 

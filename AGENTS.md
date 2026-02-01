@@ -24,6 +24,16 @@ locked: false
 
 Scripts are served via dynamic routes at `/scripts/week-1`, `/scripts/week-2`, etc. The `[slug]` route in `src/routes/scripts/[slug]/` loads content from `src/content/scripts/` and MDsveX automatically applies `ScriptLayout.svelte`.
 
+## Writing Style for Scripts
+
+When referring to UI elements (buttons, menu items, dropdown options, tabs, etc.) in the `.svx` script files:
+- Use **quotes** around the element name, not bold
+-  `Click the "Clone repository" button`
+-  `Select "Create a new repository" from the dropdown`
+-  `Go to the "Settings" tab`
+- L `Click the **Clone repository** button`
+- L `Select **Create a new repository** from the dropdown`
+
 ## Development Workflow
 
 - **Do not start the dev server yourself.** Ask the user to run `npm run dev` - they typically keep it running in a separate terminal.

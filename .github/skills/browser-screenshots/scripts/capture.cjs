@@ -20,11 +20,16 @@
  *   --format        Output format: png or jpeg (default: png)
  *   --quality       JPEG quality 0-100 (default: 90)
  *   --deviceScale   Device scale factor (default: 2 for retina)
+ *   --session       Named session to use for authenticated captures
  */
 
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
+
+// Session storage directory
+const SESSION_DIR = path.join(os.homedir(), '.playwright-sessions');
 
 // Parse command line arguments
 function parseArgs(args) {
@@ -42,6 +47,7 @@ function parseArgs(args) {
     format: 'png',
     quality: 90,
     deviceScale: 2,
+    session: null,
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -86,6 +92,9 @@ function parseArgs(args) {
       case '--deviceScale':
         options.deviceScale = parseFloat(args[++i]);
         break;
+      case '--session':
+        options.session = args[++i];
+        break;
     }
   }
 
@@ -109,13 +118,27 @@ async function captureScreenshot(options) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
+  // Check for session file
+  let storageState = undefined;
+  if (options.session) {
+    const sessionPath = path.join(SESSION_DIR, `${options.session}.json`);
+    if (fs.existsSync(sessionPath)) {
+      console.log(`Using session: ${options.session}`);
+      storageState = sessionPath;
+    } else {
+      console.error(`Error: Session '${options.session}' not found.`);
+      console.error(`Run: node save-session.cjs --session ${options.session}`);
+      process.exit(1);
+    }
+  }
+
   // Launch browser
   const browser = await chromium.launch({
     headless: true,
   });
 
   try {
-    // Create context with viewport settings
+    // Create context with viewport settings and optional session
     const context = await browser.newContext({
       viewport: {
         width: options.width,
@@ -123,6 +146,7 @@ async function captureScreenshot(options) {
       },
       deviceScaleFactor: options.deviceScale,
       colorScheme: options.dark ? 'dark' : 'light',
+      storageState: storageState,
     });
 
     const page = await context.newPage();
@@ -130,9 +154,12 @@ async function captureScreenshot(options) {
     // Navigate to URL
     console.log(`Navigating to: ${options.url}`);
     await page.goto(options.url, {
-      waitUntil: 'networkidle',
-      timeout: 30000,
+      waitUntil: 'domcontentloaded',
+      timeout: 60000,
     });
+    
+    // Additional wait for dynamic content
+    await page.waitForTimeout(1000);
 
     // Execute custom JavaScript if provided
     if (options.execute) {
@@ -221,6 +248,7 @@ Options:
   --format        Output format: png or jpeg (default: png)
   --quality       JPEG quality 0-100 (default: 90)
   --deviceScale   Device scale factor for retina (default: 2)
+  --session       Named session for authenticated captures (use save-session.cjs first)
 
 Examples:
   # Basic screenshot
@@ -237,6 +265,9 @@ Examples:
 
   # Execute script before capture
   node capture.js --url http://localhost:5173 --execute "document.querySelector('button').click()" --wait 1000 --output after-click.png
+
+  # Capture with saved session (authenticated)
+  node capture.js --url https://github.com/new --session github --output github-new-repo.png
 `);
   process.exit(0);
 }

@@ -224,6 +224,29 @@ img {
   max-width: 800px;
 }
 
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--spacing-md);
+}
+
+th,
+td {
+  text-align: left;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  font-family: var(--font-family-bold);
+  font-weight: 700;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
 /* Responsive Typography */
 @media (max-width: 768px) {
   html {
