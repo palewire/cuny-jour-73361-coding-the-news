@@ -49,7 +49,7 @@ Two, they all use the Node.js programming system, which will be the first thing 
 
 ## Part 2: Introduction to Node.js
 
-[Node.js](https://en.wikipedia.org/wiki/Node.js) is a programming system that lets you run JavaScript on your computer, not just in a web browser. It's the engine that powers most modern web development tools, including all of the newsroom frameworks we just discussed.
+[Node.js](https://en.wikipedia.org/wiki/Node.js) is a system that lets you run [JavaScript](https://en.wikipedia.org/wiki/JavaScript), the programming language of the web, on your computer, not just in a web browser. It's the engine that powers most modern web development tools, including all of the newsroom frameworks we just discussed.
 
 <Screenshot
   src="/screenshots/week-2/nodejs-homepage.png"
