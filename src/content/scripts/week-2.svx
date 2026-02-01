@@ -12,7 +12,7 @@ locked: false
 
 ## Part 1: Introduction to Frameworks
 
-What's a [framework](https://en.wikipedia.org/wiki/Web_framework)? Nothing more than a fancy name for a set of software tools that, working together, can create and publish a website.
+What's a [framework](https://en.wikipedia.org/wiki/Web_framework)? Nothing more than a fancy name for a set of software tools that can create and publish a website.
 
 It takes dozens of different software tricks to pull a good site together. Frameworks aim to make the challenge easier by curating a set of time-saving tools that can work in harmony.
 
