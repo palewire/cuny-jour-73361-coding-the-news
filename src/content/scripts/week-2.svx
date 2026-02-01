@@ -16,7 +16,7 @@ What's a [framework](https://en.wikipedia.org/wiki/Web_framework)? Nothing more 
 
 It takes dozens of different software tricks to pull a good site together. Frameworks aim to make the challenge easier by curating a set of time-saving tools that can work in harmony.
 
-There are a lot of different frameworks out there. Maybe you've heard of some of them, like React, Next.js, Svelte, Django, or Ruby on Rails.
+There are a lot of different frameworks out there. Maybe you've heard of some of them, like [React](https://en.wikipedia.org/wiki/React_(software)), [Next.js](https://en.wikipedia.org/wiki/Next.js), [Svelte](https://en.wikipedia.org/wiki/Svelte), [Django](https://en.wikipedia.org/wiki/Django_(web_framework)), or [Ruby on Rails](https://en.wikipedia.org/wiki/Ruby_on_Rails).
 
 Each newsroom tends to go its own way, picking and choosing among the most popular tools. While the programming languages and the details vary from shop to shop, the fundamentals are almost all the same.
 
