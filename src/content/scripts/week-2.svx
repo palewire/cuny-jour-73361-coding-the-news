@@ -58,7 +58,7 @@ Two, they all use the Node.js programming system, which will be the first thing 
   chromeUrl="https://nodejs.org"
 />
 
-Its massive ecosystem of open-source packages, accessible via the [Node Package Manager](https://en.wikipedia.org/wiki/Npm), provides developers with a vast array of tools and libraries to build applications quickly and efficiently. Those tools include static-site frameworks invented and supported by major tech companies, as well as countless smaller projects maintained by individual developers.
+Its massive ecosystem of open-source packages, accessible via the [Node Package Manager](https://en.wikipedia.org/wiki/Npm), provides developers with a vast array of tools to build applications. Those tools include static-site frameworks invented and supported by major tech companies, as well as countless smaller projects maintained by individual developers.
 
 You can learn more about it at <a href="https://nodejs.org/" target="_blank">nodejs.org</a>.
 
