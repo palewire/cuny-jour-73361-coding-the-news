@@ -496,4 +496,4 @@ Document your process in a README file. What worked? What didn't? What did you l
 
 ### Task 3: Be prepared to present
 
-Be ready to present one of your three static sites to the class and talk about your experience exploring another newsroom's template. What challenges did you face? What did you learn?
+Be ready to talk about your experience exploring another newsroom's template. What challenges did you face? What did you learn?
