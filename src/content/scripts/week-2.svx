@@ -347,7 +347,7 @@ You can ask Copilot to explain any of these files in more detail. Just open the 
 
 ### Stop the development server
 
-When you're done working, you can stop the development server by clicking in the terminal and pressing `Ctrl + C`. You'll see a message confirming the server has stopped.
+When you're done working, you can stop the development server by clicking in the terminal and pressing `q + enter`. You'll see a message confirming the server has stopped.
 
 You can restart it anytime by running `npm run dev` again.
 
