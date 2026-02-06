@@ -135,14 +135,14 @@ let headline = 'Breaking News';
 
 ### Links
 
-**External links** - Use `<a>` tags with `target="_blank"`:
-```markdown
-Visit <a href="https://nodejs.org" target="_blank">nodejs.org</a> to learn more.
-```
-
-**Internal references** - Use standard Markdown:
+Use standard Markdown link syntax:
 ```markdown
 See [GitHub's guide to Markdown](https://docs.github.com/...) for more options.
+```
+
+For external sites you want to highlight inline, you can use `<a>` tags with `target="_blank"`:
+```markdown
+Visit <a href="https://nodejs.org" target="_blank">nodejs.org</a> to learn more.
 ```
 
 ### Explanations
@@ -278,7 +278,6 @@ Scripts are substantial—typically 400-700 lines. Don't rush to condense. Stude
 - [ ] Subheadings use `###` for steps within parts
 - [ ] UI elements use "quotes" not **bold**
 - [ ] Code blocks have language hints (bash, js, svelte, etc.)
-- [ ] External links use `<a target="_blank">`
 - [ ] Screenshots use appropriate `showChrome` setting
 - [ ] Alt text is descriptive for all screenshots
 - [ ] Homework section includes 2-3 tasks

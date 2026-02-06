@@ -395,11 +395,11 @@ We won't try to dive down that rabbit hole today, but you could almost certainly
 
 Your first homework assignments are to get practice creating new projects, cloning existing projects and using Copilot to explore code.
 
-### Task 1: Creating
+### Task 1: Create three projects
 
 Create three projects on GitHub using Visual Studio Code, each with a README.md. They must be public. It doesn't matter what's in them, the point is to get practice at the workflow. You should send me links to all three before next Monday's class.
 
-### Task 2: Cloning
+### Task 2: Explore newsroom repositories
 
 You should find three GitHub projects created by news organizations. If you need help finding them, an index of more than 300 news organizations on the platform is available at [github.com/silva-shih/open-journalism/](https://github.com/silva-shih/open-journalism/blob/master/orgs.csv).
 
@@ -407,6 +407,6 @@ Use Visual Studio Code to clone and use Copilot to help you understand what each
 
 Copy the text from each chat panel and paste it into a Markdown file. Commit the text to a fourth public project on GitHub. Send me the repository link before next Monday's class.
 
-### Task 3: Sharing
+### Task 3: Be prepared to present
 
 Be prepared to present what you learned about one of the repositories to the class next week. You'll be expected to share what the project does, what it would take to install it and who contributed to it.
