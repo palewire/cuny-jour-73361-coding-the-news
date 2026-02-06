@@ -116,16 +116,6 @@ First "What are you hacking on?" guest
 
 ## Week 3: Svelte Components
 
-### Students Share Their Framework Experiments
-
-- What did you get stuck on?
-- How did you solve the problem?
-- What new trick did you learn?
-
-### Outside Guest #3
-
-Third "What are you hacking on?" guest
-
 ### Introduce Svelte and Components
 
 - Tell the creation myth of Svelte in newsrooms
@@ -155,10 +145,11 @@ Third "What are you hacking on?" guest
 
 ### Homework Assignments
 
-- Invent and build two original components that could be useful in a news story
+- Invent and build three original components that could be useful in a news story
 - Write a brief explanation of what each component does and why you made the choices you did
 - Use your new components on a page alongside the ones we built in class
 - Deploy the page to GitHub Pages and submit the link
+- Present one of your components in the next class
 
 Some ideas to consider:
 

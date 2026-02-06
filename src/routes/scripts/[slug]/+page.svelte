@@ -4,4 +4,4 @@
   const Content = $derived(data.content);
 </script>
 
-<Content />
+<Content previousScript={data.previousScript} nextScript={data.nextScript} />

@@ -6,4 +6,735 @@ week: 3
 locked: true
 ---
 
-TK
+<script>
+  import Screenshot from '$lib/components/Screenshot.svelte';
+  import Blockquote from '$lib/components/Blockquote.svelte';
+</script>
+
+## Part 1: Introduction to Svelte and Components
+
+Today we're learning to build **components**—reusable pieces of interface that you define once and use anywhere. A button. A chart. A quote box. An image with a caption. Define it once, use it everywhere.
+
+Think of components like recipe cards. Each card describes how to make one dish. You follow the instructions, maybe swap in a few ingredients, and you get a consistent result. If you want to improve the recipe, you change the card once and every dish you make from it gets better.
+
+This approach gives you **modularity** (break complex pages into manageable pieces), **consistency** (every instance looks the same), **reusability** (build once, use in dozens of stories), and **maintainability** (when something needs to change, change it in one place).
+
+### Where Svelte comes from
+
+[Svelte](https://svelte.dev/) was created by [Rich Harris](https://en.wikipedia.org/wiki/Rich_Harris_(programmer)), a graphics editor who worked at The Guardian and later The New York Times. In a recent interview, Harris described how Svelte emerged from the unique pressures of newsroom development:
+
+<Blockquote
+  quote="Newsrooms are a very deadline-driven culture for obvious reasons. And so you need to build things quickly. At the same time, you're trying to do things that are engaging. The whole point is to reach people and tell them a story in hopefully a way that they haven't seen before."
+  attribution="Rich Harris"
+/>
+
+Harris wanted a tool that would bridge the gap between knowing HTML and CSS (which many journalists and designers already understood) and building rich interactive applications—without having to become a JavaScript expert first.
+
+Today, Svelte powers newsroom tools worldwide. DataWrapper, the charting tool used by newsrooms everywhere, is built on Svelte. Reuters built their graphics kit around it. The Pudding uses it for nearly everything.
+
+### Components in the wild
+
+Let's look at a real example. Open your browser and navigate to the Reuters graphics-kit repository at <a href="https://github.com/reuters-graphics/graphics-kit-components" target="_blank">github.com/reuters-graphics/graphics-kit-components</a>.
+
+This is a library of components that Reuters journalists use in their interactive stories. Click into the `src` folder, then `components`. You'll see dozens of components: `ArticleBody`, `Byline`, `Dateline`, `Figure`, `Headline`, `PhotoCaption`, and more.
+
+Click on a few and look at the code. Don't worry if you don't understand everything yet. Just notice the pattern: each component is a self-contained file that defines its own structure and styling. Some accept data like text or images. Some have configuration options. All of them can be dropped into a story with a single line of code.
+
+This is what we're going to learn to build.
+
+### Components in our template
+
+The class template you've been using already has some components. Let's take a look.
+
+Open your `my-first-static-site` project in Visual Studio Code. If you don't have it open, clone it from GitHub using the techniques we learned in previous weeks.
+
+In the Explorer sidebar, navigate to `src/lib/components/`. You should see a few files there already.
+
+These are Svelte components. Each `.svelte` file is a self-contained piece of interface. The template uses them to build the page you see when you run `npm run dev`.
+
+Open one of them and take a look. You'll see three sections:
+
+1. A `<script>` block at the top for JavaScript
+2. HTML markup in the middle
+3. A `<style>` block at the bottom for CSS
+
+This three-part structure is the anatomy of every Svelte component. The script handles logic and data. The markup defines the structure. The styles control the appearance.
+
+Now let's build our own.
+
+## Part 2: Build a Blockquote Component
+
+Every news story has quotes. Someone said something, and you want to set it apart from the body text. Let's build a component that does this elegantly.
+
+But first, let's start fresh with a new project. Rather than building on top of the site you customized last week, we'll create a clean slate for experimenting with components.
+
+### Create a new project from the template
+
+Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+
+Click the green "Use this template" button near the top right of the page. Select "Create a new repository" from the dropdown menu.
+
+Name this repository `components-practice`. Make sure "Public" is selected, then click "Create repository."
+
+### Clone and set up the project
+
+Once your new repository is created, open Visual Studio Code. Click on the "Source Control" icon in the left sidebar and select "Clone Repository."
+
+Copy the URL of your new `components-practice` repository from GitHub and paste it into the popup. Press Enter, then select your `Code` folder as the destination. When prompted, click "Open" to open the project.
+
+Now open a terminal in VS Code (Terminal → New Terminal) and install the project dependencies:
+
+```bash
+npm install
+```
+
+Then start the development server:
+
+```bash
+npm run dev
+```
+
+Open your browser to `http://localhost:5173` to see the template running. Keep this server running throughout the class—you'll see your changes appear in real time as we build components.
+
+### Create the component file
+
+In VS Code's Explorer sidebar, right-click on the `src/lib/components/` folder and select "New File." Name it `Blockquote.svelte`.
+
+The file will open in the editor, completely empty. Let's fill it in.
+
+### Start with the markup
+
+We'll build this component step by step, starting with the simplest possible version.
+
+Type the following into your new file:
+
+```svelte
+<blockquote>
+  <p>"This is a placeholder quote that will be replaced with real text."</p>
+  <cite>— Someone Famous</cite>
+</blockquote>
+```
+
+Save the file. This is valid Svelte, but it's not very useful yet. The text is hardcoded, so every quote would say the same thing.
+
+### Add props
+
+Props (short for properties) are how you pass data into a component. Think of them as the ingredients in our recipe card. The recipe stays the same, but you can swap in different ingredients each time.
+
+In Svelte 5, we define props using the `$props()` function. Add a script block at the top of your file:
+
+```svelte
+<script>
+  let { quote, attribution } = $props();
+</script>
+
+<blockquote>
+  <p>"{quote}"</p>
+  <cite>— {attribution}</cite>
+</blockquote>
+```
+
+The curly braces `{}` in the markup tell Svelte to insert the value of a JavaScript variable. Now our component can display any quote we pass to it.
+
+### Add scoped styles
+
+Let's make our blockquote look distinctive. Add a style block at the bottom of the file:
+
+```svelte
+<script>
+  let { quote, attribution } = $props();
+</script>
+
+<blockquote>
+  <p>"{quote}"</p>
+  <cite>— {attribution}</cite>
+</blockquote>
+
+<style>
+  blockquote {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    padding-left: 2rem;
+    border-left: 4px solid #f47920;
+    background-color: #f5f5f5;
+    font-style: italic;
+  }
+
+  p {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  cite {
+    display: block;
+    font-style: normal;
+    font-weight: bold;
+    color: #666;
+  }
+</style>
+```
+
+Here's something important: these styles are **scoped**. That means they only apply to elements inside this component. The `p` styles won't affect paragraphs elsewhere on your page. The `blockquote` styles won't conflict with other blockquotes that might exist in your project.
+
+Scoped styles are one of Svelte's best features. They let you write simple, readable CSS without worrying about naming collisions or specificity wars.
+
+### Use the component on your page
+
+Now let's see it in action. Open `src/routes/+page.svelte` in your editor.
+
+At the top of the file, inside the existing `<script>` block, add an import statement:
+
+```js
+import Blockquote from '$lib/components/Blockquote.svelte';
+```
+
+The `$lib` path is a special alias in SvelteKit that points to your `src/lib` folder. It saves you from writing long relative paths like `../../lib/components/`.
+
+Now scroll down to the main content area of the page, somewhere after the headline and lead paragraph. Add your new component:
+
+```svelte
+<Blockquote
+  quote="The best journalism is built on facts, context, and a willingness to keep asking questions."
+  attribution="Someone who knows things"
+/>
+```
+
+Save the file and check your browser. You should see a styled quote box with the orange left border and gray background.
+
+Try adding another one with different text:
+
+```svelte
+<Blockquote
+  quote="Components are like LEGO bricks for the web."
+  attribution="A developer, probably"
+/>
+```
+
+Notice how both quotes have identical styling, but different content. That's the power of components. Define once, use everywhere.
+
+### Experiment with the styling
+
+Take a few minutes to customize your blockquote. Try changing the border color, the background, the font size. Each change you make will update every blockquote on the page.
+
+If you want to get creative, ask Copilot for suggestions. Open the chat panel and try something like: "How could I make this blockquote component more visually interesting?"
+
+## Part 3: Build a Big Number Component
+
+Data journalism often needs to highlight key statistics. "500,000 people displaced." "A 47% increase." "$2.3 billion in losses." These numbers deserve special treatment.
+
+Let's build a component that makes statistics stand out.
+
+### Create the component file
+
+Create a new file at `src/lib/components/BigNumber.svelte`. Start with this code:
+
+```svelte
+<script>
+  let { number, label, context } = $props();
+</script>
+
+<div class="big-number">
+  <span class="number">{number}</span>
+  <span class="label">{label}</span>
+  {#if context}
+    <span class="context">{context}</span>
+  {/if}
+</div>
+
+<style>
+  .big-number {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #1a1a1a;
+    color: white;
+    border-radius: 8px;
+  }
+
+  .number {
+    display: block;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #f47920;
+    line-height: 1.2;
+  }
+
+  .label {
+    display: block;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.5rem;
+  }
+
+  .context {
+    display: block;
+    font-size: 0.875rem;
+    color: #999;
+    margin-top: 0.75rem;
+    font-style: italic;
+  }
+</style>
+```
+
+### Understanding optional props
+
+Notice the `{#if context}` block in the markup. This is Svelte's conditional rendering syntax. It means "only render this part if `context` has a value."
+
+This makes `context` an optional prop. You can use the component with or without it:
+
+```svelte
+<!-- With context -->
+<BigNumber
+  number="47%"
+  label="Increase in ridership"
+  context="Compared to pre-pandemic levels"
+/>
+
+<!-- Without context -->
+<BigNumber
+  number="$2.3B"
+  label="Total investment"
+/>
+```
+
+Both are valid. The first shows three lines, the second shows two. The component adapts.
+
+### Add it to your page
+
+Open `src/routes/+page.svelte` again. Add another import at the top:
+
+```js
+import BigNumber from '$lib/components/BigNumber.svelte';
+```
+
+Then add a few big numbers to your page:
+
+```svelte
+<BigNumber
+  number="1.2M"
+  label="Students enrolled"
+  context="Across all CUNY campuses"
+/>
+
+<BigNumber
+  number="25"
+  label="Colleges and schools"
+/>
+
+<BigNumber
+  number="$7,680"
+  label="Annual in-state tuition"
+  context="For full-time undergraduates"
+/>
+```
+
+Save and check your browser. You should see three dark boxes with orange numbers, stacked vertically.
+
+They look good, but they'd look better side by side. That's what we'll tackle next.
+
+## Part 4: Build a Row Component
+
+So far, our components have been about displaying content. But components can also be about layout. Let's build a component that arranges other components in a horizontal row.
+
+### Understanding children
+
+Some components wrap other components. A navigation bar wraps menu items. A card grid wraps cards. A row wraps... whatever you put in it.
+
+In Svelte 5, wrapped content is called "children." When you write:
+
+```svelte
+<Row>
+  <BigNumber number="100" label="First" />
+  <BigNumber number="200" label="Second" />
+</Row>
+```
+
+The two BigNumber components are the "children" of the Row component. Row needs a way to receive and render them.
+
+### Create the Row component
+
+Create a new file at `src/lib/components/Row.svelte`:
+
+```svelte
+<script>
+  let { children, gap = '1rem' } = $props();
+</script>
+
+<div class="row" style="gap: {gap};">
+  {@render children()}
+</div>
+
+<style>
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .row > :global(*) {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+  }
+</style>
+```
+
+Let's break this down:
+
+**`let { children, gap = '1rem' } = $props();`** - We're accepting two props. `children` is a special prop that contains whatever is placed between the opening and closing tags. `gap` has a default value of `'1rem'`, making it optional.
+
+**`{@render children()}`** - This is how Svelte 5 renders children. It's a function call that outputs whatever was passed in.
+
+**`style="gap: {gap};"`** - We're using the `gap` prop to set the CSS gap property inline. This lets users customize spacing.
+
+**`:global(*)`** - The `:global()` modifier tells Svelte to apply styles to child elements even though they're technically outside this component's scope. Without it, the flex styling wouldn't reach the BigNumber components inside.
+
+### Use the Row component
+
+Back in `src/routes/+page.svelte`, add the import:
+
+```js
+import Row from '$lib/components/Row.svelte';
+```
+
+Now wrap your BigNumber components in a Row:
+
+```svelte
+<Row>
+  <BigNumber
+    number="1.2M"
+    label="Students enrolled"
+    context="Across all CUNY campuses"
+  />
+  <BigNumber
+    number="25"
+    label="Colleges and schools"
+  />
+  <BigNumber
+    number="$7,680"
+    label="Annual in-state tuition"
+    context="For full-time undergraduates"
+  />
+</Row>
+```
+
+Save and check your browser. The three stat boxes should now sit side by side in a neat row.
+
+Try resizing your browser window. Notice how the boxes wrap to a new line when the window gets too narrow. That's the `flex-wrap: wrap` doing its job, making our row responsive without any extra code.
+
+### Customize the gap
+
+The Row component accepts a `gap` prop. Try it:
+
+```svelte
+<Row gap="2rem">
+  <!-- BigNumber components here -->
+</Row>
+```
+
+The spacing between items increases. This kind of customization makes components flexible enough to use in different contexts.
+
+### Nesting and composition
+
+This pattern of components containing other components is called composition. It's one of the most powerful ideas in component-based development.
+
+You can nest components as deep as you want. A Page might contain Sections. A Section might contain Rows. A Row might contain Cards. Each level handles one concern, making the code easier to understand and modify.
+
+This is how real newsroom projects are built. The Reuters graphics kit, The Pudding's templates, the New York Times' interactives—they're all composed of small, focused components that snap together like building blocks.
+
+## Part 5: Responsive Design with SCSS Mixins
+
+Your components look great on a desktop browser. But what about phones? Tablets? The small screen in someone's pocket is often the first place they'll see your work.
+
+Responsive design means building interfaces that adapt to different screen sizes. We've already seen a taste of this—the Row component uses `flex-wrap: wrap` to stack items on narrow screens. But for more control, we need a systematic approach.
+
+### Understanding breakpoints
+
+A breakpoint is a screen width where your design changes. Common breakpoints include:
+
+| Breakpoint | Width | Typical devices |
+|------------|-------|-----------------|
+| Mobile | under 600px | Phones |
+| Tablet | 600px – 900px | Tablets, small laptops |
+| Desktop | over 900px | Laptops, monitors |
+
+When the screen is narrower than a breakpoint, you apply different styles. Maybe text gets smaller. Maybe columns stack vertically. Maybe certain elements hide entirely.
+
+### Media queries in CSS
+
+The traditional way to handle breakpoints is with media queries:
+
+```css
+.big-number {
+  font-size: 3rem;
+}
+
+@media (max-width: 600px) {
+  .big-number {
+    font-size: 2rem;
+  }
+}
+```
+
+This works, but it gets repetitive. If you have twenty components, you write twenty media queries. If you decide to change your mobile breakpoint from 600px to 640px, you change it in twenty places.
+
+### Enter SCSS
+
+[SCSS](https://sass-lang.com/) (Sassy CSS) is a CSS preprocessor that adds powerful features like variables, nesting, and mixins. A mixin is a reusable chunk of CSS that you can include anywhere.
+
+SvelteKit supports SCSS out of the box. You just need to install the preprocessor and update your component's style block.
+
+### Install the SCSS preprocessor
+
+Open your terminal and run:
+
+```bash
+npm install -D sass
+```
+
+This installs Sass (the tool that compiles SCSS) as a development dependency. Now you can use SCSS in any component.
+
+### Create responsive mixins
+
+Let's create a file that holds our responsive mixins. Create a new file at `src/lib/styles/mixins.scss`:
+
+```scss
+// Breakpoint values
+$breakpoint-mobile: 600px;
+$breakpoint-tablet: 900px;
+
+// Mobile-first: styles apply to mobile, then override for larger screens
+@mixin tablet {
+  @media (min-width: $breakpoint-mobile) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+// Desktop-first: styles apply to desktop, then override for smaller screens
+@mixin mobile-only {
+  @media (max-width: #{$breakpoint-mobile - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet-only {
+  @media (min-width: $breakpoint-mobile) and (max-width: #{$breakpoint-tablet - 1px}) {
+    @content;
+  }
+}
+```
+
+This file defines four mixins:
+
+- **`tablet`** - Styles that apply at tablet size and up
+- **`desktop`** - Styles that apply at desktop size and up
+- **`mobile-only`** - Styles that only apply on mobile
+- **`tablet-only`** - Styles that only apply on tablet
+
+The `@content` directive is where your actual styles get inserted when you use the mixin.
+
+### Use mixins in a component
+
+Let's update our BigNumber component to be more responsive. Open `src/lib/components/BigNumber.svelte` and change the style block to use SCSS.
+
+First, change the opening `<style>` tag to `<style lang="scss">`. This tells Svelte to process the styles as SCSS instead of plain CSS.
+
+Then add the import at the top of your styles:
+
+```scss
+@use '$lib/styles/mixins' as *;
+```
+
+Now you can use the mixins throughout your styles. Here's the complete updated style block:
+
+```scss
+/* Add lang="scss" to your style tag */
+@use '$lib/styles/mixins' as *;
+
+.big-number {
+  text-align: center;
+  padding: 1rem;
+  background-color: #1a1a1a;
+  color: white;
+  border-radius: 8px;
+
+  @include tablet {
+    padding: 1.25rem;
+  }
+
+  @include desktop {
+    padding: 1.5rem;
+  }
+}
+
+.number {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #f47920;
+  line-height: 1.2;
+
+  @include tablet {
+    font-size: 2.5rem;
+  }
+
+  @include desktop {
+    font-size: 3rem;
+  }
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.5rem;
+
+  @include desktop {
+    font-size: 1rem;
+  }
+}
+
+.context {
+  display: block;
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 0.75rem;
+  font-style: italic;
+
+  @include tablet {
+    font-size: 0.875rem;
+  }
+}
+```
+
+Notice the key changes:
+
+1. **`lang="scss"`** tells Svelte to process this as SCSS instead of plain CSS
+2. **`@use '$lib/styles/mixins' as *`** imports our mixins file
+3. **`@include tablet { ... }`** applies styles at tablet breakpoint and up
+4. **`@include desktop { ... }`** applies styles at desktop breakpoint and up
+
+This is called mobile-first design. The base styles are for mobile (the smallest screens), and we progressively enhance for larger screens.
+
+### Test the responsive behavior
+
+Save your files and check your browser. Open the developer tools (right-click and select "Inspect" or press F12) and click the device toolbar icon to simulate different screen sizes.
+
+Watch how the BigNumber component changes:
+
+- On mobile (under 600px): Smaller text, tighter padding
+- On tablet (600px – 900px): Medium text, medium padding
+- On desktop (over 900px): Largest text, most padding
+
+Try resizing your browser window to see the transitions happen.
+
+### Update the Row component
+
+Let's also make the Row component more responsive. Update `src/lib/components/Row.svelte`:
+
+```svelte
+<script>
+  let { children, gap = '1rem' } = $props();
+</script>
+
+<div class="row" style="gap: {gap};">
+  {@render children()}
+</div>
+
+<style lang="scss">
+  @use '$lib/styles/mixins' as *;
+
+  .row {
+    display: flex;
+    flex-direction: column;
+
+    @include tablet {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  .row > :global(*) {
+    width: 100%;
+
+    @include tablet {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+  }
+</style>
+```
+
+Now on mobile, items stack vertically in a single column. On tablet and up, they flow horizontally and wrap as needed.
+
+### Why mobile-first?
+
+You might wonder why we start with mobile styles and add complexity for larger screens. There are good reasons:
+
+1. **Most traffic is mobile.** More people browse news on phones than desktops. Design for them first.
+
+2. **Simpler base styles.** Mobile layouts are usually simpler—single columns, stacked elements. It's easier to start simple and add complexity.
+
+3. **Progressive enhancement.** If the CSS for larger screens fails to load, users still get a functional mobile experience.
+
+4. **Performance.** Mobile devices are often on slower connections. Sending only the CSS they need helps pages load faster.
+
+### Centralized breakpoints
+
+The real power of this approach is centralization. If your design team decides the tablet breakpoint should be 640px instead of 600px, you change it once in `mixins.scss` and every component updates automatically.
+
+This is the kind of systematic thinking that separates professional codebases from hobby projects. It takes a few extra minutes to set up, but it saves hours of maintenance down the road.
+
+## Homework Assignments
+
+### Task 1: Build three original components
+
+Invent and build three components that could be useful in a news story. They should be different from the ones we built in class.
+
+Here are some ideas to get you started:
+
+- **An author bio box** with photo, name, title, and social links
+ **A "key takeaways" box** that lists bullet points in a highlighted container-
+ **A "read more" card** that links out to another story with a thumbnail and headline
+- **A correction or update box** for editor's notes
+- **A data source attribution** that credits where numbers came from
+-
+You're not limited to these ideas. Be creative. Think about elements you see in news stories that could benefit from consistent styling.
+
+### Task 2: Document your components
+
+For each component you build, write a brief explanation in your project's README.md:
+
+- What does the component do?
+- What props does it accept?
+- Why did you make the design choices you did?
+
+This documentation practice is valuable. Real component libraries include documentation so other developers know how to use them.
+
+### Task 3: Create a showcase page
+
+Use your three new components on a page alongside the Blockquote, BigNumber, and Row components we built in class. The page should demonstrate all six components working together.
+
+It doesn't need to be a real news story. It can be placeholder content. The goal is to show the components in context.
+
+Deploy your page to GitHub Pages and send me the link before next Monday's class.
+
+### Task 4: Prepare to present
+
+Pick one of your original components to present in class next week. Be prepared to:
+
+- Show the component on your live page
+- Walk through the code
+- Explain why you designed it the way you did
+- Discuss any challenges you encountered

@@ -145,6 +145,34 @@ For external sites you want to highlight inline, you can use `<a>` tags with `ta
 Visit <a href="https://nodejs.org" target="_blank">nodejs.org</a> to learn more.
 ```
 
+### MDsveX Parsing Pitfalls
+
+Since `.svx` files are processed by MDsveX (Markdown + Svelte), certain characters are interpreted as Svelte syntax rather than plain text.
+
+**Avoid `<` and `>` characters in prose.** MDsveX interprets these as Svelte component tags, causing parsing errors like:
+
+```
+Error: < is not a valid component name
+```
+
+Instead of comparison operators, use words:
+- ✅ `under 600px` or `less than 600px`
+- ✅ `over 900px` or `greater than 900px`
+- ❌ `< 600px`
+- ❌ `> 900px`
+
+This applies everywhere in the content—paragraphs, lists, tables, and code comments outside of fenced code blocks.
+
+**Fenced code blocks are safe.** Inside triple-backtick code blocks, `<` and `>` are treated as literal characters:
+
+```markdown
+\`\`\`css
+@media (max-width: 600px) { /* This is fine */ }
+\`\`\`
+```
+
+**Style blocks need special handling.** When showing SCSS/CSS code with `<style>` tags, show the style content in a code block but don't wrap it in the actual `<style>` tag in your explanation—MDsveX will try to process it.
+
 ### Explanations
 - Explain **why**, not just **how**
 - Use relatable analogies (git as "air traffic controller", GitHub as "airport")
