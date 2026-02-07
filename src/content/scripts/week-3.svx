@@ -555,7 +555,7 @@ Here are some ideas. You should come up with at least one on your own.
 
 ### Task 2: Prepare to present
 
-Pick one of your original components to present in class next week. Send me links to the live page and the code behind it.
+Pick one of your original components to present in class next week. Send me a link to the live page, as well as a link to the code behind it.
 
 Be prepared to:
 

@@ -161,26 +161,28 @@ Some ideas to consider:
 
 ---
 
-## Week 4: Templating with Data
+## Week 4: Getting Interactive with Reactive Code
 
-### Students Share Their Data Portal Experiments
+### Introducing Reactive Components
 
-- What did you get stuck on?
-- How did you solve the problem?
-- What new trick did you learn?
+- Make the simple counter example from the Svelte documentation
+- Replace that with a card component that highlights a random record from the dataset each time you push a button
 
-### Outside Guest #2
+### Live Filters
 
-Second "What are you hacking on?" guest
+- Start with a simple bar or line chart that displays a full dataset
+- Add a filter with all of the distinct categories in one of the columns
+- Have the chart automatically update each time we change what's in the filter
+- Create a table with that same data
+- Add a search component that will automatically filter the table
 
-### SvelteKit Project Structure
+### Homework Assignments
 
-- Walk through all the pieces of the SvelteKit system
-- Show where the parent template is
-- Show where the page you're building is
-- Explain how template inheritance works
-- Make a change to the parent template
-- Make a change to the child template
+- Revise your data portal page to include more than one interactive element
+
+---
+
+## Week 5: Templating with Data
 
 ### Importing Data
 
@@ -203,48 +205,7 @@ Second "What are you hacking on?" guest
 
 ---
 
-## Week 5: Getting Interactive with Reactive Code
-
-### Students Share Their Component Experiments
-
-- What did you get stuck on?
-- How did you solve the problem?
-- What new trick did you learn?
-
-### Outside Guest #4
-
-Fourth "What are you hacking on?" guest
-
-### Introducing Reactive Components
-
-- Make the simple counter example from the Svelte documentation
-- Replace that with a card component that highlights a random record from the dataset each time you push a button
-
-### Live Filters
-
-- Start with a simple bar or line chart that displays a full dataset
-- Add a filter with all of the distinct categories in one of the columns
-- Have the chart automatically update each time we change what's in the filter
-- Create a table with that same data
-- Add a search component that will automatically filter the table
-
-### Homework Assignments
-
-- Revise your data portal page to include more than one interactive element
-
----
-
 ## Week 6: Layout and Design
-
-### Students Share Their Component Experiments
-
-- What did you get stuck on?
-- How did you solve the problem?
-- What new trick did you learn?
-
-### Outside Guest #5
-
-Fifth "What are you hacking on?" guest
 
 ### The Basics of Web Design
 
