@@ -1,0 +1,7 @@
+---
+title: "Interactive Inputs"
+summary: "How to engage your readers with reactive components"
+date: "Feb. 16, 2026"
+week: 4
+locked: true
+---
