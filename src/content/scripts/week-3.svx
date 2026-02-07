@@ -87,7 +87,7 @@ Open your browser and navigate to our template repository at <a href="https://gi
 
 Just like last week, click the green "Use this template" button near the top right of the page. This week, let's name our repository something different, like `my-first-svelte-components`. Make sure "Public" is selected, then click "Create repository."
 
-Now let's get this code onto your computer using the techniques we covered in [week one](./week-1.svx).
+Now let's get this code onto your computer using the techniques we covered in [week one](/scripts/week-1).
 
 In the Explorer sidebar, we're going to navigate to a folder we didn't explore last week, `src/lib/components/`. You should see a few files there already.
 
@@ -542,8 +542,8 @@ Create a new repo based on our template and add three components that could be u
 Here are some ideas, but you should come with at least one on your own.
 
 - An author bio box with photo, name, title, and social links
-- A "key takeaways" box that lists bullet points in a highlighted container
-- A "read more" card that links out to another story with a thumbnail and headline
+- A key takeaways box that lists bullet points in a highlighted container
+- A card that links out to a related story with a thumbnail and headline
 - A correction or update box for editor's notes
 - A methodology section that explains where the data sources and analysis methods in the story
 - A diptych parent component that places two related images side by side with captions
@@ -555,9 +555,10 @@ Here are some ideas, but you should come with at least one on your own.
 
 ### Task 2: Prepare to present
 
-Pick one of your original components to present in class next week. Be prepared to:
+Pick one of your original components to present in class next week. Send me links to the live page and the code behind it.
+
+Be prepared to:
 
 - Show the component on your live page
-- Walk through the code and explain how it works
-- Explain why you designed it the way you did
-- Discuss any challenges you encountered
+- Walk through the code and explain how it works. If you had AI assistance writing it, you should do whatever research is necessary to understand the code well enough to explain it in your own words.
+- Discuss how you used AI and share what worked, what didn't, and what you learned from the process
