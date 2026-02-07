@@ -85,15 +85,13 @@ Open your browser and navigate to our template repository at <a href="https://gi
   chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
 />
 
-Just like last week, click the green "Use this template" button near the top right of the page. This week's let's name our repository something different, like `my-first-svelte-components`. Make sure "Public" is selected, then click "Create repository."
+Just like last week, click the green "Use this template" button near the top right of the page. This week, let's name our repository something different, like `my-first-svelte-components`. Make sure "Public" is selected, then click "Create repository."
 
 Now let's get this code onto your computer using the techniques we covered in [week one](./week-1.svx).
 
 In the Explorer sidebar, we're going to navigate to a folder we didn't explore last week, `src/lib/components/`. You should see a few files there already.
 
-These are Svelte components. Each `.svelte` file is a self-contained piece of interface. The template uses them to build the page you see when you run `npm run dev`.
-
-Open one of them and take a look. I suggest starting with `Image.svelte`.
+These are Svelte components. Open one of them and take a look. I suggest starting with `Image.svelte`.
 
 <Screenshot
   src="/screenshots/week-3/vscode-image-svelte.png"
