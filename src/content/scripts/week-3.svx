@@ -112,7 +112,7 @@ Seems simple enough, right?
 
 Now that you've seen how a component is structured, let's find out by building our own.
 
-## Creating your first component
+## Part 2: Creating your first component
 
 We'll start simple. We will build a component that displays a quote in large type, along with the name of the person being quoted.
 
@@ -296,7 +296,7 @@ Then try something broader like, "Make this blockquote component look like a 19t
 
 You will see the AI assistant is able to understand the structure of your component and make changes big and small. These new tools can help you quickly iterate and explore variations without having to write every line of code yourself.
 
-## Creating a parent component
+## Part 3: Creating a parent component
 
 Components can be about more than just displaying content. They can also be about layout and organization, wrapping other components in a larger design.
 
@@ -503,7 +503,7 @@ Much better!
 
 This pattern of components containing other components is called composition. You can nest them as deep as you want. A Page might contain Sections. A Section might contain Rows. A Row might contain Cards. Each level handles one concern, making the code easier to understand and modify.
 
-## Prompting AI to build components
+## Part 4: Prompting AI to build components
 
 Now that you've seen how simple components are to build, why not let AI have a try?
 
@@ -533,13 +533,13 @@ After a few iterations, you should have a component that looks and functions the
   maxWidth="960px"
 />
 
-## Homework Assignments
+## Homework
 
 ### Task 1: Build three new components
 
 Create a new repo based on our template and add three components that could be useful in a news story. They should be different from the ones we built in class. Get them working on a page together, and deploy it via GitHub. Send me the link.
 
-Here are some ideas, but you should come with at least one on your own.
+Here are some ideas. You should come up with at least one on your own.
 
 - An author bio box with photo, name, title, and social links
 - A key takeaways box that lists bullet points in a highlighted container
@@ -559,6 +559,6 @@ Pick one of your original components to present in class next week. Send me link
 
 Be prepared to:
 
-- Show the component on your live page
-- Walk through the code and explain how it works. If you had AI assistance writing it, you should do whatever research is necessary to understand the code well enough to explain it in your own words.
+- Show the component and code to the class
+- Explain how it works. If you had AI assistance writing the code, you should do whatever research is necessary to understand it well enough to explain it in your own words.
 - Discuss how you used AI and share what worked, what didn't, and what you learned from the process

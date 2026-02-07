@@ -391,7 +391,7 @@ Not great. But, hey, it's a start! And there are error messages in my terminal t
 
 We won't try to dive down that rabbit hole today, but you could almost certainly use Copilot to help you get this project running if you put in a little time and effort.
 
-## Homework Assignments
+## Homework
 
 Your first homework assignments are to get practice creating new projects, cloning existing projects and using Copilot to explore code.
 

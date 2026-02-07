@@ -476,7 +476,7 @@ Hit the link to visit your site. You should see the same page you were editing l
 
 From now on, every time you push changes to your repository, GitHub Actions will automatically rebuild and redeploy your site. The whole process takes just a minute or two.
 
-## Homework Assignments
+## Homework
 
 ### Task 1: Create three static sites
 
