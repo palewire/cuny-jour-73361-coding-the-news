@@ -89,8 +89,6 @@ Just like last week, click the green "Use this template" button near the top rig
 
 Now let's get this code onto your computer using the techniques we covered in [week one](./week-1.svx).
 
-## The anatomy of a Svelte component
-
 In the Explorer sidebar, we're going to navigate to a folder we didn't explore last week, `src/lib/components/`. You should see a few files there already.
 
 These are Svelte components. Each `.svelte` file is a self-contained piece of interface. The template uses them to build the page you see when you run `npm run dev`.
