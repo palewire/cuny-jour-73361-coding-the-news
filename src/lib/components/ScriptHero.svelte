@@ -1,10 +1,13 @@
 <script>
-  let { title, summary, date } = $props();
+  let { title, summary, date, week } = $props();
 </script>
 
 <section class="script-hero">
   <div class="container">
     <div class="script-header">
+      {#if week}
+        <span class="kicker">Week {week}</span>
+      {/if}
       <h1 class="script-title">{title}</h1>
     </div>
     {#if summary}
@@ -26,6 +29,16 @@
     border-left: 4px solid var(--color-primary-orange);
     padding-left: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
+  }
+
+  .kicker {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary-orange);
+    margin-bottom: var(--spacing-xs);
   }
 
   .script-title {

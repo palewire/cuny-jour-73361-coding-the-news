@@ -9,8 +9,8 @@
 
   const shareImage = 'https://palewi.re/docs/coding-the-news/social-share.jpg';
 
-  // Generate breadcrumb label from week number
-  const breadcrumbLabel = $derived(week ? `Week ${week} Script` : 'Script');
+  // Breadcrumb label (week info is now shown as a kicker in ScriptHero)
+  const breadcrumbLabel = 'Script';
 </script>
 
 <svelte:head>
@@ -36,7 +36,7 @@
 </svelte:head>
 
 <Breadcrumbs items={[{ label: breadcrumbLabel }]} />
-<ScriptHero {title} {summary} {date} />
+<ScriptHero {title} {summary} {date} {week} />
 
 <section class="section toc">
   <div class="container">
