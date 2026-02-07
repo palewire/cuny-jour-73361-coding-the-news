@@ -290,32 +290,55 @@ Take five to ten minutes to customize your blockquote. Try changing the border c
 
 Try asking Copilot for edits.
 
-Open the chat panel and ask it to "Make the blockquote font bigger" or "Make the blockquote background a light blue" or "Make the blockquote border dashed instead of solid."
+Open the chat panel and ask it to "Make the blockquote font bigger" or "Make the blockquote background a light blue" or "Make the blockquote border dashed instead of solid." Save the results and see how it did.
 
 Then try something broader like, "Make this blockquote component look like a 19th century newspaper."
 
-You will see how the AI assistant is able to understand the structure of your component and make changes big and small. This is one of the most exciting aspects of coding with AI. These new tools can help you quickly iterate and explore variations without having to write every line of code yourself.
+You will see the AI assistant is able to understand the structure of your component and make changes big and small. These new tools can help you quickly iterate and explore variations without having to write every line of code yourself.
 
 ## Creating a parent component
 
-Data journalism often needs to highlight key statistics. "500,000 people displaced." "A 47% increase." "$2.3 billion in losses." These numbers deserve special treatment.
+Components can be about more than just displaying content. They can also be about layout and organization, wrapping other components in a larger design.
 
-Let's build a component that makes statistics stand out.
+A simple example of this in our template is the `ArticleBody` component, which wraps the main content of our page. It doesn't have any props of its own, but it provides a consistent look whatever content we put inside it.
 
-### Create the component file
+<Screenshot
+  src="/screenshots/week-3/vscode-articlebody-svelte.png"
+  alt="VS Code showing ArticleBody.svelte component with Explorer open"
+  showChrome={false}
+  maxWidth="960px"
+/>
 
-Create a new file at `src/lib/components/BigNumber.svelte`. Start with this code:
+Rather than accept traditional properties, ArticleBody accepts "children," which is a special prop that contains whatever is placed between the opening and closing tags of the component in your page.
+
+For example, in `src/routes/+page.svelte`, we have something like this:
+
+```svelte
+<ArticleBody>
+  <p>...</p>
+  <Blockquote ... />
+  <p>...</p>
+</ArticleBody>
+```
+
+The interior content is placed inside the component by the `{@render children()}` function call.
+
+To demonstrate the power of this pattern, lets build a new component that wraps other components in a horizontal row.
+
+We'll use it to package a group of statistics pumped up in larger type, like the big, stylized numbers you see on top of data dashboards or mixed into graphics stories.
+
+Let's start by creating new file at `src/lib/components/BigNumber.svelte`. Toss in this skeleton code I've created as a starting point.
 
 ```svelte
 <script>
-  let { number, label, context } = $props();
+  let { number, label, footnote } = $props();
 </script>
 
 <div class="big-number">
   <span class="number">{number}</span>
   <span class="label">{label}</span>
-  {#if context}
-    <span class="context">{context}</span>
+  {#if footnote}
+    <span class="footnote">{footnote}</span>
   {/if}
 </div>
 
@@ -323,7 +346,7 @@ Create a new file at `src/lib/components/BigNumber.svelte`. Start with this code
   .big-number {
     text-align: center;
     padding: 1.5rem;
-    background-color: #1a1a1a;
+    background-color: var(--color-accent);
     color: white;
     border-radius: 8px;
   }
@@ -332,7 +355,7 @@ Create a new file at `src/lib/components/BigNumber.svelte`. Start with this code
     display: block;
     font-size: 3rem;
     font-weight: bold;
-    color: #f47920;
+    color: var(--color-white);
     line-height: 1.2;
   }
 
@@ -344,40 +367,25 @@ Create a new file at `src/lib/components/BigNumber.svelte`. Start with this code
     margin-top: 0.5rem;
   }
 
-  .context {
+  .footnote {
     display: block;
-    font-size: 0.875rem;
-    color: #999;
-    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-white);
+    margin-top: 0.25rem;
     font-style: italic;
   }
 </style>
 ```
 
-### Understanding optional props
+Notice the `{#if footnote}` line. That's a new trick.
 
-Notice the `{#if context}` block in the markup. This is Svelte's conditional rendering syntax. It means "only render this part if `context` has a value."
+The [`{#if ...}{/if}`](https://svelte.dev/docs/svelte/if) syntax is one of Svelte's main ways of dealing with different variations of a component.
 
-This makes `context` an optional prop. You can use the component with or without it:
+In this case, I wanted to make the footnote optional. Some component will have it, other's won't, and I want a component that can handle both situations.
 
-```svelte
-<!-- With context -->
-<BigNumber
-  number="47%"
-  label="Increase in ridership"
-  context="Compared to pre-pandemic levels"
-/>
+By nesting the footnote in an `{#if}` block, Svelte will only render that part of the markup if a `footnote` property is provided. If it's not provided, the component will simply skip that section and render the rest.
 
-<!-- Without context -->
-<BigNumber
-  number="$2.3B"
-  label="Total investment"
-/>
-```
-
-Both are valid. The first shows three lines, the second shows two. The component adapts.
-
-### Add it to your page
+Let's try it out on our page.
 
 Open `src/routes/+page.svelte` again. Add another import at the top:
 
@@ -385,66 +393,56 @@ Open `src/routes/+page.svelte` again. Add another import at the top:
 import BigNumber from '$lib/components/BigNumber.svelte';
 ```
 
-Then add a few big numbers to your page:
+Then add these three big numbers, just below the Image and above the ArticleBody.
 
 ```svelte
 <BigNumber
-  number="1.2M"
-  label="Students enrolled"
-  context="Across all CUNY campuses"
+  number="2006"
+  label="Year Founded"
 />
 
 <BigNumber
-  number="25"
-  label="Colleges and schools"
+  number="1,300"
+  label="Alumni"
 />
 
 <BigNumber
-  number="$7,680"
-  label="Annual in-state tuition"
-  context="For full-time undergraduates"
+  number="50%"
+  label="Attend tuition free"
+  footnote="As of Aug. 2025"
 />
 ```
 
-Save and check your browser. You should see three dark boxes with orange numbers, stacked vertically.
+Save and check your browser. You should see three blue boxes with white numbers, stacked vertically.
 
-They look good, but they'd look better side by side. That's what we'll tackle next.
+<Screenshot
+  src="/screenshots/week-3/bignumber-row.png"
+  alt="Local development page showing three BigNumber components in a row"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
-## Part 4: Build a Row Component
+It's a start, but they'd look better side by side in a three-column layout.
 
-So far, our components have been about displaying content. But components can also be about layout. Let's build a component that arranges other components in a horizontal row.
+That's where our parent component comes in. We'll call it `Dashboard`, and it will be responsible for arranging its children in a horizontal row with some spacing.
 
-### Understanding children
-
-Some components wrap other components. A navigation bar wraps menu items. A card grid wraps cards. A row wraps... whatever you put in it.
-
-In Svelte 5, wrapped content is called "children." When you write:
-
-```svelte
-<Row>
-  <BigNumber number="100" label="First" />
-  <BigNumber number="200" label="Second" />
-</Row>
-```
-
-The two BigNumber components are the "children" of the Row component. Row needs a way to receive and render them.
-
-### Create the Row component
-
-Create a new file at `src/lib/components/Row.svelte`:
+Create a new file at `src/lib/components/Dashboard.svelte`. Drop this in:
 
 ```svelte
 <script>
-  let { children, gap = '1rem' } = $props();
+  let { children } = $props();
 </script>
 
-<div class="row" style="gap: {gap};">
+<div class="row">
   {@render children()}
 </div>
 
 <style>
   .row {
+    margin: 2rem 0;
     display: flex;
+    gap: 1rem;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -457,108 +455,109 @@ Create a new file at `src/lib/components/Row.svelte`:
 </style>
 ```
 
-Let's break this down:
+Just like ArticleBody, this component accepts `children` as a prop, which will contain whatever we place between the opening and closing tags of the Dashboard component in our page.
 
-**`let { children, gap = '1rem' } = $props();`** - We're accepting two props. `children` is a special prop that contains whatever is placed between the opening and closing tags. `gap` has a default value of `'1rem'`, making it optional.
+The markup is simple. We wrap the children in a `<div>` with a class of "row," which we will style using CSS to create a horizontal layout.
 
-**`{@render children()}`** - This is how Svelte 5 renders children. It's a function call that outputs whatever was passed in.
+One important extra bit of CSS is the [`:global(*)`](https://svelte.dev/docs/svelte/global-styles) selector. This is a special Svelte syntax that allows us to target child elements of the row, even though they are technically outside the scope of this component. This is necessary to apply the flex properties to the BigNumber components inside.
 
-**`style="gap: {gap};"`** - We're using the `gap` prop to set the CSS gap property inline. This lets users customize spacing.
-
-**`:global(*)`** - The `:global()` modifier tells Svelte to apply styles to child elements even though they're technically outside this component's scope. Without it, the flex styling wouldn't reach the BigNumber components inside.
-
-### Use the Row component
-
-Back in `src/routes/+page.svelte`, add the import:
+Save the file and head back to `src/routes/+page.svelte`. Add an import for the Dashboard component:
 
 ```js
-import Row from '$lib/components/Row.svelte';
+import Dashboard from '$lib/components/Dashboard.svelte';
 ```
 
-Now wrap your BigNumber components in a Row:
+Now wrap your BigNumber components in a Dashboard:
 
 ```svelte
-<Row>
+<Dashboard>
   <BigNumber
-    number="1.2M"
-    label="Students enrolled"
-    context="Across all CUNY campuses"
+    number="2006"
+    label="Year Founded"
   />
+
   <BigNumber
-    number="25"
-    label="Colleges and schools"
+    number="1,300"
+    label="Alumni"
   />
+
   <BigNumber
-    number="$7,680"
-    label="Annual in-state tuition"
-    context="For full-time undergraduates"
+    number="50%"
+    label="Attend tuition free"
+    footnote="As of Aug. 2025"
   />
-</Row>
+</Dashboard>
 ```
 
 Save and check your browser. The three stat boxes should now sit side by side in a neat row.
 
-Try resizing your browser window. Notice how the boxes wrap to a new line when the window gets too narrow. That's the `flex-wrap: wrap` doing its job, making our row responsive without any extra code.
+<Screenshot
+  src="/screenshots/week-3/bignumber-row-horizontal.png"
+  alt="Local development page showing three BigNumber components arranged horizontally in a Dashboard"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
-### Customize the gap
+Much better!
 
-The Row component accepts a `gap` prop. Try it:
+This pattern of components containing other components is called composition. You can nest them as deep as you want. A Page might contain Sections. A Section might contain Rows. A Row might contain Cards. Each level handles one concern, making the code easier to understand and modify.
 
-```svelte
-<Row gap="2rem">
-  <!-- BigNumber components here -->
-</Row>
-```
+## Prompting AI to build components
 
-The spacing between items increases. This kind of customization makes components flexible enough to use in different contexts.
+Now that you see how simple components are to build, why let AI have a try?
 
-### Nesting and composition
+It might seem strange at first, but you can prompt an AI assistant to build a component for you simply by describing what you want in plain language. And the results can be surprisingly good.
 
-This pattern of components containing other components is called composition. It's one of the most powerful ideas in component-based development.
+Open the chat panel in Visual Studio Code and ask your AI assistant to "Build a Svelte component that can serve as a promotional aside box in the middle of our article body. It should have a title, some text and a call to action button. Implement it in our page as callout that the Newmark school is now accepting applications for the next class with a link to https://www.journalism.cuny.edu/future-students/admissions/how-to-apply/."
 
-You can nest components as deep as you want. A Page might contain Sections. A Section might contain Rows. A Row might contain Cards. Each level handles one concern, making the code easier to understand and modify.
+<Screenshot
+  src="/screenshots/week-3/copilot-aside.png"
+  alt="Local development page showing AI-generated promotional aside component"
+  chromeTitle="localhost:5174"
+  chromeUrl="http://localhost:5174"
+  maxWidth="960px"
+/>
 
-This is how real newsroom projects are built. The Reuters graphics kit, The Pudding's templates, the New York Times' interactives—they're all composed of small, focused components that snap together like building blocks.
+Within a few seconds, you should see a completed component appear on your page. Like mine, it may not be perfect, but it should be a solid starting point that you can customize and improve.
+
+Rather than editing the code yourself, try asking the AI assistant to make small improvements. For example, you could say, "Remove the gradient from the background" or "Make the button square instead of rounded."
+
+After a few iterations, you should have a component that looks and functions the way you want, without having to write every line of code yourself. Here's how mine turned out after a few rounds of prompting.
+
+<Screenshot
+  src="/screenshots/week-3/copilot-aside-final.png"
+  alt="Local development page showing AI-generated promotional aside component after refinement"
+  chromeTitle="localhost:5174"
+  chromeUrl="http://localhost:5174"
+  maxWidth="960px"
+/>
 
 ## Homework Assignments
 
-### Task 1: Build three original components
+### Task 1: Build three new components
 
-Invent and build three components that could be useful in a news story. They should be different from the ones we built in class.
+Create a new repo based on our template and add three components that could be useful in a news story. They should be different from the ones we built in class. Get them working on a page together, and deploy it via GitHub. Send me the link.
 
-Here are some ideas to get you started:
+Here are some ideas, but you should come with at least one on your own.
 
-- **An author bio box** with photo, name, title, and social links
- **A "key takeaways" box** that lists bullet points in a highlighted container-
- **A "read more" card** that links out to another story with a thumbnail and headline
-- **A correction or update box** for editor's notes
-- **A data source attribution** that credits where numbers came from
--
-You're not limited to these ideas. Be creative. Think about elements you see in news stories that could benefit from consistent styling.
+- An author bio box with photo, name, title, and social links
+- A "key takeaways" box that lists bullet points in a highlighted container
+- A "read more" card that links out to another story with a thumbnail and headline
+- A correction or update box for editor's notes
+- A methodology section that explains where the data sources and analysis methods in the story
+- A diptych parent component that places two related images side by side with captions
+- A timeline component that lists events in chronological order with dates and descriptions
+- A profile card for a person or organization mentioned in the story
+- A breaking news alert bar that banners across the top of the page with a headline and link
+- A group of share buttons for social media platforms like Twitter, Facebook and LinkedIn
+- A component to embed YouTube videos
 
-### Task 2: Document your components
-
-For each component you build, write a brief explanation in your project's README.md:
-
-- What does the component do?
-- What props does it accept?
-- Why did you make the design choices you did?
-
-This documentation practice is valuable. Real component libraries include documentation so other developers know how to use them.
-
-### Task 3: Create a showcase page
-
-Use your three new components on a page alongside the Blockquote, BigNumber, and Row components we built in class. The page should demonstrate all six components working together.
-
-It doesn't need to be a real news story. It can be placeholder content. The goal is to show the components in context.
-
-Deploy your page to GitHub Pages and send me the link before next Monday's class.
-
-### Task 4: Prepare to present
+### Task 2: Prepare to present
 
 Pick one of your original components to present in class next week. Be prepared to:
 
 - Show the component on your live page
-- Walk through the code
+- Walk through the code and explain how it works
 - Explain why you designed it the way you did
 - Discuss any challenges you encountered
