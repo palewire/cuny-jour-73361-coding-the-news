@@ -3,7 +3,7 @@ title: "Building Blocks"
 summary: "How to create and combine reusable components with Svelte"
 date: "Feb. 9, 2026"
 week: 3
-locked: true
+locked: false
 ---
 
 <script>
@@ -110,7 +110,7 @@ This three-part structure is the anatomy of every Svelte component. The script h
 
 Seems simple enough, right?
 
-Let's find out by building our own.
+Now that you've seen how a component is structured, let's find out by building our own.
 
 ## Creating your first component
 
@@ -279,8 +279,8 @@ Save the file and check your browser again. You should see two blockquotes, each
 <Screenshot
   src="/screenshots/week-3/blockquote-both.png"
   alt="Local development page showing two blockquotes"
-  chromeTitle="localhost:5174"
-  chromeUrl="http://localhost:5174"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
@@ -323,11 +323,11 @@ For example, in `src/routes/+page.svelte`, we have something like this:
 
 The interior content is placed inside the component by the `{@render children()}` function call.
 
-To demonstrate the power of this pattern, lets build a new component that wraps other components in a horizontal row.
+To demonstrate the power of this pattern, let's build a new component that wraps other components in a horizontal row.
 
 We'll use it to package a group of statistics pumped up in larger type, like the big, stylized numbers you see on top of data dashboards or mixed into graphics stories.
 
-Let's start by creating new file at `src/lib/components/BigNumber.svelte`. Toss in this skeleton code I've created as a starting point.
+Create a new file at `src/lib/components/BigNumber.svelte`. Add this code I've created as a starting point.
 
 ```svelte
 <script>
@@ -381,7 +381,7 @@ Notice the `{#if footnote}` line. That's a new trick.
 
 The [`{#if ...}{/if}`](https://svelte.dev/docs/svelte/if) syntax is one of Svelte's main ways of dealing with different variations of a component.
 
-In this case, I wanted to make the footnote optional. Some component will have it, other's won't, and I want a component that can handle both situations.
+In this case, I wanted to make the footnote optional. Some components will have it, others won't, and I want a component that can handle both situations.
 
 By nesting the footnote in an `{#if}` block, Svelte will only render that part of the markup if a `footnote` property is provided. If it's not provided, the component will simply skip that section and render the rest.
 
@@ -459,7 +459,7 @@ Just like ArticleBody, this component accepts `children` as a prop, which will c
 
 The markup is simple. We wrap the children in a `<div>` with a class of "row," which we will style using CSS to create a horizontal layout.
 
-One important extra bit of CSS is the [`:global(*)`](https://svelte.dev/docs/svelte/global-styles) selector. This is a special Svelte syntax that allows us to target child elements of the row, even though they are technically outside the scope of this component. This is necessary to apply the flex properties to the BigNumber components inside.
+One important extra bit of CSS is the [`:global(*)`](https://svelte.dev/docs/svelte/global-styles) selector (where the asterisk means "all elements"). This is a special Svelte syntax that allows us to target child elements of the row, even though they are technically outside the scope of this component. This is necessary to apply the flex properties to the BigNumber components inside.
 
 Save the file and head back to `src/routes/+page.svelte`. Add an import for the Dashboard component:
 
@@ -505,7 +505,7 @@ This pattern of components containing other components is called composition. Yo
 
 ## Prompting AI to build components
 
-Now that you see how simple components are to build, why let AI have a try?
+Now that you've seen how simple components are to build, why not let AI have a try?
 
 It might seem strange at first, but you can prompt an AI assistant to build a component for you simply by describing what you want in plain language. And the results can be surprisingly good.
 
@@ -514,8 +514,8 @@ Open the chat panel in Visual Studio Code and ask your AI assistant to "Build a 
 <Screenshot
   src="/screenshots/week-3/copilot-aside.png"
   alt="Local development page showing AI-generated promotional aside component"
-  chromeTitle="localhost:5174"
-  chromeUrl="http://localhost:5174"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
@@ -528,8 +528,8 @@ After a few iterations, you should have a component that looks and functions the
 <Screenshot
   src="/screenshots/week-3/copilot-aside-final.png"
   alt="Local development page showing AI-generated promotional aside component after refinement"
-  chromeTitle="localhost:5174"
-  chromeUrl="http://localhost:5174"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
