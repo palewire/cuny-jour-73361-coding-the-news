@@ -42,7 +42,7 @@ modules:
         title: 'Longform Story'
         description: 'A story page that weaves together text, images and other media to guide readers through a lengthy narrative.'
       - icon: 'Layers'
-        title: 'Data Story'
+        title: 'Graphics Story'
         description: 'A stacked presentation that combines charts and analysis to walk readers through data-driven findings.'
       - icon: 'CircleHelp'
         title: 'News Quiz'
