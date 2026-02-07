@@ -16,7 +16,7 @@ modules:
     topics:
       - icon: 'Monitor'
         title: "Today's Tool Belt"
-        description: 'Set up Visual Studio Code, connect to GitHub for version control and learn to collaborate with an AI coding assistant.'
+        description: 'Set up Visual Studio Code, connect to GitHub and learn to collaborate with an AI coding assistant.'
       - icon: 'Globe'
         title: 'Static Site Publishing'
         description: 'Explore SvelteKit and the page-building frameworks newsrooms use to publish to the World Wide Web.'
