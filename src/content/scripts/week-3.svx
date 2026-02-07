@@ -7,56 +7,108 @@ locked: true
 ---
 
 <script>
+  import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
   import Blockquote from '$lib/components/Blockquote.svelte';
+  import YouTubeEmbed from '$lib/components/YouTubeEmbed.svelte';
 </script>
 
-## Part 1: Introduction to Svelte and Components
+## Part 1: Introduction to components
 
-Today we're learning to build **components**—reusable pieces of interface that you define once and use anywhere. A button. A chart. A quote box. An image with a caption. Define it once, use it everywhere.
+Today we're learning to build what web developers call "components." It's the vague term nerds settled on to describe reusable pieces of code that, combined together, can create user interfaces on the web. A headline. A button. A chart. An image with a caption. You define it once and then use it everywhere.
 
-Think of components like recipe cards. Each card describes how to make one dish. You follow the instructions, maybe swap in a few ingredients, and you get a consistent result. If you want to improve the recipe, you change the card once and every dish you make from it gets better.
+Many of today's web frameworks are organized using components so that individual pieces of a page can be built in isolation, then assembled together without all of the code tangled up.
 
-This approach gives you **modularity** (break complex pages into manageable pieces), **consistency** (every instance looks the same), **reusability** (build once, use in dozens of stories), and **maintainability** (when something needs to change, change it in one place).
+We see an example of this approach in our class template. Each component arranged in [`src/routes/+page.svelte`](https://github.com/palewire/cuny-jour-static-site-template/blob/main/src/routes/%2Bpage.svelte) is imported from a separate file that defines its own structure, style and behavior. When you put them together, they create the page.
 
-### Where Svelte comes from
-
-[Svelte](https://svelte.dev/) was created by [Rich Harris](https://en.wikipedia.org/wiki/Rich_Harris_(programmer)), a graphics editor who worked at The Guardian and later The New York Times. In a recent interview, Harris described how Svelte emerged from the unique pressures of newsroom development:
-
-<Blockquote
-  quote="Newsrooms are a very deadline-driven culture for obvious reasons. And so you need to build things quickly. At the same time, you're trying to do things that are engaging. The whole point is to reach people and tell them a story in hopefully a way that they haven't seen before."
-  attribution="Rich Harris"
+```svelte
+<ArticleHeader
+  {headline}
+  {byline}
+  {pubDate}
 />
 
-Harris wanted a tool that would bridge the gap between knowing HTML and CSS (which many journalists and designers already understood) and building rich interactive applications—without having to become a JavaScript expert first.
+<Image
+  src="/example-photo.gif"
+  alt="The Craig Newmark Graduate School of Journalism is at 219 West 40th Street in Midtown Manhattan."
+  caption="The Craig Newmark Graduate School of Journalism is at 219 West 40th Street in Midtown Manhattan."
+  credit="Craig Newmark Graduate School of Journalism"
+/>
+```
 
-Today, Svelte powers newsroom tools worldwide. DataWrapper, the charting tool used by newsrooms everywhere, is built on Svelte. Reuters built their graphics kit around it. The Pudding uses it for nearly everything.
+Our template uses a framework known as [SvelteKit](https://kit.svelte.dev/), which is built on top of the [Svelte](https://svelte.dev/) component framework. SvelteKit provides the overall structure for our project, while Svelte gives us the tools to build individual components.
 
-### Components in the wild
+<Screenshot
+  src="/screenshots/week-3/svelte-home.png"
+  alt="Svelte homepage hero and navigation"
+  chromeTitle="Svelte"
+  chromeUrl="https://svelte.dev/"
+  maxWidth="960px"
+/>
 
-Let's look at a real example. Open your browser and navigate to the Reuters graphics-kit repository at <a href="https://github.com/reuters-graphics/graphics-kit-components" target="_blank">github.com/reuters-graphics/graphics-kit-components</a>.
+[Svelte](https://svelte.dev/) was created in 2016 by [Rich Harris](https://rich-harris.dev) while he was living in Brooklyn and working as a graphics editor at The Guardian. His goal was to invent a better way to build interesting pages.
 
-This is a library of components that Reuters journalists use in their interactive stories. Click into the `src` folder, then `components`. You'll see dozens of components: `ArticleBody`, `Byline`, `Dateline`, `Figure`, `Headline`, `PhotoCaption`, and more.
+"Newsrooms are a very deadline-driven culture for obvious reasons, and so you need to build things quickly," Harris [told an interviewer in 2025](https://zencastr.com/z/nGDNQwB9). "Svelte was my attempt to make that easier."
 
-Click on a few and look at the code. Don't worry if you don't understand everything yet. Just notice the pattern: each component is a self-contained file that defines its own structure and styling. Some accept data like text or images. Some have configuration options. All of them can be dropped into a story with a single line of code.
+He later moved to The New York Times, where he continued to develop Svelte as a tool for [building interactive news stories](https://www.nytimes.com/by/rich-harris). Today, it is used by newsrooms around the world, including The Guardian, The Times, Reuters, The Pudding and many more.
 
-This is what we're going to learn to build.
+Svelte is also widely used outside of journalism, in companies like Apple, Square and Spotify. Harris now works on Svelte full-time at the technology company [Vercel](https://vercel.com/blog/vercel-welcomes-rich-harris-creator-of-svelte), which hosts many Svelte projects.
 
-### Components in our template
+<Aside title="'Svelte Origins: A JavaScript Documentary'">
+  <p>You can learn more about the history of Svelte in this 2023 documentary about the project.</p>
+  <YouTubeEmbed
+    url="https://www.youtube.com/embed/kMlkCYL9qo0"
+    title="Svelte overview on YouTube"
+  />
+</Aside>
 
-The class template you've been using already has some components. Let's take a look.
+The Reuters graphics team has released the components it uses to build interactive stories as an open-source library that [you can see online](https://reuters-graphics.github.io/graphics-components/). It contains snippets of code for common elements like headlines, bylines, captions, embeds, timelines and more.
 
-Open your `my-first-static-site` project in Visual Studio Code. If you don't have it open, clone it from GitHub using the techniques we learned in previous weeks.
+<Screenshot
+  src="/screenshots/week-3/reuters-graphics-components.png"
+  alt="Reuters Graphics components Storybook example"
+  chromeTitle="Reuters Graphics Components"
+  chromeUrl="https://reuters-graphics.github.io/graphics-components/"
+  maxWidth="960px"
+/>
 
-In the Explorer sidebar, navigate to `src/lib/components/`. You should see a few files there already.
+In today's class, we'll explore the simple set of components I've seeded in our class template, learn how they're created and then build a few simple ones of our own from scratch. In the weeks to come, we'll get more advanced, building components that fetch data, handle user interactions and integrate with each other.
+
+But let's start with the basics.
+
+Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+
+<Screenshot
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
+
+Just like last week, click the green "Use this template" button near the top right of the page. This week's let's name our repository something different, like `my-first-svelte-components`. Make sure "Public" is selected, then click "Create repository."
+
+Now let's get this code onto your computer using the techniques we covered in [week one](./week-1.svx).
+
+## The anatomy of a Svelte component
+
+In the Explorer sidebar, we're going to navigate to a folder we didn't explore last week, `src/lib/components/`. You should see a few files there already.
 
 These are Svelte components. Each `.svelte` file is a self-contained piece of interface. The template uses them to build the page you see when you run `npm run dev`.
 
-Open one of them and take a look. You'll see three sections:
+Open one of them and take a look. I suggest starting with `Image.svelte`.
 
-1. A `<script>` block at the top for JavaScript
-2. HTML markup in the middle
-3. A `<style>` block at the bottom for CSS
+<Screenshot
+  src="/screenshots/week-3/vscode-image-svelte.png"
+  alt="VS Code showing Image.svelte with Explorer open"
+  showChrome={false}
+  maxWidth="960px"
+/>
+
+You'll see three sections:
+
+1. A `<script>` block at the top with snippets of JavaScript and what look like inputs
+2. HTML markup in the middle with some braces and tags you might not recognize
+3. A `<style>` block at the bottom filled with CSS
 
 This three-part structure is the anatomy of every Svelte component. The script handles logic and data. The markup defines the structure. The styles control the appearance.
 
