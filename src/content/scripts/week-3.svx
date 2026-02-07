@@ -290,11 +290,11 @@ Take five to ten minutes to customize your blockquote. Try changing the border c
 
 Try asking Copilot for edits.
 
-Open the chat panel and ask it to "Make this blockquote component more visually arresting."
+Open the chat panel and ask it to "Make the blockquote font bigger" or "Make the blockquote background a light blue" or "Make the blockquote border dashed instead of solid."
 
-Then try "Make this blockquote component look like a traditional print newspaper."
+Then try something broader like, "Make this blockquote component look like a 19th century newspaper."
 
-And finally, "Make this blockquote component look like pages created by the Reuters graphics department."
+You will see how the AI assistant is able to understand the structure of your component and make changes big and small. This is one of the most exciting aspects of coding with AI. These new tools can help you quickly iterate and explore variations without having to write every line of code yourself.
 
 ## Creating a parent component
 
