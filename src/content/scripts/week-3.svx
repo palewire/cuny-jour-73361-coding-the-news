@@ -15,7 +15,7 @@ locked: false
 
 ## Part 1: Introduction to components
 
-Today we're learning to build what web developers call "components." That's the vague term nerds settled on to describe a reusable piece of code that defines a specific part of a page. A headline. A button. A chart. An image with a caption. You define it once and then use it everywhere.
+Today we're learning to build what web developers call "components." That's the vague term nerds have settled on to describe a reusable piece of code that defines a specific part of a page. A headline. A button. A chart. An image with a caption. You define it once and then use it everywhere.
 
 Many of today's web frameworks are organized using components so that the different parts of a page can be built in isolation, then assembled together without getting all of the code tangled up.
 
