@@ -62,7 +62,7 @@ Svelte is also widely used outside of journalism, in companies like Apple, Squar
   />
 </Aside>
 
-The Reuters graphics team has released the components it uses to build interactive stories as an open-source library that [you can see online](https://reuters-graphics.github.io/graphics-components/). It contains snippets of code for common elements like headlines, bylines, captions, embeds, timelines and more.
+For a real-world example, check out the open-source library released by the [Reuters Graphics team](https://reuters-graphics.github.io/graphics-components/). It contains components for common elements like headlines, bylines, captions, embeds, timelines and more.
 
 <Screenshot
   src="/screenshots/week-3/reuters-graphics-components.png"
@@ -72,7 +72,7 @@ The Reuters graphics team has released the components it uses to build interacti
   maxWidth="960px"
 />
 
-In today's class, we'll explore the simple set of components I've seeded in our class template, learn how they're created and then build a few simple ones of our own from scratch. In the weeks to come, we'll get more advanced, building components that fetch data, handle user interactions and integrate with each other.
+In today's class, we'll stick with the simple set of components I've seeded in our class template. We'll learn how they're structured and then build a few simple ones from scratch. In the weeks to come, we'll get more advanced, building components that fetch data, handle user interactions and integrate with each other.
 
 But let's start with the basics.
 
