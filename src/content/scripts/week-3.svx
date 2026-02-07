@@ -108,68 +108,75 @@ You'll see three sections:
 
 This three-part structure is the anatomy of every Svelte component. The script handles logic and data. The markup defines the structure. The styles control the appearance.
 
-Now let's build our own.
+Seems simple enough, right?
 
-## Part 2: Build a Blockquote Component
+Let's find out by building our own.
 
-Every news story has quotes. Someone said something, and you want to set it apart from the body text. Let's build a component that does this elegantly.
+## Creating your first component
 
-But first, let's start fresh with a new project. Rather than building on top of the site you customized last week, we'll create a clean slate for experimenting with components.
+We'll start simple. We will build a component that displays a quote in large type, along with the name of the person being quoted.
 
-### Create a new project from the template
+Before we start coding, we should remember to install the project dependencies. Since we created a new repository for today's work, we'll need to do this step over again.
 
-Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
-
-Click the green "Use this template" button near the top right of the page. Select "Create a new repository" from the dropdown menu.
-
-Name this repository `components-practice`. Make sure "Public" is selected, then click "Create repository."
-
-### Clone and set up the project
-
-Once your new repository is created, open Visual Studio Code. Click on the "Source Control" icon in the left sidebar and select "Clone Repository."
-
-Copy the URL of your new `components-practice` repository from GitHub and paste it into the popup. Press Enter, then select your `Code` folder as the destination. When prompted, click "Open" to open the project.
-
-Now open a terminal in VS Code (Terminal → New Terminal) and install the project dependencies:
+Open a terminal in Visual Studio Code and run the same command as last week. If you don't have it memorized yet, you will soon because you'll need to execute it every time you start a new project.
 
 ```bash
 npm install
 ```
 
-Then start the development server:
+Then start the development server at [localhost:5173](http://localhost:5173):
 
 ```bash
 npm run dev
 ```
 
-Open your browser to `http://localhost:5173` to see the template running. Keep this server running throughout the class—you'll see your changes appear in real time as we build components.
+Now we're ready.
 
-### Create the component file
+Right-click on the `src/lib/components/` folder in Visual Studio Code's left-hand Explorer and select "New File." Name it `Blockquote.svelte`.
 
-In VS Code's Explorer sidebar, right-click on the `src/lib/components/` folder and select "New File." Name it `Blockquote.svelte`.
+The file will open in the editor, completely empty.
 
-The file will open in the editor, completely empty. Let's fill it in.
-
-### Start with the markup
+<Screenshot
+  src="/screenshots/week-3/vscode-blockquote-empty.png"
+  alt="VS Code showing an empty Blockquote.svelte file"
+  showChrome={false}
+  maxWidth="960px"
+/>
 
 We'll build this component step by step, starting with the simplest possible version.
 
-Type the following into your new file:
+Begin by adding a traditional [`<blockquote>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/blockquote) tag to the file, just as you would in a traditional HTML document. Inside it, add a placeholder quote in the [`<p>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/p) tag and a [`<cite>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/cite) tag for the attribution.
 
 ```svelte
 <blockquote>
-  <p>"This is a placeholder quote that will be replaced with real text."</p>
-  <cite>— Someone Famous</cite>
+  <p>
+     As I look back over a misspent life
+     I find myself more and more convinced
+     that I had more fun doing news reporting
+     than in any other enterprise.
+     It is really the life of kings.
+  </p>
+  <cite>— H.L. Mencken</cite>
 </blockquote>
 ```
 
-Save the file. This is valid Svelte, but it's not very useful yet. The text is hardcoded, so every quote would say the same thing.
+This is HTML that you could find in any web page. If we included it in our page, it would render perfectly. But it's not reusable.
 
-### Add props
+If we wanted to display another quote, we'd have to copy this snippet, paste it somewhere else and then change the content, which would duplicate work and open the door to errors and inconsistencies.
 
-Props (short for properties) are how you pass data into a component. Think of them as the ingredients in our recipe card. The recipe stays the same, but you can swap in different ingredients each time.
+We can make our component reusable by replacing the hardcoded quote with a placeholder that accepts input from the outside. This is done using a Svelte feature called [`$props`](https://svelte.dev/docs/svelte/$props), which is short for properties. It's how components receive data from the pages where they are put to use.
 
-In Svelte 5, we define props using the `$props()` function. Add a script block at the top of your file:
+We can introduce properties to our blockquote by adding a `<script>` block at the top of the file. We can define variables for as many inputs as we like. They'll be passed in as a JavaScript object via Svelte's magic `$props()` function, which can be unpacked into separate variables using a technique called [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring).
+
+```svelte
+<script>
+  let { quote, attribution } = $props();
+</script>
+```
+
+In this example, I've decided to allow two inputs: `quote` and `attribution`, which correspond to the content of the `<q>` and `<cite>` tags, respectively. You can name these variables whatever you like. They are just placeholders for whatever data you'd like to have passed in.
+
+Next, we need to tell Svelte to insert these variables into the markup. We do this by replacing the hardcoded text with curly braces `{}` that reference our variables:
 
 ```svelte
 <script>
@@ -177,16 +184,14 @@ In Svelte 5, we define props using the `$props()` function. Add a script block a
 </script>
 
 <blockquote>
-  <p>"{quote}"</p>
+  <p>{quote}</p>
   <cite>— {attribution}</cite>
 </blockquote>
 ```
 
-The curly braces `{}` in the markup tell Svelte to insert the value of a JavaScript variable. Now our component can display any quote we pass to it.
+Before we test it out, let's make it look a little nicer.
 
-### Add scoped styles
-
-Let's make our blockquote look distinctive. Add a style block at the bottom of the file:
+Add a `<style>` tag at the bottom of the file, where we can write CSS. Here's something to get us started. Copy and paste what I've provided. It will use the color scheme defined in our project's `app.css` file, which is available to all components.
 
 ```svelte
 <script>
@@ -194,81 +199,104 @@ Let's make our blockquote look distinctive. Add a style block at the bottom of t
 </script>
 
 <blockquote>
-  <p>"{quote}"</p>
+  <p>{quote}</p>
   <cite>— {attribution}</cite>
 </blockquote>
 
 <style>
   blockquote {
     margin: 2rem 0;
-    padding: 1.5rem;
-    padding-left: 2rem;
-    border-left: 4px solid #f47920;
-    background-color: #f5f5f5;
-    font-style: italic;
+    padding: 1rem;
+    padding-left: 1.5rem;
+    border-left: 4px solid var(--color-accent);
+    background-color: var(--color-light-gray);
   }
 
   p {
-    margin: 0 0 0.75rem 0;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     line-height: 1.6;
-    color: #333;
+    font-style: italic;
   }
 
   cite {
+    margin: 0.5rem 0 0;
     display: block;
-    font-style: normal;
+    text-align: right;
+    font-size: 0.875rem;
     font-weight: bold;
-    color: #666;
+    font-style: normal;
+    color: var(--color-dark-gray);
   }
 </style>
 ```
 
-Here's something important: these styles are **scoped**. That means they only apply to elements inside this component. The `p` styles won't affect paragraphs elsewhere on your page. The `blockquote` styles won't conflict with other blockquotes that might exist in your project.
+These styles will only apply to the blockquote component, and won't affect any other blockquotes or paragraphs on the page. This is a technique that computer programmers refer to as [scoping](https://en.wikipedia.org/wiki/Scope_(computer_programming)).
 
-Scoped styles are one of Svelte's best features. They let you write simple, readable CSS without worrying about naming collisions or specificity wars.
+By limiting styles to a specific component, we can be confident that our CSS will not have unintended consequences elsewhere in our project. It's another way that components help us write clean, maintainable code.
 
-### Use the component on your page
+Save your `Blockquote.svelte` file and we're ready to see it in action.
 
-Now let's see it in action. Open `src/routes/+page.svelte` in your editor.
+Open `src/routes/+page.svelte` in your editor.
 
-At the top of the file, inside the existing `<script>` block, add an import statement:
+At the top of the file, add an import statement inside the existing `<script>` block, which will bring our new component into this page.
 
 ```js
 import Blockquote from '$lib/components/Blockquote.svelte';
 ```
 
-The `$lib` path is a special alias in SvelteKit that points to your `src/lib` folder. It saves you from writing long relative paths like `../../lib/components/`.
+The [`$lib`](https://svelte.dev/docs/kit/$lib) path is a special alias in SvelteKit projects that points to your `src/lib` folder. It saves you from writing long relative paths like `../../lib/components/`.
 
-Now scroll down to the main content area of the page, somewhere after the headline and lead paragraph. Add your new component:
-
-```svelte
-<Blockquote
-  quote="The best journalism is built on facts, context, and a willingness to keep asking questions."
-  attribution="Someone who knows things"
-/>
-```
-
-Save the file and check your browser. You should see a styled quote box with the orange left border and gray background.
-
-Try adding another one with different text:
+Now scroll down to the main content area of the page, inside of the `ArticleBody` component. This is where the content of our page lives. We can add our blockquote here between the existing paragraph tags. Feel free to put in any quote you like, or use the one I provided below.
 
 ```svelte
 <Blockquote
-  quote="Components are like LEGO bricks for the web."
-  attribution="A developer, probably"
+  quote="As I look back over a misspent life I find myself more and more convinced that I had more fun doing news reporting than in any other enterprise. It is really the life of kings."
+  attribution="H.L. Mencken"
 />
 ```
 
-Notice how both quotes have identical styling, but different content. That's the power of components. Define once, use everywhere.
+Save the file and check your browser at [localhost:5173](http://localhost:5173). You should see a styled quote box with a left border and gray background.
 
-### Experiment with the styling
+<Screenshot
+  src="/screenshots/week-3/blockquote-page.png"
+  alt="Local development page centered on the blockquote component"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
-Take a few minutes to customize your blockquote. Try changing the border color, the background, the font size. Each change you make will update every blockquote on the page.
+Now add a second Blockquote with different text.
 
-If you want to get creative, ask Copilot for suggestions. Open the chat panel and try something like: "How could I make this blockquote component more visually interesting?"
+```svelte
+<Blockquote
+  quote="Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances."
+  attribution="Constitution of the United States"
+/>
+```
 
-## Part 3: Build a Big Number Component
+Save the file and check your browser again. You should see two blockquotes, each with different content but identical styling.
+
+<Screenshot
+  src="/screenshots/week-3/blockquote-both.png"
+  alt="Local development page showing two blockquotes"
+  chromeTitle="localhost:5174"
+  chromeUrl="http://localhost:5174"
+  maxWidth="960px"
+/>
+
+That's the power of components. You define it once and then use it everywhere. If you want to change the design, you only have to change it in one place, and all instances of that component will update automatically.
+
+Take five to ten minutes to customize your blockquote. Try changing the border color, the background, the font size. Each change you make will update every blockquote on the page.
+
+Try asking Copilot for edits.
+
+Open the chat panel and ask it to "Make this blockquote component more visually arresting."
+
+Then try "Make this blockquote component look like a traditional print newspaper."
+
+And finally, "Make this blockquote component look like pages created by the Reuters graphics department."
+
+## Creating a parent component
 
 Data journalism often needs to highlight key statistics. "500,000 people displaced." "A 47% increase." "$2.3 billion in losses." These numbers deserve special treatment.
 
