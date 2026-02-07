@@ -36,7 +36,7 @@
     line-height: 1.6;
   }
 
-  .aside__body > * {
+  .aside__body > :global(*) {
     min-width: 0;
   }
 </style>
