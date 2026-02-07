@@ -87,7 +87,7 @@ Open your browser and navigate to our template repository at <a href="https://gi
 
 Just like last week, click the green "Use this template" button near the top right of the page. This week, let's name our repository something different, like `my-first-svelte-components`. Make sure "Public" is selected, then click "Create repository."
 
-Now let's get this code onto your computer using the techniques we covered in [week one](/scripts/week-1).
+Now let's get this code onto your computer using the techniques we covered in [week one](/docs/coding-the-news/scripts/week-1).
 
 In the Explorer sidebar, we're going to navigate to a folder we didn't explore last week, `src/lib/components/`. You should see a few files there already.
 
