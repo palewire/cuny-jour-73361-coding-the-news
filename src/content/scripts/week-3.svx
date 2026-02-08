@@ -36,7 +36,7 @@ We see an example of this approach in our class template. Each component arrange
 />
 ```
 
-Our template uses a framework known as [SvelteKit](https://kit.svelte.dev/), which is built on top of the [Svelte](https://svelte.dev/) component framework. SvelteKit provides the overall structure for our project, while Svelte gives us the tools to build individual components.
+Our template uses a framework known as [SvelteKit](https://kit.svelte.dev/), which is built on top of the [Svelte](https://svelte.dev/) component system. SvelteKit provides the overall structure for our project, while Svelte gives us the tools to build individual components.
 
 <Screenshot
   src="/screenshots/week-3/svelte-home.png"
