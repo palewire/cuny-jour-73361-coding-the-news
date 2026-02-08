@@ -165,20 +165,148 @@ Some ideas to consider:
 
 ### Introducing Reactive Components
 
-- Make the simple counter example from the Svelte documentation
-- Replace that with a card component that highlights a random record from the dataset each time you push a button
+- Explanation of what "reactive" means in the context of web development
+- Show examples of interactive features on news sites (toggles, counters, calculators)
+- It's all made possible by HTML inputs picked up by JavaScript event handlers
+- Explain how Svelte's reactivity model modernized this model and allows us to build these features with simple state variables and derived values
 
-### Live Filters
+---
 
-- Start with a simple bar or line chart that displays a full dataset
-- Add a filter with all of the distinct categories in one of the columns
-- Have the chart automatically update each time we change what's in the filter
-- Create a table with that same data
-- Add a search component that will automatically filter the table
+## Part 1: Show/Hide Toggle (~40 mins)
 
-### Homework Assignments
+### Introduction to Reactivity
 
-- Revise your data portal page to include more than one interactive element
+- The problem: Static components are nice, but real sites need to respond to users
+- Show examples: "Read more" expanders, methodology toggles, correction boxes on news sites
+- The Svelte solution: Reactive state with `$state()`
+
+### Build the Toggle Component
+
+1. Create `ReadMore.svelte` component
+2. Add `let isExpanded = $state(false)`
+3. Create button with `onclick={() => isExpanded = !isExpanded}`
+4. Add `{#if isExpanded}` block for hidden content
+5. Style it to look like a news site feature
+
+### Use it in the Page
+
+- Import and place in `+page.svelte`
+- Try multiple instances (each maintains own state)
+- Customize text for different use cases (methodology, sources, correction)
+
+**Key concepts introduced:**
+
+- `$state()` with boolean
+- Event handlers (`onclick`)
+- Conditional rendering (`{#if}`)
+- State toggling pattern
+
+---
+
+## Part 2: Counter (~40 mins)
+
+### Introduction to Numeric State
+
+- Show examples: Promise trackers, days-since counters, vote tallies
+- Same reactive pattern, but with numbers instead of booleans
+
+### Build the Counter Component
+
+1. Create `PromiseTracker.svelte` component
+2. Add `let kept = $state(0)` and `let broken = $state(0)`
+3. Create buttons that increment each counter
+4. Introduce `$derived()`: `let total = $derived(kept + broken)`
+5. Display all three values
+6. Style it like a news dashboard using a BigNumber like the one we built last week
+
+### Use it in the Page
+
+- Import and place in `+page.svelte`
+- Show how `$derived()` automatically updates when state changes
+- Discuss: Why use `$derived()` instead of just `kept + broken` in the template?
+
+**Key concepts introduced:**
+
+- `$state()` with numbers
+- Incrementing state
+- `$derived()` for computed values
+- Multiple state variables in one component
+
+---
+
+## Part 3: Tip Calculator (~60 mins)
+
+### Introduction to Form Inputs
+
+- Show examples: Calculators, budget tools, "how much would you save?" widgets
+- The new concept: `bind:value` for two-way data binding
+- Explain: Button clicks vs. form inputs (one-way vs. two-way)
+
+### Build the Calculator Component (Step by Step)
+
+**Version 1: Basic bill input**
+
+1. Create `TipCalculator.svelte`
+2. Add `let billAmount = $state(0)`
+3. Create `<input type="number" bind:value={billAmount}>`
+4. Add `let tip = $derived(billAmount * 0.20)`
+5. Display: "20% tip: ${tip.toFixed(2)}"
+
+**Version 2: Add custom tip percentage**
+
+1. Add `let tipPercent = $state(18)`
+2. Update derived: `let tip = $derived(billAmount * (tipPercent / 100))`
+3. Add range slider: `<input type="range" bind:value={tipPercent} min="10" max="30">`
+4. Display tip percentage label
+
+**Version 3: Add total calculation**
+
+1. Add `let total = $derived(billAmount + tip)`
+2. Style the results nicely
+
+**Optional Version 4: Split the bill**
+
+1. Add `let numPeople = $state(1)`
+2. Add `let perPerson = $derived(total / numPeople)`
+3. Add number input for splitting
+
+### Use it in the Page
+
+- Import and place in `+page.svelte`
+- Experiment with the inputs
+- Notice how everything updates automatically
+
+**Key concepts introduced:**
+
+- `bind:value` with number inputs
+- `bind:value` with range inputs
+- Multiple `$state()` variables working together
+- Multiple `$derived()` calculations
+- Number formatting (`.toFixed()`)
+- Two-way data binding concept
+
+---
+
+## Homework Assignments
+
+### Task 1: Build three interactive components from scratch
+
+Pick three from this list (or invent your own):
+
+- A "Time until election" countdown (with date input)
+- A "Split the rent" calculator (bill amount ÷ number of roommates)
+- A reading time estimator (paste text, see estimated minutes)
+- A multiple choice quiz question with instant feedback
+- A units converter (miles to kilometers, dollars to euros, etc.)
+
+### Task 2: Prepare to present
+
+Pick your favorite interactive component to show the class. Be ready to explain:
+
+- What state does it track?
+- What user actions trigger state changes?
+- How does the DOM update in response?
+- If you used AI to help, what worked and what didn't?
 
 ---
 

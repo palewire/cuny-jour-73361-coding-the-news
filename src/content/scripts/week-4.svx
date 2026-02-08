@@ -3,7 +3,974 @@ title: "Interactive Inputs"
 summary: "How to engage your readers with reactive components"
 date: "Feb. 16, 2026"
 week: 4
-locked: true
+locked: false
 ---
 
-TK
+<script>
+  import Aside from '$lib/components/Aside.svelte';
+  import Screenshot from '$lib/components/Screenshot.svelte';
+  import YouTubeEmbed from '$lib/components/YouTubeEmbed.svelte';
+</script>
+
+## Part 1: Show/Hide Toggle
+
+Last week we learned how to build static components—reusable pieces of code that display content with consistent styling. But real news sites need to do more than display. They need to respond to readers.
+
+Think about the interactive features you encounter on news websites. A "Read more" button that reveals additional methodology. A toggle that shows or hides a correction notice. A calculator that tells you how much you'd save under a proposed tax plan.
+
+These features all have something in common: they react to user input. When you click a button or type in a field, the page updates instantly without reloading. This is what web developers call reactivity.
+
+Svelte was built from the ground up to make reactivity simple. Where other frameworks require you to jump through hoops to update the page, Svelte lets you write code that feels natural and straightforward.
+
+Today we're going to build three interactive components, each one introducing new concepts that build on the last. By the end of class, you'll understand how to track state, respond to user actions, and compute values on the fly.
+
+Let's start with the most basic interaction: clicking a button to show or hide content.
+
+### Setting up your project
+
+Before we dive in, let's create a fresh project to work in. Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+
+Click the green "Use this template" button and create a new repository called `my-first-interactive-components`. Make sure "Public" is selected, then click "Create repository."
+
+Clone it to your computer using the techniques from [week one](/docs/coding-the-news/scripts/week-1). Open the project in Visual Studio Code, install the dependencies with `npm install`, and start the development server with `npm run dev`.
+
+Now we're ready to build.
+
+### Understanding state
+
+In programming, "state" is a fancy word for information that can change over time. A toggle button has state: it's either on or off. A counter has state: it tracks the current number. A form has state: it holds whatever the user has typed.
+
+In Svelte 5, we create state using a special function called `$state()`. This is one of Svelte's "runes"—magic keywords that tell Svelte to pay attention to a variable and update the page whenever it changes.
+
+Here's the simplest possible example:
+
+```js
+let isVisible = $state(false);
+```
+
+This creates a variable called `isVisible` that starts as `false`. The `$state()` wrapper tells Svelte to track this variable. Whenever we change it, Svelte will automatically update any part of the page that uses it.
+
+### Building the ReadMore component
+
+Let's put this into practice. We'll build a component that shows a "Read more" button. When clicked, it reveals hidden content. Click again, and the content collapses.
+
+Create a new file at `src/lib/components/ReadMore.svelte`. Start with the basic structure:
+
+```svelte
+<script>
+  let { title, children } = $props();
+  let isExpanded = $state(false);
+</script>
+```
+
+We're accepting two props: a `title` that appears on the button, and `children` for whatever content should be hidden or revealed. We also create a state variable `isExpanded` that starts as `false`.
+
+Now let's add the markup:
+
+```svelte
+<script>
+  let { title, children } = $props();
+  let isExpanded = $state(false);
+</script>
+
+<div class="read-more">
+  <button onclick={() => isExpanded = !isExpanded}>
+    {isExpanded ? '▼' : '▶'} {title}
+  </button>
+  
+  {#if isExpanded}
+    <div class="content">
+      {@render children()}
+    </div>
+  {/if}
+</div>
+```
+
+There are a few new things happening here. Let's break them down.
+
+The `onclick` attribute is an event handler. It tells Svelte what to do when the user clicks the button. In this case, we're using an arrow function that flips the value of `isExpanded`. If it's `false`, it becomes `true`. If it's `true`, it becomes `false`. This is a common pattern called toggling.
+
+The `{isExpanded ? '▼' : '▶'}` syntax is called a ternary operator. It's a shorthand way of saying "if `isExpanded` is true, show a down arrow; otherwise, show a right arrow." This gives the user a visual cue about whether the content is expanded or collapsed.
+
+The `{#if isExpanded}` block is Svelte's conditional rendering syntax. Everything inside this block only appears on the page when `isExpanded` is `true`. When the user clicks the button and `isExpanded` becomes `true`, Svelte automatically adds this content to the page. When it becomes `false`, Svelte removes it.
+
+Finally, let's add some styling:
+
+```svelte
+<script>
+  let { title, children } = $props();
+  let isExpanded = $state(false);
+</script>
+
+<div class="read-more">
+  <button onclick={() => isExpanded = !isExpanded}>
+    {isExpanded ? '▼' : '▶'} {title}
+  </button>
+  
+  {#if isExpanded}
+    <div class="content">
+      {@render children()}
+    </div>
+  {/if}
+</div>
+
+<style>
+  .read-more {
+    margin: 1.5rem 0;
+    border: 1px solid var(--color-light-gray);
+    border-radius: 4px;
+  }
+
+  button {
+    width: 100%;
+    padding: 1rem;
+    text-align: left;
+    background: var(--color-light-gray);
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--color-dark-gray);
+  }
+
+  button:hover {
+    background: #e0e0e0;
+  }
+
+  .content {
+    padding: 1rem;
+    border-top: 1px solid var(--color-light-gray);
+  }
+</style>
+```
+
+### Using the component
+
+Save your `ReadMore.svelte` file and open `src/routes/+page.svelte`. Add an import at the top of the script block:
+
+```js
+import ReadMore from '$lib/components/ReadMore.svelte';
+```
+
+Now add the component somewhere in your page content, inside the `ArticleBody`:
+
+```svelte
+<ReadMore title="Methodology">
+  <p>
+    This analysis is based on data from the U.S. Census Bureau's 
+    American Community Survey, 2019-2023 5-year estimates. We calculated 
+    median household income by ZIP code and adjusted for inflation using 
+    the Bureau of Labor Statistics' Consumer Price Index.
+  </p>
+</ReadMore>
+```
+
+Save the file and check your browser at [localhost:5173](http://localhost:5173). You should see a button labeled "Methodology" with a right arrow. Click it, and the methodology text appears. Click again, and it disappears.
+
+Try adding a few more ReadMore components with different content:
+
+```svelte
+<ReadMore title="About the data">
+  <p>
+    The data for this project was obtained through a public records request
+    filed with the city's Department of Finance on January 15, 2026.
+  </p>
+</ReadMore>
+
+<ReadMore title="Correction">
+  <p>
+    An earlier version of this story incorrectly stated the mayor's 
+    proposed budget was $98 billion. It is $89 billion. The story has 
+    been updated.
+  </p>
+</ReadMore>
+```
+
+Notice how each ReadMore component maintains its own state. Clicking one doesn't affect the others. This is because each component instance has its own `isExpanded` variable. This independence is one of the powerful features of component-based architecture.
+
+## Part 2: Counter
+
+Now that you understand the basics of state and event handlers, let's build something a little more sophisticated: a counter that tracks multiple values.
+
+News organizations often use counters to track progress on ongoing stories. Think of promise trackers that monitor whether politicians keep their commitments, or day counters that show how long it's been since an event.
+
+We're going to build a simple promise tracker that counts promises kept and promises broken.
+
+### Building the PromiseTracker component
+
+Create a new file at `src/lib/components/PromiseTracker.svelte`. This time we'll use multiple state variables:
+
+```svelte
+<script>
+  let kept = $state(0);
+  let broken = $state(0);
+</script>
+```
+
+We have two independent pieces of state: `kept` starts at 0, and `broken` starts at 0. Each can be changed independently.
+
+Now here's a new concept. What if we want to display the total number of promises tracked? We could write `{kept + broken}` in our markup, and it would work. But Svelte offers a better way: the `$derived()` rune.
+
+```svelte
+<script>
+  let kept = $state(0);
+  let broken = $state(0);
+  let total = $derived(kept + broken);
+</script>
+```
+
+The `$derived()` rune creates a value that automatically recalculates whenever the values it depends on change. When `kept` or `broken` changes, `total` automatically updates. This is more efficient than recalculating in the template, and it keeps your logic organized in one place.
+
+Let's add the markup and styling:
+
+```svelte
+<script>
+  let kept = $state(0);
+  let broken = $state(0);
+  let total = $derived(kept + broken);
+</script>
+
+<div class="tracker">
+  <h3>Promise Tracker</h3>
+  
+  <div class="stats">
+    <div class="stat kept">
+      <span class="number">{kept}</span>
+      <span class="label">Kept</span>
+    </div>
+    
+    <div class="stat broken">
+      <span class="number">{broken}</span>
+      <span class="label">Broken</span>
+    </div>
+    
+    <div class="stat total">
+      <span class="number">{total}</span>
+      <span class="label">Total</span>
+    </div>
+  </div>
+  
+  <div class="buttons">
+    <button class="kept-btn" onclick={() => kept++}>
+      + Promise Kept
+    </button>
+    <button class="broken-btn" onclick={() => broken++}>
+      + Promise Broken
+    </button>
+  </div>
+</div>
+
+<style>
+  .tracker {
+    padding: 1.5rem;
+    background: var(--color-light-gray);
+    border-radius: 8px;
+    margin: 2rem 0;
+  }
+
+  h3 {
+    margin: 0 0 1rem;
+    text-align: center;
+    color: var(--color-dark-gray);
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  .kept .number {
+    color: #2e7d32;
+  }
+
+  .broken .number {
+    color: #c62828;
+  }
+
+  .total .number {
+    color: var(--color-dark-gray);
+  }
+
+  .label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-dark-gray);
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+  }
+
+  .kept-btn {
+    background: #2e7d32;
+  }
+
+  .kept-btn:hover {
+    background: #1b5e20;
+  }
+
+  .broken-btn {
+    background: #c62828;
+  }
+
+  .broken-btn:hover {
+    background: #b71c1c;
+  }
+</style>
+```
+
+Notice the `onclick={() => kept++}` syntax. This is a shorthand way of incrementing a number. It's equivalent to `onclick={() => kept = kept + 1}`.
+
+### Using the PromiseTracker
+
+Add the import to your page:
+
+```js
+import PromiseTracker from '$lib/components/PromiseTracker.svelte';
+```
+
+And place it in your content:
+
+```svelte
+<PromiseTracker />
+```
+
+Check your browser. You should see a tracker with "Kept," "Broken," and "Total" displays. Click the buttons and watch all three numbers update. The total automatically stays in sync because of our `$derived()` declaration.
+
+### Why use $derived()?
+
+You might wonder why we need `$derived()` when we could just write `{kept + broken}` directly in the template. There are a few reasons:
+
+1. **Organization**: Keeping calculations in the script block makes your template cleaner and your logic easier to find.
+
+2. **Reuse**: If you need to use the total in multiple places, you only define it once.
+
+3. **Complexity**: For more complex calculations, `$derived()` keeps things readable. Imagine a formula like `$derived((kept / total * 100).toFixed(1))` for a percentage—that would clutter your template.
+
+4. **Performance**: Svelte optimizes `$derived()` values, only recalculating when necessary.
+
+## Part 3: Tip Calculator
+
+For our final component, we're going to build something more ambitious: a tip calculator that responds to form inputs. This will introduce one of Svelte's most powerful features: two-way data binding with `bind:value`.
+
+News organizations love calculators. They let readers personalize a story by entering their own information. "How much would you save under the new tax plan?" "What's your risk level based on these factors?" "How does your commute compare to the city average?"
+
+These tools increase engagement because they make the story about the reader. And with Svelte, they're surprisingly easy to build.
+
+### Understanding two-way binding
+
+So far, we've seen one-way interactions: the user clicks a button, and something changes. But form inputs work differently. A text field or slider needs to both display a value and accept changes to that value.
+
+Svelte handles this with `bind:value`, which creates a two-way connection between an input element and a state variable. When the variable changes, the input updates. When the user types or drags, the variable updates. Everything stays in sync automatically.
+
+Here's a simple example:
+
+```svelte
+<script>
+  let name = $state('');
+</script>
+
+<input type="text" bind:value={name}>
+<p>Hello, {name}!</p>
+```
+
+As the user types, the paragraph instantly updates to greet them by name. No event handlers needed—Svelte handles the connection for you.
+
+### Building the calculator step by step
+
+Let's build our tip calculator in stages, adding features as we go.
+
+Create a new file at `src/lib/components/TipCalculator.svelte`. Start with the most basic version:
+
+```svelte
+<script>
+  let billAmount = $state(0);
+  let tip = $derived(billAmount * 0.20);
+</script>
+
+<div class="calculator">
+  <h3>Tip Calculator</h3>
+  
+  <div class="input-group">
+    <label for="bill">Bill Amount</label>
+    <div class="input-wrapper">
+      <span class="currency">$</span>
+      <input 
+        type="number" 
+        id="bill"
+        bind:value={billAmount}
+        min="0"
+        step="0.01"
+      >
+    </div>
+  </div>
+  
+  <div class="result">
+    <span class="label">20% Tip:</span>
+    <span class="value">${tip.toFixed(2)}</span>
+  </div>
+</div>
+```
+
+The `bind:value={billAmount}` creates our two-way binding. The input displays the current value of `billAmount`, and typing a new number updates the variable.
+
+The `tip` variable uses `$derived()` to calculate 20% of the bill. Notice the `.toFixed(2)` at the end—this formats the number to always show two decimal places, which is what we expect for currency.
+
+Add some basic styling:
+
+```svelte
+<style>
+  .calculator {
+    padding: 1.5rem;
+    background: var(--color-light-gray);
+    border-radius: 8px;
+    margin: 2rem 0;
+    max-width: 400px;
+  }
+
+  h3 {
+    margin: 0 0 1.5rem;
+    color: var(--color-dark-gray);
+  }
+
+  .input-group {
+    margin-bottom: 1rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--color-dark-gray);
+  }
+
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .currency {
+    padding: 0.75rem;
+    background: #eee;
+    color: var(--color-dark-gray);
+    font-weight: bold;
+  }
+
+  input[type="number"] {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    font-size: 1.25rem;
+    width: 100%;
+  }
+
+  input[type="number"]:focus {
+    outline: none;
+  }
+
+  .result {
+    padding: 1rem;
+    background: var(--color-accent);
+    color: white;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .result .label {
+    font-weight: bold;
+    color: white;
+  }
+
+  .result .value {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+</style>
+```
+
+Import it into your page and try it out:
+
+```js
+import TipCalculator from '$lib/components/TipCalculator.svelte';
+```
+
+```svelte
+<TipCalculator />
+```
+
+Type a bill amount and watch the tip calculate instantly. But 20% isn't always the right tip. Let's add a way to customize the percentage.
+
+### Adding a custom tip percentage
+
+Update your script to include a tip percentage variable:
+
+```svelte
+<script>
+  let billAmount = $state(0);
+  let tipPercent = $state(18);
+  let tip = $derived(billAmount * (tipPercent / 100));
+</script>
+```
+
+Now our `tip` calculation uses the `tipPercent` variable instead of a hardcoded 0.20. We start at 18% because that's a common default.
+
+Add a range slider to let users adjust the percentage. Insert this after the bill amount input:
+
+```svelte
+<div class="input-group">
+  <label for="percent">Tip: {tipPercent}%</label>
+  <input 
+    type="range" 
+    id="percent"
+    bind:value={tipPercent}
+    min="10"
+    max="30"
+    step="1"
+  >
+</div>
+```
+
+The range input creates a slider. `bind:value={tipPercent}` connects it to our state. As the user drags, `tipPercent` updates, which triggers `tip` to recalculate, which updates the display. The label shows the current percentage using `{tipPercent}%`.
+
+Update your result display to show the dynamic percentage:
+
+```svelte
+<div class="result">
+  <span class="label">{tipPercent}% Tip:</span>
+  <span class="value">${tip.toFixed(2)}</span>
+</div>
+```
+
+Add styling for the slider:
+
+```css
+input[type="range"] {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: #ddd;
+  appearance: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  cursor: pointer;
+}
+```
+
+### Adding the total
+
+Let's show the total bill including tip:
+
+```svelte
+<script>
+  let billAmount = $state(0);
+  let tipPercent = $state(18);
+  let tip = $derived(billAmount * (tipPercent / 100));
+  let total = $derived(billAmount + tip);
+</script>
+```
+
+Add another result display:
+
+```svelte
+<div class="results">
+  <div class="result">
+    <span class="label">{tipPercent}% Tip:</span>
+    <span class="value">${tip.toFixed(2)}</span>
+  </div>
+  <div class="result total">
+    <span class="label">Total:</span>
+    <span class="value">${total.toFixed(2)}</span>
+  </div>
+</div>
+```
+
+Update the styles to handle multiple results:
+
+```css
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.result.total {
+  background: var(--color-dark-gray);
+}
+```
+
+### Splitting the bill
+
+For the final feature, let's add the ability to split the bill among multiple people:
+
+```svelte
+<script>
+  let billAmount = $state(0);
+  let tipPercent = $state(18);
+  let numPeople = $state(1);
+  
+  let tip = $derived(billAmount * (tipPercent / 100));
+  let total = $derived(billAmount + tip);
+  let perPerson = $derived(total / numPeople);
+</script>
+```
+
+Add an input for the number of people, after the tip slider:
+
+```svelte
+<div class="input-group">
+  <label for="people">Split between</label>
+  <div class="people-input">
+    <button onclick={() => numPeople = Math.max(1, numPeople - 1)}>−</button>
+    <span class="people-count">{numPeople}</span>
+    <button onclick={() => numPeople++}>+</button>
+  </div>
+</div>
+```
+
+Notice we use `Math.max(1, numPeople - 1)` for the minus button. This ensures we never go below 1 person—you can't split a bill zero ways!
+
+Add the per-person result:
+
+```svelte
+{#if numPeople > 1}
+  <div class="result per-person">
+    <span class="label">Per Person:</span>
+    <span class="value">${perPerson.toFixed(2)}</span>
+  </div>
+{/if}
+```
+
+The `{#if numPeople > 1}` only shows this line when splitting among multiple people. No need to show "per person" when there's only one person.
+
+Here's the final styling for the people input:
+
+```css
+.people-input {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.people-input button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.people-input button:hover {
+  background: #e06610;
+}
+
+.people-count {
+  font-size: 1.5rem;
+  font-weight: bold;
+  min-width: 40px;
+  text-align: center;
+}
+
+.result.per-person {
+  background: #1565c0;
+}
+```
+
+### The complete component
+
+Here's the final `TipCalculator.svelte` with all features:
+
+```svelte
+<script>
+  let billAmount = $state(0);
+  let tipPercent = $state(18);
+  let numPeople = $state(1);
+  
+  let tip = $derived(billAmount * (tipPercent / 100));
+  let total = $derived(billAmount + tip);
+  let perPerson = $derived(total / numPeople);
+</script>
+
+<div class="calculator">
+  <h3>Tip Calculator</h3>
+  
+  <div class="input-group">
+    <label for="bill">Bill Amount</label>
+    <div class="input-wrapper">
+      <span class="currency">$</span>
+      <input 
+        type="number" 
+        id="bill"
+        bind:value={billAmount}
+        min="0"
+        step="0.01"
+      >
+    </div>
+  </div>
+  
+  <div class="input-group">
+    <label for="percent">Tip: {tipPercent}%</label>
+    <input 
+      type="range" 
+      id="percent"
+      bind:value={tipPercent}
+      min="10"
+      max="30"
+      step="1"
+    >
+  </div>
+  
+  <div class="input-group">
+    <label>Split between</label>
+    <div class="people-input">
+      <button onclick={() => numPeople = Math.max(1, numPeople - 1)}>−</button>
+      <span class="people-count">{numPeople}</span>
+      <button onclick={() => numPeople++}>+</button>
+    </div>
+  </div>
+  
+  <div class="results">
+    <div class="result">
+      <span class="label">{tipPercent}% Tip:</span>
+      <span class="value">${tip.toFixed(2)}</span>
+    </div>
+    <div class="result total">
+      <span class="label">Total:</span>
+      <span class="value">${total.toFixed(2)}</span>
+    </div>
+    {#if numPeople > 1}
+      <div class="result per-person">
+        <span class="label">Per Person:</span>
+        <span class="value">${perPerson.toFixed(2)}</span>
+      </div>
+    {/if}
+  </div>
+</div>
+
+<style>
+  .calculator {
+    padding: 1.5rem;
+    background: var(--color-light-gray);
+    border-radius: 8px;
+    margin: 2rem 0;
+    max-width: 400px;
+  }
+
+  h3 {
+    margin: 0 0 1.5rem;
+    color: var(--color-dark-gray);
+  }
+
+  .input-group {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--color-dark-gray);
+  }
+
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .currency {
+    padding: 0.75rem;
+    background: #eee;
+    color: var(--color-dark-gray);
+    font-weight: bold;
+  }
+
+  input[type="number"] {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    font-size: 1.25rem;
+    width: 100%;
+  }
+
+  input[type="number"]:focus {
+    outline: none;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #ddd;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    cursor: pointer;
+  }
+
+  .people-input {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .people-input button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .people-input button:hover {
+    background: #e06610;
+  }
+
+  .people-count {
+    font-size: 1.5rem;
+    font-weight: bold;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .result {
+    padding: 1rem;
+    background: var(--color-accent);
+    color: white;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .result .label {
+    font-weight: bold;
+  }
+
+  .result .value {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .result.total {
+    background: var(--color-dark-gray);
+  }
+
+  .result.per-person {
+    background: #1565c0;
+  }
+</style>
+```
+
+## What you've learned
+
+Today we covered the core concepts of reactive programming in Svelte:
+
+**State with `$state()`**: Create variables that Svelte tracks and responds to when they change. Use it for booleans (toggles), numbers (counters), strings (text input), or any value that needs to change.
+
+**Event handlers with `onclick`**: Respond to user actions like button clicks. Use arrow functions to update state: `onclick={() => count++}`.
+
+**Conditional rendering with `{#if}`**: Show or hide parts of your component based on state. Content inside an `{#if}` block only renders when the condition is true.
+
+**Derived values with `$derived()`**: Create values that automatically recalculate when their dependencies change. Use for totals, percentages, formatting, or any computation based on state.
+
+**Two-way binding with `bind:value`**: Connect form inputs directly to state variables. Changes flow both ways—update the variable and the input updates; change the input and the variable updates.
+
+These concepts are the foundation of interactive web development. With them, you can build calculators, quizzes, filters, visualizations, and countless other tools that engage your readers.
+
+## Homework
+
+### Task 1: Build three interactive components
+
+Create a new repository from our class template and build three interactive components from scratch. Pick from this list or invent your own:
+
+- **Time until election countdown**: Accept a date input and display days, hours, minutes until that date. Update automatically (hint: you'll need `setInterval`).
+
+- **Rent split calculator**: Enter total rent and number of roommates. Show what each person owes. Bonus: allow unequal splits with percentage inputs.
+
+- **Reading time estimator**: Paste text into a textarea. Calculate and display estimated reading time based on word count (assume 200 words per minute).
+
+- **Quiz question**: Display a multiple choice question. When the user selects an answer, show whether they're right or wrong with an explanation.
+
+- **Unit converter**: Convert between miles and kilometers, Fahrenheit and Celsius, or dollars and euros. Let users type in either field and see the other update.
+
+Deploy your page to GitHub Pages and send me the link.
+
+### Task 2: Prepare to present
+
+Pick your favorite interactive component to show the class. Be ready to explain:
+
+- What state does your component track?
+- What user actions trigger state changes?
+- How does the display update in response?
+- If you used AI to help, what worked and what didn't?
+
+We'll spend the first part of next class sharing what you built.
