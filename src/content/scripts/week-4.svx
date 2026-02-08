@@ -1,7 +1,7 @@
 ---
 title: "Interactive Inputs"
 summary: "How to engage your readers with reactive components"
-date: "Feb. 16, 2026"
+date: "Feb. 23, 2026"
 week: 4
 locked: false
 ---
@@ -77,7 +77,7 @@ Now let's add the markup:
   <button onclick={() => isExpanded = !isExpanded}>
     {isExpanded ? '▼' : '▶'} {title}
   </button>
-  
+
   {#if isExpanded}
     <div class="content">
       {@render children()}
@@ -106,7 +106,7 @@ Finally, let's add some styling:
   <button onclick={() => isExpanded = !isExpanded}>
     {isExpanded ? '▼' : '▶'} {title}
   </button>
-  
+
   {#if isExpanded}
     <div class="content">
       {@render children()}
@@ -157,9 +157,9 @@ Now add the component somewhere in your page content, inside the `ArticleBody`:
 ```svelte
 <ReadMore title="Methodology">
   <p>
-    This analysis is based on data from the U.S. Census Bureau's 
-    American Community Survey, 2019-2023 5-year estimates. We calculated 
-    median household income by ZIP code and adjusted for inflation using 
+    This analysis is based on data from the U.S. Census Bureau's
+    American Community Survey, 2019-2023 5-year estimates. We calculated
+    median household income by ZIP code and adjusted for inflation using
     the Bureau of Labor Statistics' Consumer Price Index.
   </p>
 </ReadMore>
@@ -179,8 +179,8 @@ Try adding a few more ReadMore components with different content:
 
 <ReadMore title="Correction">
   <p>
-    An earlier version of this story incorrectly stated the mayor's 
-    proposed budget was $98 billion. It is $89 billion. The story has 
+    An earlier version of this story incorrectly stated the mayor's
+    proposed budget was $98 billion. It is $89 billion. The story has
     been updated.
   </p>
 </ReadMore>
@@ -232,24 +232,24 @@ Let's add the markup and styling:
 
 <div class="tracker">
   <h3>Promise Tracker</h3>
-  
+
   <div class="stats">
     <div class="stat kept">
       <span class="number">{kept}</span>
       <span class="label">Kept</span>
     </div>
-    
+
     <div class="stat broken">
       <span class="number">{broken}</span>
       <span class="label">Broken</span>
     </div>
-    
+
     <div class="stat total">
       <span class="number">{total}</span>
       <span class="label">Total</span>
     </div>
   </div>
-  
+
   <div class="buttons">
     <button class="kept-btn" onclick={() => kept++}>
       + Promise Kept
@@ -416,13 +416,13 @@ Create a new file at `src/lib/components/TipCalculator.svelte`. Start with the m
 
 <div class="calculator">
   <h3>Tip Calculator</h3>
-  
+
   <div class="input-group">
     <label for="bill">Bill Amount</label>
     <div class="input-wrapper">
       <span class="currency">$</span>
-      <input 
-        type="number" 
+      <input
+        type="number"
         id="bill"
         bind:value={billAmount}
         min="0"
@@ -430,7 +430,7 @@ Create a new file at `src/lib/components/TipCalculator.svelte`. Start with the m
       >
     </div>
   </div>
-  
+
   <div class="result">
     <span class="label">20% Tip:</span>
     <span class="value">${tip.toFixed(2)}</span>
@@ -552,8 +552,8 @@ Add a range slider to let users adjust the percentage. Insert this after the bil
 ```svelte
 <div class="input-group">
   <label for="percent">Tip: {tipPercent}%</label>
-  <input 
-    type="range" 
+  <input
+    type="range"
     id="percent"
     bind:value={tipPercent}
     min="10"
@@ -648,7 +648,7 @@ For the final feature, let's add the ability to split the bill among multiple pe
   let billAmount = $state(0);
   let tipPercent = $state(18);
   let numPeople = $state(1);
-  
+
   let tip = $derived(billAmount * (tipPercent / 100));
   let total = $derived(billAmount + tip);
   let perPerson = $derived(total / numPeople);
@@ -731,7 +731,7 @@ Here's the final `TipCalculator.svelte` with all features:
   let billAmount = $state(0);
   let tipPercent = $state(18);
   let numPeople = $state(1);
-  
+
   let tip = $derived(billAmount * (tipPercent / 100));
   let total = $derived(billAmount + tip);
   let perPerson = $derived(total / numPeople);
@@ -739,13 +739,13 @@ Here's the final `TipCalculator.svelte` with all features:
 
 <div class="calculator">
   <h3>Tip Calculator</h3>
-  
+
   <div class="input-group">
     <label for="bill">Bill Amount</label>
     <div class="input-wrapper">
       <span class="currency">$</span>
-      <input 
-        type="number" 
+      <input
+        type="number"
         id="bill"
         bind:value={billAmount}
         min="0"
@@ -753,11 +753,11 @@ Here's the final `TipCalculator.svelte` with all features:
       >
     </div>
   </div>
-  
+
   <div class="input-group">
     <label for="percent">Tip: {tipPercent}%</label>
-    <input 
-      type="range" 
+    <input
+      type="range"
       id="percent"
       bind:value={tipPercent}
       min="10"
@@ -765,7 +765,7 @@ Here's the final `TipCalculator.svelte` with all features:
       step="1"
     >
   </div>
-  
+
   <div class="input-group">
     <label>Split between</label>
     <div class="people-input">
@@ -774,7 +774,7 @@ Here's the final `TipCalculator.svelte` with all features:
       <button onclick={() => numPeople++}>+</button>
     </div>
   </div>
-  
+
   <div class="results">
     <div class="result">
       <span class="label">{tipPercent}% Tip:</span>
