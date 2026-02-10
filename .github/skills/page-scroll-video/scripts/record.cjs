@@ -14,6 +14,8 @@
  *   --output        Output MP4 file path (required)
  *   --duration      Scroll duration in seconds (default: 10)
  *   --speed         Scroll speed in pixels per second (default: 300)
+ *   --wait          Extra milliseconds to wait after load before recording (default: 3000)
+ *   --trim          Seconds to trim from the start of the recording (default: 3)
  *   --title         Custom browser title bar text (default: auto from page)
  *   --no-gif        Skip GIF generation
  *   --width         Viewport width (default: 900)
@@ -53,6 +55,8 @@ function parseArgs(args) {
     output: null,
     duration: DEFAULT_DURATION,
     speed: DEFAULT_SCROLL_SPEED,
+    wait: 3000,
+    trim: 3,
     title: null,
     noGif: false,
     width: DEFAULT_WIDTH,
@@ -73,6 +77,12 @@ function parseArgs(args) {
         break;
       case '--speed':
         options.speed = parseFloat(args[++i]);
+        break;
+      case '--wait':
+        options.wait = parseInt(args[++i], 10);
+        break;
+      case '--trim':
+        options.trim = parseFloat(args[++i]);
         break;
       case '--title':
         options.title = args[++i];
@@ -414,6 +424,12 @@ async function recordVideo(options) {
       timeout: 60000,
     });
 
+    // Give the page extra time to finish rendering async assets during setup only
+    if (options.wait > 0) {
+      console.log(`Waiting ${options.wait}ms for page to settle (setup only)...`);
+      await setupPage.waitForTimeout(options.wait);
+    }
+
     // Get page title if not provided
     let pageTitle = options.title;
     if (!pageTitle) {
@@ -475,7 +491,7 @@ async function recordVideo(options) {
     const recordedVideo = path.join(tempDir, videoFiles[0]);
 
     // Convert to MP4, trimming the 2-second chrome settling time from the beginning
-    const mp4Success = convertToMp4(recordedVideo, options.output, 2);
+    const mp4Success = convertToMp4(recordedVideo, options.output, options.trim);
     if (!mp4Success) {
       console.error('Failed to convert to MP4. Keeping WebM...');
       const webmOutput = options.output.replace('.mp4', '.webm');
@@ -520,6 +536,8 @@ Options:
   --output        Output MP4 file path (required)
   --duration      Scroll duration in seconds (default: 10)
   --speed         Scroll speed in pixels per second (default: 300)
+  --wait          Extra milliseconds to wait after load before recording (default: 3000)
+  --trim          Seconds to trim from the start of the recording (default: 3)
   --title         Custom browser title bar text (default: auto from page)
   --no-gif        Skip GIF generation
   --width         Viewport width (default: 900)
