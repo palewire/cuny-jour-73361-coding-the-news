@@ -426,7 +426,9 @@ async function recordVideo(options) {
 
     // Give the page extra time to finish rendering async assets during setup only
     if (options.wait > 0) {
-      console.log(`Waiting ${options.wait}ms for page to settle (setup only)...`);
+      console.log(
+        `Waiting ${options.wait}ms for page to settle (setup only)...`
+      );
       await setupPage.waitForTimeout(options.wait);
     }
 
@@ -491,7 +493,11 @@ async function recordVideo(options) {
     const recordedVideo = path.join(tempDir, videoFiles[0]);
 
     // Convert to MP4, trimming the 2-second chrome settling time from the beginning
-    const mp4Success = convertToMp4(recordedVideo, options.output, options.trim);
+    const mp4Success = convertToMp4(
+      recordedVideo,
+      options.output,
+      options.trim
+    );
     if (!mp4Success) {
       console.error('Failed to convert to MP4. Keeping WebM...');
       const webmOutput = options.output.replace('.mp4', '.webm');
