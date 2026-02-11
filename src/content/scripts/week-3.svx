@@ -537,7 +537,7 @@ After a few iterations, you should have a component that looks and functions the
 
 ### Task 1: Build three new components
 
-Create a new repo based on our template and add three components that could be useful in a news story. They should be different from the ones we built in class. Get them working on a page together, and deploy it via GitHub. Send me the link.
+Create a new repository based on [our class template](https://github.com/palewire/cuny-jour-static-site-template) and add three components that could be useful in a news story. They should be different from the ones we built in class. Get them working on a page together, and deploy it via GitHub. Send me the link.
 
 Here are some ideas. You should come up with at least one on your own.
 
