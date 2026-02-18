@@ -12,19 +12,57 @@ locked: true
   import YouTubeEmbed from '$lib/components/YouTubeEmbed.svelte';
 </script>
 
+## Introduction: What the Web Can Do That Print Can't
+
+A newspaper can inform you. A radio broadcast can move you. A television report can show you. But none of them can listen to you.
+
+The web can. It's the only mass medium where the audience can do something and get something back. Click a button. Type an answer. Drag a slider. The page responds. That basic capability — a reader does something, the page changes — is what makes interactive journalism possible.
+
+And newsrooms have been exploiting it for years.
+
+The New York Times' [dialect quiz](https://www.nytimes.com/interactive/2014/upshot/dialect-quiz-map.html) asks you a series of questions about how you talk — do you say "sneakers" or "tennis shoes"? — and generates a personalized heat map that pinpoints where you grew up. It became the single most-visited piece of content on the Times' website the year it was published, attracting tens of millions of visitors.
+
+<Screenshot
+  src="/screenshots/week-4/nyt-dialect-quiz.png"
+  alt="The New York Times dialect quiz showing a heat map of the United States based on reader answers about regional vocabulary"
+  chromeTitle="How Y'all, Youse and You Guys Talk"
+  chromeUrl="https://www.nytimes.com/interactive/2014/upshot/dialect-quiz-map.html"
+  maxWidth="960px"
+/>
+
+The Times' Upshot section built a [rent vs. buy calculator](https://www.nytimes.com/interactive/2014/upshot/buy-rent-calculator.html) that takes your income, savings, and local housing prices and tells you whether you're better off renting or buying. Their ["You Draw It"](https://www.nytimes.com/interactive/2017/01/15/us/politics/you-draw-obama-legacy.html) series asks readers to sketch their guess on a chart — how did the economy change under Obama? — then reveals the real data on top of your drawing.
+
+<Screenshot
+  src="/screenshots/week-4/nyt-you-draw-it.png"
+  alt="The New York Times 'You Draw It' interactive where readers draw their prediction on a chart and compare it to real data"
+  chromeTitle="You Draw It: What Got Better or Worse During Obama's Presidency"
+  chromeUrl="https://www.nytimes.com/interactive/2017/01/15/us/politics/you-draw-obama-legacy.html"
+  maxWidth="960px"
+/>
+
+The Washington Post runs a [daily news quiz](https://www.washingtonpost.com/games/news-quiz/) where readers test their knowledge of the week's events. ProPublica built [Dollars for Docs](https://projects.propublica.org/docdollars/), a searchable database where you type in your doctor's name and see how much money they've received from pharmaceutical companies.
+
+<Screenshot
+  src="/screenshots/week-4/propublica-dollars-for-docs.png"
+  alt="ProPublica's Dollars for Docs lookup tool showing a search interface for finding pharmaceutical payments to doctors"
+  chromeTitle="Dollars for Docs"
+  chromeUrl="https://projects.propublica.org/docdollars/"
+  maxWidth="960px"
+/>
+
+All of these projects share the same fundamental pattern: the reader provides input, the code processes it, and the page updates instantly. No reload. No waiting. The interface just responds.
+
+Web developers have a name for this pattern. They call it [reactivity](https://en.wikipedia.org/wiki/Reactive_programming). And Svelte — the framework we've been using — was specifically designed to make reactive interfaces easy to build. It provides a handful of simple tools that handle the hard parts for you: tracking what the user has done, figuring out what needs to change, and updating the page automatically.
+
+Today we're going to learn those tools by building three interactive components, each one introducing new concepts that build on the last. By the end of class, you'll understand how to track state, respond to user actions, and compute values on the fly.
+
 ## Part 1: Show/Hide Toggle
 
-Last week we learned how to build static components—reusable pieces of code that display content with consistent styling. But real news sites need to do more than display. They need to respond to readers.
-
-Think about the interactive features you encounter on news websites. A "Read more" button that reveals additional methodology. A toggle that shows or hides a correction notice. A calculator that tells you how much you'd save under a proposed tax plan.
-
-These features all have something in common: they react to user input. When you click a button or type in a field, the page updates instantly without reloading. This is what web developers call reactivity.
-
-Svelte was built from the ground up to make reactivity simple. Where other frameworks require you to jump through hoops to update the page, Svelte lets you write code that feels natural and straightforward.
-
-Today we're going to build three interactive components, each one introducing new concepts that build on the last. By the end of class, you'll understand how to track state, respond to user actions, and compute values on the fly.
-
 Let's start with the most basic interaction: clicking a button to show or hide content.
+
+Think about the interactive features you encounter on news websites every day. A "Read more" button that reveals additional methodology. A toggle that shows or hides a correction notice. An expandable section that lets the reader dig deeper without cluttering the page.
+
+These are small features, but they all depend on the same concept: the page needs to remember whether something is open or closed, and update itself when the reader clicks.
 
 ### Setting up your project
 
@@ -94,7 +132,7 @@ The `{isExpanded ? '▼' : '▶'}` syntax is called a ternary operator. It's a s
 
 The `{#if isExpanded}` block is Svelte's conditional rendering syntax. Everything inside this block only appears on the page when `isExpanded` is `true`. When the user clicks the button and `isExpanded` becomes `true`, Svelte automatically adds this content to the page. When it becomes `false`, Svelte removes it.
 
-Finally, let's add some styling:
+Finally, let's add some styling. Copy and paste this into the bottom of the file:
 
 ```svelte
 <script>
@@ -118,7 +156,6 @@ Finally, let's add some styling:
   .read-more {
     margin: 1.5rem 0;
     border: 1px solid var(--color-light-gray);
-    border-radius: 4px;
   }
 
   button {
@@ -127,14 +164,8 @@ Finally, let's add some styling:
     text-align: left;
     background: var(--color-light-gray);
     border: none;
-    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    color: var(--color-dark-gray);
-  }
-
-  button:hover {
-    background: #e0e0e0;
   }
 
   .content {
@@ -188,192 +219,340 @@ Try adding a few more ReadMore components with different content:
 
 Notice how each ReadMore component maintains its own state. Clicking one doesn't affect the others. This is because each component instance has its own `isExpanded` variable. This independence is one of the powerful features of component-based architecture.
 
-## Part 2: Counter
+## Part 2: Streaming Survey
 
-Now that you understand the basics of state and event handlers, let's build something a little more sophisticated: a counter that tracks multiple values.
+Now that you understand the basics of state and event handlers, let's build something that introduces a new concept: values that automatically calculate themselves from other values.
 
-News organizations often use counters to track progress on ongoing stories. Think of promise trackers that monitor whether politicians keep their commitments, or day counters that show how long it's been since an event.
+We're going to build an in-class survey. I'm going to ask how many of you subscribe to each of the major streaming services. You'll click buttons to record the votes, and the component will tally everything up in real time.
 
-We're going to build a simple promise tracker that counts promises kept and promises broken.
+This is exactly the kind of interactive element that news organizations build for reader engagement. You've probably seen polls embedded in stories asking readers to weigh in on a topic. "Do you think the city should raise the minimum wage?" "Should the Olympics add esports?" These tools are simple to build, and they demonstrate a powerful Svelte concept.
 
-### Building the PromiseTracker component
+### Starting with one service
 
-Create a new file at `src/lib/components/PromiseTracker.svelte`. This time we'll use multiple state variables:
-
-```svelte
-<script>
-  let kept = $state(0);
-  let broken = $state(0);
-</script>
-```
-
-We have two independent pieces of state: `kept` starts at 0, and `broken` starts at 0. Each can be changed independently.
-
-Now here's a new concept. What if we want to display the total number of promises tracked? We could write `{kept + broken}` in our markup, and it would work. But Svelte offers a better way: the `$derived()` rune.
+Create a new file at `src/lib/components/StreamingSurvey.svelte`. Let's start small, with just one streaming service:
 
 ```svelte
 <script>
-  let kept = $state(0);
-  let broken = $state(0);
-  let total = $derived(kept + broken);
-</script>
-```
-
-The `$derived()` rune creates a value that automatically recalculates whenever the values it depends on change. When `kept` or `broken` changes, `total` automatically updates. This is more efficient than recalculating in the template, and it keeps your logic organized in one place.
-
-Let's add the markup and styling:
-
-```svelte
-<script>
-  let kept = $state(0);
-  let broken = $state(0);
-  let total = $derived(kept + broken);
+  let netflixYes = $state(0);
+  let netflixNo = $state(0);
 </script>
 
-<div class="tracker">
-  <h3>Promise Tracker</h3>
+<div class="survey">
+  <h3>Streaming Survey</h3>
 
-  <div class="stats">
-    <div class="stat kept">
-      <span class="number">{kept}</span>
-      <span class="label">Kept</span>
+  <div class="service">
+    <span class="name">Netflix</span>
+    <div class="buttons">
+      <button class="yes-btn" onclick={() => netflixYes++}>
+        Yes ({netflixYes})
+      </button>
+      <button class="no-btn" onclick={() => netflixNo++}>
+        No ({netflixNo})
+      </button>
     </div>
-
-    <div class="stat broken">
-      <span class="number">{broken}</span>
-      <span class="label">Broken</span>
-    </div>
-
-    <div class="stat total">
-      <span class="number">{total}</span>
-      <span class="label">Total</span>
-    </div>
-  </div>
-
-  <div class="buttons">
-    <button class="kept-btn" onclick={() => kept++}>
-      + Promise Kept
-    </button>
-    <button class="broken-btn" onclick={() => broken++}>
-      + Promise Broken
-    </button>
   </div>
 </div>
+```
 
+This should feel familiar from Part 1. We have two `$state` variables, one for yes votes and one for no votes. Each button increments its counter when clicked. The current count is displayed right on the button.
+
+Copy and paste the styles I've provided below. We won't spend much time on the CSS today—our focus is on the JavaScript. But the green and red button colors help make the yes/no distinction clear at a glance.
+
+```svelte
 <style>
-  .tracker {
+  .survey {
     padding: 1.5rem;
     background: var(--color-light-gray);
-    border-radius: 8px;
     margin: 2rem 0;
   }
 
   h3 {
     margin: 0 0 1rem;
-    text-align: center;
-    color: var(--color-dark-gray);
   }
 
-  .stats {
+  .service {
     display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #ddd;
   }
 
-  .stat {
-    text-align: center;
-  }
-
-  .number {
-    display: block;
-    font-size: 2.5rem;
+  .name {
     font-weight: bold;
-    line-height: 1.2;
-  }
-
-  .kept .number {
-    color: #2e7d32;
-  }
-
-  .broken .number {
-    color: #c62828;
-  }
-
-  .total .number {
-    color: var(--color-dark-gray);
-  }
-
-  .label {
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-dark-gray);
   }
 
   .buttons {
     display: flex;
-    justify-content: center;
-    gap: 1rem;
+    gap: 0.5rem;
   }
 
   button {
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
     color: white;
   }
 
-  .kept-btn {
+  .yes-btn {
     background: #2e7d32;
   }
 
-  .kept-btn:hover {
-    background: #1b5e20;
-  }
-
-  .broken-btn {
+  .no-btn {
     background: #c62828;
-  }
-
-  .broken-btn:hover {
-    background: #b71c1c;
   }
 </style>
 ```
 
-Notice the `onclick={() => kept++}` syntax. This is a shorthand way of incrementing a number. It's equivalent to `onclick={() => kept = kept + 1}`.
-
-### Using the PromiseTracker
-
-Add the import to your page:
+Save the file, then open `src/routes/+page.svelte` and import it:
 
 ```js
-import PromiseTracker from '$lib/components/PromiseTracker.svelte';
+import StreamingSurvey from '$lib/components/StreamingSurvey.svelte';
 ```
 
-And place it in your content:
+Place it in your page:
 
 ```svelte
-<PromiseTracker />
+<StreamingSurvey />
 ```
 
-Check your browser. You should see a tracker with "Kept," "Broken," and "Total" displays. Click the buttons and watch all three numbers update. The total automatically stays in sync because of our `$derived()` declaration.
+Check your browser. You should see Netflix with yes and no buttons. Click them and watch the counts update. It works, but it's just one service. Let's expand.
+
+### Introducing $derived()
+
+Before we add more services, let's introduce a new concept. What if we want to know the total number of votes for Netflix? We could write `{netflixYes + netflixNo}` in our markup, and it would work. But Svelte offers a better way: the `$derived()` rune.
+
+```svelte
+<script>
+  let netflixYes = $state(0);
+  let netflixNo = $state(0);
+  let netflixTotal = $derived(netflixYes + netflixNo);
+</script>
+```
+
+The `$derived()` rune creates a value that automatically recalculates whenever the values it depends on change. When `netflixYes` or `netflixNo` changes, `netflixTotal` automatically updates. You never have to manually recalculate it. Svelte handles the math for you.
+
+We can derive more than just a sum. How about the percentage of yes votes?
+
+```svelte
+<script>
+  let netflixYes = $state(0);
+  let netflixNo = $state(0);
+  let netflixTotal = $derived(netflixYes + netflixNo);
+  let netflixPercent = $derived(
+    netflixTotal > 0 ? Math.round((netflixYes / netflixTotal) * 100) : 0
+  );
+</script>
+```
+
+Notice the `netflixTotal > 0 ?` check. This prevents a division-by-zero error when no votes have been cast. If there are no votes, we just show 0%. Otherwise, we calculate the percentage and round it to a whole number with `Math.round()`.
+
+Let's add this to our display. Update the markup to show the total and percentage below the buttons:
+
+```svelte
+<div class="service">
+  <span class="name">Netflix</span>
+  <div class="buttons">
+    <button class="yes-btn" onclick={() => netflixYes++}>
+      Yes ({netflixYes})
+    </button>
+    <button class="no-btn" onclick={() => netflixNo++}>
+      No ({netflixNo})
+    </button>
+  </div>
+  <span class="percent">{netflixPercent}%</span>
+</div>
+```
+
+Add a style for the percentage to your `<style>` block:
+
+```css
+.percent {
+  font-weight: bold;
+  min-width: 50px;
+  text-align: right;
+}
+```
+
+Save and test. As you click yes and no, the percentage updates instantly. This is `$derived()` in action—you change the inputs, and every value that depends on them recalculates automatically.
+
+### Scaling up to multiple services
+
+Now let's add the rest of our streaming services. Update the script block with state and derived values for each one:
+
+```svelte
+<script>
+  // Netflix
+  let netflixYes = $state(0);
+  let netflixNo = $state(0);
+  let netflixTotal = $derived(netflixYes + netflixNo);
+  let netflixPercent = $derived(
+    netflixTotal > 0 ? Math.round((netflixYes / netflixTotal) * 100) : 0
+  );
+
+  // Hulu
+  let huluYes = $state(0);
+  let huluNo = $state(0);
+  let huluTotal = $derived(huluYes + huluNo);
+  let huluPercent = $derived(
+    huluTotal > 0 ? Math.round((huluYes / huluTotal) * 100) : 0
+  );
+
+  // Disney+
+  let disneyYes = $state(0);
+  let disneyNo = $state(0);
+  let disneyTotal = $derived(disneyYes + disneyNo);
+  let disneyPercent = $derived(
+    disneyTotal > 0 ? Math.round((disneyYes / disneyTotal) * 100) : 0
+  );
+
+  // Max
+  let maxYes = $state(0);
+  let maxNo = $state(0);
+  let maxTotal = $derived(maxYes + maxNo);
+  let maxPercent = $derived(
+    maxTotal > 0 ? Math.round((maxYes / maxTotal) * 100) : 0
+  );
+
+  // Apple TV+
+  let appleYes = $state(0);
+  let appleNo = $state(0);
+  let appleTotal = $derived(appleYes + appleNo);
+  let applePercent = $derived(
+    appleTotal > 0 ? Math.round((appleYes / appleTotal) * 100) : 0
+  );
+
+  // Totals across all services
+  let totalYes = $derived(netflixYes + huluYes + disneyYes + maxYes + appleYes);
+  let totalNo = $derived(netflixNo + huluNo + disneyNo + maxNo + appleNo);
+  let totalVotes = $derived(totalYes + totalNo);
+  let overallPercent = $derived(
+    totalVotes > 0 ? Math.round((totalYes / totalVotes) * 100) : 0
+  );
+</script>
+```
+
+Yes, that's a lot of variables. You might be thinking there has to be a better way to organize this, and you'd be right. Later in the course, when we work with data structures like arrays and objects, we'll learn how to handle repetitive patterns more elegantly. For now, the repetition is actually useful, because it makes the pattern crystal clear: state in, derived values out.
+
+Look at those last four lines. `totalYes` and `totalNo` derive from all five services. `totalVotes` derives from `totalYes` and `totalNo`. And `overallPercent` derives from `totalYes` and `totalVotes`. This is a chain of derived values—each one building on the ones before it. Svelte keeps every link in the chain up to date automatically.
+
+Now update the markup with all five services and a summary footer:
+
+```svelte
+<div class="survey">
+  <h3>📺 Do you subscribe to...</h3>
+
+  <div class="service">
+    <span class="name">Netflix</span>
+    <div class="buttons">
+      <button class="yes-btn" onclick={() => netflixYes++}>Yes ({netflixYes})</button>
+      <button class="no-btn" onclick={() => netflixNo++}>No ({netflixNo})</button>
+    </div>
+    <span class="percent">{netflixPercent}%</span>
+  </div>
+
+  <div class="service">
+    <span class="name">Hulu</span>
+    <div class="buttons">
+      <button class="yes-btn" onclick={() => huluYes++}>Yes ({huluYes})</button>
+      <button class="no-btn" onclick={() => huluNo++}>No ({huluNo})</button>
+    </div>
+    <span class="percent">{huluPercent}%</span>
+  </div>
+
+  <div class="service">
+    <span class="name">Disney+</span>
+    <div class="buttons">
+      <button class="yes-btn" onclick={() => disneyYes++}>Yes ({disneyYes})</button>
+      <button class="no-btn" onclick={() => disneyNo++}>No ({disneyNo})</button>
+    </div>
+    <span class="percent">{disneyPercent}%</span>
+  </div>
+
+  <div class="service">
+    <span class="name">Max</span>
+    <div class="buttons">
+      <button class="yes-btn" onclick={() => maxYes++}>Yes ({maxYes})</button>
+      <button class="no-btn" onclick={() => maxNo++}>No ({maxNo})</button>
+    </div>
+    <span class="percent">{maxPercent}%</span>
+  </div>
+
+  <div class="service">
+    <span class="name">Apple TV+</span>
+    <div class="buttons">
+      <button class="yes-btn" onclick={() => appleYes++}>Yes ({appleYes})</button>
+      <button class="no-btn" onclick={() => appleNo++}>No ({appleNo})</button>
+    </div>
+    <span class="percent">{applePercent}%</span>
+  </div>
+
+  <div class="summary">
+    <div class="summary-stat">
+      <span class="summary-number">{totalVotes}</span>
+      <span class="summary-label">Total Votes</span>
+    </div>
+    <div class="summary-stat">
+      <span class="summary-number">{totalYes}</span>
+      <span class="summary-label">Subscriptions</span>
+    </div>
+    <div class="summary-stat">
+      <span class="summary-number">{overallPercent}%</span>
+      <span class="summary-label">Subscribe Rate</span>
+    </div>
+  </div>
+</div>
+```
+
+Add the summary styles to your `<style>` block:
+
+```css
+.summary {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-dark-gray);
+}
+
+.summary-stat {
+  text-align: center;
+}
+
+.summary-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.summary-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+```
+
+Save and check your browser. You should see all five streaming services with yes and no buttons, individual percentages, and a summary row at the bottom that tallies everything up.
+
+Let's try it. I'll poll the room. Raise your hand if you subscribe to Netflix. Count the hands, click yes that many times. Now the rest of you, click no. Move on to Hulu. Disney+. Max. Apple TV+.
+
+Watch the summary row as we go. The total votes climb. The subscription count rises. The overall percentage adjusts. Every single number on the page is either a `$state` that we're clicking to change, or a `$derived` value that recalculates automatically. Nothing is stale. Nothing is out of sync.
 
 ### Why use $derived()?
 
-You might wonder why we need `$derived()` when we could just write `{kept + broken}` directly in the template. There are a few reasons:
+You might wonder why we need `$derived()` when we could just write `{netflixYes + netflixNo}` directly in the template. There are a few reasons:
 
 1. **Organization**: Keeping calculations in the script block makes your template cleaner and your logic easier to find.
 
 2. **Reuse**: If you need to use the total in multiple places, you only define it once.
 
-3. **Complexity**: For more complex calculations, `$derived()` keeps things readable. Imagine a formula like `$derived((kept / total * 100).toFixed(1))` for a percentage—that would clutter your template.
+3. **Complexity**: For more complex calculations, `$derived()` keeps things readable. Imagine a formula like `$derived(netflixTotal > 0 ? Math.round((netflixYes / netflixTotal) * 100) : 0)` for a percentage—that would clutter your template.
 
-4. **Performance**: Svelte optimizes `$derived()` values, only recalculating when necessary.
+4. **Chaining**: Derived values can depend on other derived values. Our `overallPercent` depends on `totalYes` and `totalVotes`, which themselves depend on the individual service counts. Svelte sorts out the dependency chain for you.
+
+<Aside title="The rising cost of streaming">
+  <p>If you're curious about how much all these subscriptions add up to, the numbers are staggering. As of early 2026, Netflix's ad-free plan costs $17.99 a month. Disney+ is $11.99 with ads. Max is $10.99. Apple TV+ is $12.99. Hulu is $9.99. That's over $63 a month just for five services—and it doesn't include the ad-free tiers, which can push the total well past $90. According to a 2025 survey by Reviews.org, U.S. consumers spent an average of $278 per month to stay connected to their chosen streaming platforms. News organizations cover this "streamflation" beat regularly, often with exactly the kind of interactive calculators we're learning to build.</p>
+</Aside>
 
 ## Part 3: Tip Calculator
 
@@ -442,21 +621,19 @@ The `bind:value={billAmount}` creates our two-way binding. The input displays th
 
 The `tip` variable uses `$derived()` to calculate 20% of the bill. Notice the `.toFixed(2)` at the end—this formats the number to always show two decimal places, which is what we expect for currency.
 
-Add some basic styling:
+Add some basic styling. Again, just copy and paste this—we'll focus more on CSS in later weeks:
 
 ```svelte
 <style>
   .calculator {
     padding: 1.5rem;
     background: var(--color-light-gray);
-    border-radius: 8px;
     margin: 2rem 0;
     max-width: 400px;
   }
 
   h3 {
     margin: 0 0 1.5rem;
-    color: var(--color-dark-gray);
   }
 
   .input-group {
@@ -467,22 +644,17 @@ Add some basic styling:
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: var(--color-dark-gray);
   }
 
   .input-wrapper {
     display: flex;
     align-items: center;
-    background: white;
     border: 2px solid #ddd;
-    border-radius: 4px;
-    overflow: hidden;
   }
 
   .currency {
     padding: 0.75rem;
     background: #eee;
-    color: var(--color-dark-gray);
     font-weight: bold;
   }
 
@@ -494,15 +666,10 @@ Add some basic styling:
     width: 100%;
   }
 
-  input[type="number"]:focus {
-    outline: none;
-  }
-
   .result {
     padding: 1rem;
     background: var(--color-accent);
     color: white;
-    border-radius: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -511,7 +678,6 @@ Add some basic styling:
 
   .result .label {
     font-weight: bold;
-    color: white;
   }
 
   .result .value {
@@ -579,20 +745,6 @@ Add styling for the slider:
 ```css
 input[type="range"] {
   width: 100%;
-  height: 8px;
-  border-radius: 4px;
-  background: #ddd;
-  appearance: none;
-  cursor: pointer;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  cursor: pointer;
 }
 ```
 
@@ -659,7 +811,7 @@ Add an input for the number of people, after the tip slider:
 
 ```svelte
 <div class="input-group">
-  <label for="people">Split between</label>
+  <label>Split between</label>
   <div class="people-input">
     <button onclick={() => numPeople = Math.max(1, numPeople - 1)}>−</button>
     <span class="people-count">{numPeople}</span>
@@ -683,7 +835,7 @@ Add the per-person result:
 
 The `{#if numPeople > 1}` only shows this line when splitting among multiple people. No need to show "per person" when there's only one person.
 
-Here's the final styling for the people input:
+Here's the styling for the people input and the per-person result:
 
 ```css
 .people-input {
@@ -696,25 +848,15 @@ Here's the final styling for the people input:
   width: 40px;
   height: 40px;
   border: none;
-  border-radius: 50%;
   background: var(--color-accent);
   color: white;
   font-size: 1.5rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.people-input button:hover {
-  background: #e06610;
 }
 
 .people-count {
   font-size: 1.5rem;
   font-weight: bold;
-  min-width: 40px;
-  text-align: center;
 }
 
 .result.per-person {
@@ -797,14 +939,12 @@ Here's the final `TipCalculator.svelte` with all features:
   .calculator {
     padding: 1.5rem;
     background: var(--color-light-gray);
-    border-radius: 8px;
     margin: 2rem 0;
     max-width: 400px;
   }
 
   h3 {
     margin: 0 0 1.5rem;
-    color: var(--color-dark-gray);
   }
 
   .input-group {
@@ -815,22 +955,17 @@ Here's the final `TipCalculator.svelte` with all features:
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: var(--color-dark-gray);
   }
 
   .input-wrapper {
     display: flex;
     align-items: center;
-    background: white;
     border: 2px solid #ddd;
-    border-radius: 4px;
-    overflow: hidden;
   }
 
   .currency {
     padding: 0.75rem;
     background: #eee;
-    color: var(--color-dark-gray);
     font-weight: bold;
   }
 
@@ -842,26 +977,8 @@ Here's the final `TipCalculator.svelte` with all features:
     width: 100%;
   }
 
-  input[type="number"]:focus {
-    outline: none;
-  }
-
   input[type="range"] {
     width: 100%;
-    height: 8px;
-    border-radius: 4px;
-    background: #ddd;
-    appearance: none;
-    cursor: pointer;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--color-accent);
-    cursor: pointer;
   }
 
   .people-input {
@@ -874,25 +991,15 @@ Here's the final `TipCalculator.svelte` with all features:
     width: 40px;
     height: 40px;
     border: none;
-    border-radius: 50%;
     background: var(--color-accent);
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .people-input button:hover {
-    background: #e06610;
   }
 
   .people-count {
     font-size: 1.5rem;
     font-weight: bold;
-    min-width: 40px;
-    text-align: center;
   }
 
   .results {
@@ -905,7 +1012,6 @@ Here's the final `TipCalculator.svelte` with all features:
     padding: 1rem;
     background: var(--color-accent);
     color: white;
-    border-radius: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
