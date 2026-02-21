@@ -238,7 +238,7 @@ This is because each component instance has its own `isExpanded` variable. This 
 
 ## Part 3: Introduction to derived values
 
-Managing state is only the beginning of the story. The reactive variables you define can serve the foundation for other values, triggering ripple effects across the page as the user manipulates an input.
+Managing state is only the beginning of the story. The reactive variables you define can serve as the foundation for other values, triggering ripple effects across the page as the user manipulates an input.
 
 That's where the [`$derived()`](https://svelte.dev/docs/svelte/$derived) function comes in. As its name suggests, it is based on the current state of other variables. When those variables change, the derived value automatically recalculates.
 
@@ -250,7 +250,7 @@ Let's learn how to use `$derived()` by building a subscription cost calculator. 
 
 ### Creating a StreamingCost component
 
-Create a new file in the `src/lib/components/` directory. Call it `StreamingCost.svelte`. Start with a simple script block at top:
+Create a new file in the `src/lib/components/` directory. Call it `StreamingCost.svelte`. Start with a simple script block at the top:
 
 ```svelte
 <script>
@@ -425,17 +425,16 @@ This is `$derived()` in action. You change the input, and every value that depen
 
 ### Adding more services
 
-One service isn't much of a calculator. Let's add the rest of the major streaming platforms. First, we need to store the prices somewhere. A JavaScript object is perfect for this:
+One service isn't much of a calculator. Let's add the rest of the major streaming platforms. First, we need to store the prices somewhere. A JavaScript object is perfect for this. Let's add the prices of each service to the top of our script block, and a state variable for each one:
 
-```svelte
-<script>
+```svelte {emphasize-lines="1-8,11-15"}
   const prices = {
     netflix: 17.99,
-    disney: 13.99,
-    max: 16.99,
-    hulu: 9.99,
+    disney: 18.99,
+    max: 18.49,
+    hulu: 18.99,
     apple: 9.99,
-    peacock: 7.99
+    peacock: 10.99
   };
 
   let netflix = $state(false);
@@ -444,36 +443,27 @@ One service isn't much of a calculator. Let's add the rest of the major streamin
   let hulu = $state(false);
   let apple = $state(false);
   let peacock = $state(false);
-
-  let total = $derived(
-    (netflix ? prices.netflix : 0) +
-    (disney ? prices.disney : 0) +
-    (max ? prices.max : 0) +
-    (hulu ? prices.hulu : 0) +
-    (apple ? prices.apple : 0) +
-    (peacock ? prices.peacock : 0)
-  );
-
-  let count = $derived(
-    (netflix ? 1 : 0) +
-    (disney ? 1 : 0) +
-    (max ? 1 : 0) +
-    (hulu ? 1 : 0) +
-    (apple ? 1 : 0) +
-    (peacock ? 1 : 0)
-  );
-</script>
 ```
 
-The `prices` object stores each service's monthly cost. We look up values using dot notation like `prices.netflix`. This keeps our data organized and easy to update if prices change.
-
-We now have six boolean state variables, one for each service. The `total` derived value adds up the price of each checked service—if the checkbox is true, add the price; if false, add zero. The `count` derived value works the same way but adds 1 for each checked box instead of the price.
-
-Now update the markup with all six services:
+Below that, let's update the `total` variable to add up all the services instead of just Netflix:
 
 ```svelte
+let total = $derived(
+  (netflix ? prices.netflix : 0) +
+  (disney ? prices.disney : 0) +
+  (max ? prices.max : 0) +
+  (hulu ? prices.hulu : 0) +
+  (apple ? prices.apple : 0) +
+  (peacock ? prices.peacock : 0)
+);
+```
+We now have six boolean state variables, one for each service. The `total` derived value adds up the price of each checked service.
+
+Now update the markup with all six services. You should draw the cost labels from the `prices` object instead of hardcoding them in the markup. Add a [`toFixed(2)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed) to the total to make sure it rounds the numbers, which fixes a strange quirk of JavaScript when it comes to decimals.
+
+```svelte {emphasize-lines="4-43"}
 <div class="calculator">
-  <h3>📺 Your Streaming Subscriptions</h3>
+  <h3>How much do your streaming subscriptions cost?</h3>
 
   <button class="service" onclick={() => netflix = !netflix}>
     <span class="indicator">{netflix ? '✓' : '○'}</span>
@@ -512,195 +502,20 @@ Now update the markup with all six services:
   </button>
 
   <div class="summary">
-    <div class="summary-row">
-      <span class="summary-label">Services:</span>
-      <span class="summary-value">{count} of 6</span>
-    </div>
-    <div class="summary-row total">
-      <span class="summary-label">Monthly Total:</span>
-      <span class="summary-value">${total.toFixed(2)}</span>
-    </div>
+    <span class="summary-label">Monthly Total</span>
+    <span class="summary-amount">${total.toFixed(2)}</span>
   </div>
 </div>
 ```
 
-Each button uses the same pattern: `onclick` to toggle the state and a ternary operator for the visual indicator. Notice we're also using `${prices.netflix}` in the markup to display each price—if Netflix raises its rates, we only need to update the `prices` object.
+Save and check your browser. Click different combinations of services.  See the monthly total climb as you add services, or shrink as you unsubscribe.
 
-Add the summary styles to your `<style>` block:
-
-```css
-.summary {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 2px solid var(--color-dark-gray);
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-}
-
-.summary-row.total {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: var(--color-accent);
-}
-```
-
-### The complete component
-
-Here's the final `StreamingCost.svelte` with all features:
-
-```svelte
-<script>
-  const prices = {
-    netflix: 15.49,
-    disney: 13.99,
-    max: 16.99,
-    hulu: 9.99,
-    apple: 9.99,
-    peacock: 7.99
-  };
-
-  let netflix = $state(false);
-  let disney = $state(false);
-  let max = $state(false);
-  let hulu = $state(false);
-  let apple = $state(false);
-  let peacock = $state(false);
-
-  let total = $derived(
-    (netflix ? prices.netflix : 0) +
-    (disney ? prices.disney : 0) +
-    (max ? prices.max : 0) +
-    (hulu ? prices.hulu : 0) +
-    (apple ? prices.apple : 0) +
-    (peacock ? prices.peacock : 0)
-  );
-
-  let count = $derived(
-    (netflix ? 1 : 0) +
-    (disney ? 1 : 0) +
-    (max ? 1 : 0) +
-    (hulu ? 1 : 0) +
-    (apple ? 1 : 0) +
-    (peacock ? 1 : 0)
-  );
-</script>
-
-<div class="calculator">
-  <h3>📺 Your Streaming Subscriptions</h3>
-
-  <button class="service" onclick={() => netflix = !netflix}>
-    <span class="indicator">{netflix ? '✓' : '○'}</span>
-    <span class="name">Netflix</span>
-    <span class="price">${prices.netflix}/mo</span>
-  </button>
-
-  <button class="service" onclick={() => disney = !disney}>
-    <span class="indicator">{disney ? '✓' : '○'}</span>
-    <span class="name">Disney+</span>
-    <span class="price">${prices.disney}/mo</span>
-  </button>
-
-  <button class="service" onclick={() => max = !max}>
-    <span class="indicator">{max ? '✓' : '○'}</span>
-    <span class="name">Max</span>
-    <span class="price">${prices.max}/mo</span>
-  </button>
-
-  <button class="service" onclick={() => hulu = !hulu}>
-    <span class="indicator">{hulu ? '✓' : '○'}</span>
-    <span class="name">Hulu</span>
-    <span class="price">${prices.hulu}/mo</span>
-  </button>
-
-  <button class="service" onclick={() => apple = !apple}>
-    <span class="indicator">{apple ? '✓' : '○'}</span>
-    <span class="name">Apple TV+</span>
-    <span class="price">${prices.apple}/mo</span>
-  </button>
-
-  <button class="service" onclick={() => peacock = !peacock}>
-    <span class="indicator">{peacock ? '✓' : '○'}</span>
-    <span class="name">Peacock</span>
-    <span class="price">${prices.peacock}/mo</span>
-  </button>
-
-  <div class="summary">
-    <div class="summary-row">
-      <span class="summary-label">Services:</span>
-      <span class="summary-value">{count} of 6</span>
-    </div>
-    <div class="summary-row total">
-      <span class="summary-label">Monthly Total:</span>
-      <span class="summary-value">${total.toFixed(2)}</span>
-    </div>
-  </div>
-</div>
-
-<style>
-  .calculator {
-    padding: 1.5rem;
-    background: var(--color-light-gray);
-    margin: 2rem 0;
-    max-width: 400px;
-  }
-
-  h3 {
-    margin: 0 0 1rem;
-  }
-
-  .service {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    border: none;
-    border-bottom: 1px solid #ddd;
-    background: transparent;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
-  }
-
-  .indicator {
-    font-size: 1.25rem;
-  }
-
-  .name {
-    flex: 1;
-    font-weight: bold;
-  }
-
-  .price {
-    color: #666;
-  }
-
-  .summary {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 2px solid var(--color-dark-gray);
-  }
-
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-  }
-
-  .summary-row.total {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: var(--color-accent);
-  }
-</style>
-```
-
-Save and check your browser. Click different combinations of services. Watch as the count updates from "0 of 6" to however many you've selected. See the monthly total climb as you add services—or shrink as you unsubscribe.
-
-Every number on the page is either a `$state` that you're clicking to change, or a `$derived` value that recalculates automatically. Check Netflix and Hulu? That's $25.48. Add Disney+? Now it's $39.47. Uncheck them all? Back to $0.00. Nothing is stale. Nothing is out of sync.
+<Screenshot
+  src="/screenshots/week-4/first-derived.png"
+  alt="A StreamingCost component showing buttons for Netflix, Disney+, Max, Hulu, Apple TV+ and Peacock. Each has a checkbox and price. Below is a summary section that shows the monthly total. As different services are checked and unchecked, the total updates to reflect the new sum."
+  chromeTitle="Become a force for good. Join our next class."
+  chromeUrl="https://localhost:5173"
+/>
 
 ## Part 4: Introduction to two-way binding
 
