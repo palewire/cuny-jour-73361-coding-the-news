@@ -3,7 +3,7 @@ title: "Interactive Inputs"
 summary: "How to engage your readers with reactive components"
 date: "Feb. 23, 2026"
 week: 4
-locked: false
+locked: true
 ---
 
 <script>
@@ -12,15 +12,15 @@ locked: false
   import YouTubeEmbed from '$lib/components/YouTubeEmbed.svelte';
 </script>
 
-## Introduction: What the Web Can Do That Print Can't
+## Part 1: Introduction to reactivity
 
-A newspaper can inform you. A radio broadcast can move you. A television report can show you. But none of them can listen to you.
+This week we'll venture further into what you can do with Svelte by learning how to create reactive components.
 
-The web can. It's the only mass medium where the audience can do something and get something back. Click a button. Type an answer. Drag a slider. The page responds. That basic capability — a reader does something, the page changes — is what makes interactive journalism possible.
+[Reactivity](https://en.wikipedia.org/wiki/Reactive_programming) is the arcane term that developers use to describe features that respond instantly to new data or user input. It's what allows news developers to create engaging applications that wouldn't be possible in print or a one-way broadcast.
 
-And newsrooms have been exploiting it for years.
+Interactive features can take many different forms. They can be quizzes, calculators, polls, games, maps, dashboards, rankings and anything else that allows the page to automatically update in response to user actions.
 
-The New York Times' [dialect quiz](https://www.nytimes.com/interactive/2014/upshot/dialect-quiz-map.html) asks you a series of questions about how you talk — do you say "sneakers" or "tennis shoes"? — and generates a personalized heat map that pinpoints where you grew up. It became the single most-visited piece of content on the Times' website the year it was published, attracting tens of millions of visitors.
+A famous example is ["How Y’all, Youse and You Guys Talk,"](https://www.nytimes.com/interactive/2014/upshot/dialect-quiz-map.html) a dialect quiz published in 2013 by [Josh Katz](https://www.nytimes.com/by/josh-katz) and [Wilson Andrews](https://www.nytimes.com/by/wilson-andrews) of The New York Times.
 
 <Screenshot
   src="/screenshots/week-4/nyt-dialect-quiz.png"
@@ -30,31 +30,21 @@ The New York Times' [dialect quiz](https://www.nytimes.com/interactive/2014/upsh
   maxWidth="960px"
 />
 
-The Times' Upshot section built a [rent vs. buy calculator](https://www.nytimes.com/interactive/2014/upshot/buy-rent-calculator.html) that takes your income, savings, and local housing prices and tells you whether you're better off renting or buying. Their ["You Draw It"](https://www.nytimes.com/interactive/2017/01/15/us/politics/you-draw-obama-legacy.html) series asks readers to sketch their guess on a chart — how did the economy change under Obama? — then reveals the real data on top of your drawing.
+It asks readers a series of questions about how they talk — do you say "sneakers" or "tennis shoes?" — and then generates a personalized heat map that pinpoints where they are likely to have grown up. It rocketed across the web, ranking as the The Times' [most popular page of the year](https://www.nytco.com/press/the-new-york-timess-most-visited-content-of-2013/), and [earning Katz](https://knightlab.northwestern.edu/2014/01/20/behind-the-dialect-map-interactive-how-an-intern-created-the-new-york-times-most-popular-piece-of-content-in-2013/), who authored it as an intern, a full-time job.
+
+Today we're going to learn the fundamentals you need to build interactive components like the Times quiz by building three simple components. Each one will introduce a new concept you need to know.
+
+Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
 <Screenshot
-  src="/screenshots/week-4/nyt-you-draw-it.png"
-  alt="The New York Times 'You Draw It' interactive where readers draw their prediction on a chart and compare it to real data"
-  chromeTitle="You Draw It: What Got Better or Worse During Obama's Presidency"
-  chromeUrl="https://www.nytimes.com/interactive/2017/01/15/us/politics/you-draw-obama-legacy.html"
-  maxWidth="960px"
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
 />
 
-The Washington Post runs a [daily news quiz](https://www.washingtonpost.com/games/news-quiz/) where readers test their knowledge of the week's events. ProPublica built [Dollars for Docs](https://projects.propublica.org/docdollars/), a searchable database where you type in your doctor's name and see how much money they've received from pharmaceutical companies.
+Just like our previous classes, click the green "Use this template" button near the top right of the page. This week, let's name our repository `my-first-interactive-components`. Make sure "Public" is selected, then click "Create repository."
 
-<Screenshot
-  src="/screenshots/week-4/propublica-dollars-for-docs.png"
-  alt="ProPublica's Dollars for Docs lookup tool showing a search interface for finding pharmaceutical payments to doctors"
-  chromeTitle="Dollars for Docs"
-  chromeUrl="https://projects.propublica.org/docdollars/"
-  maxWidth="960px"
-/>
-
-All of these projects share the same fundamental pattern: the reader provides input, the code processes it, and the page updates instantly. No reload. No waiting. The interface just responds.
-
-Web developers have a name for this pattern. They call it [reactivity](https://en.wikipedia.org/wiki/Reactive_programming). And Svelte — the framework we've been using — was specifically designed to make reactive interfaces easy to build. It provides a handful of simple tools that handle the hard parts for you: tracking what the user has done, figuring out what needs to change, and updating the page automatically.
-
-Today we're going to learn those tools by building three interactive components, each one introducing new concepts that build on the last. By the end of class, you'll understand how to track state, respond to user actions, and compute values on the fly.
 
 ## Part 1: Show/Hide Toggle
 
