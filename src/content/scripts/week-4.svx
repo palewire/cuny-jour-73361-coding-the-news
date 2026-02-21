@@ -1018,22 +1018,6 @@ Here's the final `TipCalculator.svelte` with all features:
 </style>
 ```
 
-## What you've learned
-
-Today we covered the core concepts of reactive programming in Svelte:
-
-**State with `$state()`**: Create variables that Svelte tracks and responds to when they change. Use it for booleans (toggles), numbers (counters), strings (text input), or any value that needs to change.
-
-**Event handlers with `onclick`**: Respond to user actions like button clicks. Use arrow functions to update state: `onclick={() => count++}`.
-
-**Conditional rendering with `{#if}`**: Show or hide parts of your component based on state. Content inside an `{#if}` block only renders when the condition is true.
-
-**Derived values with `$derived()`**: Create values that automatically recalculate when their dependencies change. Use for totals, percentages, formatting, or any computation based on state.
-
-**Two-way binding with `bind:value`**: Connect form inputs directly to state variables. Changes flow both ways—update the variable and the input updates; change the input and the variable updates.
-
-These concepts are the foundation of interactive web development. With them, you can build calculators, quizzes, filters, visualizations, and countless other tools that engage your readers.
-
 ## Homework
 
 ### Task 1: Build three interactive components
