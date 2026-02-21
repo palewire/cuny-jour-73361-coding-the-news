@@ -511,7 +511,7 @@ Now update the markup with all six services. You should draw the cost labels fro
 Save and check your browser. Click different combinations of services.  See the monthly total climb as you add services, or shrink as you unsubscribe.
 
 <Screenshot
-  src="/screenshots/week-4/first-derived.png"
+  src="/screenshots/week-4/all-boxes.png"
   alt="A StreamingCost component showing buttons for Netflix, Disney+, Max, Hulu, Apple TV+ and Peacock. Each has a checkbox and price. Below is a summary section that shows the monthly total. As different services are checked and unchecked, the total updates to reflect the new sum."
   chromeTitle="Become a force for good. Join our next class."
   chromeUrl="https://localhost:5173"
