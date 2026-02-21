@@ -238,49 +238,414 @@ This is because each component instance has its own `isExpanded` variable. This 
 
 ## Part 3: Introduction to derived values
 
-Now that you understand the basics of state and event handlers, let's build something that introduces a new concept: values that automatically calculate themselves from other values.
+Managing state is only the beginning of the story. The reactive variables you define can serve the foundation for other values, triggering ripple effects across the page as the user manipulates an input.
 
-We're going to build an in-class survey. I'm going to ask how many of you subscribe to each of the major streaming services. You'll click buttons to record the votes, and the component will tally everything up in real time.
+That's where the [`$derived()`](https://svelte.dev/docs/svelte/$derived) function comes in. As its name suggests, it is based on the current state of other variables. When those variables change, the derived value automatically recalculates.
 
-This is exactly the kind of interactive element that news organizations build for reader engagement. You've probably seen polls embedded in stories asking readers to weigh in on a topic. "Do you think the city should raise the minimum wage?" "Should the Olympics add esports?" These tools are simple to build, and they demonstrate a powerful Svelte concept.
+```js
+let myDerivedValue = $derived(someState + anotherState);
+```
 
-### Starting with one service
+Let's learn how to use `$derived()` by building a subscription cost calculator. You'll check off which streaming services you subscribe to and the component will tally up your monthly bill.
 
-Create a new file at `src/lib/components/StreamingSurvey.svelte`. Let's start small, with just one streaming service:
+### Creating a StreamingCost component
+
+Create a new file in the `src/lib/components/` directory. Call it `StreamingCost.svelte`. Start with a simple script block at top:
 
 ```svelte
 <script>
-  let netflixYes = $state(0);
-  let netflixNo = $state(0);
+  let netflix = $state(false);
+</script>
+```
+
+Add the markup that will display a clickable service button.
+
+```svelte {5-18}
+<script>
+  let netflix = $state(false);
 </script>
 
-<div class="survey">
-  <h3>Streaming Survey</h3>
+<div class="calculator">
+  <h3>How much do your streaming subscriptions cost?</h3>
 
-  <div class="service">
+  <button class="service" onclick={() => netflix = !netflix}>
+    <span class="indicator">{netflix ? '✓' : '○'}</span>
     <span class="name">Netflix</span>
-    <div class="buttons">
-      <button class="yes-btn" onclick={() => netflixYes++}>
-        Yes ({netflixYes})
-      </button>
-      <button class="no-btn" onclick={() => netflixNo++}>
-        No ({netflixNo})
-      </button>
+    <span class="price">$17.99/mo</span>
+  </button>
+</div>
+```
+
+This pattern should feel familiar from Part 2. The `onclick` handler toggles `netflix` between true and false. The ternary `{netflix ? '✓' : '○'}` shows a check mark when selected or a circle when not.
+
+Add some styling. Copy and paste this into the bottom of the file.
+
+```svelte {15-52}
+<script>
+  let netflix = $state(false);
+</script>
+
+<div class="calculator">
+   <h3>How much do your streaming subscriptions cost?</h3>
+
+  <button class="service" onclick={() => netflix = !netflix}>
+    <span class="indicator">{netflix ? '✓' : '○'}</span>
+    <span class="name">Netflix</span>
+    <span class="price">$17.99/mo</span>
+  </button>
+</div>
+
+<style>
+  .calculator {
+    padding: 1.5rem;
+    background: var(--color-light-gray);
+    margin: 2rem 0;
+    max-width: 400px;
+  }
+
+  h3 {
+    margin: 0 0 1rem !important;
+  }
+
+  .service {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+  }
+
+  .indicator {
+    font-size: 1.25rem;
+  }
+
+  .name {
+    flex: 1;
+    font-weight: bold;
+  }
+
+  .price {
+    color: #666;
+  }
+</style>
+```
+
+Save your `StreamingCost.svelte` file and open `src/routes/+page.svelte`. Add an import at the top of the script block:
+
+```js
+import StreamingCost from '$lib/components/StreamingCost.svelte';
+```
+
+Place it in your page:
+
+```svelte
+<StreamingCost />
+```
+
+Check your browser. You should see Netflix with a checkbox and price. Click it on and off.
+
+<Screenshot
+  src="/screenshots/week-4/netflix.png"
+  alt="A StreamingCost component showing a button for Netflix with a checkbox and price. When clicked, the checkbox toggles between checked and unchecked."
+  chromeTitle="Become a force for good. Join our next class."
+  chromeUrl="https://localhost:5173"
+/>
+
+The checkbox works, but nothing else happens yet. Let's add in the calculation.
+
+### Using $derived() for on-the-fly calculations
+
+Now comes the magic. We want to show the total monthly cost. Let's add a `$derived()` value that calculates it:
+
+```svelte {emphasize-lines="3"}
+<script>
+  let netflix = $state(false);
+  let total = $derived(netflix ? 17.99 : 0);
+</script>
+```
+
+The `$derived()` function creates a value that recalculates automatically. The expression `netflix ? 17.99 : 0` is another ternary operator. If `netflix` is true, it uses 17.99, the current standard price. Otherwise, uses 0.
+
+Add a summary section to display the total:
+
+```svelte {emphasize-lines="10-13"}
+<div class="calculator">
+  <h3>How much do your streaming subscriptions cost?</h3>
+
+  <button class="service" onclick={() => netflix = !netflix}>
+    <span class="indicator">{netflix ? '✓' : '○'}</span>
+    <span class="name">Netflix</span>
+    <span class="price">$17.99/mo</span>
+  </button>
+
+  <div class="summary">
+    <span class="summary-label">Monthly Total:</span>
+    <span class="summary-amount">${total}</span>
+  </div>
+</div>
+```
+
+Add styles for the summary:
+
+```css
+.summary {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-dark-gray);
+}
+
+.summary-label {
+  font-size: 1.125rem;
+  }
+
+.summary-amount {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: var(--color-accent);
+}
+```
+
+Save and test. Check Netflix on, and the total shows $17.99. Uncheck it, and you're back to $0.00.
+
+<Screenshot
+  src="/screenshots/week-4/first-derived.png"
+  alt="A StreamingCost component showing a button for Netflix with a checkbox and price. Below it is a summary section that shows the monthly total. When the Netflix checkbox is checked, the total shows $17.99. When unchecked, it shows $0.00."
+  chromeTitle="Become a force for good. Join our next class."
+  chromeUrl="https://localhost:5173"
+/>
+
+This is `$derived()` in action. You change the input, and every value that depends on it recalculates automatically.
+
+### Adding more services
+
+One service isn't much of a calculator. Let's add the rest of the major streaming platforms. First, we need to store the prices somewhere. A JavaScript object is perfect for this:
+
+```svelte
+<script>
+  const prices = {
+    netflix: 17.99,
+    disney: 13.99,
+    max: 16.99,
+    hulu: 9.99,
+    apple: 9.99,
+    peacock: 7.99
+  };
+
+  let netflix = $state(false);
+  let disney = $state(false);
+  let max = $state(false);
+  let hulu = $state(false);
+  let apple = $state(false);
+  let peacock = $state(false);
+
+  let total = $derived(
+    (netflix ? prices.netflix : 0) +
+    (disney ? prices.disney : 0) +
+    (max ? prices.max : 0) +
+    (hulu ? prices.hulu : 0) +
+    (apple ? prices.apple : 0) +
+    (peacock ? prices.peacock : 0)
+  );
+
+  let count = $derived(
+    (netflix ? 1 : 0) +
+    (disney ? 1 : 0) +
+    (max ? 1 : 0) +
+    (hulu ? 1 : 0) +
+    (apple ? 1 : 0) +
+    (peacock ? 1 : 0)
+  );
+</script>
+```
+
+The `prices` object stores each service's monthly cost. We look up values using dot notation like `prices.netflix`. This keeps our data organized and easy to update if prices change.
+
+We now have six boolean state variables, one for each service. The `total` derived value adds up the price of each checked service—if the checkbox is true, add the price; if false, add zero. The `count` derived value works the same way but adds 1 for each checked box instead of the price.
+
+Now update the markup with all six services:
+
+```svelte
+<div class="calculator">
+  <h3>📺 Your Streaming Subscriptions</h3>
+
+  <button class="service" onclick={() => netflix = !netflix}>
+    <span class="indicator">{netflix ? '✓' : '○'}</span>
+    <span class="name">Netflix</span>
+    <span class="price">${prices.netflix}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => disney = !disney}>
+    <span class="indicator">{disney ? '✓' : '○'}</span>
+    <span class="name">Disney+</span>
+    <span class="price">${prices.disney}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => max = !max}>
+    <span class="indicator">{max ? '✓' : '○'}</span>
+    <span class="name">Max</span>
+    <span class="price">${prices.max}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => hulu = !hulu}>
+    <span class="indicator">{hulu ? '✓' : '○'}</span>
+    <span class="name">Hulu</span>
+    <span class="price">${prices.hulu}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => apple = !apple}>
+    <span class="indicator">{apple ? '✓' : '○'}</span>
+    <span class="name">Apple TV+</span>
+    <span class="price">${prices.apple}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => peacock = !peacock}>
+    <span class="indicator">{peacock ? '✓' : '○'}</span>
+    <span class="name">Peacock</span>
+    <span class="price">${prices.peacock}/mo</span>
+  </button>
+
+  <div class="summary">
+    <div class="summary-row">
+      <span class="summary-label">Services:</span>
+      <span class="summary-value">{count} of 6</span>
+    </div>
+    <div class="summary-row total">
+      <span class="summary-label">Monthly Total:</span>
+      <span class="summary-value">${total.toFixed(2)}</span>
     </div>
   </div>
 </div>
 ```
 
-This should feel familiar from Part 1. We have two `$state` variables, one for yes votes and one for no votes. Each button increments its counter when clicked. The current count is displayed right on the button.
+Each button uses the same pattern: `onclick` to toggle the state and a ternary operator for the visual indicator. Notice we're also using `${prices.netflix}` in the markup to display each price—if Netflix raises its rates, we only need to update the `prices` object.
 
-Copy and paste the styles I've provided below. We won't spend much time on the CSS today—our focus is on the JavaScript. But the green and red button colors help make the yes/no distinction clear at a glance.
+Add the summary styles to your `<style>` block:
+
+```css
+.summary {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-dark-gray);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.summary-row.total {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--color-accent);
+}
+```
+
+### The complete component
+
+Here's the final `StreamingCost.svelte` with all features:
 
 ```svelte
+<script>
+  const prices = {
+    netflix: 15.49,
+    disney: 13.99,
+    max: 16.99,
+    hulu: 9.99,
+    apple: 9.99,
+    peacock: 7.99
+  };
+
+  let netflix = $state(false);
+  let disney = $state(false);
+  let max = $state(false);
+  let hulu = $state(false);
+  let apple = $state(false);
+  let peacock = $state(false);
+
+  let total = $derived(
+    (netflix ? prices.netflix : 0) +
+    (disney ? prices.disney : 0) +
+    (max ? prices.max : 0) +
+    (hulu ? prices.hulu : 0) +
+    (apple ? prices.apple : 0) +
+    (peacock ? prices.peacock : 0)
+  );
+
+  let count = $derived(
+    (netflix ? 1 : 0) +
+    (disney ? 1 : 0) +
+    (max ? 1 : 0) +
+    (hulu ? 1 : 0) +
+    (apple ? 1 : 0) +
+    (peacock ? 1 : 0)
+  );
+</script>
+
+<div class="calculator">
+  <h3>📺 Your Streaming Subscriptions</h3>
+
+  <button class="service" onclick={() => netflix = !netflix}>
+    <span class="indicator">{netflix ? '✓' : '○'}</span>
+    <span class="name">Netflix</span>
+    <span class="price">${prices.netflix}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => disney = !disney}>
+    <span class="indicator">{disney ? '✓' : '○'}</span>
+    <span class="name">Disney+</span>
+    <span class="price">${prices.disney}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => max = !max}>
+    <span class="indicator">{max ? '✓' : '○'}</span>
+    <span class="name">Max</span>
+    <span class="price">${prices.max}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => hulu = !hulu}>
+    <span class="indicator">{hulu ? '✓' : '○'}</span>
+    <span class="name">Hulu</span>
+    <span class="price">${prices.hulu}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => apple = !apple}>
+    <span class="indicator">{apple ? '✓' : '○'}</span>
+    <span class="name">Apple TV+</span>
+    <span class="price">${prices.apple}/mo</span>
+  </button>
+
+  <button class="service" onclick={() => peacock = !peacock}>
+    <span class="indicator">{peacock ? '✓' : '○'}</span>
+    <span class="name">Peacock</span>
+    <span class="price">${prices.peacock}/mo</span>
+  </button>
+
+  <div class="summary">
+    <div class="summary-row">
+      <span class="summary-label">Services:</span>
+      <span class="summary-value">{count} of 6</span>
+    </div>
+    <div class="summary-row total">
+      <span class="summary-label">Monthly Total:</span>
+      <span class="summary-value">${total.toFixed(2)}</span>
+    </div>
+  </div>
+</div>
+
 <style>
-  .survey {
+  .calculator {
     padding: 1.5rem;
     background: var(--color-light-gray);
     margin: 2rem 0;
+    max-width: 400px;
   }
 
   h3 {
@@ -289,287 +654,53 @@ Copy and paste the styles I've provided below. We won't spend much time on the C
 
   .service {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: none;
     border-bottom: 1px solid #ddd;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+  }
+
+  .indicator {
+    font-size: 1.25rem;
   }
 
   .name {
+    flex: 1;
     font-weight: bold;
   }
 
-  .buttons {
+  .price {
+    color: #666;
+  }
+
+  .summary {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--color-dark-gray);
+  }
+
+  .summary-row {
     display: flex;
-    gap: 0.5rem;
+    justify-content: space-between;
+    padding: 0.5rem 0;
   }
 
-  button {
-    padding: 0.5rem 1rem;
-    border: none;
+  .summary-row.total {
+    font-size: 1.25rem;
     font-weight: bold;
-    cursor: pointer;
-    color: white;
-  }
-
-  .yes-btn {
-    background: #2e7d32;
-  }
-
-  .no-btn {
-    background: #c62828;
+    color: var(--color-accent);
   }
 </style>
 ```
 
-Save the file, then open `src/routes/+page.svelte` and import it:
+Save and check your browser. Click different combinations of services. Watch as the count updates from "0 of 6" to however many you've selected. See the monthly total climb as you add services—or shrink as you unsubscribe.
 
-```js
-import StreamingSurvey from '$lib/components/StreamingSurvey.svelte';
-```
-
-Place it in your page:
-
-```svelte
-<StreamingSurvey />
-```
-
-Check your browser. You should see Netflix with yes and no buttons. Click them and watch the counts update. It works, but it's just one service. Let's expand.
-
-### Introduction to $derived()
-
-Before we add more services, let's introduce a new concept. What if we want to know the total number of votes for Netflix? We could write `{netflixYes + netflixNo}` in our markup, and it would work. But Svelte offers a better way: the `$derived()` rune.
-
-```svelte
-<script>
-  let netflixYes = $state(0);
-  let netflixNo = $state(0);
-  let netflixTotal = $derived(netflixYes + netflixNo);
-</script>
-```
-
-The `$derived()` rune creates a value that automatically recalculates whenever the values it depends on change. When `netflixYes` or `netflixNo` changes, `netflixTotal` automatically updates. You never have to manually recalculate it. Svelte handles the math for you.
-
-We can derive more than just a sum. How about the percentage of yes votes?
-
-```svelte
-<script>
-  let netflixYes = $state(0);
-  let netflixNo = $state(0);
-  let netflixTotal = $derived(netflixYes + netflixNo);
-  let netflixPercent = $derived(
-    netflixTotal > 0 ? Math.round((netflixYes / netflixTotal) * 100) : 0
-  );
-</script>
-```
-
-Notice the `netflixTotal > 0 ?` check. This prevents a division-by-zero error when no votes have been cast. If there are no votes, we just show 0%. Otherwise, we calculate the percentage and round it to a whole number with `Math.round()`.
-
-Let's add this to our display. Update the markup to show the total and percentage below the buttons:
-
-```svelte
-<div class="service">
-  <span class="name">Netflix</span>
-  <div class="buttons">
-    <button class="yes-btn" onclick={() => netflixYes++}>
-      Yes ({netflixYes})
-    </button>
-    <button class="no-btn" onclick={() => netflixNo++}>
-      No ({netflixNo})
-    </button>
-  </div>
-  <span class="percent">{netflixPercent}%</span>
-</div>
-```
-
-Add a style for the percentage to your `<style>` block:
-
-```css
-.percent {
-  font-weight: bold;
-  min-width: 50px;
-  text-align: right;
-}
-```
-
-Save and test. As you click yes and no, the percentage updates instantly. This is `$derived()` in action—you change the inputs, and every value that depends on them recalculates automatically.
-
-### Scaling up to multiple services
-
-Now let's add the rest of our streaming services. Update the script block with state and derived values for each one:
-
-```svelte
-<script>
-  // Netflix
-  let netflixYes = $state(0);
-  let netflixNo = $state(0);
-  let netflixTotal = $derived(netflixYes + netflixNo);
-  let netflixPercent = $derived(
-    netflixTotal > 0 ? Math.round((netflixYes / netflixTotal) * 100) : 0
-  );
-
-  // Hulu
-  let huluYes = $state(0);
-  let huluNo = $state(0);
-  let huluTotal = $derived(huluYes + huluNo);
-  let huluPercent = $derived(
-    huluTotal > 0 ? Math.round((huluYes / huluTotal) * 100) : 0
-  );
-
-  // Disney+
-  let disneyYes = $state(0);
-  let disneyNo = $state(0);
-  let disneyTotal = $derived(disneyYes + disneyNo);
-  let disneyPercent = $derived(
-    disneyTotal > 0 ? Math.round((disneyYes / disneyTotal) * 100) : 0
-  );
-
-  // Max
-  let maxYes = $state(0);
-  let maxNo = $state(0);
-  let maxTotal = $derived(maxYes + maxNo);
-  let maxPercent = $derived(
-    maxTotal > 0 ? Math.round((maxYes / maxTotal) * 100) : 0
-  );
-
-  // Apple TV+
-  let appleYes = $state(0);
-  let appleNo = $state(0);
-  let appleTotal = $derived(appleYes + appleNo);
-  let applePercent = $derived(
-    appleTotal > 0 ? Math.round((appleYes / appleTotal) * 100) : 0
-  );
-
-  // Totals across all services
-  let totalYes = $derived(netflixYes + huluYes + disneyYes + maxYes + appleYes);
-  let totalNo = $derived(netflixNo + huluNo + disneyNo + maxNo + appleNo);
-  let totalVotes = $derived(totalYes + totalNo);
-  let overallPercent = $derived(
-    totalVotes > 0 ? Math.round((totalYes / totalVotes) * 100) : 0
-  );
-</script>
-```
-
-Yes, that's a lot of variables. You might be thinking there has to be a better way to organize this, and you'd be right. Later in the course, when we work with data structures like arrays and objects, we'll learn how to handle repetitive patterns more elegantly. For now, the repetition is actually useful, because it makes the pattern crystal clear: state in, derived values out.
-
-Look at those last four lines. `totalYes` and `totalNo` derive from all five services. `totalVotes` derives from `totalYes` and `totalNo`. And `overallPercent` derives from `totalYes` and `totalVotes`. This is a chain of derived values—each one building on the ones before it. Svelte keeps every link in the chain up to date automatically.
-
-Now update the markup with all five services and a summary footer:
-
-```svelte
-<div class="survey">
-  <h3>📺 Do you subscribe to...</h3>
-
-  <div class="service">
-    <span class="name">Netflix</span>
-    <div class="buttons">
-      <button class="yes-btn" onclick={() => netflixYes++}>Yes ({netflixYes})</button>
-      <button class="no-btn" onclick={() => netflixNo++}>No ({netflixNo})</button>
-    </div>
-    <span class="percent">{netflixPercent}%</span>
-  </div>
-
-  <div class="service">
-    <span class="name">Hulu</span>
-    <div class="buttons">
-      <button class="yes-btn" onclick={() => huluYes++}>Yes ({huluYes})</button>
-      <button class="no-btn" onclick={() => huluNo++}>No ({huluNo})</button>
-    </div>
-    <span class="percent">{huluPercent}%</span>
-  </div>
-
-  <div class="service">
-    <span class="name">Disney+</span>
-    <div class="buttons">
-      <button class="yes-btn" onclick={() => disneyYes++}>Yes ({disneyYes})</button>
-      <button class="no-btn" onclick={() => disneyNo++}>No ({disneyNo})</button>
-    </div>
-    <span class="percent">{disneyPercent}%</span>
-  </div>
-
-  <div class="service">
-    <span class="name">Max</span>
-    <div class="buttons">
-      <button class="yes-btn" onclick={() => maxYes++}>Yes ({maxYes})</button>
-      <button class="no-btn" onclick={() => maxNo++}>No ({maxNo})</button>
-    </div>
-    <span class="percent">{maxPercent}%</span>
-  </div>
-
-  <div class="service">
-    <span class="name">Apple TV+</span>
-    <div class="buttons">
-      <button class="yes-btn" onclick={() => appleYes++}>Yes ({appleYes})</button>
-      <button class="no-btn" onclick={() => appleNo++}>No ({appleNo})</button>
-    </div>
-    <span class="percent">{applePercent}%</span>
-  </div>
-
-  <div class="summary">
-    <div class="summary-stat">
-      <span class="summary-number">{totalVotes}</span>
-      <span class="summary-label">Total Votes</span>
-    </div>
-    <div class="summary-stat">
-      <span class="summary-number">{totalYes}</span>
-      <span class="summary-label">Subscriptions</span>
-    </div>
-    <div class="summary-stat">
-      <span class="summary-number">{overallPercent}%</span>
-      <span class="summary-label">Subscribe Rate</span>
-    </div>
-  </div>
-</div>
-```
-
-Add the summary styles to your `<style>` block:
-
-```css
-.summary {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 2px solid var(--color-dark-gray);
-}
-
-.summary-stat {
-  text-align: center;
-}
-
-.summary-number {
-  display: block;
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-.summary-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-}
-```
-
-Save and check your browser. You should see all five streaming services with yes and no buttons, individual percentages, and a summary row at the bottom that tallies everything up.
-
-Let's try it. I'll poll the room. Raise your hand if you subscribe to Netflix. Count the hands, click yes that many times. Now the rest of you, click no. Move on to Hulu. Disney+. Max. Apple TV+.
-
-Watch the summary row as we go. The total votes climb. The subscription count rises. The overall percentage adjusts. Every single number on the page is either a `$state` that we're clicking to change, or a `$derived` value that recalculates automatically. Nothing is stale. Nothing is out of sync.
-
-### Why use $derived()?
-
-You might wonder why we need `$derived()` when we could just write `{netflixYes + netflixNo}` directly in the template. There are a few reasons:
-
-1. **Organization**: Keeping calculations in the script block makes your template cleaner and your logic easier to find.
-
-2. **Reuse**: If you need to use the total in multiple places, you only define it once.
-
-3. **Complexity**: For more complex calculations, `$derived()` keeps things readable. Imagine a formula like `$derived(netflixTotal > 0 ? Math.round((netflixYes / netflixTotal) * 100) : 0)` for a percentage—that would clutter your template.
-
-4. **Chaining**: Derived values can depend on other derived values. Our `overallPercent` depends on `totalYes` and `totalVotes`, which themselves depend on the individual service counts. Svelte sorts out the dependency chain for you.
-
-<Aside title="The rising cost of streaming">
-  <p>If you're curious about how much all these subscriptions add up to, the numbers are staggering. As of early 2026, Netflix's ad-free plan costs $17.99 a month. Disney+ is $11.99 with ads. Max is $10.99. Apple TV+ is $12.99. Hulu is $9.99. That's over $63 a month just for five services—and it doesn't include the ad-free tiers, which can push the total well past $90. According to a 2025 survey by Reviews.org, U.S. consumers spent an average of $278 per month to stay connected to their chosen streaming platforms. News organizations cover this "streamflation" beat regularly, often with exactly the kind of interactive calculators we're learning to build.</p>
-</Aside>
+Every number on the page is either a `$state` that you're clicking to change, or a `$derived` value that recalculates automatically. Check Netflix and Hulu? That's $25.48. Add Disney+? Now it's $39.47. Uncheck them all? Back to $0.00. Nothing is stale. Nothing is out of sync.
 
 ## Part 4: Introduction to two-way binding
 
