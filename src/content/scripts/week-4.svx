@@ -34,6 +34,8 @@ It asks readers a series of questions about how they talk — do you say "sneake
 
 Today we're going to learn the fundamentals you need to build interactive components like the Times quiz by building three simple components. Each one will introduce a new concept you need to know.
 
+### Create your repository
+
 Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
 <Screenshot
@@ -46,23 +48,13 @@ Open your browser and navigate to our template repository at <a href="https://gi
 Just like our previous classes, click the green "Use this template" button near the top right of the page. This week, let's name our repository `my-first-interactive-components`. Make sure "Public" is selected, then click "Create repository."
 
 
-## Part 1: Show/Hide Toggle
+## Part 2: Introduction to state
 
 Let's start with the most basic interaction: clicking a button to show or hide content.
 
 Think about the interactive features you encounter on news websites every day. A "Read more" button that reveals additional methodology. A toggle that shows or hides a correction notice. An expandable section that lets the reader dig deeper without cluttering the page.
 
 These are small features, but they all depend on the same concept: the page needs to remember whether something is open or closed, and update itself when the reader clicks.
-
-### Setting up your project
-
-Before we dive in, let's create a fresh project to work in. Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
-
-Click the green "Use this template" button and create a new repository called `my-first-interactive-components`. Make sure "Public" is selected, then click "Create repository."
-
-Clone it to your computer using the techniques from [week one](/docs/coding-the-news/scripts/week-1). Open the project in Visual Studio Code, install the dependencies with `npm install`, and start the development server with `npm run dev`.
-
-Now we're ready to build.
 
 ### Understanding state
 
@@ -209,7 +201,7 @@ Try adding a few more ReadMore components with different content:
 
 Notice how each ReadMore component maintains its own state. Clicking one doesn't affect the others. This is because each component instance has its own `isExpanded` variable. This independence is one of the powerful features of component-based architecture.
 
-## Part 2: Streaming Survey
+## Part 3: Introducing derived values
 
 Now that you understand the basics of state and event handlers, let's build something that introduces a new concept: values that automatically calculate themselves from other values.
 
@@ -544,7 +536,7 @@ You might wonder why we need `$derived()` when we could just write `{netflixYes 
   <p>If you're curious about how much all these subscriptions add up to, the numbers are staggering. As of early 2026, Netflix's ad-free plan costs $17.99 a month. Disney+ is $11.99 with ads. Max is $10.99. Apple TV+ is $12.99. Hulu is $9.99. That's over $63 a month just for five services—and it doesn't include the ad-free tiers, which can push the total well past $90. According to a 2025 survey by Reviews.org, U.S. consumers spent an average of $278 per month to stay connected to their chosen streaming platforms. News organizations cover this "streamflation" beat regularly, often with exactly the kind of interactive calculators we're learning to build.</p>
 </Aside>
 
-## Part 3: Tip Calculator
+## Part 4: Introducing two-way binding
 
 For our final component, we're going to build something more ambitious: a tip calculator that responds to form inputs. This will introduce one of Svelte's most powerful features: two-way data binding with `bind:value`.
 
