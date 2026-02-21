@@ -201,7 +201,7 @@ Try adding a few more ReadMore components with different content:
 
 Notice how each ReadMore component maintains its own state. Clicking one doesn't affect the others. This is because each component instance has its own `isExpanded` variable. This independence is one of the powerful features of component-based architecture.
 
-## Part 3: Introducing derived values
+## Part 3: Introduction to derived values
 
 Now that you understand the basics of state and event handlers, let's build something that introduces a new concept: values that automatically calculate themselves from other values.
 
@@ -301,7 +301,7 @@ Place it in your page:
 
 Check your browser. You should see Netflix with yes and no buttons. Click them and watch the counts update. It works, but it's just one service. Let's expand.
 
-### Introducing $derived()
+### Introduction to $derived()
 
 Before we add more services, let's introduce a new concept. What if we want to know the total number of votes for Netflix? We could write `{netflixYes + netflixNo}` in our markup, and it would work. But Svelte offers a better way: the `$derived()` rune.
 
@@ -536,7 +536,7 @@ You might wonder why we need `$derived()` when we could just write `{netflixYes 
   <p>If you're curious about how much all these subscriptions add up to, the numbers are staggering. As of early 2026, Netflix's ad-free plan costs $17.99 a month. Disney+ is $11.99 with ads. Max is $10.99. Apple TV+ is $12.99. Hulu is $9.99. That's over $63 a month just for five services—and it doesn't include the ad-free tiers, which can push the total well past $90. According to a 2025 survey by Reviews.org, U.S. consumers spent an average of $278 per month to stay connected to their chosen streaming platforms. News organizations cover this "streamflation" beat regularly, often with exactly the kind of interactive calculators we're learning to build.</p>
 </Aside>
 
-## Part 4: Introducing two-way binding
+## Part 4: Introduction to two-way binding
 
 For our final component, we're going to build something more ambitious: a tip calculator that responds to form inputs. This will introduce one of Svelte's most powerful features: two-way data binding with `bind:value`.
 
