@@ -47,34 +47,25 @@ Open your browser and navigate to our template repository at <a href="https://gi
 
 Just like our previous classes, click the green "Use this template" button near the top right of the page. This week, let's name our repository `my-first-interactive-components`. Make sure "Public" is selected, then click "Create repository."
 
+Clone the repository and its code onto your computer using the techniques we covered in [week one](/docs/coding-the-news/scripts/week-1). Open it in Visual Studio Code. Start a terminal and run `npm install` to fetch the template's dependencies. These steps should start to feel like second nature.
 
 ## Part 2: Introduction to state
 
-Let's start with the most basic interaction: clicking a button to show or hide content.
+In programming, "state" is the name for any piece of information stored by the application that can change over time. A toggle button has state: it's either on or off. A news quiz's state updates as readers answer each question. Every time you buy something online, you gradually update the state of your shopping cart.
 
-Think about the interactive features you encounter on news websites every day. A "Read more" button that reveals additional methodology. A toggle that shows or hides a correction notice. An expandable section that lets the reader dig deeper without cluttering the page.
-
-These are small features, but they all depend on the same concept: the page needs to remember whether something is open or closed, and update itself when the reader clicks.
-
-### Understanding state
-
-In programming, "state" is a fancy word for information that can change over time. A toggle button has state: it's either on or off. A counter has state: it tracks the current number. A form has state: it holds whatever the user has typed.
-
-In Svelte 5, we create state using a special function called `$state()`. This is one of Svelte's "runes"—magic keywords that tell Svelte to pay attention to a variable and update the page whenever it changes.
-
-Here's the simplest possible example:
+In Svelte, we manage state using another one of its magic keywords. Fittingly, it's called [`$state()`](https://svelte.dev/docs/svelte/$state). It tells Svelte to pay special attention to a JavaScript variable and update the page whenever it changes. All you have to do is wrap a default value in `$state()`, and Svelte takes care of the rest.
 
 ```js
-let isVisible = $state(false);
+let myReactiveVariable = $state(initialValue);
 ```
 
-This creates a variable called `isVisible` that starts as `false`. The `$state()` wrapper tells Svelte to track this variable. Whenever we change it, Svelte will automatically update any part of the page that uses it.
+Let's ease into using state by building a component that shows or hides content whenever you click a button. This kind of feature often appears on news websites to give readers control over whether they want to expand a story to read more.
 
-### Building the ReadMore component
+### Creating a ReadMore component
 
-Let's put this into practice. We'll build a component that shows a "Read more" button. When clicked, it reveals hidden content. Click again, and the content collapses.
+We'll illustrate this by building a component that shows a "Read more" button. When clicked, it will reveal hidden content. Click again and the content will disappear.
 
-Create a new file at `src/lib/components/ReadMore.svelte`. Start with the basic structure:
+Create a new file at `src/lib/components/` directory we used last week. Call it `ReadMore.svelte`. Start with a simple script block at top:
 
 ```svelte
 <script>
@@ -83,11 +74,13 @@ Create a new file at `src/lib/components/ReadMore.svelte`. Start with the basic 
 </script>
 ```
 
-We're accepting two props: a `title` that appears on the button, and `children` for whatever content should be hidden or revealed. We also create a state variable `isExpanded` that starts as `false`.
+The first line uses the `$props()` function you learned last week. The `title` variable will be the headline at the top of our component. The `children` variable will represent whatever text should be hidden or revealed in the component we're building.
 
-Now let's add the markup:
+The new trick is the `$state()` function on the second line. It will be stored as a variable called `isExpanded` and the default, starting value is `false`. This means that when the component first loads, `isExpanded` will be `false`, and the content will be hidden.
 
-```svelte
+Now let's add the markup that will display the button and content.
+
+```svelte {6-15}
 <script>
   let { title, children } = $props();
   let isExpanded = $state(false);
@@ -97,7 +90,6 @@ Now let's add the markup:
   <button onclick={() => isExpanded = !isExpanded}>
     {isExpanded ? '▼' : '▶'} {title}
   </button>
-
   {#if isExpanded}
     <div class="content">
       {@render children()}
@@ -106,17 +98,17 @@ Now let's add the markup:
 </div>
 ```
 
-There are a few new things happening here. Let's break them down.
+The [`onclick`](https://www.w3schools.com/jsref/event_onclick.asp) attribute is an [event handler](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Events). It tells Svelte what to do when the user clicks the button. In this case, we're using [a function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) that flips the value of `isExpanded`. If it's false, it becomes true. If it's true, it becomes false. This is a common pattern called toggling.
 
-The `onclick` attribute is an event handler. It tells Svelte what to do when the user clicks the button. In this case, we're using an arrow function that flips the value of `isExpanded`. If it's `false`, it becomes `true`. If it's `true`, it becomes `false`. This is a common pattern called toggling.
+The `{isExpanded ? '▼' : '▶'}` syntax is called a [ternary operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator). It's a shorthand way of saying "if `isExpanded` is true, show a down arrow; otherwise, show a right arrow." This gives the user a visual cue about whether the content is expanded or collapsed.
 
-The `{isExpanded ? '▼' : '▶'}` syntax is called a ternary operator. It's a shorthand way of saying "if `isExpanded` is true, show a down arrow; otherwise, show a right arrow." This gives the user a visual cue about whether the content is expanded or collapsed.
+You can see that our `title` variable is being used right after the arrow. When we use the `ReadMore` component, whatever we pass as the `title` property will appear here.
 
-The `{#if isExpanded}` block is Svelte's conditional rendering syntax. Everything inside this block only appears on the page when `isExpanded` is `true`. When the user clicks the button and `isExpanded` becomes `true`, Svelte automatically adds this content to the page. When it becomes `false`, Svelte removes it.
+The `{#if isExpanded}` block is Svelte's conditional rendering syntax. Everything inside this block only appears on the page when `isExpanded` is true. When the user clicks the button and `isExpanded` becomes true, Svelte automatically adds this content to the page. When it becomes false, Svelte removes it.
 
-Finally, let's add some styling. Copy and paste this into the bottom of the file:
+Finally, let's add some styling. Copy and paste this into the bottom of the file. Don't worry about the particulars of the CSS. It's boilerplate to make the component look decent.
 
-```svelte
+```svelte {emphasize-lines="17-37"}
 <script>
   let { title, children } = $props();
   let isExpanded = $state(false);
@@ -126,7 +118,6 @@ Finally, let's add some styling. Copy and paste this into the bottom of the file
   <button onclick={() => isExpanded = !isExpanded}>
     {isExpanded ? '▼' : '▶'} {title}
   </button>
-
   {#if isExpanded}
     <div class="content">
       {@render children()}
@@ -157,7 +148,7 @@ Finally, let's add some styling. Copy and paste this into the bottom of the file
 </style>
 ```
 
-### Using the component
+### Using it on your page
 
 Save your `ReadMore.svelte` file and open `src/routes/+page.svelte`. Add an import at the top of the script block:
 
@@ -165,41 +156,85 @@ Save your `ReadMore.svelte` file and open `src/routes/+page.svelte`. Add an impo
 import ReadMore from '$lib/components/ReadMore.svelte';
 ```
 
-Now add the component somewhere in your page content, inside the `ArticleBody`:
+Now add the component somewhere inside the `ArticleBody`. We'll pass in the same title and content that Katz and Andrews used in their dialect quiz:
 
 ```svelte
-<ReadMore title="Methodology">
+<ReadMore title="About This Quiz">
   <p>
-    This analysis is based on data from the U.S. Census Bureau's
-    American Community Survey, 2019-2023 5-year estimates. We calculated
-    median household income by ZIP code and adjusted for inflation using
-    the Bureau of Labor Statistics' Consumer Price Index.
+    The data for the quiz and maps shown here come from over
+    350,000 survey responses collected from August to October 2013
+    by Josh Katz, a graphics editor for the New York Times who developed
+    this quiz and has since written “Speaking American,” a visual
+    exploration of American regional dialects.
+  </p>
+
+  <p>
+    Most of the questions used in this quiz are based on those in
+    the Harvard Dialect Survey, a linguistics project begun in 2002 by
+    Bert Vaux and Scott Golder. The original questions and results for
+    that survey can be found on Dr. Vaux’s current website.
+  </p>
+
+  <p>
+    The colors on the large heat map correspond to the probability
+    that a randomly selected person in that location would respond
+    to a randomly selected survey question the same way that you did.
+    The three smaller maps show which answer most contributed to those
+    cities being named the most (or least) similar to you.
   </p>
 </ReadMore>
 ```
 
-Save the file and check your browser at [localhost:5173](http://localhost:5173). You should see a button labeled "Methodology" with a right arrow. Click it, and the methodology text appears. Click again, and it disappears.
+Save the file. As we've done in previous weeks, open a terminal and execute `npm run dev` to start the development server.
 
-Try adding a few more ReadMore components with different content:
+When you check your browser at [localhost:5173](http://localhost:5173). You should see a button with our title and a right arrow. Click it, and the methodology text appears. Click again, and it disappears.
+
+<Screenshot
+  src="/screenshots/week-4/toggle-read-more.png"
+  alt="A ReadMore component showing the title 'About This Quiz' with a right arrow. When clicked, the arrow points down and a paragraph of text appears below."
+  chromeTitle="Become a force for good. Join our next class."
+  chromeUrl="https://localhost:5173"
+/>
+
+Try adding a few more ReadMore components with methodologies from [more](https://www.nytimes.com/2026/01/30/upshot/obamacare-subsidies-financial-cliff.html) [recent](https://www.nytimes.com/interactive/2025/12/22/upshot/trump-presidential-history-survey.html) Katz stories.
 
 ```svelte
 <ReadMore title="About the data">
   <p>
-    The data for this project was obtained through a public records request
-    filed with the city's Department of Finance on January 15, 2026.
+    Our analysis is based on data shared by researchers at the health research group KFF,
+    calculated using insurance premiums published on healthcare.gov and state insurance
+    marketplaces for the 2026 plan year.
+  </p>
+
+  <p>
+    Premiums are calculated based on the price of the “benchmark” silver plan averaged across the
+    entire nation for an individual 60-year-old. The national averages assume every state uses the
+    most common 3:1 age rating calculation. Tax credits and thresholds are calculated using I.R.S.
+    income thresholds for each year and the federal poverty level for the contiguous United
+    States. Numbers for Alaska and Hawaii differ. Dollars are not inflation-adjusted.
   </p>
 </ReadMore>
 
-<ReadMore title="Correction">
+<ReadMore title="About the data">
   <p>
-    An earlier version of this story incorrectly stated the mayor's
-    proposed budget was $98 billion. It is $89 billion. The story has
-    been updated.
+    For this project, we reached out to dozens of historians and political scientists, including
+    some participants of C-SPAN’s Presidential Historians Survey. We asked them to provide us with
+    relevant precedent to specific Trump actions, if there were any, and to describe how those
+    precedents were and were not similar to what Mr. Trump has done.
   </p>
 </ReadMore>
 ```
 
-Notice how each ReadMore component maintains its own state. Clicking one doesn't affect the others. This is because each component instance has its own `isExpanded` variable. This independence is one of the powerful features of component-based architecture.
+Notice how each ReadMore component maintains its own state. Clicking one doesn't affect the others.
+
+<Screenshot
+  src="/screenshots/week-4/more-toggles.png"
+  alt="Three ReadMore components stacked on top of each other, each with its own title and content. Two are toggled open to show the content. One is toggled closed to hide the content."
+  chromeTitle="Become a force for good. Join our next class."
+  chromeUrl="https://localhost:5173"
+/>
+
+This is because each component instance has its own `isExpanded` variable. This independence is another powerful feature of component-based design.
 
 ## Part 3: Introduction to derived values
 

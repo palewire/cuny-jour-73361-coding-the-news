@@ -125,4 +125,18 @@
   .script-body :global(.shiki .line) {
     line-height: 1.6;
   }
+
+  /* Highlighted lines in code blocks */
+  .script-body :global(.shiki .line.highlighted) {
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 0 calc(-1 * var(--spacing-sm));
+    padding: 0 var(--spacing-sm);
+    display: inline-block;
+    width: calc(100% + 2 * var(--spacing-sm));
+  }
+
+  /* Ensure empty highlighted lines still render */
+  .script-body :global(.shiki .line.highlighted:empty)::before {
+    content: ' ';
+  }
 </style>
