@@ -107,38 +107,43 @@
 
   @media (max-width: 600px) {
     .script-navigation {
-      gap: var(--spacing-xs);
+      flex-direction: column;
+      gap: var(--spacing-sm);
     }
 
     .nav-link {
-      flex: 1;
-      max-width: 50%;
-      min-width: 0;
+      flex: none;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .nav-link.next {
+      text-align: left;
+      margin-left: 0;
     }
 
     .nav-link a {
-      padding: var(--spacing-xs) var(--spacing-sm);
-      gap: 0.25rem;
+      width: 100%;
+      padding: var(--spacing-sm) var(--spacing-md);
+      gap: 0.5rem;
     }
 
     .nav-content {
       min-width: 0;
+      flex: 1;
     }
 
     .nav-label {
-      font-size: 0.65rem;
+      font-size: 0.7rem;
     }
 
     .nav-title {
-      font-size: 0.8rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 0.85rem;
     }
 
     .nav-link :global(svg) {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
     }
   }
 </style>
