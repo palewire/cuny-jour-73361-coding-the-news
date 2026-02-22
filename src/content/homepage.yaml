@@ -131,6 +131,10 @@ guestSpeakers:
       org: 'Reuters'
       image: 'tiana-mcgee.jpg'
       linkedin: 'https://www.linkedin.com/in/tiana-m-12b535217/'
+    - name: 'Casey Miller'
+      org: 'Reuters'
+      image: 'casey-miller.avif'
+      linkedin: 'https://www.linkedin.com/in/caseymm/'
 
 instructor:
   kicker: 'Faculty'
