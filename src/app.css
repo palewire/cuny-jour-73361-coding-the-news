@@ -105,6 +105,7 @@ h6 {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: var(--spacing-sm);
+  scroll-margin-top: calc(var(--masthead-height) + var(--spacing-md));
 }
 
 h1 {
