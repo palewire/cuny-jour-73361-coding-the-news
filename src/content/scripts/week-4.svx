@@ -8,6 +8,8 @@ locked: true
 
 <script>
   import Aside from '$lib/components/Aside.svelte';
+  import Blockquote from '$lib/components/Blockquote.svelte';
+  import BoundValueExample from '$lib/components/BoundValueExample.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
   import YouTubeEmbed from '$lib/components/YouTubeEmbed.svelte';
 </script>
@@ -32,7 +34,12 @@ A famous example is ["How Y’all, Youse and You Guys Talk,"](https://www.nytime
 
 It asks readers a series of questions about how they talk — do you say "sneakers" or "tennis shoes?" — and then generates a personalized heat map that pinpoints where they are likely to have grown up. It rocketed across the web, ranking as the The Times' [most popular page of the year](https://www.nytco.com/press/the-new-york-timess-most-visited-content-of-2013/), and [earning Katz](https://knightlab.northwestern.edu/2014/01/20/behind-the-dialect-map-interactive-how-an-intern-created-the-new-york-times-most-popular-piece-of-content-in-2013/), who authored it as an intern, a full-time job.
 
-Today we're going to learn the fundamentals you need to build interactive components like the Times quiz by building three simple components. Each one will introduce a new concept you need to know.
+<Blockquote
+  quote="I’m pretty blown away by the response to the whole thing."
+  attribution="Josh Katz"
+/>
+
+Today we're going to learn the fundamentals you need to build interactive components like the Times quiz. Each part will introduce a concept you need to know.
 
 ### Create your repository
 
@@ -65,7 +72,7 @@ Let's ease into using state by building a component that shows or hides content 
 
 We'll illustrate this by building a component that shows a "Read more" button. When clicked, it will reveal hidden content. Click again and the content will disappear.
 
-Create a new file at `src/lib/components/` directory we used last week. Call it `ReadMore.svelte`. Start with a simple script block at top:
+Create a new file at `src/lib/components/` directory we used last week. Call it `ReadMore.svelte`. Start with a simple script block at the top.
 
 ```svelte
 <script>
@@ -517,40 +524,47 @@ Save and check your browser. Click different combinations of services.  See the 
   chromeUrl="https://localhost:5173"
 />
 
-## Part 4: Introduction to two-way binding
+## Part 4: Introduction to binding
 
-For our final component, we're going to build something more ambitious: a tip calculator that responds to form inputs. This will introduce one of Svelte's most powerful features: two-way data binding with `bind:value`.
+So far, we've handled simple interactions where the user clicks a button and the page changes. That's a nice start, but some inputs are more fluid than that. Think of a text box, which gradually updates as the user types in more text.
 
-News organizations love calculators. They let readers personalize a story by entering their own information. "How much would you save under the new tax plan?" "What's your risk level based on these factors?" "How does your commute compare to the city average?"
+Svelte handles these situations with [`bind:value`](https://svelte.dev/docs/svelte/bind#input-bind:value). It creates a live connection between an input and a `$state` variable. When the user types, drags or touches, everything stays in sync automatically.
 
-These tools increase engagement because they make the story about the reader. And with Svelte, they're surprisingly easy to build.
-
-### Understanding two-way binding
-
-So far, we've seen one-way interactions: the user clicks a button, and something changes. But form inputs work differently. A text field or slider needs to both display a value and accept changes to that value.
-
-Svelte handles this with `bind:value`, which creates a two-way connection between an input element and a state variable. When the variable changes, the input updates. When the user types or drags, the variable updates. Everything stays in sync automatically.
-
-Here's a simple example:
+Here's a simple example of a bound text input that will automatically print its contents on the page.
 
 ```svelte
 <script>
-  let name = $state('');
+  let boundVariable = $state('');
 </script>
 
-<input type="text" bind:value={name}>
-<p>Hello, {name}!</p>
+<input type="text" bind:value={boundVariable}>
+<p>Hello, {boundVariable}!</p>
 ```
 
-As the user types, the paragraph instantly updates to greet them by name. No event handlers needed—Svelte handles the connection for you.
+<Aside title="Try it out. Type your name.">
+  <BoundValueExample />
+</Aside>
 
-### Building the calculator step by step
+Notice how the `bind:value` attribute on the input connects the text box to the bound variable. It's a simple trick with powerful implications.
 
-Let's build our tip calculator in stages, adding features as we go.
+### Creating a TipCalculator component
 
-Create a new file at `src/lib/components/TipCalculator.svelte`. Start with the most basic version:
+Let's explore the power of bound variables by building a tip calculator. It will let users enter a bill amount and see the tip calculated instantly.
+
+Create a new file in the `src/lib/components/` directory. Call it `TipCalculator.svelte`. Start with a simple script block at top:
 
 ```svelte
+<script>
+  let billAmount = $state(0);
+  let tip = $derived(billAmount * 0.20);
+</script>
+```
+
+The first line creates a state variable called `billAmount` with a default value of 0. The second line uses `$derived()` to calculate 20% of the bill using a fixed value we've entered into the code. Whenever `billAmount` changes, the tip will automatically recalculate at that rate.
+
+Now let's add the markup that will display the input and result, much like your subscription survey. The key difference: You'll fit `bind:value` on a text input.
+
+```svelte {6-27}
 <script>
   let billAmount = $state(0);
   let tip = $derived(billAmount * 0.20);
@@ -574,17 +588,13 @@ Create a new file at `src/lib/components/TipCalculator.svelte`. Start with the m
   </div>
 
   <div class="result">
-    <span class="label">20% Tip:</span>
+    <span class="label">20% Tip</span>
     <span class="value">${tip.toFixed(2)}</span>
   </div>
 </div>
 ```
 
-The `bind:value={billAmount}` creates our two-way binding. The input displays the current value of `billAmount`, and typing a new number updates the variable.
-
-The `tip` variable uses `$derived()` to calculate 20% of the bill. Notice the `.toFixed(2)` at the end—this formats the number to always show two decimal places, which is what we expect for currency.
-
-Add some basic styling. Again, just copy and paste this—we'll focus more on CSS in later weeks:
+Add some simple styles.
 
 ```svelte
 <style>
@@ -596,318 +606,10 @@ Add some basic styling. Again, just copy and paste this—we'll focus more on CS
   }
 
   h3 {
-    margin: 0 0 1.5rem;
-  }
-
-  .input-group {
-    margin-bottom: 1rem;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-  }
-
-  .input-wrapper {
-    display: flex;
-    align-items: center;
-    border: 2px solid #ddd;
-  }
-
-  .currency {
-    padding: 0.75rem;
-    background: #eee;
-    font-weight: bold;
-  }
-
-  input[type="number"] {
-    flex: 1;
-    padding: 0.75rem;
-    border: none;
-    font-size: 1.25rem;
-    width: 100%;
-  }
-
-  .result {
-    padding: 1rem;
-    background: var(--color-accent);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
-  }
-
-  .result .label {
-    font-weight: bold;
-  }
-
-  .result .value {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-</style>
-```
-
-Import it into your page and try it out:
-
-```js
-import TipCalculator from '$lib/components/TipCalculator.svelte';
-```
-
-```svelte
-<TipCalculator />
-```
-
-Type a bill amount and watch the tip calculate instantly. But 20% isn't always the right tip. Let's add a way to customize the percentage.
-
-### Adding a custom tip percentage
-
-Update your script to include a tip percentage variable:
-
-```svelte
-<script>
-  let billAmount = $state(0);
-  let tipPercent = $state(18);
-  let tip = $derived(billAmount * (tipPercent / 100));
-</script>
-```
-
-Now our `tip` calculation uses the `tipPercent` variable instead of a hardcoded 0.20. We start at 18% because that's a common default.
-
-Add a range slider to let users adjust the percentage. Insert this after the bill amount input:
-
-```svelte
-<div class="input-group">
-  <label for="percent">Tip: {tipPercent}%</label>
-  <input
-    type="range"
-    id="percent"
-    bind:value={tipPercent}
-    min="10"
-    max="30"
-    step="1"
-  >
-</div>
-```
-
-The range input creates a slider. `bind:value={tipPercent}` connects it to our state. As the user drags, `tipPercent` updates, which triggers `tip` to recalculate, which updates the display. The label shows the current percentage using `{tipPercent}%`.
-
-Update your result display to show the dynamic percentage:
-
-```svelte
-<div class="result">
-  <span class="label">{tipPercent}% Tip:</span>
-  <span class="value">${tip.toFixed(2)}</span>
-</div>
-```
-
-Add styling for the slider:
-
-```css
-input[type="range"] {
-  width: 100%;
-}
-```
-
-### Adding the total
-
-Let's show the total bill including tip:
-
-```svelte
-<script>
-  let billAmount = $state(0);
-  let tipPercent = $state(18);
-  let tip = $derived(billAmount * (tipPercent / 100));
-  let total = $derived(billAmount + tip);
-</script>
-```
-
-Add another result display:
-
-```svelte
-<div class="results">
-  <div class="result">
-    <span class="label">{tipPercent}% Tip:</span>
-    <span class="value">${tip.toFixed(2)}</span>
-  </div>
-  <div class="result total">
-    <span class="label">Total:</span>
-    <span class="value">${total.toFixed(2)}</span>
-  </div>
-</div>
-```
-
-Update the styles to handle multiple results:
-
-```css
-.results {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.result.total {
-  background: var(--color-dark-gray);
-}
-```
-
-### Splitting the bill
-
-For the final feature, let's add the ability to split the bill among multiple people:
-
-```svelte
-<script>
-  let billAmount = $state(0);
-  let tipPercent = $state(18);
-  let numPeople = $state(1);
-
-  let tip = $derived(billAmount * (tipPercent / 100));
-  let total = $derived(billAmount + tip);
-  let perPerson = $derived(total / numPeople);
-</script>
-```
-
-Add an input for the number of people, after the tip slider:
-
-```svelte
-<div class="input-group">
-  <label>Split between</label>
-  <div class="people-input">
-    <button onclick={() => numPeople = Math.max(1, numPeople - 1)}>−</button>
-    <span class="people-count">{numPeople}</span>
-    <button onclick={() => numPeople++}>+</button>
-  </div>
-</div>
-```
-
-Notice we use `Math.max(1, numPeople - 1)` for the minus button. This ensures we never go below 1 person—you can't split a bill zero ways!
-
-Add the per-person result:
-
-```svelte
-{#if numPeople > 1}
-  <div class="result per-person">
-    <span class="label">Per Person:</span>
-    <span class="value">${perPerson.toFixed(2)}</span>
-  </div>
-{/if}
-```
-
-The `{#if numPeople > 1}` only shows this line when splitting among multiple people. No need to show "per person" when there's only one person.
-
-Here's the styling for the people input and the per-person result:
-
-```css
-.people-input {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.people-input button {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: var(--color-accent);
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.people-count {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.result.per-person {
-  background: #1565c0;
-}
-```
-
-### The complete component
-
-Here's the final `TipCalculator.svelte` with all features:
-
-```svelte
-<script>
-  let billAmount = $state(0);
-  let tipPercent = $state(18);
-  let numPeople = $state(1);
-
-  let tip = $derived(billAmount * (tipPercent / 100));
-  let total = $derived(billAmount + tip);
-  let perPerson = $derived(total / numPeople);
-</script>
-
-<div class="calculator">
-  <h3>Tip Calculator</h3>
-
-  <div class="input-group">
-    <label for="bill">Bill Amount</label>
-    <div class="input-wrapper">
-      <span class="currency">$</span>
-      <input
-        type="number"
-        id="bill"
-        bind:value={billAmount}
-        min="0"
-        step="0.01"
-      >
-    </div>
-  </div>
-
-  <div class="input-group">
-    <label for="percent">Tip: {tipPercent}%</label>
-    <input
-      type="range"
-      id="percent"
-      bind:value={tipPercent}
-      min="10"
-      max="30"
-      step="1"
-    >
-  </div>
-
-  <div class="input-group">
-    <label>Split between</label>
-    <div class="people-input">
-      <button onclick={() => numPeople = Math.max(1, numPeople - 1)}>−</button>
-      <span class="people-count">{numPeople}</span>
-      <button onclick={() => numPeople++}>+</button>
-    </div>
-  </div>
-
-  <div class="results">
-    <div class="result">
-      <span class="label">{tipPercent}% Tip:</span>
-      <span class="value">${tip.toFixed(2)}</span>
-    </div>
-    <div class="result total">
-      <span class="label">Total:</span>
-      <span class="value">${total.toFixed(2)}</span>
-    </div>
-    {#if numPeople > 1}
-      <div class="result per-person">
-        <span class="label">Per Person:</span>
-        <span class="value">${perPerson.toFixed(2)}</span>
-      </div>
-    {/if}
-  </div>
-</div>
-
-<style>
-  .calculator {
-    padding: 1.5rem;
-    background: var(--color-light-gray);
-    margin: 2rem 0;
-    max-width: 400px;
-  }
-
-  h3 {
-    margin: 0 0 1.5rem;
+    margin: 0 0 1.5rem !important;
+    font-weight: bold !important;
+    font-size: 1.75rem !important;
+    text-transform: uppercase;
   }
 
   .input-group {
@@ -940,37 +642,6 @@ Here's the final `TipCalculator.svelte` with all features:
     width: 100%;
   }
 
-  input[type="range"] {
-    width: 100%;
-  }
-
-  .people-input {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .people-input button {
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: var(--color-accent);
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-
-  .people-count {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-
-  .results {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
   .result {
     padding: 1rem;
     background: var(--color-accent);
@@ -980,24 +651,212 @@ Here's the final `TipCalculator.svelte` with all features:
     align-items: center;
   }
 
-  .result .label {
-    font-weight: bold;
-  }
-
   .result .value {
     font-size: 1.5rem;
     font-weight: bold;
   }
-
-  .result.total {
-    background: var(--color-dark-gray);
-  }
-
-  .result.per-person {
-    background: #1565c0;
-  }
 </style>
 ```
+
+Save your `TipCalculator.svelte` file and open `src/routes/+page.svelte`. Add an import at the top of the script block:
+
+```js
+import TipCalculator from '$lib/components/TipCalculator.svelte';
+```
+
+Now place the component somewhere inside the `ArticleBody`, as we did with our other components.
+
+```svelte
+<TipCalculator />
+```
+
+Check your browser. Type a bill amount and watch the tip calculate instantly.
+
+<Screenshot
+  src="/screenshots/week-4/tip-calculator-basic.png"
+  alt="A TipCalculator component showing a bill amount input and a 20% tip calculation. When the user types a bill amount, the tip updates instantly."
+  chromeTitle="Become a force for good. Join our next class."
+  chromeUrl="https://localhost:5173"
+/>
+
+### Adding a custom tip percentage
+
+Now let's complicate things and add a way to customize the percentage. In the script tag at the top of the component, add a new `$state` variable with default tip percentage. Then replace our `tip` variable with a `$derived` variable that calculates the amount based on the two inputs.
+
+```svelte {emphasize-lines="3-4"}
+<script>
+  let billAmount = $state(0);
+  let tipPercent = $state(20);
+  let tip = $derived(billAmount * (tipPercent / 100));
+</script>
+```
+
+Down in the markup, add a range slider bound to the `tipPercent` variable that lets users adjust the value. Then update the final box to print the `tipPercent` in our bottom line.
+
+```svelte {emphasize-lines="4-14,30-33"}
+<div class="calculator">
+  <h3>Tip Calculator</h3>
+
+  <div class="input-group">
+    <label for="percent">Tip {tipPercent}%</label>
+    <input
+        type="range"
+        id="percent"
+        bind:value={tipPercent}
+        min="10"
+        max="30"
+        step="1"
+    >
+  </div>
+
+  <div class="input-group">
+    <label for="bill">Bill Amount</label>
+    <div class="input-wrapper">
+      <span class="currency">$</span>
+      <input
+        type="number"
+        id="bill"
+        bind:value={billAmount}
+        min="0"
+        step="0.01"
+      >
+    </div>
+  </div>
+
+  <div class="result">
+    <span class="label">{tipPercent}% Tip</span>
+    <span class="value">${tip.toFixed(2)}</span>
+  </div>
+</div>
+```
+
+Save, reload and twiddle around a little to try it out.
+
+<Screenshot
+  src="/screenshots/week-4/tip-calculator-slider.png"
+  alt="A TipCalculator component with a slider added."
+  chromeTitle="Become a force for good. Join our next class."
+  chromeUrl="https://localhost:5173"
+/>
+
+### Adding the total
+
+Let's show the total bill including tip. Add another derived value to your script that calculates it.
+
+```svelte {emphasize-lines="5"}
+<script>
+  let billAmount = $state(0);
+  let tipPercent = $state(20);
+  let tip = $derived(billAmount * (tipPercent / 100));
+  let total = $derived(billAmount + tip);
+</script>
+```
+
+Add another result display. Wrap both results in a container:
+
+```svelte {emphasize-lines="5-8"}
+<div class="result">
+  <span class="label">{tipPercent}% Tip:</span>
+  <span class="value">${tip.toFixed(2)}</span>
+</div>
+<div class="result">
+  <span class="label">Total</span>
+  <span class="value">${total.toFixed(2)}</span>
+</div>
+```
+
+Boom. There it is.
+
+<Screenshot
+  src="/screenshots/week-4/tip-calculator-total.png"
+  alt="A TipCalculator component with a total added."
+  chromeTitle="Become a force for good. Join our next class."
+  chromeUrl="https://localhost:5173"
+/>
+
+### Splitting the bill
+
+For the final feature, let's add the ability to split the bill among multiple people.
+
+Add another state variable for the input and derived value with the new calculation.
+
+```svelte {emphasize-lines="4,7"}
+<script>
+  let billAmount = $state(0);
+  let tipPercent = $state(18);
+  let numPeople = $state(1);
+  let tip = $derived(billAmount * (tipPercent / 100));
+  let total = $derived(billAmount + tip);
+  let perPerson = $derived(total / numPeople);
+</script>
+```
+
+Add a third input for the number of people, after the tip slider and before the bill amount.
+
+```svelte {emphasize-lines="13-16"}
+  <div class="input-group">
+    <label for="percent">Tip {tipPercent}%</label>
+    <input
+        type="range"
+        id="percent"
+        bind:value={tipPercent}
+        min="10"
+        max="30"
+        step="1"
+    >
+  </div>
+
+  <div class="input-group">
+    <label for="people">Split between {numPeople} {numPeople === 1 ? 'person' : 'people'}</label>
+    <input type="number" id="people" bind:value={numPeople} min="1">
+  </div>
+
+  <div class="input-group">
+    <label for="bill">Bill Amount</label>
+    <div class="input-wrapper">
+      <span class="currency">$</span>
+      <input
+        type="number"
+        id="bill"
+        bind:value={billAmount}
+        min="0"
+        step="0.01"
+      >
+    </div>
+  </div>
+```
+
+Notice we use `min="1"` on the input to ensure we never go below 1 person. The label dynamically shows "person" or "people" using a ternary operator.
+
+Add the per-person result. The `{#if numPeople > 1}` only shows this line when splitting among multiple people.
+
+```svelte {emphasize-lines="9-15"}
+  <div class="result">
+    <span class="label">{tipPercent}% Tip</span>
+    <span class="value">${tip.toFixed(2)}</span>
+  </div>
+  <div class="result">
+    <span class="label">Total</span>
+    <span class="value">${total.toFixed(2)}</span>
+  </div>
+  {#if numPeople > 1}
+  <div class="result">
+      <span class="label">Per Person</span>
+      <span class="value">${perPerson.toFixed(2)}</span>
+  </div>
+  {/if}
+```
+
+Save and check your browser. You should now be able to enter a bill amount, adjust the tip percentage and split the bill among multiple people.
+
+<Screenshot
+  src="/screenshots/week-4/tip-calculator-complete.png"
+  alt="A TipCalculator component showing a bill amount input, a tip percentage slider, and a split between input. Below are result displays showing the tip amount, total, and per-person cost."
+  chromeTitle="Become a force for good. Join our next class."
+  chromeUrl="https://localhost:5173"
+/>
+
+Congratulations, you've used `$state`, `$derived` and `bind:value` together to create an interactive calculator.
 
 ## Homework
 
