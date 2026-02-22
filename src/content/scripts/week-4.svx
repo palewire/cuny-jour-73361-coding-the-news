@@ -32,7 +32,7 @@ A famous example is ["How Y’all, Youse and You Guys Talk,"](https://www.nytime
   maxWidth="960px"
 />
 
-It asks readers a series of questions about how they talk — do you say "sneakers" or "tennis shoes?" — and then generates a personalized heat map that pinpoints where they are likely to have grown up. It rocketed across the web, ranking as the The Times' [most popular page of the year](https://www.nytco.com/press/the-new-york-timess-most-visited-content-of-2013/), and [earning Katz](https://knightlab.northwestern.edu/2014/01/20/behind-the-dialect-map-interactive-how-an-intern-created-the-new-york-times-most-popular-piece-of-content-in-2013/), who authored it as an intern, a full-time job.
+It asks readers a series of questions about the words they choose — do you say "sneakers" or "tennis shoes?" — and then generates a personalized heat map that pinpoints where they are likely to have grown up. It rocketed across the web, ranking as the The Times' [most popular page of the year](https://www.nytco.com/press/the-new-york-timess-most-visited-content-of-2013/), and [earning Katz](https://knightlab.northwestern.edu/2014/01/20/behind-the-dialect-map-interactive-how-an-intern-created-the-new-york-times-most-popular-piece-of-content-in-2013/), who authored it as an intern, a full-time job.
 
 <Blockquote
   quote="I’m pretty blown away by the response to the whole thing."
@@ -43,7 +43,7 @@ Today we're going to learn the fundamentals you need to build interactive compon
 
 ### Create your repository
 
-Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+Before we begin, open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
 <Screenshot
   src="/screenshots/week-2/template-repo-homepage.png"
