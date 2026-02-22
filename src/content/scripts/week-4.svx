@@ -392,7 +392,7 @@ Add a summary section to display the total:
 
   <div class="summary">
     <span class="summary-label">Monthly Total:</span>
-    <span class="summary-amount">${total}</span>
+    <span class="summary-amount">${total.toFixed(2)}</span>
   </div>
 </div>
 ```
@@ -783,7 +783,7 @@ Add another state variable for the input and derived value with the new calculat
 ```svelte {emphasize-lines="4,7"}
 <script>
   let billAmount = $state(0);
-  let tipPercent = $state(18);
+  let tipPercent = $state(20);
   let numPeople = $state(1);
   let tip = $derived(billAmount * (tipPercent / 100));
   let total = $derived(billAmount + tip);
@@ -860,29 +860,25 @@ Congratulations, you've used `$state`, `$derived` and `bind:value` together to c
 
 ## Homework
 
-### Task 1: Build three interactive components
+### Task 1: Build an interactive news component
 
-Create a new repository from our class template and build three interactive components from scratch. Pick from this list or invent your own:
+Find a story published in the past year by a news organization you admire that would benefit from an interactive component. Then build it.
 
-- **Time until election countdown**: Accept a date input and display days, hours, minutes until that date. Update automatically (hint: you'll need `setInterval`).
+Your component should use at least two of the three reactive concepts we covered today: `$state`, `$derived` and `bind:value`. You should build it inside a fresh copy of our class template.
 
-- **Rent split calculator**: Enter total rent and number of roommates. Show what each person owes. Bonus: allow unequal splits with percentage inputs.
+Some examples of what this might look like:
 
-- **Reading time estimator**: Paste text into a textarea. Calculate and display estimated reading time based on word count (assume 200 words per minute).
-
-- **Quiz question**: Display a multiple choice question. When the user selects an answer, show whether they're right or wrong with an explanation.
-
-- **Unit converter**: Convert between miles and kilometers, Fahrenheit and Celsius, or dollars and euros. Let users type in either field and see the other update.
-
-Deploy your page to GitHub Pages and send me the link.
+* A story about rising grocery prices could have a calculator where readers enter their weekly grocery budget and see how inflation has changed what they're paying compared to a year ago.
+* A story about rent stabilization could have a tool where readers enter details about their building and see if they'd be affected.
 
 ### Task 2: Prepare to present
 
-Pick your favorite interactive component to show the class. Be ready to explain:
+Be ready to share you interactive component with the class and explain how you built it. You should be prepared to:
 
-- What state does your component track?
-- What user actions trigger state changes?
-- How does the display update in response?
-- If you used AI to help, what worked and what didn't?
+* Show the story that inspired it and explain what editorial problem the component solves
+* Trace the reactive flow: what state does it track, what user actions change it, and what values derive from it
+* Discuss how you used AI in the process and what you had to adjust by hand
 
-We'll spend the first part of next class sharing what you built.
+### Task 3: Make a pull request
+
+Our guest this week, [Casey Miller](https://www.linkedin.com/in/caseymm/), shared how [she submitted her work](https://github.com/reuters-graphics/graphics-components/pull/391) for review using GitHub's [pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) system. You should work through [the "First Pull Request" tutorial](https://palewi.re/docs/first-pull-request/) and submit an addition to the [moneyinpolitics.wtf](https://moneyinpolitics.wtf) dictionary.
