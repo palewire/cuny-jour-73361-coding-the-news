@@ -397,6 +397,10 @@ Add a summary section to display the total:
 </div>
 ```
 
+```{note}
+We add [toFixed(2)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed) to the total to make sure it rounds the number to two decimal places, fixing a strange quirk of JavaScript that can result in far too many decimal places being printed.
+```
+
 Add styles for the summary:
 
 ```css
@@ -466,7 +470,7 @@ let total = $derived(
 ```
 We now have six boolean state variables, one for each service. The `total` derived value adds up the price of each checked service.
 
-Now update the markup with all six services. You should draw the cost labels from the `prices` object instead of hardcoding them in the markup. Add a [`toFixed(2)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed) to the total to make sure it rounds the numbers, which fixes a strange quirk of JavaScript when it comes to decimals.
+Now update the markup with all six services. You should draw the cost labels from the `prices` object instead of hardcoding them in the markup.
 
 ```svelte {emphasize-lines="4-43"}
 <div class="calculator">
