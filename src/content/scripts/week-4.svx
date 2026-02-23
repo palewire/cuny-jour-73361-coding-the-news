@@ -397,9 +397,8 @@ Add a summary section to display the total:
 </div>
 ```
 
-```{note}
-We add [toFixed(2)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed) to the total to make sure it rounds the number to two decimal places, fixing a strange quirk of JavaScript that can result in far too many decimal places being printed.
-```
+We add [`toFixed(2)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed) to the total to make sure it rounds the number to two decimal places, fixing a strange quirk of JavaScript that can result in far too many decimal places being printed.
+
 
 Add styles for the summary:
 
