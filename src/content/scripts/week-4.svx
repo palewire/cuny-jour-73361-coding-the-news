@@ -858,6 +858,98 @@ Save and check your browser. You should now be able to enter a bill amount, adju
 
 Congratulations, you've used `$state`, `$derived` and `bind:value` together to create an interactive calculator.
 
+## Part 5: Introduction to subcomponents
+
+Let's return to our streaming cost calculator from Part 3. Look at the markup — it has six nearly identical button blocks, each using the native `onclick` handler to the toggle the checkout and update the page. It works fine, but there's a lot of repetition, and now that we have the `bind` syntax in our toolbox, we can do better.
+
+### Creating a ServiceButton component
+
+The pattern we used for each service is:
+
+```svelte
+<button class="service" onclick={() => netflix = !netflix}>
+  <span class="indicator">{netflix ? '✓' : '○'}</span>
+  <span class="name">Netflix</span>
+  <span class="price">${prices.netflix}/mo</span>
+</button>
+```
+
+Let's extract this into its own component. Create a new file called `ServiceButton.svelte` in the `src/lib/components/` directory.
+
+There's a new keyword here: [`$bindable()`](https://svelte.dev/docs/svelte/$bindable). This tells Svelte that a propery can be bound from the parent component. The `selected` prop has a default value of `false`, but when the parent uses `bind:selected`, changes flow in both directions.
+
+```svelte
+<script>
+  let { name, price, selected = $bindable(false) } = $props();
+</script>
+
+<button class="service" onclick={() => selected = !selected}>
+  <span class="indicator">{selected ? '✓' : '○'}</span>
+  <span class="name">{name}</span>
+  <span class="price">${price}/mo</span>
+</button>
+
+<style>
+  .service {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+  }
+
+  .indicator {
+    font-size: 1.25rem;
+  }
+
+  .name {
+    flex: 1;
+    font-weight: bold;
+  }
+
+  .price {
+    color: #666;
+  }
+</style>
+```
+
+Now let's update `StreamingCost.svelte` to use the new component. First, add an import at the top of the script block.
+
+```js
+import ServiceButton from './ServiceButton.svelte';
+```
+
+Now replace all six button blocks with our new component. Instead of `bind:value`, we use `bind:selected` to match our property name.
+
+```svelte {emphasize-lines="5-11"}
+<div class="calculator">
+
+  <h3>How much do your streaming subscriptions cost?</h3>
+
+  <ServiceButton name="Netflix" price={prices.netflix} bind:selected={netflix} />
+  <ServiceButton name="Disney+" price={prices.disney} bind:selected={disney} />
+  <ServiceButton name="Max" price={prices.max} bind:selected={max} />
+  <ServiceButton name="Hulu" price={prices.hulu} bind:selected={hulu} />
+  <ServiceButton name="Apple TV+" price={prices.apple} bind:selected={apple} />
+  <ServiceButton name="Peacock" price={prices.peacock} bind:selected={peacock} />
+
+  <div class="summary">
+    <span class="summary-label">Monthly Total</span>
+    <span class="summary-amount">${total.toFixed(2)}</span>
+  </div>
+
+</div>
+```
+
+The calculator works exactly as before, but now each service button is a clean, reusable component.
+
+This pattern is fundamental to streamlining interactive applications. The parent stays in control of the data, while children handle their display logic.
+
 ## Homework
 
 ### Task 1: Build an interactive news component
