@@ -365,7 +365,7 @@ Check your browser. You should see Netflix with a checkbox and price. Click it o
 
 The checkbox works, but nothing else happens yet. Let's add in the calculation.
 
-### Using $derived() for on-the-fly calculations
+### Using `$derived()` for on-the-fly calculations
 
 Now comes the magic. We want to show the total monthly cost. Let's add a `$derived()` value that calculates it:
 
@@ -376,7 +376,7 @@ Now comes the magic. We want to show the total monthly cost. Let's add a `$deriv
 </script>
 ```
 
-The `$derived()` function creates a value that recalculates automatically. The expression `netflix ? 17.99 : 0` is another ternary operator. If `netflix` is true, it uses 17.99, the current standard price. Otherwise, uses 0.
+The `$derived()` function creates a value that recalculates automatically. The expression `netflix ? 17.99 : 0` is another ternary operator. If `netflix` is true, it uses 17.99, the current standard price. Otherwise, it uses zero.
 
 Add a summary section to display the total:
 
@@ -396,6 +396,9 @@ Add a summary section to display the total:
   </div>
 </div>
 ```
+
+We add [`toFixed(2)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed) to the total to make sure it rounds the number to two decimal places, fixing a strange quirk of JavaScript that can result in far too many decimal places being printed.
+
 
 Add styles for the summary:
 
@@ -466,7 +469,7 @@ let total = $derived(
 ```
 We now have six boolean state variables, one for each service. The `total` derived value adds up the price of each checked service.
 
-Now update the markup with all six services. You should draw the cost labels from the `prices` object instead of hardcoding them in the markup. Add a [`toFixed(2)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed) to the total to make sure it rounds the numbers, which fixes a strange quirk of JavaScript when it comes to decimals.
+Now update the markup with all six services. You should draw the cost labels from the `prices` object instead of hardcoding them in the markup.
 
 ```svelte {emphasize-lines="4-43"}
 <div class="calculator">
