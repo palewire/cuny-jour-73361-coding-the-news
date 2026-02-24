@@ -929,7 +929,7 @@ import ServiceButton from './ServiceButton.svelte';
 
 Now replace all six button blocks with our new component. Instead of `bind:value`, we use `bind:selected` to match our property name.
 
-```svelte {emphasize-lines="5-11"}
+```svelte {emphasize-lines="5-10"}
 <div class="calculator">
 
   <h3>How much do your streaming subscriptions cost?</h3>
