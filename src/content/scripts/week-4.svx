@@ -32,7 +32,7 @@ A famous example is ["How Y’all, Youse and You Guys Talk,"](https://www.nytime
   maxWidth="960px"
 />
 
-It asks readers a series of questions about the words they choose — do you say "sneakers" or "tennis shoes?" — and then generates a personalized heat map that pinpoints where they are likely to have grown up. It rocketed across the web, ranking as the The Times' [most popular page of the year](https://www.nytco.com/press/the-new-york-timess-most-visited-content-of-2013/), and [earning Katz](https://knightlab.northwestern.edu/2014/01/20/behind-the-dialect-map-interactive-how-an-intern-created-the-new-york-times-most-popular-piece-of-content-in-2013/), who authored it as an intern, a full-time job.
+It asks readers a series of questions about the words they choose — do you say "sneakers" or "tennis shoes"? — and then generates a personalized heat map that pinpoints where they are likely to have grown up. It rocketed across the web, ranking as the The Times' [most popular page of the year](https://www.nytco.com/press/the-new-york-timess-most-visited-content-of-2013/), and [earning Katz](https://knightlab.northwestern.edu/2014/01/20/behind-the-dialect-map-interactive-how-an-intern-created-the-new-york-times-most-popular-piece-of-content-in-2013/), who authored it as an intern, a full-time job.
 
 <Blockquote
   quote="I’m pretty blown away by the response to the whole thing."
@@ -81,7 +81,7 @@ Create a new file at `src/lib/components/` directory we used last week. Call it 
 </script>
 ```
 
-The first line uses the `$props()` function you learned last week. The `title` variable will be the headline at the top of our component. The `children` variable will represent whatever text should be hidden or revealed in the component we're building.
+The first line uses the `$props()` function you learned [last week](/docs/coding-the-news/scripts/week-3/#part-2-creating-your-first-component). The `title` variable will be the headline at the top of our component. The `children` variable will represent whatever text should be hidden or revealed in the component we're building.
 
 The new trick is the `$state()` function on the second line. It will be stored as a variable called `isExpanded` and the default, starting value is `false`. This means that when the component first loads, `isExpanded` will be `false`, and the content will be hidden.
 
@@ -879,7 +879,7 @@ The pattern we used for each service is:
 
 Let's extract this into its own component. Create a new file called `ServiceButton.svelte` in the `src/lib/components/` directory.
 
-There's a new keyword here: [`$bindable()`](https://svelte.dev/docs/svelte/$bindable). This tells Svelte that a propery can be bound from the parent component. The `selected` prop has a default value of `false`, but when the parent uses `bind:selected`, changes flow in both directions.
+There's a new keyword here: [`$bindable()`](https://svelte.dev/docs/svelte/$bindable). This tells Svelte that a property can be bound from the parent component. The `selected` prop has a default value of `false`, but when the parent uses `bind:selected`, changes flow in both directions.
 
 ```svelte
 <script>
@@ -970,9 +970,9 @@ Some examples of what this might look like:
 
 Be ready to share you interactive component with the class and explain how you built it. You should be prepared to:
 
-* Show the story that inspired it and explain what editorial problem the component solves
-* Trace the reactive flow: what state does it track, what user actions change it, and what values derive from it
-* Discuss how you used AI in the process and what you had to adjust by hand
+* Show the story that inspired it and explain what editorial problem the component solves.
+* Trace the reactive flow: what state does it track, what user actions change it, and what values derive from it.
+* Discuss how you used AI in the process and what you had to adjust by hand.
 
 ### Task 3: Make a pull request
 
