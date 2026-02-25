@@ -139,6 +139,10 @@ guestSpeakers:
       org: 'Reuters'
       image: 'casey-miller.avif'
       linkedin: 'https://www.linkedin.com/in/caseymm/'
+    - name: 'Julia Wolfe'
+      org: 'Reuters'
+      image: 'julia-wolfe.jpeg'
+      linkedin: 'https://www.linkedin.com/in/juruwolfe/'
 
 instructor:
   kicker: 'Faculty'
