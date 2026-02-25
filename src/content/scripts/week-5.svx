@@ -292,7 +292,7 @@ Save and check your browser.
 
 <Screenshot
   src="/screenshots/week-5/each-table.png"
-  alt="An HTML table populated with thousands of restaurant inspection rows rendered by the {#each} block"
+  alt="An HTML table populated with thousands of restaurant inspection rows rendered by the each block"
   chromeTitle="localhost:5173"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
