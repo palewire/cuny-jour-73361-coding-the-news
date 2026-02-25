@@ -19,25 +19,9 @@ Today we're going to learn how to bring external data into a Svelte project, ren
 
 We'll use a dataset you may already know personally: the restaurant inspection grades posted in the window of every food establishment in New York City.
 
-<Screenshot
-  src="/screenshots/week-5/restaurant-grade-window.png"
-  alt="A letter grade card posted in the window of a New York City restaurant, showing a blue 'A' grade from the NYC Department of Health"
-  chromeTitle="NYC Restaurant Grades"
-  chromeUrl="https://www.nyc.gov/site/doh/services/restaurant-grades.page"
-  maxWidth="960px"
-/>
-
 The New York City Department of Health and Mental Hygiene conducts unannounced inspections of the city's roughly 29,000 restaurants at least once a year. Inspectors check for food safety violations — improper temperatures, pest infestations, unsanitary surfaces — and assign point values to each violation. The points are totaled into a score, and the score is converted into a letter grade. The lower the score, the better the grade.
 
 The results of every inspection are published as open data by the city, freely available to anyone who wants to download and analyze them.
-
-<Screenshot
-  src="/screenshots/week-5/nyc-open-data-portal.png"
-  alt="The NYC Open Data portal page for DOHMH New York City Restaurant Inspection Results, showing the dataset description and download options"
-  chromeTitle="DOHMH New York City Restaurant Inspection Results"
-  chromeUrl="https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j"
-  maxWidth="960px"
-/>
 
 You can browse the dataset at [data.cityofnewyork.us](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j). It's one of the most popular datasets on the city's open data portal, and it's been the basis for countless news stories, apps and academic research projects.
 
@@ -48,13 +32,6 @@ There's just one problem: the full dataset contains hundreds of thousands of row
 Rather than download the whole thing and manually cut it, we'll write a small Node.js script that talks to the city's data server and asks for exactly the records we need. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
 
 Let's start by creating a new repository from our template. Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
-
-<Screenshot
-  src="/screenshots/week-2/template-repo-homepage.png"
-  alt="GitHub template repository page showing the Use this template button"
-  chromeTitle="cuny-jour-static-site-template"
-  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
-/>
 
 Click the green "Use this template" button and name your new repository `my-first-data-page`. Make sure "Public" is selected, then click "Create repository."
 
@@ -117,20 +94,7 @@ Now run the script:
 node fetch-data.js
 ```
 
-<Screenshot
-  src="/screenshots/week-5/fetch-script-output.png"
-  alt="Terminal output showing the fetch script running, reporting the number of records received and the file saved"
-  showChrome={false}
-/>
-
 You should see a message reporting how many records were downloaded and confirming the file was saved. Open `src/lib/data/restaurants.json` in VS Code and take a look. You'll see an array of objects, each representing one restaurant inspection.
-
-<Screenshot
-  src="/screenshots/week-5/json-preview.png"
-  alt="Visual Studio Code showing the restaurants.json file with an array of restaurant inspection records"
-  showChrome={false}
-  maxWidth="960px"
-/>
 
 Each record has the fields we asked for: `camis` (the restaurant's unique ID), `dba` (the business name), `boro` (the borough), `cuisine_description` (the type of food), `inspection_date`, `grade` and `score`.
 
@@ -179,14 +143,6 @@ console.log(data.restaurants);
 ```
 
 Start the development server with `npm run dev` and open your browser to [localhost:5173](http://localhost:5173). Open the browser's developer tools — you can do this by right-clicking anywhere on the page and selecting "Inspect," then clicking the "Console" tab.
-
-<Screenshot
-  src="/screenshots/week-5/console-log-data.png"
-  alt="Browser developer tools console showing the logged restaurant data array with expandable objects"
-  chromeTitle="localhost:5173"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
 
 You should see your data array logged in the console. Click the arrow to expand it and explore individual records. This is a useful trick for understanding any dataset — log it, expand it, poke at it.
 
@@ -247,14 +203,6 @@ Inside the `ArticleBody` on your page, add a simple HTML table with a few rows h
 
 Save and check your browser. You'll see a simple table with three rows.
 
-<Screenshot
-  src="/screenshots/week-5/hardcoded-table.png"
-  alt="A simple HTML table showing three hardcoded restaurant rows with columns for name, borough, cuisine and grade"
-  chromeTitle="localhost:5173"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
 Now imagine doing this for 5,000 restaurants. You'd lose your mind — and your deadline.
 
 ### The `{#each}` block
@@ -289,14 +237,6 @@ The syntax reads almost like English: "for each item in the `data.restaurants` a
 Inside the block, we use the familiar curly-brace syntax to insert each field. The `restaurant.dba` expression pulls the business name. The `restaurant.boro` gets the borough. And so on.
 
 Save and check your browser.
-
-<Screenshot
-  src="/screenshots/week-5/each-table.png"
-  alt="An HTML table populated with thousands of restaurant inspection rows rendered by the each block"
-  chromeTitle="localhost:5173"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
 
 One block of markup. Thousands of rows. That's the power of `{#each}`.
 
@@ -458,14 +398,6 @@ We use JavaScript's [`.toLocaleString()`](https://developer.mozilla.org/en-US/do
 
 Save and check your browser.
 
-<Screenshot
-  src="/screenshots/week-5/summary-stats.png"
-  alt="Three BigNumber components in a Dashboard row showing the count of Grade A, Grade B and Grade C restaurants, displayed above the restaurant table"
-  chromeTitle="localhost:5173"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
 You should see three colored boxes showing the grade breakdown, sitting above your full table of restaurants. Already, the shape of a story is emerging. Most restaurants earn an A. Far fewer get a B or C.
 
 Let's add one more statistic to make the picture complete. Add another derived value that calculates the total number of inspections:
@@ -496,14 +428,6 @@ And add a fourth BigNumber to the dashboard:
   />
 </Dashboard>
 ```
-
-<Screenshot
-  src="/screenshots/week-5/summary-stats-with-total.png"
-  alt="Four BigNumber components showing total inspections and the count of each grade"
-  chromeTitle="localhost:5173"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
 
 These summary statistics aren't just decorative. In a real newsroom, this is how you'd present the top-line findings of your analysis — the numbers that anchor your story and give readers immediate context before they dive into the details.
 
@@ -558,14 +482,6 @@ And update the table to use our filtered `restaurants` variable:
 ```
 
 Save and check your browser. Select "Brooklyn" from the dropdown.
-
-<Screenshot
-  src="/screenshots/week-5/borough-filter.png"
-  alt="The page with a borough dropdown set to Brooklyn. The BigNumber stats and restaurant table have updated to show only Brooklyn restaurants."
-  chromeTitle="localhost:5173"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
 
 The summary stats recalculate. The table shrinks to show only Brooklyn restaurants. Switch to "Queens" and it all updates again. Select "All boroughs" and you're back to the full dataset.
 
@@ -664,23 +580,7 @@ Add some styles to keep the filters tidy. You can add these to a `<style>` block
 
 Save and check your browser. Try different combinations — Mexican restaurants in the Bronx, Italian restaurants in Manhattan, pizza places across all boroughs. The stats and table update with each selection.
 
-<Screenshot
-  src="/screenshots/week-5/both-filters.png"
-  alt="The page with both borough and cuisine dropdowns active. The BigNumber stats and table reflect the combined filter selections."
-  chromeTitle="localhost:5173"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
 If a combination returns no results, you'll see the "No restaurants found" message we added with `{:else}` in Part 2. That fallback is doing its job.
-
-<Screenshot
-  src="/screenshots/week-5/no-results.png"
-  alt="The page showing a filter combination that returns no results, with the 'No restaurants found' message displayed in the table and all BigNumber stats showing zero"
-  chromeTitle="localhost:5173"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
 
 ### The full picture
 
