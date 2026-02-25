@@ -1,9 +1,726 @@
 ---
-title: "Data Services"
+title: "Flowing Data"
 summary: "How to empower your readers to explore newsworthy data"
 date: "Feb. 30, 2026"
 week: 5
 locked: true
 ---
 
-TK
+<script>
+  import Aside from '$lib/components/Aside.svelte';
+  import Screenshot from '$lib/components/Screenshot.svelte';
+</script>
+
+## Part 1: Getting data into your project
+
+Up to now, all of the data in our projects has been typed by hand. We hardcoded streaming prices, tip amounts and blockquote text directly into our components. That works fine for a lesson, but it's not how journalists build stories. Real projects are powered by real data — spreadsheets, databases, public records — that live outside your code and get pulled in when the page is built.
+
+Today we're going to learn how to bring external data into a Svelte project, render it on a page, summarize it with the reactive tools we learned [last week](/docs/coding-the-news/scripts/week-4), and let readers filter it on the fly.
+
+We'll use a dataset you may already know personally: the restaurant inspection grades posted in the window of every food establishment in New York City.
+
+<Screenshot
+  src="/screenshots/week-5/restaurant-grade-window.png"
+  alt="A letter grade card posted in the window of a New York City restaurant, showing a blue 'A' grade from the NYC Department of Health"
+  chromeTitle="NYC Restaurant Grades"
+  chromeUrl="https://www.nyc.gov/site/doh/services/restaurant-grades.page"
+  maxWidth="960px"
+/>
+
+The New York City Department of Health and Mental Hygiene conducts unannounced inspections of the city's roughly 29,000 restaurants at least once a year. Inspectors check for food safety violations — improper temperatures, pest infestations, unsanitary surfaces — and assign point values to each violation. The points are totaled into a score, and the score is converted into a letter grade. The lower the score, the better the grade.
+
+The results of every inspection are published as open data by the city, freely available to anyone who wants to download and analyze them.
+
+<Screenshot
+  src="/screenshots/week-5/nyc-open-data-portal.png"
+  alt="The NYC Open Data portal page for DOHMH New York City Restaurant Inspection Results, showing the dataset description and download options"
+  chromeTitle="DOHMH New York City Restaurant Inspection Results"
+  chromeUrl="https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j"
+  maxWidth="960px"
+/>
+
+You can browse the dataset at [data.cityofnewyork.us](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j). It's one of the most popular datasets on the city's open data portal, and it's been the basis for countless news stories, apps and academic research projects.
+
+There's just one problem: the full dataset contains hundreds of thousands of rows. That's far too much for a classroom exercise. We need to trim it down.
+
+### Fetching data with a script
+
+Rather than download the whole thing and manually cut it, we'll write a small Node.js script that talks to the city's data server and asks for exactly the records we need. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
+
+Let's start by creating a new repository from our template. Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+
+<Screenshot
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
+
+Click the green "Use this template" button and name your new repository `my-first-data-page`. Make sure "Public" is selected, then click "Create repository."
+
+Clone it to your computer, open it in Visual Studio Code, and run `npm install` in the terminal. You know the drill by now.
+
+Next, create a new file in the root of your project called `fetch-data.js`. This will be our data fetching script. Paste in the following code:
+
+```js
+const fs = require("fs");
+
+const apiUrl = "https://data.cityofnewyork.us/resource/43nn-pn8j.json";
+
+const params = new URLSearchParams({
+  $limit: 5000,
+  $where: "inspection_date > '2025-01-01T00:00:00' AND grade IN('A', 'B', 'C')",
+  $select: "camis,dba,boro,cuisine_description,inspection_date,grade,score",
+  $order: "inspection_date DESC",
+});
+
+const url = `${apiUrl}?${params.toString()}`;
+
+console.log(`Fetching data from NYC Open Data...`);
+
+fetch(url)
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(`Received ${data.length} records`);
+    fs.writeFileSync("src/lib/data/restaurants.json", JSON.stringify(data, null, 2));
+    console.log("Saved to src/lib/data/restaurants.json");
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+  });
+```
+
+Before we run it, let's walk through what this does.
+
+The `apiUrl` variable points to the city's data server. This is a [Socrata Open Data API](https://dev.socrata.com/) endpoint — a system used by hundreds of government agencies to publish public data. The URL ending in `.json` tells the server we want the data in JSON format, the same format we've been working with all semester.
+
+The `params` object contains our filters:
+
+| Parameter | What it does |
+|-----------|-------------|
+| `$limit` | Caps the number of records returned at 5,000 |
+| `$where` | Filters to inspections from 2025 onward that resulted in a letter grade |
+| `$select` | Picks only the columns we need, ignoring dozens of others |
+| `$order` | Sorts by inspection date, newest first |
+
+The rest of the script fetches the data, converts the response to JSON, and writes it to a file in our project.
+
+Before we can run the script, we need to create the folder where it will save the data. In the terminal, type:
+
+```bash
+mkdir -p src/lib/data
+```
+
+Now run the script:
+
+```bash
+node fetch-data.js
+```
+
+<Screenshot
+  src="/screenshots/week-5/fetch-script-output.png"
+  alt="Terminal output showing the fetch script running, reporting the number of records received and the file saved"
+  showChrome={false}
+/>
+
+You should see a message reporting how many records were downloaded and confirming the file was saved. Open `src/lib/data/restaurants.json` in VS Code and take a look. You'll see an array of objects, each representing one restaurant inspection.
+
+<Screenshot
+  src="/screenshots/week-5/json-preview.png"
+  alt="Visual Studio Code showing the restaurants.json file with an array of restaurant inspection records"
+  showChrome={false}
+  maxWidth="960px"
+/>
+
+Each record has the fields we asked for: `camis` (the restaurant's unique ID), `dba` (the business name), `boro` (the borough), `cuisine_description` (the type of food), `inspection_date`, `grade` and `score`.
+
+Take a moment to scroll through the file. You'll notice things that are typical of real-world data. Some restaurant names are in ALL CAPS. Cuisine descriptions range from the expected ("Italian," "Chinese") to the oddly specific ("Chicken" as a cuisine). Scores vary widely. This is what working with public data looks like — messy, inconsistent and full of stories waiting to be found.
+
+### Loading data the SvelteKit way
+
+We have our data file. Now we need to get it into our page. You might think we'd just import the JSON directly in our component, and that would work — but it's not how SvelteKit is designed to operate.
+
+SvelteKit has an official pattern for getting data into your pages. It's called a [load function](https://svelte.dev/docs/kit/load), and it lives in a special file called `+page.js` that sits right next to your `+page.svelte`.
+
+The idea is simple: before your page component renders, SvelteKit runs the load function to prepare whatever data the page needs. The page then receives that data as a prop. This separates *getting* the data from *displaying* it, which keeps your component focused on presentation.
+
+This is the pattern used by virtually every professional SvelteKit project, including the newsroom frameworks we looked at in [week two](/docs/coding-the-news/scripts/week-2). Learning it now means you're learning the real thing.
+
+Create a new file at `src/routes/+page.js`. This file must be named exactly `+page.js` — SvelteKit looks for this specific filename.
+
+```js
+import restaurants from '$lib/data/restaurants.json';
+
+export function load() {
+  return {
+    restaurants
+  };
+}
+```
+
+That's the entire file. Let's break it down.
+
+The first line imports our JSON data file. The `$lib` path is the same alias you've been using for components — it points to your `src/lib` folder.
+
+The `load` function is the special function that SvelteKit calls before rendering the page. Whatever object you return from it becomes available to your page component. In this case, we're returning an object with one property: `restaurants`, which contains the full array of inspection records from our JSON file.
+
+Now open `src/routes/+page.svelte`. At the top of the `<script>` block, we need to receive the data that the load function prepared. Replace the existing props line or add this new one:
+
+```js
+let { data } = $props();
+```
+
+The `data` prop is another SvelteKit convention. It automatically contains whatever your `+page.js` load function returned. So `data.restaurants` is our array of inspection records.
+
+Let's verify it works. Add a `console.log` right after the props line:
+
+```js
+console.log(data.restaurants);
+```
+
+Start the development server with `npm run dev` and open your browser to [localhost:5173](http://localhost:5173). Open the browser's developer tools — you can do this by right-clicking anywhere on the page and selecting "Inspect," then clicking the "Console" tab.
+
+<Screenshot
+  src="/screenshots/week-5/console-log-data.png"
+  alt="Browser developer tools console showing the logged restaurant data array with expandable objects"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+You should see your data array logged in the console. Click the arrow to expand it and explore individual records. This is a useful trick for understanding any dataset — log it, expand it, poke at it.
+
+Once you've confirmed it's working, you can remove the `console.log` line. We won't need it anymore.
+
+### Why a load function?
+
+It might seem like an extra step compared to importing JSON directly in your component. And for a single-page project like ours, it is. But the load function pattern pays off as your projects grow.
+
+In a real newsroom project, the load function might fetch data from an API, query a database, read from a content management system, or combine multiple data sources — all before the page renders. The page component never has to worry about *where* the data comes from. It just receives it and displays it.
+
+Even for our simple case, the pattern reinforces a clean habit: data flows into the page from the outside, through a well-defined entry point that SvelteKit controls. As you build more complex projects later in this course, you'll appreciate having learned this from the start.
+
+## Part 2: Rendering lists with `{#each}`
+
+You have data flowing into your page. Now what? The whole point is to show it to readers. And since we have hundreds or thousands of records, we need a way to render them all without writing each one by hand.
+
+That's where Svelte's [`{#each}`](https://svelte.dev/docs/svelte/each) block comes in. It loops over an array and renders a chunk of markup for every item. It's the tool you'll reach for anytime you need to display a list, a table, a grid of cards, or any other repeating pattern.
+
+### The hard way first
+
+To appreciate why `{#each}` matters, let's start without it.
+
+Inside the `ArticleBody` on your page, add a simple HTML table with a few rows hardcoded from your data. Pick any three restaurants from your JSON file and type them in manually:
+
+```svelte
+<table>
+  <thead>
+    <tr>
+      <th>Restaurant</th>
+      <th>Borough</th>
+      <th>Cuisine</th>
+      <th>Grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SOME RESTAURANT NAME</td>
+      <td>Manhattan</td>
+      <td>Italian</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <td>ANOTHER RESTAURANT</td>
+      <td>Brooklyn</td>
+      <td>Chinese</td>
+      <td>B</td>
+    </tr>
+    <tr>
+      <td>A THIRD PLACE</td>
+      <td>Queens</td>
+      <td>Mexican</td>
+      <td>A</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+Save and check your browser. You'll see a simple table with three rows.
+
+<Screenshot
+  src="/screenshots/week-5/hardcoded-table.png"
+  alt="A simple HTML table showing three hardcoded restaurant rows with columns for name, borough, cuisine and grade"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+Now imagine doing this for 5,000 restaurants. You'd lose your mind — and your deadline.
+
+### The `{#each}` block
+
+Delete the hardcoded `<tbody>` rows and replace them with an `{#each}` block. Remember, our restaurant data lives in `data.restaurants`, because it was passed in by the load function.
+
+```svelte
+<table>
+  <thead>
+    <tr>
+      <th>Restaurant</th>
+      <th>Borough</th>
+      <th>Cuisine</th>
+      <th>Grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each data.restaurants as restaurant}
+      <tr>
+        <td>{restaurant.dba}</td>
+        <td>{restaurant.boro}</td>
+        <td>{restaurant.cuisine_description}</td>
+        <td>{restaurant.grade}</td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
+```
+
+The syntax reads almost like English: "for each item in the `data.restaurants` array, call it `restaurant`, and render this row."
+
+Inside the block, we use the familiar curly-brace syntax to insert each field. The `restaurant.dba` expression pulls the business name. The `restaurant.boro` gets the borough. And so on.
+
+Save and check your browser.
+
+<Screenshot
+  src="/screenshots/week-5/each-table.png"
+  alt="An HTML table populated with thousands of restaurant inspection rows rendered by the {#each} block"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+One block of markup. Thousands of rows. That's the power of `{#each}`.
+
+### Handling empty data with `{:else}`
+
+There's one more trick worth knowing now, because we'll need it later. The `{#each}` block supports an `{:else}` clause that renders when the array is empty. This is useful for showing a "no results" message when filters eliminate all records.
+
+```svelte
+{#each data.restaurants as restaurant}
+  <tr>
+    <td>{restaurant.dba}</td>
+    <td>{restaurant.boro}</td>
+    <td>{restaurant.cuisine_description}</td>
+    <td>{restaurant.grade}</td>
+  </tr>
+{:else}
+  <tr>
+    <td colspan="4">No restaurants found.</td>
+  </tr>
+{/each}
+```
+
+Right now, this won't do anything visible since we have plenty of data. But when we add filters in Part 4, this fallback will come in handy.
+
+### Extracting a RestaurantTable component
+
+Before we move on, let's clean up by extracting our table into a reusable component, just like we've done in previous weeks.
+
+Create a new file at `src/lib/components/RestaurantTable.svelte`:
+
+```svelte
+<script>
+  let { data } = $props();
+</script>
+
+<table>
+  <thead>
+    <tr>
+      <th>Restaurant</th>
+      <th>Borough</th>
+      <th>Cuisine</th>
+      <th>Grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each data as restaurant}
+      <tr>
+        <td>{restaurant.dba}</td>
+        <td>{restaurant.boro}</td>
+        <td>{restaurant.cuisine_description}</td>
+        <td>{restaurant.grade}</td>
+      </tr>
+    {:else}
+      <tr>
+        <td colspan="4">No restaurants found.</td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
+
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  th {
+    text-align: left;
+    padding: 0.5rem;
+    border-bottom: 2px solid var(--color-dark-gray);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  tr:hover {
+    background-color: var(--color-light-gray);
+  }
+</style>
+```
+
+The component accepts a `data` prop — whatever array of restaurants you pass in, it will render as a table. This separation will become important in Part 4, when the data we pass in will change based on user input.
+
+Back in `src/routes/+page.svelte`, import the component and replace your table markup:
+
+```js
+import RestaurantTable from '$lib/components/RestaurantTable.svelte';
+```
+
+```svelte
+<RestaurantTable data={data.restaurants} />
+```
+
+Save and confirm the table still renders. Same result, cleaner code.
+
+## Part 3: Summary statistics with `$derived`
+
+A table full of raw data is useful, but it's not a story. Journalists need to summarize — how many restaurants got an A? How many failed? What's the overall picture?
+
+This is where the `$derived` feature from [last week](/docs/coding-the-news/scripts/week-4/#part-3-introduction-to-derived-values) comes back. We used it to calculate streaming subscription totals and tip amounts. Now we'll use it to compute summary statistics from a real dataset.
+
+And we'll display those numbers using the `BigNumber` and `Dashboard` components from [week three](/docs/coding-the-news/scripts/week-3/#part-3-creating-a-parent-component). The tools you've built are starting to work together.
+
+### Counting grades
+
+Open `src/routes/+page.svelte`. In the `<script>` block, add these derived values below your props:
+
+```js
+let restaurants = $derived(data.restaurants);
+let gradeA = $derived(restaurants.filter(r => r.grade === 'A').length);
+let gradeB = $derived(restaurants.filter(r => r.grade === 'B').length);
+let gradeC = $derived(restaurants.filter(r => r.grade === 'C').length);
+```
+
+The first line creates a convenience variable so we don't have to write `data.restaurants` everywhere. Since it's wrapped in `$derived`, it will stay in sync if we ever change how data flows into the page. We'll modify this variable in Part 4 to incorporate filters.
+
+Each subsequent line uses JavaScript's [`.filter()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) method to narrow the array to records matching a specific grade, and then [`.length`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length) to count how many remain.
+
+The expression `r => r.grade === 'A'` is an [arrow function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) — a compact way to write a test. It checks each restaurant record `r` and keeps only the ones where the `grade` field equals `'A'`. The `===` operator is JavaScript's strict equality check.
+
+Because these are wrapped in `$derived()`, Svelte will automatically recalculate them whenever the underlying data changes. That doesn't matter yet — our restaurant array is static. But it will matter a lot in Part 4, when we introduce filters.
+
+### Displaying with BigNumber and Dashboard
+
+Now let's show these counts on the page. Import the components you built in week three:
+
+```js
+import BigNumber from '$lib/components/BigNumber.svelte';
+import Dashboard from '$lib/components/Dashboard.svelte';
+```
+
+Add them to your page above the `RestaurantTable`:
+
+```svelte
+<Dashboard>
+  <BigNumber
+    number={gradeA.toLocaleString()}
+    label="Grade A"
+  />
+  <BigNumber
+    number={gradeB.toLocaleString()}
+    label="Grade B"
+  />
+  <BigNumber
+    number={gradeC.toLocaleString()}
+    label="Grade C"
+  />
+</Dashboard>
+```
+
+We use JavaScript's [`.toLocaleString()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString) method to format the numbers with commas, so "1234" becomes "1,234." A small touch that makes data easier to read.
+
+Save and check your browser.
+
+<Screenshot
+  src="/screenshots/week-5/summary-stats.png"
+  alt="Three BigNumber components in a Dashboard row showing the count of Grade A, Grade B and Grade C restaurants, displayed above the restaurant table"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+You should see three colored boxes showing the grade breakdown, sitting above your full table of restaurants. Already, the shape of a story is emerging. Most restaurants earn an A. Far fewer get a B or C.
+
+Let's add one more statistic to make the picture complete. Add another derived value that calculates the total number of inspections:
+
+```js
+let total = $derived(restaurants.length);
+```
+
+And add a fourth BigNumber to the dashboard:
+
+```svelte
+<Dashboard>
+  <BigNumber
+    number={total.toLocaleString()}
+    label="Inspections"
+  />
+  <BigNumber
+    number={gradeA.toLocaleString()}
+    label="Grade A"
+  />
+  <BigNumber
+    number={gradeB.toLocaleString()}
+    label="Grade B"
+  />
+  <BigNumber
+    number={gradeC.toLocaleString()}
+    label="Grade C"
+  />
+</Dashboard>
+```
+
+<Screenshot
+  src="/screenshots/week-5/summary-stats-with-total.png"
+  alt="Four BigNumber components showing total inspections and the count of each grade"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+These summary statistics aren't just decorative. In a real newsroom, this is how you'd present the top-line findings of your analysis — the numbers that anchor your story and give readers immediate context before they dive into the details.
+
+## Part 4: Filtering with reactive state
+
+We have a table and summary statistics. But they show everything at once. What if a reader only cares about restaurants in their borough? Or wants to see just the places that got a C?
+
+This is where everything we've learned comes together. We'll add dropdown menus that let readers filter the data, and both the table and the summary statistics will update instantly.
+
+### Adding a borough filter
+
+Start by adding a `$state` variable to your script block for the selected borough. We'll default it to an empty string, which will represent "show all boroughs."
+
+```js
+let selectedBorough = $state('');
+```
+
+Now we need to update our `restaurants` variable to filter the data based on the selection. Replace the simple convenience variable we created in Part 3 with a filtered version:
+
+```js
+let restaurants = $derived(
+  selectedBorough === ''
+    ? data.restaurants
+    : data.restaurants.filter(r => r.boro === selectedBorough)
+);
+```
+
+This reads: if `selectedBorough` is empty, use the full array. Otherwise, keep only restaurants where the `boro` field matches the selection.
+
+Because the grade counts and total are derived from `restaurants`, they'll automatically recalculate when the filter changes. That's the reactive chain doing its job — we only have to change the data in one place, and everything downstream updates.
+
+Now add a `<select>` dropdown to your page, above the Dashboard. We'll use `bind:value` to connect it to our state variable, just like we did with the tip calculator [last week](/docs/coding-the-news/scripts/week-4/#part-4-introduction-to-binding).
+
+```svelte
+<div class="filters">
+  <label for="borough">Borough</label>
+  <select id="borough" bind:value={selectedBorough}>
+    <option value="">All boroughs</option>
+    <option value="Manhattan">Manhattan</option>
+    <option value="Brooklyn">Brooklyn</option>
+    <option value="Queens">Queens</option>
+    <option value="Bronx">Bronx</option>
+    <option value="Staten Island">Staten Island</option>
+  </select>
+</div>
+```
+
+And update the table to use our filtered `restaurants` variable:
+
+```svelte
+<RestaurantTable data={restaurants} />
+```
+
+Save and check your browser. Select "Brooklyn" from the dropdown.
+
+<Screenshot
+  src="/screenshots/week-5/borough-filter.png"
+  alt="The page with a borough dropdown set to Brooklyn. The BigNumber stats and restaurant table have updated to show only Brooklyn restaurants."
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+The summary stats recalculate. The table shrinks to show only Brooklyn restaurants. Switch to "Queens" and it all updates again. Select "All boroughs" and you're back to the full dataset.
+
+This is the reactive chain in action: the user changes the dropdown, which updates `selectedBorough`, which recalculates `restaurants`, which recalculates the grade counts and the total, which updates the BigNumbers and the table. All of that happens automatically because of `$state` and `$derived`.
+
+### Adding a cuisine filter
+
+Let's add a second dropdown for cuisine type. This works the same way, but since there are dozens of cuisine types in the data, we'll generate the options dynamically from the dataset itself.
+
+Add another state variable:
+
+```js
+let selectedCuisine = $state('');
+```
+
+We'll need a list of all the unique cuisine types in the data. Add a derived value that extracts them:
+
+```js
+let cuisines = $derived(
+  [...new Set(data.restaurants.map(r => r.cuisine_description))].sort()
+);
+```
+
+This line does a few things at once. The `.map()` method pulls the `cuisine_description` from every record. Wrapping it in `new Set()` eliminates duplicates, since a Set can only contain unique values. The `[...]` [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax) converts the Set back into an array. And `.sort()` puts them in alphabetical order.
+
+Notice we derive the cuisine list from `data.restaurants` — the full, unfiltered dataset — so the dropdown always shows all available cuisines regardless of the current borough selection.
+
+Now update the `restaurants` variable to account for both dropdowns:
+
+```js
+let restaurants = $derived(
+  data.restaurants.filter(r => {
+    if (selectedBorough !== '' && r.boro !== selectedBorough) return false;
+    if (selectedCuisine !== '' && r.cuisine_description !== selectedCuisine) return false;
+    return true;
+  })
+);
+```
+
+This filter checks each restaurant against both criteria. If a borough is selected and the restaurant doesn't match, it's excluded. Same for cuisine. If both are empty, everything passes through. If both are set, only restaurants matching both survive.
+
+Add the second dropdown next to the first:
+
+```svelte
+<div class="filters">
+  <label for="borough">Borough</label>
+  <select id="borough" bind:value={selectedBorough}>
+    <option value="">All boroughs</option>
+    <option value="Manhattan">Manhattan</option>
+    <option value="Brooklyn">Brooklyn</option>
+    <option value="Queens">Queens</option>
+    <option value="Bronx">Bronx</option>
+    <option value="Staten Island">Staten Island</option>
+  </select>
+
+  <label for="cuisine">Cuisine</label>
+  <select id="cuisine" bind:value={selectedCuisine}>
+    <option value="">All cuisines</option>
+    {#each cuisines as cuisine}
+      <option value={cuisine}>{cuisine}</option>
+    {/each}
+  </select>
+</div>
+```
+
+Notice we're using `{#each}` again — this time to generate `<option>` tags from our list of cuisines. The same tool that renders table rows can render any repeating element.
+
+Add some styles to keep the filters tidy. You can add these to a `<style>` block at the bottom of `+page.svelte`, or put them in a new component if you prefer.
+
+```svelte
+<style>
+  .filters {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+  }
+
+  label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+</style>
+```
+
+Save and check your browser. Try different combinations — Mexican restaurants in the Bronx, Italian restaurants in Manhattan, pizza places across all boroughs. The stats and table update with each selection.
+
+<Screenshot
+  src="/screenshots/week-5/both-filters.png"
+  alt="The page with both borough and cuisine dropdowns active. The BigNumber stats and table reflect the combined filter selections."
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+If a combination returns no results, you'll see the "No restaurants found" message we added with `{:else}` in Part 2. That fallback is doing its job.
+
+<Screenshot
+  src="/screenshots/week-5/no-results.png"
+  alt="The page showing a filter combination that returns no results, with the 'No restaurants found' message displayed in the table and all BigNumber stats showing zero"
+  chromeTitle="localhost:5173"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+### The full picture
+
+Let's step back and appreciate what you've built. In a single session, you've gone from a raw government dataset to an interactive data application. Readers can explore restaurant inspection results by borough and cuisine, guided by summary statistics that update in real time.
+
+The reactive chain flows from the user's selections through your `$state` variables, into the `$derived` filter, through the `$derived` summary counts, and out to the components on the page. Every link in that chain is something you learned in the past five weeks:
+
+| Concept | Week learned | Role in this project |
+|---------|-------------|---------------------|
+| Components and props | [Week 3](/docs/coding-the-news/scripts/week-3) | RestaurantTable, BigNumber, Dashboard |
+| `$state` | [Week 4](/docs/coding-the-news/scripts/week-4) | Tracking the selected borough and cuisine |
+| `$derived` | [Week 4](/docs/coding-the-news/scripts/week-4) | Filtered data, grade counts, total |
+| `bind:value` | [Week 4](/docs/coding-the-news/scripts/week-4) | Connecting dropdowns to state |
+| `{#each}` | Today | Rendering table rows and dropdown options |
+| `+page.js` load function | Today | Getting data into the page |
+
+This is the foundation of every interactive data story you'll encounter in the wild. The datasets will be different. The designs will be more polished. But the architecture — data loaded by the framework, state tracking user input, derived values driving the display — is the same.
+
+## Homework
+
+### Task 1: Build a data explorer
+
+Find a different dataset on the [NYC Open Data portal](https://data.cityofnewyork.us/). Here are some good ones to explore:
+
+- [311 Service Requests](https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9) — complaints about noise, potholes, rodents and more
+- [Film Permits](https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p) — where movies and TV shows are shooting around the city
+- [Popular Baby Names](https://data.cityofnewyork.us/Health/Popular-Baby-Names/25th-nujf) — the most popular baby names by year, ethnicity and gender
+- [Motor Vehicle Collisions](https://data.cityofnewyork.us/Public-Safety/Motor-Vehicle-Collisions-Crashes/h9gi-nx95) — traffic crash data with location and contributing factors
+
+Adapt the fetch script we wrote in class to download a subset of your chosen dataset. Change the API URL, the `$where` filter, and the `$select` fields to match your dataset's columns.
+
+Import the data into a fresh copy of our class template using a `+page.js` load function. Build a table with `{#each}`, add at least one summary statistic with `$derived` and `BigNumber`, and create at least one dropdown filter.
+
+Deploy to GitHub Pages and send me the link.
+
+### Task 2: Prepare to present
+
+Be ready to share your data explorer with the class. You should be prepared to:
+
+- Explain why you chose this dataset and what story it could tell
+- Walk through how you adapted the fetch script
+- Show the reactive chain: what state do you track, what derived values depend on it, and how do the components update
+- Discuss how you used AI in the process and what you had to figure out yourself
