@@ -123,6 +123,10 @@ guestSpeakers:
       org: 'Washington Post'
       image: 'joe-fox.jpg'
       linkedin: 'https://www.linkedin.com/in/joemfox/'
+    - name: Sam Jacoby
+      org: 'New York Times'
+      image: 'sam-jacoby.jpg'
+      linkedin: 'https://www.linkedin.com/in/samjacoby1'
     - name: 'Allison McCartney'
       org: 'New York Times'
       image: 'allison-mccartney.jpg'
