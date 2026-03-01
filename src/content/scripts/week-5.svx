@@ -1,7 +1,7 @@
 ---
 title: "Flowing Data"
 summary: "How to empower your readers to explore newsworthy data"
-date: "Feb. 30, 2026"
+date: "March 1, 2026"
 week: 5
 locked: true
 ---
@@ -11,11 +11,11 @@ locked: true
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
-## Introduction to interactive databases
+## Part 1: Introduction to interactive databases
 
-In 2010, the team at ProPublica started with a simple idea: Collect all the payments that pharmaceutical companies make to doctors. Then build a searchable database that lets the public look up how much money any physician in America had received.
+In 2010, the team at ProPublica started with a simple idea: Collect all the payments that pharmaceutical companies make to doctors. Then build a searchable database that lets the public look up how much money any physician in America has received.
 
-Pulling it off was more complicated. [Dan Nguyen](https://danwin.com), [Charles Ornstein](https://www.propublica.org/people/charles-ornstein) and [Tracy Weber](https://www.propublica.org/people/tracy-weber) had find and download countless payment disclosures from a baffling array of different websites, then spend hours standardizing the inconsistent data. It was months of work before they could even begin to think about posting it online.
+Pulling it off was more complicated. [Dan Nguyen](https://danwin.com), [Charles Ornstein](https://www.propublica.org/people/charles-ornstein) and [Tracy Weber](https://www.propublica.org/people/tracy-weber) had to find and download countless payment disclosures from a baffling array of different websites, then spend hours standardizing the inconsistent data. It was months of work before they could even begin to think about posting it online.
 
 When ["Dollar for Docs"](https://projects.propublica.org/docdollars/) finally launched, the response was overwhelming. Readers searched it tens of millions of times. Dozens of newsrooms used the data to report their own stories. Law enforcement used it to investigate drug companies.
 
@@ -36,7 +36,7 @@ Regardless of the topic, the underlying architecture is the same. You have a dat
 
 We'll cover all of those fundamentals today, step by step, using a public dataset published by New York City.
 
-## Part 2: Fetching data with Node.JS
+## Part 2: Fetching data with Node.js
 
 Up to now, all of the data in our projects has been typed by hand. Last week, we hardcoded streaming prices and tip amounts directly into our components. Real projects are powered by real data — from spreadsheets, databases, PDFs and APIs — that get pulled in before the page is built.
 
@@ -54,7 +54,7 @@ The New York City Department of Health and Mental Hygiene posts an updated datas
 
 The full dataset contains nearly 300,000 records, each representing an administrative action taken by the city, covering far more than just the final letter grade.
 
-Rather than download the whole thing , we'll write a small Node.js script that talks to the city's data server and asks for exactly the records we want. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
+Rather than download the whole thing, we'll write a small Node.js script that talks to the city's data server and asks for exactly the records we want. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
 
 Let's start by creating a new repository from our template. Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
@@ -69,7 +69,7 @@ Click the green "Use this template" button and name your new repository `my-firs
 
 Clone it to your computer, open it in Visual Studio Code. Run `npm install` in the terminal.
 
-Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code. It's a Node.JS script that will hit the city's data API, ask for the last 50,000 letter grades and then save the most recent grade for each restaurant to a JSON file in our project.
+Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code. It's a Node.js script that will hit the city's data API, ask for the last 50,000 letter grades and then save the most recent grade for each restaurant to a JSON file in our project.
 
 ```js
 // Node's built-in file system module — lets us write files to disk
@@ -116,6 +116,16 @@ fetch(url)
 
     console.log(`Filtered to ${restaurants.length} unique restaurants.`);
 
+    // Filter to inspections on or after Jan 1, 2025
+    const cutoff = new Date("2025-01-01");
+    restaurants = restaurants.filter(
+      (r) => new Date(r.inspection_date) >= cutoff,
+    );
+
+    console.log(
+      `Filtered to ${restaurants.length} inspections on or after Jan 1, 2025.`,
+    );
+
     // Write the cleaned data to a JSON file so our app can use it
     // JSON.stringify with null, 2 formats the output with 2-space indentation
     fs.writeFileSync(
@@ -130,7 +140,7 @@ fetch(url)
   });
 ```
 
-We won't go over everything it does here. The important to thing to understand that our work as a page designer is starting with a data file that comes from the outside world, which we'll be asked to bring to life.
+We won't go over everything it does here. The important to thing to understand is that our work as a page designer is starting with a data file that comes from the outside world, which we'll be asked to bring to life.
 
 Before we can run the script, we need to create the folder where it will save the data. In the terminal, make a new directory for our data file:
 
@@ -165,37 +175,55 @@ You should see a message reporting how many raw records were downloaded and how 
     "grade": "A",
     "score": "10"
   },
-````
+```
+
+Scroll to the bottom and you should see inspections from early January 2025, which is the cutoff we set in our script.
+
+```json
+  {
+    "camis": "50015659",
+    "dba": "HARRY'S NEW YORK BAR",
+    "boro": "Manhattan",
+    "cuisine_description": "American",
+    "inspection_date": "2025-01-02T00:00:00.000",
+    "grade": "A",
+    "score": "12"
+  }
+```
 
 ### Loading data the SvelteKit way
 
-We have our data file. Now we need to get it into our page. You might think we'd just import the JSON directly in our component, and that would work — but it's not how SvelteKit is designed to operate.
+We have our data file. Now we need to get it into our page.
 
 SvelteKit has an official pattern for getting data into your pages. It's called a [load function](https://svelte.dev/docs/kit/load), and it lives in a special file called `+page.js` that sits right next to your `+page.svelte`.
 
-The idea is simple: before your page component renders, SvelteKit runs the load function to prepare whatever data the page needs. The page then receives that data as a prop. This separates *getting* the data from *displaying* it, which keeps your component focused on presentation.
+Before your page component renders, SvelteKit runs the load function to prepare whatever data the page needs. The page then receives that data as a property. This separates getting the data from displaying it, which keeps your component focused on presentation.
 
-This is the pattern used by virtually every professional SvelteKit project, including the newsroom frameworks we looked at in [week two](/docs/coding-the-news/scripts/week-2). Learning it now means you're learning the real thing.
+This is the pattern used by extremely complicated news applications with multiple data sources, authentication, pagination and more. It's also the pattern used by our simple project, because it's important to learn it from the start.
 
 Create a new file at `src/routes/+page.js`. This file must be named exactly `+page.js` — SvelteKit looks for this specific filename.
 
-```js
+```svelte
 import restaurants from '$lib/data/restaurants.json';
 
-export function load() {
+export function load({ params }) {
   return {
     restaurants
   };
 }
 ```
 
-That's the entire file. Let's break it down.
+This is extremely simple example of a `+page.js`. The first line imports our JSON data file, as it would any other Node.js library.
 
-The first line imports our JSON data file. The `$lib` path is the same alias you've been using for components — it points to your `src/lib` folder.
+The `load` function is the special function that SvelteKit calls before rendering the page. Whatever object you return from it becomes available to your page component.
 
-The `load` function is the special function that SvelteKit calls before rendering the page. Whatever object you return from it becomes available to your page component. In this case, we're returning an object with one property: `restaurants`, which contains the full array of inspection records from our JSON file.
+<Aside>
+In this case, we're returning an object with one property: `restaurants`, which contains the full array of inspection records from our JSON file.
 
-Now open `src/routes/+page.svelte`. At the top of the `<script>` block, we need to receive the data that the load function prepared. Replace the existing props line or add this new one:
+Because the name of the variable we imported matches the name of the key in our `{}` object, we can use shorthand syntax and just write `restaurants` instead of `restaurants: restaurants`. That's a JavaScript quirk that can be confusing at first.
+</Aside>
+
+Now open `src/routes/+page.svelte`. At the top of the script block, we need to receive the data that the load function prepared. Replace the existing props line or add this new one:
 
 ```js
 let { data } = $props();
@@ -203,27 +231,19 @@ let { data } = $props();
 
 The `data` prop is another SvelteKit convention. It automatically contains whatever your `+page.js` load function returned. So `data.restaurants` is our array of inspection records.
 
-Let's verify it works. Add a `console.log` right after the props line:
+Let's verify it works. Add a `$inspect()` call right after the props line. It's the special Svelte function that logs a variable to the browser console .
 
 ```js
-console.log(data.restaurants);
+$inspect(data.restaurants);
 ```
 
 Start the development server with `npm run dev` and open your browser to [localhost:5173](http://localhost:5173). Open the browser's developer tools — you can do this by right-clicking anywhere on the page and selecting "Inspect," then clicking the "Console" tab.
 
 You should see your data array logged in the console. Click the arrow to expand it and explore individual records. This is a useful trick for understanding any dataset — log it, expand it, poke at it.
 
-Once you've confirmed it's working, you can remove the `console.log` line. We won't need it anymore.
+Once you've confirmed it's working, you can remove the `$inspect()` line. We won't need it anymore.
 
-### Why a load function?
-
-It might seem like an extra step compared to importing JSON directly in your component. And for a single-page project like ours, it is. But the load function pattern pays off as your projects grow.
-
-In a real newsroom project, the load function might fetch data from an API, query a database, read from a content management system, or combine multiple data sources — all before the page renders. The page component never has to worry about *where* the data comes from. It just receives it and displays it.
-
-Even for our simple case, the pattern reinforces a clean habit: data flows into the page from the outside, through a well-defined entry point that SvelteKit controls. As you build more complex projects later in this course, you'll appreciate having learned this from the start.
-
-## Part 2: Rendering lists with `{#each}`
+## Part 3: Rendering lists with `{#each}`
 
 You have data flowing into your page. Now what? The whole point is to show it to readers. And since we have hundreds or thousands of records, we need a way to render them all without writing each one by hand.
 
@@ -406,7 +426,7 @@ import RestaurantTable from '$lib/components/RestaurantTable.svelte';
 
 Save and confirm the table still renders. Same result, cleaner code.
 
-## Part 3: Summary statistics with `$derived`
+## Part 4: Summary statistics with `$derived`
 
 A table full of raw data is useful, but it's not a story. Journalists need to summarize — how many restaurants got an A? How many failed? What's the overall picture?
 
@@ -498,7 +518,7 @@ And add a fourth BigNumber to the dashboard:
 
 These summary statistics aren't just decorative. In a real newsroom, this is how you'd present the top-line findings of your analysis — the numbers that anchor your story and give readers immediate context before they dive into the details.
 
-## Part 4: Filtering with reactive state
+## Part 5: Filtering with reactive state
 
 We have a table and summary statistics. But they show everything at once. What if a reader only cares about restaurants in their borough? Or wants to see just the places that got a C?
 
