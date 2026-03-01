@@ -101,7 +101,7 @@ fetch(url)
     // A Set lets us track which restaurant IDs (camis) we've already seen,
     // so we can keep only the most recent inspection per restaurant
     const seen = new Set();
-    const restaurants = data.filter((r) => {
+    let restaurants = data.filter((r) => {
       // If we've seen this camis before, skip it
       if (seen.has(r.camis)) return false;
       // Otherwise, mark it as seen and keep it
@@ -140,7 +140,7 @@ fetch(url)
   });
 ```
 
-We won't go over everything it does here. The important to thing to understand is that our work as a page designer is starting with a data file that comes from the outside world, which we'll be asked to bring to life.
+We won't go over everything it does here. The important thing to understand is that our work as a page designer is starting with a data file that comes from the outside world, which we'll be asked to bring to life.
 
 Before we can run the script, we need to create the folder where it will save the data. In the terminal, make a new directory for our data file:
 
@@ -206,14 +206,14 @@ Create a new file at `src/routes/+page.js`. This file must be named exactly `+pa
 ```svelte
 import restaurants from '$lib/data/restaurants.json';
 
-export function load({ params }) {
+export function load() {
   return {
     restaurants
   };
 }
 ```
 
-This is extremely simple example of a `+page.js`. The first line imports our JSON data file, as it would any other Node.js library.
+This is an extremely simple example of a `+page.js`. The first line imports our JSON data file, as it would any other Node.js library.
 
 The `load` function is the special function that SvelteKit calls before rendering the page. Whatever object you return from it becomes available to your page component.
 
@@ -231,7 +231,7 @@ let { data } = $props();
 
 The `data` prop is another SvelteKit convention. It automatically contains whatever your `+page.js` load function returned. So `data.restaurants` is our array of inspection records.
 
-Let's verify it works. Add a `$inspect()` call right after the props line. It's the special Svelte function that logs a variable to the browser console .
+Let's verify it works. Add a `$inspect()` call right after the props line. It's the special Svelte function that logs a variable to the browser console.
 
 ```js
 $inspect(data.restaurants);
@@ -243,17 +243,13 @@ You should see your data array logged in the console. Click the arrow to expand 
 
 Once you've confirmed it's working, you can remove the `$inspect()` line. We won't need it anymore.
 
-## Part 3: Rendering lists with `{#each}`
+## Part 3: Looping through lists with `{#each}`
 
 You have data flowing into your page. Now what? The whole point is to show it to readers. And since we have hundreds or thousands of records, we need a way to render them all without writing each one by hand.
 
-That's where Svelte's [`{#each}`](https://svelte.dev/docs/svelte/each) block comes in. It loops over an array and renders a chunk of markup for every item. It's the tool you'll reach for anytime you need to display a list, a table, a grid of cards, or any other repeating pattern.
+That's where Svelte's [`{#each}`](https://svelte.dev/docs/svelte/each) block comes in. It loops over an array and renders one row at a time. It's the tool you'll reach for anytime you need to display a list, a table, a grid of cards, or any other repeating pattern.
 
-### The hard way first
-
-To appreciate why `{#each}` matters, let's start without it.
-
-Inside the `ArticleBody` on your page, add a simple HTML table with a few rows hardcoded from your data. Pick any three restaurants from your JSON file and type them in manually:
+Inside the `ArticleBody` in `+page.svelte`, add a HTML table that uses an `{#each}` block to repeat the same pattern for each row in `data.restaurants`.
 
 ```svelte
 <table>
@@ -266,93 +262,27 @@ Inside the `ArticleBody` on your page, add a simple HTML table with a few rows h
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>SOME RESTAURANT NAME</td>
-      <td>Manhattan</td>
-      <td>Italian</td>
-      <td>A</td>
-    </tr>
-    <tr>
-      <td>ANOTHER RESTAURANT</td>
-      <td>Brooklyn</td>
-      <td>Chinese</td>
-      <td>B</td>
-    </tr>
-    <tr>
-      <td>A THIRD PLACE</td>
-      <td>Queens</td>
-      <td>Mexican</td>
-      <td>A</td>
-    </tr>
-  </tbody>
-</table>
-```
-
-Save and check your browser. You'll see a simple table with three rows.
-
-Now imagine doing this for 5,000 restaurants. You'd lose your mind — and your deadline.
-
-### The `{#each}` block
-
-Delete the hardcoded `<tbody>` rows and replace them with an `{#each}` block. Remember, our restaurant data lives in `data.restaurants`, because it was passed in by the load function.
-
-```svelte
-<table>
-  <thead>
-    <tr>
-      <th>Restaurant</th>
-      <th>Borough</th>
-      <th>Cuisine</th>
-      <th>Grade</th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each data.restaurants as restaurant}
+    {#each data.restaurants as row}
       <tr>
-        <td>{restaurant.dba}</td>
-        <td>{restaurant.boro}</td>
-        <td>{restaurant.cuisine_description}</td>
-        <td>{restaurant.grade}</td>
+        <td>{row.dba}</td>
+        <td>{row.boro}</td>
+        <td>{row.cuisine_description}</td>
+        <td>{row.grade}</td>
       </tr>
     {/each}
   </tbody>
 </table>
 ```
 
-The syntax reads almost like English: "for each item in the `data.restaurants` array, call it `restaurant`, and render this row."
+Inside the block, we use the familiar curly-brace syntax to insert each field. The `row.dba` expression pulls the business name. The `row.boro` gets the borough. And so on.
 
-Inside the block, we use the familiar curly-brace syntax to insert each field. The `restaurant.dba` expression pulls the business name. The `restaurant.boro` gets the borough. And so on.
-
-Save and check your browser.
-
-One block of markup. Thousands of rows. That's the power of `{#each}`.
-
-### Handling empty data with `{:else}`
-
-There's one more trick worth knowing now, because we'll need it later. The `{#each}` block supports an `{:else}` clause that renders when the array is empty. This is useful for showing a "no results" message when filters eliminate all records.
-
-```svelte
-{#each data.restaurants as restaurant}
-  <tr>
-    <td>{restaurant.dba}</td>
-    <td>{restaurant.boro}</td>
-    <td>{restaurant.cuisine_description}</td>
-    <td>{restaurant.grade}</td>
-  </tr>
-{:else}
-  <tr>
-    <td colspan="4">No restaurants found.</td>
-  </tr>
-{/each}
-```
-
-Right now, this won't do anything visible since we have plenty of data. But when we add filters in Part 4, this fallback will come in handy.
+Save and check your browser. You'll see all 5,000 records printed out on one page. Way more than we'd ever want to show, but I bet you get the point. One loop was able to print out entire dataset.
 
 ### Extracting a RestaurantTable component
 
-Before we move on, let's clean up by extracting our table into a reusable component, just like we've done in previous weeks.
+Let's clean things up by extracting our table into a reusable component, just like we've done in previous weeks.
 
-Create a new file at `src/lib/components/RestaurantTable.svelte`:
+Create a new file at `src/lib/components/RestaurantTable.svelte`. Put this in it.
 
 ```svelte
 <script>
@@ -369,16 +299,12 @@ Create a new file at `src/lib/components/RestaurantTable.svelte`:
     </tr>
   </thead>
   <tbody>
-    {#each data as restaurant}
+    {#each data as row}
       <tr>
-        <td>{restaurant.dba}</td>
-        <td>{restaurant.boro}</td>
-        <td>{restaurant.cuisine_description}</td>
-        <td>{restaurant.grade}</td>
-      </tr>
-    {:else}
-      <tr>
-        <td colspan="4">No restaurants found.</td>
+        <td>{row.dba}</td>
+        <td>{row.boro}</td>
+        <td>{row.cuisine_description}</td>
+        <td>{row.grade}</td>
       </tr>
     {/each}
   </tbody>
@@ -412,8 +338,6 @@ Create a new file at `src/lib/components/RestaurantTable.svelte`:
 </style>
 ```
 
-The component accepts a `data` prop — whatever array of restaurants you pass in, it will render as a table. This separation will become important in Part 4, when the data we pass in will change based on user input.
-
 Back in `src/routes/+page.svelte`, import the component and replace your table markup:
 
 ```js
@@ -424,7 +348,7 @@ import RestaurantTable from '$lib/components/RestaurantTable.svelte';
 <RestaurantTable data={data.restaurants} />
 ```
 
-Save and confirm the table still renders. Same result, cleaner code.
+Save and reload. Similiar result, a little cleaner though.
 
 ## Part 4: Summary statistics with `$derived`
 

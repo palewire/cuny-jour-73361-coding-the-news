@@ -10,10 +10,12 @@
       "Bash(magick /tmp/d4d-original.png txt:-)",
       "Bash(magick /tmp/d4d-original.png -fuzz 15% -trim +repage /tmp/d4d-trimmed.png)",
       "Read(//Users/U6122976/Code/cuny-jour-73361-coding-the-news/**)",
-      "Bash(python3 -c \":*)"
+      "Bash(python3 -c \":*)",
+      "Bash(npm install --save-dev prettier prettier-plugin-svelte)"
     ],
     "additionalDirectories": [
-      "/Users/U6122976/Code/cuny-jour-73361-coding-the-news"
+      "/Users/U6122976/Code/cuny-jour-73361-coding-the-news",
+      "/Users/U6122976/Code/my-first-data-components"
     ]
   }
 }
