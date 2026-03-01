@@ -9,7 +9,11 @@
       "Bash(magick /tmp/d4d-original.png -format \"%[fx:u.p{0,0}]\\\\n%[fx:u.p{2385,0}]\\\\n%[fx:u.p{0,1463}]\\\\n%[fx:u.p{2385,1463}]\" info:)",
       "Bash(magick /tmp/d4d-original.png txt:-)",
       "Bash(magick /tmp/d4d-original.png -fuzz 15% -trim +repage /tmp/d4d-trimmed.png)",
-      "Read(//Users/U6122976/Code/cuny-jour-73361-coding-the-news/**)"
+      "Read(//Users/U6122976/Code/cuny-jour-73361-coding-the-news/**)",
+      "Bash(python3 -c \":*)"
+    ],
+    "additionalDirectories": [
+      "/Users/U6122976/Code/cuny-jour-73361-coding-the-news"
     ]
   }
 }

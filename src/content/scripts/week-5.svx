@@ -69,68 +69,103 @@ Click the green "Use this template" button and name your new repository `my-firs
 
 Clone it to your computer, open it in Visual Studio Code. Run `npm install` in the terminal.
 
-Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code:
+Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code. It's a Node.JS script that will hit the city's data API, ask for the last 50,000 letter grades and then save the most recent grade for each restaurant to a JSON file in our project.
 
 ```js
-const fs = require("fs");
+// Node's built-in file system module — lets us write files to disk
+import fs from "fs";
 
+// The NYC Open Data API endpoint for restaurant inspections
 const apiUrl = "https://data.cityofnewyork.us/resource/43nn-pn8j.json";
 
+// Query parameters sent to the API using the Socrata Query Language (SoQL)
 const params = new URLSearchParams({
-  $limit: 5000,
-  $where: "inspection_date > '2025-01-01T00:00:00' AND grade IN('A', 'B', 'C')",
-  $select: "camis,dba,boro,cuisine_description,inspection_date,grade,score",
-  $order: "inspection_date DESC",
+  $limit: 50000, // max number of rows to return
+  $where: "grade IN('A', 'B', 'C')", // only include graded inspections
+  $select: "camis,dba,boro,cuisine_description,inspection_date,grade,score", // only fetch the columns we need
+  $order: "camis ASC, inspection_date DESC", // sort by restaurant ID, newest inspection first
 });
 
+// Combine the base URL and query string into one complete request URL
 const url = `${apiUrl}?${params.toString()}`;
 
 console.log(`Fetching data from NYC Open Data...`);
 
+// fetch() makes an HTTP GET request to the API and returns a Promise
 fetch(url)
+  // Parse the response body as JSON — also returns a Promise
   .then((response) => response.json())
   .then((data) => {
-    console.log(`Received ${data.length} records`);
-    fs.writeFileSync("src/lib/data/restaurants.json", JSON.stringify(data, null, 2));
+    console.log(`Fetched ${data.length} records from the API.`);
+
+    // A Set lets us track which restaurant IDs (camis) we've already seen,
+    // so we can keep only the most recent inspection per restaurant
+    const seen = new Set();
+    const restaurants = data.filter((r) => {
+      // If we've seen this camis before, skip it
+      if (seen.has(r.camis)) return false;
+      // Otherwise, mark it as seen and keep it
+      seen.add(r.camis);
+      return true;
+    });
+
+    // Sort by inspection_date descending so the newest inspections appear first
+    restaurants.sort(
+      (a, b) => new Date(b.inspection_date) - new Date(a.inspection_date),
+    );
+
+    console.log(`Filtered to ${restaurants.length} unique restaurants.`);
+
+    // Write the cleaned data to a JSON file so our app can use it
+    // JSON.stringify with null, 2 formats the output with 2-space indentation
+    fs.writeFileSync(
+      "src/lib/data/restaurants.json",
+      JSON.stringify(restaurants, null, 2),
+    );
     console.log("Saved to src/lib/data/restaurants.json");
   })
+  // If anything goes wrong (network error, bad JSON, etc.), log it
   .catch((error) => {
     console.error("Error fetching data:", error);
   });
 ```
 
-Before we run it, let's walk through what this does.
+We won't go over everything it does here. The important to thing to understand that our work as a page designer is starting with a data file that comes from the outside world, which we'll be asked to bring to life.
 
-The `apiUrl` variable points to the city's data server. This is a [Socrata Open Data API](https://dev.socrata.com/) endpoint — a system used by hundreds of government agencies to publish public data. The URL ending in `.json` tells the server we want the data in JSON format, the same format we've been working with all semester.
-
-The `params` object contains our filters:
-
-| Parameter | What it does |
-|-----------|-------------|
-| `$limit` | Caps the number of records returned at 5,000 |
-| `$where` | Filters to inspections from 2025 onward that resulted in a letter grade |
-| `$select` | Picks only the columns we need, ignoring dozens of others |
-| `$order` | Sorts by inspection date, newest first |
-
-The rest of the script fetches the data, converts the response to JSON, and writes it to a file in our project.
-
-Before we can run the script, we need to create the folder where it will save the data. In the terminal, type:
+Before we can run the script, we need to create the folder where it will save the data. In the terminal, make a new directory for our data file:
 
 ```bash
 mkdir -p src/lib/data
 ```
 
-Now run the script:
+Now run the script.
 
 ```bash
 node fetch-data.js
 ```
 
-You should see a message reporting how many records were downloaded and confirming the file was saved. Open `src/lib/data/restaurants.json` in VS Code and take a look. You'll see an array of objects, each representing one restaurant inspection.
+You should see a message reporting how many raw records were downloaded and how many unique restaurants remain. Open `src/lib/data/restaurants.json` in Visual Studio Code and take a look. You'll see an array of objects, each representing one restaurant with its most recent letter grade. The most recent decisions should be at the top.
 
-Each record has the fields we asked for: `camis` (the restaurant's unique ID), `dba` (the business name), `boro` (the borough), `cuisine_description` (the type of food), `inspection_date`, `grade` and `score`.
-
-Take a moment to scroll through the file. You'll notice things that are typical of real-world data. Some restaurant names are in ALL CAPS. Cuisine descriptions range from the expected ("Italian," "Chinese") to the oddly specific ("Chicken" as a cuisine). Scores vary widely. This is what working with public data looks like — messy, inconsistent and full of stories waiting to be found.
+```json
+  {
+    "camis": "40369165",
+    "dba": "REIF'S TAVERN",
+    "boro": "Manhattan",
+    "cuisine_description": "American",
+    "inspection_date": "2026-02-25T00:00:00.000",
+    "grade": "A",
+    "score": "9"
+  },
+  {
+    "camis": "40385852",
+    "dba": "SAM'S PLACE",
+    "boro": "Manhattan",
+    "cuisine_description": "Italian",
+    "inspection_date": "2026-02-25T00:00:00.000",
+    "grade": "A",
+    "score": "10"
+  },
+````
 
 ### Loading data the SvelteKit way
 
