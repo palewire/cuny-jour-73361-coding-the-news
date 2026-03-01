@@ -11,6 +11,31 @@ locked: true
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
+## Introduction to interactive databases
+
+In 2010, the team at ProPublica started with a simple idea: Collect all the payments that pharmaceutical companies make to doctors. Then build a searchable database that lets the public look up how much money any physician in America had received.
+
+Pulling it off was more complicated. [Dan Nguyen](https://danwin.com), [Charles Ornstein](https://www.propublica.org/people/charles-ornstein) and [Tracy Weber](https://www.propublica.org/people/tracy-weber) had find and download countless payment disclosures from a baffling array of different websites, then spend hours standardizing the inconsistent data. It was months of work before they could even begin to think about posting it online.
+
+When ["Dollar for Docs"](https://projects.propublica.org/docdollars/) finally launched, the response was overwhelming. Readers searched it tens of millions of times. Dozens of newsrooms used the data to report their own stories. Law enforcement used it to investigate drug companies.
+
+<Screenshot
+  src="/screenshots/week-5/dollars-for-docs.png"
+  alt="ProPublica's Dollars for Docs database showing a search interface where users can look up doctors by name and see pharmaceutical company payments"
+  chromeTitle="Dollars for Docs"
+  chromeUrl="https://projects.propublica.org/docdollars/"
+  maxWidth="960px"
+/>
+
+
+The project was so influential that Congress eventually required drug makers to disclose their payments to [a unified federal database](https://openpaymentsdata.cms.gov/), which made the news organization's efforts obsolete.
+
+Examined from a technical perspective, "Dollar for Docs" is an example of a distinct type of news application. You start with a public dataset. You pull it into a web application. You give readers tools to explore it themselves. The formula works for school test scores, campaign contributions, police complaints or anything else that the public wants to know about.
+
+Regardless of the topic, the underlying architecture is the same. You have a dataset drawn from outside your code. You write a script to fetch and reshape it. You pull it into your page using a framework's data loading pattern. You render individual records with loops and templates. You use inputs, like the ones we covered [last week])(/docs/coding-the-news/scripts/week-4/), to make the page interactive.
+
+We'll cover all of those fundamentals today, step by step, using a public dataset published by New York City.
+
 ## Part 1: Getting data into your project
 
 Up to now, all of the data in our projects has been typed by hand. We hardcoded streaming prices, tip amounts and blockquote text directly into our components. That works fine for a lesson, but it's not how journalists build stories. Real projects are powered by real data — spreadsheets, databases, public records — that live outside your code and get pulled in when the page is built.
