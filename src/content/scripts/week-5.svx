@@ -36,33 +36,40 @@ Regardless of the topic, the underlying architecture is the same. You have a dat
 
 We'll cover all of those fundamentals today, step by step, using a public dataset published by New York City.
 
-## Part 1: Getting data into your project
+## Part 2: Fetching data with Node.JS
 
-Up to now, all of the data in our projects has been typed by hand. We hardcoded streaming prices, tip amounts and blockquote text directly into our components. That works fine for a lesson, but it's not how journalists build stories. Real projects are powered by real data — spreadsheets, databases, public records — that live outside your code and get pulled in when the page is built.
+Up to now, all of the data in our projects has been typed by hand. Last week, we hardcoded streaming prices and tip amounts directly into our components. Real projects are powered by real data — from spreadsheets, databases, PDFs and APIs — that get pulled in before the page is built.
 
-Today we're going to learn how to bring external data into a Svelte project, render it on a page, summarize it with the reactive tools we learned [last week](/docs/coding-the-news/scripts/week-4), and let readers filter it on the fly.
+Today we're going to learn how to bring external data into a Svelte project, where we can use it however we want. We'll use a dataset you see evidence of every day in New York City: The restaurants inspection grades posted in the window of food establishments all across the five boroughs.
 
-We'll use a dataset you may already know personally: the restaurant inspection grades posted in the window of every food establishment in New York City.
+The New York City Department of Health and Mental Hygiene posts an updated dataset nearly every day on the city's [open data portal](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j/about_data), where you can download all inspections over the past three years of restaurants that remain open.
 
-The New York City Department of Health and Mental Hygiene conducts unannounced inspections of the city's roughly 29,000 restaurants at least once a year. Inspectors check for food safety violations — improper temperatures, pest infestations, unsanitary surfaces — and assign point values to each violation. The points are totaled into a score, and the score is converted into a letter grade. The lower the score, the better the grade.
+<Screenshot
+  src="/screenshots/week-5/nyc-open-data-restaurant-inspections.png"
+  alt="NYC Open Data portal showing the DOHMH New York City Restaurant Inspection Results dataset page with metadata and download options"
+  chromeTitle="DOHMH New York City Restaurant Inspection Results"
+  chromeUrl="https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j/about_data"
+  maxWidth="960px"
+/>
 
-The results of every inspection are published as open data by the city, freely available to anyone who wants to download and analyze them.
+The full dataset contains nearly 300,000 records, each representing an administrative action taken by the city, covering far more than just the final letter grade.
 
-You can browse the dataset at [data.cityofnewyork.us](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j). It's one of the most popular datasets on the city's open data portal, and it's been the basis for countless news stories, apps and academic research projects.
-
-There's just one problem: the full dataset contains hundreds of thousands of rows. That's far too much for a classroom exercise. We need to trim it down.
-
-### Fetching data with a script
-
-Rather than download the whole thing and manually cut it, we'll write a small Node.js script that talks to the city's data server and asks for exactly the records we need. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
+Rather than download the whole thing , we'll write a small Node.js script that talks to the city's data server and asks for exactly the records we want. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
 
 Let's start by creating a new repository from our template. Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
-Click the green "Use this template" button and name your new repository `my-first-data-page`. Make sure "Public" is selected, then click "Create repository."
+<Screenshot
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
 
-Clone it to your computer, open it in Visual Studio Code, and run `npm install` in the terminal. You know the drill by now.
+Click the green "Use this template" button and name your new repository `my-first-data-components`. Make sure "Public" is selected, then click "Create repository."
 
-Next, create a new file in the root of your project called `fetch-data.js`. This will be our data fetching script. Paste in the following code:
+Clone it to your computer, open it in Visual Studio Code. Run `npm install` in the terminal.
+
+Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code:
 
 ```js
 const fs = require("fs");
