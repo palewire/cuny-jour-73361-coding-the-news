@@ -41,7 +41,7 @@ We'll cover all of those fundamentals today, step by step, using a public datase
 
 Up to now, all of the data in our projects has been typed by hand. Last week, we hardcoded streaming prices and tip amounts directly into our components. Real projects are powered by real data — from spreadsheets, databases, PDFs and APIs — that get pulled in before the page is built.
 
-Today we're going to learn how to bring external data into a Svelte project, where we can use it however we want. We'll use a dataset you see evidence of every day in New York City: The restaurants inspection grades posted in the window of food establishments all across the five boroughs.
+Today we're going to learn how to bring external data into a Svelte project, where we can use it however we want. We'll use a dataset you see evidence of every day in New York City: The inspection grades posted in the window of food establishments all across the five boroughs.
 
 The New York City Department of Health and Mental Hygiene posts an updated dataset nearly every day on the city's [open data portal](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j/about_data), where you can download all inspections over the past three years of restaurants that remain open.
 
@@ -70,7 +70,7 @@ Click the green "Use this template" button and name your new repository `my-firs
 
 Clone it to your computer, open it in Visual Studio Code. Run `npm install` in the terminal.
 
-Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code. It's a Node.js script that will hit the city's data API, ask for the last 50,000 letter grades and then save the most recent grade for each restaurant to a JSON file in our project.
+Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code. It's a Node.js script that will hit the city's data API, ask for the last 50,000 records and then save the most recent grade for each restaurant to a JSON file in our project.
 
 ```js
 // Node's built-in file system module — lets us write files to disk
@@ -141,7 +141,7 @@ fetch(url)
   });
 ```
 
-We won't go over everything it does here. The important thing to understand is that our work as a page designer is starting with a data file that comes from the outside world, which we'll be asked to bring to life.
+We won't go over everything it does here. The important thing to understand is that as a page designer, your job is to take a data file from the outside world and bring it to life. In some cases, you'll get that data from a colleague who has already cleaned it up for you. In other cases, you'll have to figure it out on your own. In a working newsroom, it can go either way, depending on the project.
 
 Before we can run the script, we need to create the folder where it will save the data. In the terminal, make a new directory for our data file:
 
@@ -155,7 +155,7 @@ Now run the script.
 node fetch-data.js
 ```
 
-You should see a message reporting how many raw records were downloaded and how many unique restaurants remain. Open `src/lib/data/restaurants.json` in Visual Studio Code and take a look. You'll see an array of objects, each representing one restaurant with its most recent letter grade. The most recent decisions should be at the top.
+You should see a message reporting how many raw records were downloaded and how many unique restaurants remain. Open `src/lib/data/restaurants.json` in Visual Studio Code and take a look. You'll see an array of objects, each representing one restaurant with its most recent letter grade. The most recent inspections should be at the top.
 
 ```json
   {
@@ -200,11 +200,11 @@ SvelteKit has an official pattern for getting data into your pages. It's called 
 
 Before your page component renders, SvelteKit runs the load function to prepare whatever data the page needs. The page then receives that data as a property. This separates getting the data from displaying it, which keeps your component focused on presentation.
 
-This is the pattern used by extremely complicated news applications with multiple data sources, authentication, pagination and more. It's also the pattern used by our simple project, because it's important to learn it from the start.
+This is the pattern used by complicated news applications with multiple data sources, authentication, pagination and more. It's also the pattern used by our simple project, because it's important to learn it from the start.
 
 Create a new file at `src/routes/+page.js`. This file must be named exactly `+page.js` — SvelteKit looks for this specific filename.
 
-```svelte
+```js
 import restaurants from '$lib/data/restaurants.json';
 
 export function load() {
@@ -214,7 +214,7 @@ export function load() {
 }
 ```
 
-This is an extremely simple example of a `+page.js`. The first line imports our JSON data file, as it would any other Node.js library.
+This is a simple example of a `+page.js`. The first line imports our JSON data file, as it would any other Node.js library.
 
 The `load` function is the special function that SvelteKit calls before rendering the page. Whatever object you return from it becomes available to your page component.
 
@@ -250,7 +250,7 @@ You have data flowing into your page. Now what? The whole point is to show it to
 
 That's where Svelte's [`{#each}`](https://svelte.dev/docs/svelte/each) block comes in. It loops over an array and renders one row at a time. It's the tool you'll reach for anytime you need to display a list, a table, a grid of cards, or any other repeating pattern.
 
-Inside the `ArticleBody` in `+page.svelte`, add a HTML table that uses an `{#each}` block to repeat the same pattern for each row in `data.restaurants`.
+Inside the `ArticleBody` in `+page.svelte`, add an HTML table that uses an `{#each}` block to repeat the same pattern for each row in `data.restaurants`.
 
 ```svelte
 <table>
@@ -277,13 +277,13 @@ Inside the `ArticleBody` in `+page.svelte`, add a HTML table that uses an `{#eac
 
 Inside the block, we use the familiar curly-brace syntax to insert each field. The `row.dba` expression pulls the business name. The `row.boro` gets the borough. And so on.
 
-Save and check your browser. You'll see all 5,000 records printed out on one page. Way more than we'd ever want to show, but I bet you get the point. One loop was able to print out entire dataset.
+Save and check your browser. You'll see all 5,000 records printed out on one page. Way more than we'd ever want to show. You get the point. One loop was able to print out the entire dataset.
 
 ### Extracting a RestaurantTable component
 
 Let's clean things up by extracting our table into a reusable component, just like we've done in previous weeks.
 
-Create a new file at `src/lib/components/RestaurantTable.svelte`. Put this in it.
+Create a new file at `src/lib/components/RestaurantTable.svelte`. Add this:
 
 ```svelte
 <script>
@@ -412,7 +412,7 @@ Let's add a second dropdown for cuisine type. This works the same way, but since
 Add another state variable in `+page.svelte` for the selected cuisine:
 
 ```js
-let selectedCuisine = $state('');
+let selectedCuisine = $state("");
 ```
 
 We'll need a list of all the unique cuisine types in the data. Add a derived value that extracts them:
@@ -468,8 +468,6 @@ Add a second dropdown next to the first:
 Notice we're using `{#each}` again — this time to generate `<option>` tags from our list of cuisines. The same tool that renders table rows can render any repeating element.
 
 Save and check your browser. Try different combinations — Mexican restaurants in the Bronx, Italian restaurants in Manhattan, pizza places across all boroughs. The table updates with each selection.
-
-If a combination returns no results, you'll see the "No restaurants found" message we added with `{:else}` in Part 3. That fallback is doing its job.
 
 ### Limiting results with `.slice()`
 
