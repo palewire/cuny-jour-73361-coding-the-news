@@ -613,7 +613,7 @@ Add a third dropdown to filter by letter grade. You should be able to select "A"
 
 ### Task 2: Create a summary dashboard
 
-Above the table, add a row of `BigNumber`` components inside a `Dashboard` parent component that summarize the current filter results. Your dashboard should show:
+Above the table, add a row of `BigNumber` components inside a `Dashboard` parent component that summarize the current filter results. Your dashboard should show:
 
 - The number that received an A
 - The number that received a B
