@@ -469,7 +469,7 @@ Notice we're using `{#each}` again — this time to generate `<option>` tags fro
 
 Save and check your browser. Try different combinations — Mexican restaurants in the Bronx, Italian restaurants in Manhattan, pizza places across all boroughs. The table updates with each selection.
 
-### Limiting results with `.slice()`
+### Limiting results
 
 After filtering, you may still have hundreds of matching restaurants. Rendering thousands of DOM nodes at once is slow and overwhelming. A simple fix: use JavaScript's [`.slice()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) method to cap how many rows the table shows.
 
@@ -496,7 +496,7 @@ We can use that to show readers how many total results exist. Add a short line o
 
 Now when you filter, the count updates automatically — no extra work needed, because both variables are `$derived` from `restaurants`.
 
-We've got it working, but it's looking basic. Let's add a little CSS to the bottom of `+page.svelte` to make the filters look nicer and give the table some breathing room.
+It works, but it's bare. Let's add a little CSS to the bottom of `+page.svelte` to make the filters look nicer and give the table some breathing room.
 
 Also give the count line a class so you can style it separately:
 
