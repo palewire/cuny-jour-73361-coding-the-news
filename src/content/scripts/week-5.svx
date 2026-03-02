@@ -9,14 +9,14 @@ locked: false
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
-  import { Filter, LayoutDashboard } from 'lucide-svelte';
+  import { Filter, LayoutDashboard, Zap } from 'lucide-svelte';
 </script>
 
 ## Part 1: Introduction to interactive databases
 
 The team at ProPublica started with a simple idea: Collect all the payments that pharmaceutical companies make to doctors. Then build a searchable database that lets the public look up how much money any physician in America has received.
 
-Pulling it off was more complicated. [Dan Nguyen](https://danwin.com), [Charles Ornstein](https://www.propublica.org/people/charles-ornstein) and [Tracy Weber](https://www.propublica.org/people/tracy-weber) had to find and download countless payment disclosures from a baffling array of different websites, then spend hours standardizing the inconsistent data. It was months of work before they could even begin to think about posting it online.
+Pulling it off was more complicated. [Dan Nguyen](https://danwin.com) had to find and download countless payment disclosures from a baffling array of different websites, then spend hours standardizing the inconsistent data. It was months of work before he and his teammates could even begin to think about posting it online.
 
 When ["Dollar for Docs"](https://projects.propublica.org/docdollars/) finally launched in 2010, the response was overwhelming. Readers searched it tens of millions of times. Dozens of newsrooms used the data to report their own stories. Law enforcement used it to investigate drug companies.
 
@@ -25,11 +25,11 @@ When ["Dollar for Docs"](https://projects.propublica.org/docdollars/) finally la
   alt="ProPublica's Dollars for Docs database showing a search interface where users can look up doctors by name and see pharmaceutical company payments"
   chromeTitle="Dollars for Docs"
   chromeUrl="https://projects.propublica.org/docdollars/"
-  maxWidth="960px"
+  maxWidth="960px"Zap
 />
 
 
-The project was so influential that Congress eventually required drug makers to disclose their payments to [a unified federal database](https://openpaymentsdata.cms.gov/), which made the news organization's efforts obsolete.
+The project was so influential that Congress eventually required drug makers to disclose their payments to [a unified federal database](https://openpaymentsdata.cms.gov/), copying the model that ProPublica pioneered.
 
 Examined from a technical perspective, "Dollar for Docs" is an example of a distinct type of news application. You start with a public dataset. You pull it into a web application. You give readers tools to explore it themselves. The formula works for [government bailouts](https://projects.propublica.org/coronavirus/bailouts/), [preventive power outages](https://www.sfchronicle.com/projects/pge-shutoff-power-outages-map/), [money given to political candidates](https://www.opensecrets.org/), [complaints made against police officers](https://data.cpdp.co/data/bxyXG5/citizens-police-data-project) or anything else that people want to know about.
 
