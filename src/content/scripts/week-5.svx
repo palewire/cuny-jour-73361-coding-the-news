@@ -33,15 +33,15 @@ The project was so influential that Congress eventually required drug makers to 
 
 Examined from a technical perspective, "Dollar for Docs" is an example of a distinct type of news application. You start with a public dataset. You pull it into a web application. You give readers tools to explore it themselves. The formula works for [government bailouts](https://projects.propublica.org/coronavirus/bailouts/), [preventive power outages](https://www.sfchronicle.com/projects/pge-shutoff-power-outages-map/), [money given to political candidates](https://www.opensecrets.org/), [complaints made against police officers](https://data.cpdp.co/data/bxyXG5/citizens-police-data-project) or anything else that the public wants to know about.
 
-Regardless of the topic, the underlying architecture is the same. You have a dataset drawn from outside your code. You write a script to fetch and reshape it. You pull it into your page using a framework's data loading pattern. You render individual records with loops and templates. You use inputs, like the ones we covered [last week](/docs/coding-the-news/scripts/week-4/), to make the page interactive.
+Regardless of the topic, the underlying architecture is the same. You have a dataset drawn from outside your code. You write a script to fetch and reshape it. You pull it into your page using a framework's data loading pattern. You render individual records with loops and templates. You use inputs, like the ones you covered [last week](/docs/coding-the-news/scripts/week-4/), to make the page interactive.
 
-We'll cover all of those fundamentals today, step by step, using a public dataset published by New York City.
+You'll cover all of those fundamentals today, step by step, using a public dataset published by New York City.
 
 ## Part 2: Fetching data with Node.js
 
-Up to now, all of the data in our projects has been typed by hand. Last week, we hardcoded streaming prices and tip amounts directly into our components. Real projects are powered by real data — from spreadsheets, databases, PDFs and APIs — that get pulled in before the page is built.
+Up to now, all of the data in your projects has been typed by hand. Last week, you hardcoded streaming prices and tip amounts directly into your components. Real projects are powered by real data — from spreadsheets, databases, PDFs and APIs — that get pulled in before the page is built.
 
-Today we're going to learn how to bring external data into a Svelte project, where we can use it however we want. We'll use a dataset you see evidence of every day in New York City: The inspection grades posted in the window of food establishments all across the five boroughs.
+Today you're going to learn how to bring external data into a Svelte project, where you can use it however you want. You'll use a dataset you see evidence of every day in New York City: The inspection grades posted in the window of food establishments all across the five boroughs.
 
 The New York City Department of Health and Mental Hygiene posts an updated dataset nearly every day on the city's [open data portal](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j/about_data), where you can download all inspections over the past three years of restaurants that remain open.
 
@@ -55,7 +55,7 @@ The New York City Department of Health and Mental Hygiene posts an updated datas
 
 The full dataset contains nearly 300,000 records, each representing an administrative action taken by the city, covering far more than just the final letter grade.
 
-Rather than download the whole thing, we'll write a small Node.js script that talks to the city's data server and asks for exactly the records we want. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
+Rather than download the whole thing, you'll write a small Node.js script that talks to the city's data server and asks for exactly the records we want. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
 
 Let's start by creating a new repository from our template. Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
@@ -141,9 +141,9 @@ fetch(url)
   });
 ```
 
-We won't go over everything it does here. The important thing to understand is that as a page designer, your job is to take a data file from the outside world and bring it to life. In some cases, you'll get that data from a colleague who has already cleaned it up for you. In other cases, you'll have to figure it out on your own. In a working newsroom, it can go either way, depending on the project.
+You don't need to understand everything it does here. The important thing to understand is that as a page designer, your job is to take a data file from the outside world and bring it to life. In some cases, you'll get that data from a colleague who has already cleaned it up for you. In other cases, you'll have to figure it out on your own. In a working newsroom, it can go either way, depending on the project.
 
-Before we can run the script, we need to create the folder where it will save the data. In the terminal, make a new directory for our data file:
+Before you can run the script, you need to create the folder where it will save the data. In the terminal, make a new directory for your data file:
 
 ```bash
 mkdir -p src/lib/data
@@ -194,7 +194,7 @@ Scroll to the bottom and you should see inspections from early January 2025, whi
 
 ### Loading data the SvelteKit way
 
-We have our data file. Now we need to get it into our page.
+You have your data file. Now you need to get it into your page.
 
 SvelteKit has an official pattern for getting data into your pages. It's called a [load function](https://svelte.dev/docs/kit/load), and it lives in a special file called `+page.js` that sits right next to your `+page.svelte`.
 
@@ -281,7 +281,7 @@ Save and check your browser. You'll see all 5,000 records printed out on one pag
 
 ### Extracting a RestaurantTable component
 
-Let's clean things up by extracting our table into a reusable component, just like we've done in previous weeks.
+Let's clean things up by extracting your table into a reusable component, just like you've done in previous weeks.
 
 Create a new file at `src/lib/components/RestaurantTable.svelte`. Add this:
 
@@ -355,7 +355,7 @@ Save and reload. Similar result, a little cleaner though.
 
 We have a table. But it shows every restaurant in the dataset at once. What if a reader only cares about restaurants in their borough? Or wants to see just the places that got a C?
 
-We'll take what we learned last week and add dropdown menus that let readers filter the data.
+You'll take what you learned last week and add dropdown menus that let readers filter the data.
 
 ### Adding a borough filter
 
@@ -485,7 +485,7 @@ This creates a new array containing only the first 100 items from the filtered s
 <RestaurantTable data={displayed} />
 ```
 
-Save and check your browser. The table is capped at 100 rows no matter how many records match the current filters. Notice we kept `restaurants` pointing to the full filtered set.
+Save and check your browser. The table is capped at 100 rows no matter how many records match the current filters. Notice you kept `restaurants` pointing to the full filtered set.
 
 We can use that to show readers how many total results exist. Add a short line of text above the table:
 
