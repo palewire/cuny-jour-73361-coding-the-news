@@ -82,7 +82,7 @@ const apiUrl = "https://data.cityofnewyork.us/resource/43nn-pn8j.json";
 // Query parameters sent to the API using the Socrata Query Language (SoQL)
 const params = new URLSearchParams({
   $limit: 50000, // max number of rows to return
-  $where: "grade IN('A', 'B', 'C')", // only include graded inspections
+  $where: "grade IN('A', 'B', 'C') AND inspection_date >= '2025-01-01'", // only graded inspections from 2025 onward
   $select: "camis,dba,boro,cuisine_description,inspection_date,grade,score", // only fetch the columns we need
   $order: "camis ASC, inspection_date DESC", // sort by restaurant ID, newest inspection first
 });
@@ -102,7 +102,7 @@ fetch(url)
     // A Set lets us track which restaurant IDs (camis) we've already seen,
     // so we can keep only the most recent inspection per restaurant
     const seen = new Set();
-    let restaurants = data.filter((r) => {
+    const restaurants = data.filter((r) => {
       // If we've seen this camis before, skip it
       if (seen.has(r.camis)) return false;
       // Otherwise, mark it as seen and keep it
@@ -116,16 +116,6 @@ fetch(url)
     );
 
     console.log(`Filtered to ${restaurants.length} unique restaurants.`);
-
-    // Filter to inspections on or after Jan 1, 2025
-    const cutoff = new Date("2025-01-01");
-    restaurants = restaurants.filter(
-      (r) => new Date(r.inspection_date) >= cutoff,
-    );
-
-    console.log(
-      `Filtered to ${restaurants.length} inspections on or after Jan 1, 2025.`,
-    );
 
     // Write the cleaned data to a JSON file so our app can use it
     // JSON.stringify with null, 2 formats the output with 2-space indentation
