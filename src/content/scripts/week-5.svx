@@ -9,6 +9,7 @@ locked: true
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
+  import { Filter } from 'lucide-svelte';
 </script>
 
 ## Part 1: Introduction to interactive databases
@@ -350,113 +351,21 @@ import RestaurantTable from '$lib/components/RestaurantTable.svelte';
 
 Save and reload. Similiar result, a little cleaner though.
 
-## Part 4: Summary statistics with `$derived`
+## Part 4: Filtering with reactive state
 
-A table full of raw data is useful, but it's not a story. Journalists need to summarize — how many restaurants got an A? How many failed? What's the overall picture?
+We have a table. But it shows every restaurant in the dataset at once. What if a reader only cares about restaurants in their borough? Or wants to see just the places that got a C?
 
-This is where the `$derived` feature from [last week](/docs/coding-the-news/scripts/week-4/#part-3-introduction-to-derived-values) comes back. We used it to calculate streaming subscription totals and tip amounts. Now we'll use it to compute summary statistics from a real dataset.
-
-And we'll display those numbers using the `BigNumber` and `Dashboard` components from [week three](/docs/coding-the-news/scripts/week-3/#part-3-creating-a-parent-component). The tools you've built are starting to work together.
-
-### Counting grades
-
-Open `src/routes/+page.svelte`. In the `<script>` block, add these derived values below your props:
-
-```js
-let restaurants = $derived(data.restaurants);
-let gradeA = $derived(restaurants.filter(r => r.grade === 'A').length);
-let gradeB = $derived(restaurants.filter(r => r.grade === 'B').length);
-let gradeC = $derived(restaurants.filter(r => r.grade === 'C').length);
-```
-
-The first line creates a convenience variable so we don't have to write `data.restaurants` everywhere. Since it's wrapped in `$derived`, it will stay in sync if we ever change how data flows into the page. We'll modify this variable in Part 4 to incorporate filters.
-
-Each subsequent line uses JavaScript's [`.filter()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) method to narrow the array to records matching a specific grade, and then [`.length`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length) to count how many remain.
-
-The expression `r => r.grade === 'A'` is an [arrow function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) — a compact way to write a test. It checks each restaurant record `r` and keeps only the ones where the `grade` field equals `'A'`. The `===` operator is JavaScript's strict equality check.
-
-Because these are wrapped in `$derived()`, Svelte will automatically recalculate them whenever the underlying data changes. That doesn't matter yet — our restaurant array is static. But it will matter a lot in Part 4, when we introduce filters.
-
-### Displaying with BigNumber and Dashboard
-
-Now let's show these counts on the page. Import the components you built in week three:
-
-```js
-import BigNumber from '$lib/components/BigNumber.svelte';
-import Dashboard from '$lib/components/Dashboard.svelte';
-```
-
-Add them to your page above the `RestaurantTable`:
-
-```svelte
-<Dashboard>
-  <BigNumber
-    number={gradeA.toLocaleString()}
-    label="Grade A"
-  />
-  <BigNumber
-    number={gradeB.toLocaleString()}
-    label="Grade B"
-  />
-  <BigNumber
-    number={gradeC.toLocaleString()}
-    label="Grade C"
-  />
-</Dashboard>
-```
-
-We use JavaScript's [`.toLocaleString()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString) method to format the numbers with commas, so "1234" becomes "1,234." A small touch that makes data easier to read.
-
-Save and check your browser.
-
-You should see three colored boxes showing the grade breakdown, sitting above your full table of restaurants. Already, the shape of a story is emerging. Most restaurants earn an A. Far fewer get a B or C.
-
-Let's add one more statistic to make the picture complete. Add another derived value that calculates the total number of inspections:
-
-```js
-let total = $derived(restaurants.length);
-```
-
-And add a fourth BigNumber to the dashboard:
-
-```svelte
-<Dashboard>
-  <BigNumber
-    number={total.toLocaleString()}
-    label="Inspections"
-  />
-  <BigNumber
-    number={gradeA.toLocaleString()}
-    label="Grade A"
-  />
-  <BigNumber
-    number={gradeB.toLocaleString()}
-    label="Grade B"
-  />
-  <BigNumber
-    number={gradeC.toLocaleString()}
-    label="Grade C"
-  />
-</Dashboard>
-```
-
-These summary statistics aren't just decorative. In a real newsroom, this is how you'd present the top-line findings of your analysis — the numbers that anchor your story and give readers immediate context before they dive into the details.
-
-## Part 5: Filtering with reactive state
-
-We have a table and summary statistics. But they show everything at once. What if a reader only cares about restaurants in their borough? Or wants to see just the places that got a C?
-
-This is where everything we've learned comes together. We'll add dropdown menus that let readers filter the data, and both the table and the summary statistics will update instantly.
+We'll take what we learned last week and add dropdown menus that let readers filter the data.
 
 ### Adding a borough filter
 
-Start by adding a `$state` variable to your script block for the selected borough. We'll default it to an empty string, which will represent "show all boroughs."
+Start by adding a `$state` variable to your script block in `+page.svelte` for the selected borough. We'll default it to an empty string, which will represent "show all boroughs."
 
 ```js
-let selectedBorough = $state('');
+let selectedBorough = $state("");
 ```
 
-Now we need to update our `restaurants` variable to filter the data based on the selection. Replace the simple convenience variable we created in Part 3 with a filtered version:
+Now we need to create a `restaurants` variable that filters the data based on the selection. Add this below your props:
 
 ```js
 let restaurants = $derived(
@@ -468,9 +377,9 @@ let restaurants = $derived(
 
 This reads: if `selectedBorough` is empty, use the full array. Otherwise, keep only restaurants where the `boro` field matches the selection.
 
-Because the grade counts and total are derived from `restaurants`, they'll automatically recalculate when the filter changes. That's the reactive chain doing its job — we only have to change the data in one place, and everything downstream updates.
+Because `restaurants` is `$derived`, the table will update automatically whenever `selectedBorough` changes.
 
-Now add a `<select>` dropdown to your page, above the Dashboard. We'll use `bind:value` to connect it to our state variable, just like we did with the tip calculator [last week](/docs/coding-the-news/scripts/week-4/#part-4-introduction-to-binding).
+Now add a `<select>` dropdown to your page, above the table. We'll use `bind:value` to connect it to our state variable, just like we did with the tip calculator [last week](/docs/coding-the-news/scripts/week-4/).
 
 ```svelte
 <div class="filters">
@@ -494,15 +403,13 @@ And update the table to use our filtered `restaurants` variable:
 
 Save and check your browser. Select "Brooklyn" from the dropdown.
 
-The summary stats recalculate. The table shrinks to show only Brooklyn restaurants. Switch to "Queens" and it all updates again. Select "All boroughs" and you're back to the full dataset.
-
-This is the reactive chain in action: the user changes the dropdown, which updates `selectedBorough`, which recalculates `restaurants`, which recalculates the grade counts and the total, which updates the BigNumbers and the table. All of that happens automatically because of `$state` and `$derived`.
+The table shrinks to show only Brooklyn restaurants. Switch to "Queens" and it all updates again. Select "All boroughs" and you're back to the full dataset.
 
 ### Adding a cuisine filter
 
-Let's add a second dropdown for cuisine type. This works the same way, but since there are dozens of cuisine types in the data, we'll generate the options dynamically from the dataset itself.
+Let's add a second dropdown for cuisine type. This works the same way, but since there are dozens of cuisine types in the data, we'll generate the options from the dataset itself.
 
-Add another state variable:
+Add another state variable in `+page.svelte` for the selected cuisine:
 
 ```js
 let selectedCuisine = $state('');
@@ -534,9 +441,9 @@ let restaurants = $derived(
 
 This filter checks each restaurant against both criteria. If a borough is selected and the restaurant doesn't match, it's excluded. Same for cuisine. If both are empty, everything passes through. If both are set, only restaurants matching both survive.
 
-Add the second dropdown next to the first:
+Add a second dropdown next to the first:
 
-```svelte
+```svelte {emphasize-lines="12-18"}
 <div class="filters">
   <label for="borough">Borough</label>
   <select id="borough" bind:value={selectedBorough}>
@@ -560,16 +467,58 @@ Add the second dropdown next to the first:
 
 Notice we're using `{#each}` again — this time to generate `<option>` tags from our list of cuisines. The same tool that renders table rows can render any repeating element.
 
-Add some styles to keep the filters tidy. You can add these to a `<style>` block at the bottom of `+page.svelte`, or put them in a new component if you prefer.
+Save and check your browser. Try different combinations — Mexican restaurants in the Bronx, Italian restaurants in Manhattan, pizza places across all boroughs. The table updates with each selection.
+
+If a combination returns no results, you'll see the "No restaurants found" message we added with `{:else}` in Part 3. That fallback is doing its job.
+
+### Limiting results with `.slice()`
+
+After filtering, you may still have hundreds of matching restaurants. Rendering thousands of DOM nodes at once is slow and overwhelming. A simple fix: use JavaScript's [`.slice()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) method to cap how many rows the table shows.
+
+Add a new derived variable below `restaurants`:
+
+```js
+let displayed = $derived(restaurants.slice(0, 100));
+```
+
+This creates a new array containing only the first 100 items from the filtered set. Now update the table to use `displayed` instead of `restaurants`:
+
+```svelte
+<RestaurantTable data={displayed} />
+```
+
+Save and check your browser. The table is capped at 100 rows no matter how many records match the current filters. Notice we kept `restaurants` pointing to the full filtered set.
+
+We can use that to show readers how many total results exist. Add a short line of text above the table:
+
+```svelte
+<p>Showing {displayed.length} of {restaurants.length} restaurants</p>
+<RestaurantTable data={displayed} />
+```
+
+Now when you filter, the count updates automatically — no extra work needed, because both variables are `$derived` from `restaurants`.
+
+We've got it working, but it's looking basic. Let's add a little CSS to the bottom of `+page.svelte` to make the filters look nicer and give the table some breathing room.
+
+Also give the count line a class so you can style it separately:
+
+```svelte
+<p class="count">Showing {displayed.length} of {restaurants.length} restaurants</p>
+```
+
+Then add a `<style>` block at the bottom of `+page.svelte`:
 
 ```svelte
 <style>
   .filters {
     display: flex;
     gap: 1rem;
-    align-items: end;
-    margin: 1.5rem 0;
-    flex-wrap: wrap;
+    align-items: flex-end;
+    padding: 1rem;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
   }
 
   label {
@@ -582,56 +531,35 @@ Add some styles to keep the filters tidy. You can add these to a `<style>` block
   }
 
   select {
-    padding: 0.5rem;
+    display: block;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
     border: 1px solid #ccc;
-    font-size: 1rem;
+    border-radius: 3px;
+  }
+
+  .count {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 0 0 0.5rem;
   }
 </style>
 ```
 
-Save and check your browser. Try different combinations — Mexican restaurants in the Bronx, Italian restaurants in Manhattan, pizza places across all boroughs. The stats and table update with each selection.
-
-If a combination returns no results, you'll see the "No restaurants found" message we added with `{:else}` in Part 2. That fallback is doing its job.
-
-### The full picture
-
-Let's step back and appreciate what you've built. In a single session, you've gone from a raw government dataset to an interactive data application. Readers can explore restaurant inspection results by borough and cuisine, guided by summary statistics that update in real time.
-
-The reactive chain flows from the user's selections through your `$state` variables, into the `$derived` filter, through the `$derived` summary counts, and out to the components on the page. Every link in that chain is something you learned in the past five weeks:
-
-| Concept | Week learned | Role in this project |
-|---------|-------------|---------------------|
-| Components and props | [Week 3](/docs/coding-the-news/scripts/week-3) | RestaurantTable, BigNumber, Dashboard |
-| `$state` | [Week 4](/docs/coding-the-news/scripts/week-4) | Tracking the selected borough and cuisine |
-| `$derived` | [Week 4](/docs/coding-the-news/scripts/week-4) | Filtered data, grade counts, total |
-| `bind:value` | [Week 4](/docs/coding-the-news/scripts/week-4) | Connecting dropdowns to state |
-| `{#each}` | Today | Rendering table rows and dropdown options |
-| `+page.js` load function | Today | Getting data into the page |
-
-This is the foundation of every interactive data story you'll encounter in the wild. The datasets will be different. The designs will be more polished. But the architecture — data loaded by the framework, state tracking user input, derived values driving the display — is the same.
-
 ## Homework
 
-### Task 1: Build a data explorer
+## Task 1: Add a grade filter
 
-Find a different dataset on the [NYC Open Data portal](https://data.cityofnewyork.us/). Here are some good ones to explore:
+Add a third dropdown to filter by letter grade. You should be able to select "A" and see only A-rated restaurants, or "B" to see only B-rated ones, or "All grades" to see everything again. Send me the link to a working page with the filter.
 
-- [311 Service Requests](https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9) — complaints about noise, potholes, rodents and more
-- [Film Permits](https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p) — where movies and TV shows are shooting around the city
-- [Popular Baby Names](https://data.cityofnewyork.us/Health/Popular-Baby-Names/25th-nujf) — the most popular baby names by year, ethnicity and gender
-- [Motor Vehicle Collisions](https://data.cityofnewyork.us/Public-Safety/Motor-Vehicle-Collisions-Crashes/h9gi-nx95) — traffic crash data with location and contributing factors
+## Task 2: Pitch a data application
 
-Adapt the fetch script we wrote in class to download a subset of your chosen dataset. Change the API URL, the `$where` filter, and the `$select` fields to match your dataset's columns.
+Before you build something, you have to know why it's worth building. This week's assignment is research, not code.
 
-Import the data into a fresh copy of our class template using a `+page.js` load function. Build a table with `{#each}`, add at least one summary statistic with `$derived` and `BigNumber`, and create at least one dropdown filter.
+Browse the [NYC Open Data portal](https://data.cityofnewyork.us/) and find a dataset you think could support a useful application for New York City readers.
 
-Deploy to GitHub Pages and send me the link.
+Prepare a short pitch for the thing you'd want to build. You'll deliver your idea in two minutes or less at the start of next week's class, so keep it concise. Your pitch should answer:
 
-### Task 2: Prepare to present
-
-Be ready to share your data explorer with the class. You should be prepared to:
-
-- Explain why you chose this dataset and what story it could tell
-- Walk through how you adapted the fetch script
-- Show the reactive chain: what state do you track, what derived values depend on it, and how do the components update
-- Discuss how you used AI in the process and what you had to figure out yourself
+- What dataset would you use?
+- What would the headline of your page be?
+- How would you present the data in a way that's interesting?
