@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
@@ -6,6 +7,26 @@
 
   let { children, title, summary, date, week, previousScript, nextScript } =
     $props();
+
+  onMount(() => {
+    const scriptBody = document.querySelector('.script-body');
+    if (!scriptBody) return;
+
+    scriptBody.addEventListener('click', (e) => {
+      const btn = e.target.closest('.copy-btn');
+      if (!btn) return;
+      const pre = btn.closest('.code-block')?.querySelector('pre');
+      if (!pre) return;
+      const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+      const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+      navigator.clipboard.writeText(pre.textContent ?? '').then(() => {
+        btn.innerHTML = `${checkIcon}Copied!`;
+        setTimeout(() => {
+          btn.innerHTML = `${copyIcon}Copy`;
+        }, 2000);
+      });
+    });
+  });
 
   const shareImage = 'https://palewi.re/docs/coding-the-news/social-share.jpg';
 
@@ -138,5 +159,43 @@
   /* Ensure empty highlighted lines still render */
   .script-body :global(.shiki .line.highlighted:empty)::before {
     content: ' ';
+  }
+
+  /* Copy button */
+  :global(.code-block) {
+    position: relative;
+    margin-bottom: var(--spacing-md);
+  }
+
+  :global(.code-block pre) {
+    margin-bottom: 0;
+  }
+
+  :global(.copy-btn) {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  :global(.code-block:hover .copy-btn) {
+    opacity: 1;
+  }
+
+  :global(.copy-btn:hover) {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
   }
 </style>

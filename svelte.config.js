@@ -81,23 +81,23 @@ function shikiHighlighter(code, lang = 'text', meta = '') {
 
   const highlightLines = parseHighlightLines(meta);
 
-  const html = escapeSvelte(
-    highlighter.codeToHtml(code, {
-      lang: validLang,
-      theme,
-      transformers: [
-        {
-          line(node, line) {
-            if (highlightLines.has(line)) {
-              this.addClassToHast(node, 'highlighted');
-            }
-          },
+  const html = highlighter.codeToHtml(code, {
+    lang: validLang,
+    theme,
+    transformers: [
+      {
+        line(node, line) {
+          if (highlightLines.has(line)) {
+            this.addClassToHast(node, 'highlighted');
+          }
         },
-      ],
-    })
-  );
+      },
+    ],
+  });
 
-  return `{@html \`${html}\`}`;
+  const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+  const wrapped = `<div class="code-block"><button class="copy-btn" aria-label="Copy code">${copyIcon}Copy</button>${html}</div>`;
+  return `{@html \`${escapeSvelte(wrapped)}\`}`;
 }
 
 /** @type {import('@sveltejs/kit').Config} */
