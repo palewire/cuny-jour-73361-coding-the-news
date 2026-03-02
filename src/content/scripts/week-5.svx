@@ -349,7 +349,7 @@ import RestaurantTable from '$lib/components/RestaurantTable.svelte';
 <RestaurantTable data={data.restaurants} />
 ```
 
-Save and reload. Similiar result, a little cleaner though.
+Save and reload. Similar result, a little cleaner though.
 
 ## Part 4: Filtering with reactive state
 
@@ -546,11 +546,11 @@ Then add a `<style>` block at the bottom of `+page.svelte`:
 
 ## Homework
 
-## Task 1: Add a grade filter
+### Task 1: Add a grade filter
 
 Add a third dropdown to filter by letter grade. You should be able to select "A" and see only A-rated restaurants, or "B" to see only B-rated ones, or "All grades" to see everything again. Send me the link to a working page with the filter.
 
-## Task 2: Pitch a data application
+### Task 2: Pitch a data application
 
 Before you build something, you have to know why it's worth building. This week's assignment is research, not code.
 
