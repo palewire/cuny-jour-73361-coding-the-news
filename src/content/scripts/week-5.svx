@@ -9,7 +9,7 @@ locked: false
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
-  import { Filter } from 'lucide-svelte';
+  import { Filter, LayoutDashboard } from 'lucide-svelte';
 </script>
 
 ## Part 1: Introduction to interactive databases
@@ -557,7 +557,7 @@ Add a state variable for the search query at the stop of `+page.svelte`:
 let searchQuery = $state("");
 ```
 
-Uupdate the `restaurants` filter to add a third condition. If `searchQuery` is set, keep only restaurants whose name contains the query:
+Update the `restaurants` filter to add a third condition. If `searchQuery` is set, keep only restaurants whose name contains the query:
 
 ```js
 let restaurants = $derived(
@@ -621,7 +621,22 @@ Save and check your browser. Type "pizza" into the search box and watch the tabl
 
 Add a third dropdown to filter by letter grade. You should be able to select "A" and see only A-rated restaurants, or "B" to see only B-rated ones, or "All grades" to see everything again. Send me the link to a working page with the filter.
 
-### Task 2: Pitch a data application
+### Task 2: Create a summary dashboard
+
+Above the table, add a row of `BigNumber`` components inside a `Dashboard` parent component that summarize the current filter results. Your dashboard should show:
+
+- The number that received an A
+- The number that received a B
+- The number that received a C
+
+These counts should update reactively whenever the user changes any filter — borough, cuisine, search query or grade. Use `$derived()` to calculate them from your filtered restaurants array.
+You'll need to import the BigNumber and Dashboard components we built in [Week 3](/docs/coding-the-news/scripts/week-3/).
+
+If you don't remember how they work, revisit your code from that week or ask Copilot to remind you. There's a hint in how we calculated the count of displayed restaurants above our table in tonight's lesson.
+
+As with task one, send me the link to a working page with your dashboard.
+
+### Task 3: Pitch a data application
 
 Before you build something, you have to know why it's worth building. This week's assignment is research, not code.
 
