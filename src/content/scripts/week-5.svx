@@ -1,9 +1,9 @@
 ---
 title: "Flowing Data"
 summary: "How to empower your readers to explore newsworthy data"
-date: "March 1, 2026"
+date: "March 2, 2026"
 week: 5
-locked: true
+locked: false
 ---
 
 <script>
@@ -510,6 +510,7 @@ Then add a `<style>` block at the bottom of `+page.svelte`:
 <style>
   .filters {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     align-items: flex-end;
     padding: 1rem;
@@ -543,6 +544,76 @@ Then add a `<style>` block at the bottom of `+page.svelte`:
   }
 </style>
 ```
+
+## Part 5: Adding a search input
+
+Dropdowns work well when the options are finite and known in advance. But what if a reader wants to find a specific restaurant by name? For that, you need a text input.
+
+The good news: it uses the exact same `bind:value` pattern you already know. The only new thing is the JavaScript to match text.
+
+Add a state variable for the search query at the stop of `+page.svelte`:
+
+```js
+let searchQuery = $state("");
+```
+
+Uupdate the `restaurants` filter to add a third condition. If `searchQuery` is set, keep only restaurants whose name contains the query:
+
+```js
+let restaurants = $derived(
+  data.restaurants.filter(r => {
+    if (selectedBorough !== '' && r.boro !== selectedBorough) return false;
+    if (selectedCuisine !== '' && r.cuisine_description !== selectedCuisine) return false;
+    if (searchQuery !== '' && !r.dba.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    return true;
+  })
+);
+```
+
+The `.toLowerCase().includes()` combination does the matching. Converting both strings to lowercase before comparing means "Pizza", "pizza" and "PIZZA" all return the same results.
+
+Add a text input inside your `.filters` div, next to the existing dropdowns:
+
+```svelte {emphasize-lines="20-23"}
+<div class="filters">
+  <label for="borough">Borough</label>
+  <select id="borough" bind:value={selectedBorough}>
+    <option value="">All boroughs</option>
+    <option value="Manhattan">Manhattan</option>
+    <option value="Brooklyn">Brooklyn</option>
+    <option value="Queens">Queens</option>
+    <option value="Bronx">Bronx</option>
+    <option value="Staten Island">Staten Island</option>
+  </select>
+
+  <label for="cuisine">Cuisine</label>
+  <select id="cuisine" bind:value={selectedCuisine}>
+    <option value="">All cuisines</option>
+    {#each cuisines as cuisine}
+      <option value={cuisine}>{cuisine}</option>
+    {/each}
+  </select>
+
+  <div>
+    <label for="search">Search by name</label>
+    <input id="search" type="text" bind:value={searchQuery} placeholder="e.g. Pizza" />
+  </div>
+</div>
+```
+
+Add a style rule for the input alongside the existing `select` styles:
+
+```css
+input[type="text"] {
+  display: block;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.875rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+```
+
+Save and check your browser. Type "pizza" into the search box and watch the table update as you type. Combine it with a borough filter — "pizza" in Brooklyn — and both conditions apply at once. The count line updates too.
 
 ## Homework
 
