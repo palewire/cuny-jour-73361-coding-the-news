@@ -479,22 +479,14 @@ Save and check your browser. The table is capped at 100 rows no matter how many 
 
 We can use that to show readers how many total results exist. Add a short line of text above the table:
 
-```svelte
-<p>Showing {displayed.length} of {restaurants.length} restaurants</p>
+```svelte {emphasize-lines="1"}
+<p class="count">Showing {displayed.length} of {restaurants.length} restaurants</p>
 <RestaurantTable data={displayed} />
 ```
 
 Now when you filter, the count updates automatically — no extra work needed, because both variables are `$derived` from `restaurants`.
 
 It works, but it's bare. Let's add a little CSS to the bottom of `+page.svelte` to make the filters look nicer and give the table some breathing room.
-
-Also give the count line a class so you can style it separately:
-
-```svelte
-<p class="count">Showing {displayed.length} of {restaurants.length} restaurants</p>
-```
-
-Then add a `<style>` block at the bottom of `+page.svelte`:
 
 ```svelte
 <style>
