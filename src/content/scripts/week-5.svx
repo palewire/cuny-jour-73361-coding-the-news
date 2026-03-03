@@ -329,11 +329,15 @@ Create a new file at `src/lib/components/RestaurantTable.svelte`. Add this:
 </style>
 ```
 
-Back in `src/routes/+page.svelte`, import the component and replace your table markup:
+Notice how it's the same code as in our `+page.svelte`, but now it's wrapped in a component with a `restaurantList` property, that can be passed in from the outside.
+
+Back in `src/routes/+page.svelte`, import the component.
 
 ```js
 import RestaurantTable from '$lib/components/RestaurantTable.svelte';
 ```
+
+Now delete the table you wrote in `+page.svelte` and replace it with the new component, passing in the data as a property.
 
 ```svelte
 <RestaurantTable data={data.restaurants} />
