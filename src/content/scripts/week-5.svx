@@ -277,7 +277,7 @@ Create a new file at `src/lib/components/RestaurantTable.svelte`. Add this:
 
 ```svelte
 <script>
-  let { data } = $props();
+  let { restaurantList } = $props();
 </script>
 
 <table>
@@ -290,7 +290,7 @@ Create a new file at `src/lib/components/RestaurantTable.svelte`. Add this:
     </tr>
   </thead>
   <tbody>
-    {#each data as row}
+    {#each restaurantList as row}
       <tr>
         <td>{row.dba}</td>
         <td>{row.boro}</td>
