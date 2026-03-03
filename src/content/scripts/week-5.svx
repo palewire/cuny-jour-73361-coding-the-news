@@ -355,13 +355,21 @@ You'll take what you learned last week and add dropdown menus that let readers f
 
 Start by adding a `$state` variable to your script block in `+page.svelte` for the selected borough. We'll default it to an empty string, which will represent "show all boroughs."
 
-```js
+```js {emphasize-lines="4"}
+let { data } = $props();
+$inspect(data.restaurants);
+
 let selectedBorough = $state("");
 ```
 
 Now we need to create a `filteredRestaurants` variable that filters the data based on the selection. Add this below your props:
 
-```js
+```js {emphasize-lines="6-12"}
+let { data } = $props();
+$inspect(data.restaurants);
+
+let selectedBorough = $state("");
+
 let filteredRestaurants = $derived(
   selectedBorough === ''
     ? data.restaurants
@@ -405,15 +413,37 @@ Let's add a second dropdown for cuisine type. This works the same way, but since
 
 Add another state variable in the script section at the top `+page.svelte` for the selected cuisine:
 
-```js
+```js {emphasize-lines="5"}
+let { data } = $props();
+$inspect(data.restaurants);
+
+let selectedBorough = $state("");
 let selectedCuisine = $state("");
+
+let filteredRestaurants = $derived(
+  selectedBorough === ''
+    ? data.restaurants
+    : data.restaurants.filter(r => r.boro === selectedBorough)
+);
 ```
 
 We'll need a list of all the unique cuisine types in the data. Add a derived value that extracts them:
 
-```js
+```js {emphasize-lines="7-9"}
+let { data } = $props();
+$inspect(data.restaurants);
+
+let selectedBorough = $state("");
+let selectedCuisine = $state("");
+
 let cuisines = $derived(
   [...new Set(data.restaurants.map(r => r.cuisine_description))].sort()
+);
+
+let filteredRestaurants = $derived(
+  selectedBorough === ''
+    ? data.restaurants
+    : data.restaurants.filter(r => r.boro === selectedBorough)
 );
 ```
 
@@ -423,7 +453,17 @@ Notice we derive the cuisine list from `data.restaurants` — the full, unfilter
 
 Now update the `filteredRestaurants` variable to account for both dropdowns:
 
-```js
+```js {emphasize-lines="11-17"}
+let { data } = $props();
+$inspect(data.restaurants);
+
+let selectedBorough = $state("");
+let selectedCuisine = $state("");
+
+let cuisines = $derived(
+  [...new Set(data.restaurants.map(r => r.cuisine_description))].sort()
+);
+
 let filteredRestaurants = $derived(
   data.restaurants.filter(r => {
     if (selectedBorough !== '' && r.boro !== selectedBorough) return false;
@@ -469,7 +509,25 @@ After filtering, you may still have hundreds of matching restaurants. Rendering 
 
 Add a new derived variable below `filteredRestaurants`:
 
-```js
+```js {emphasize-lines="19"}
+let { data } = $props();
+$inspect(data.restaurants);
+
+let selectedBorough = $state("");
+let selectedCuisine = $state("");
+
+let cuisines = $derived(
+  [...new Set(data.restaurants.map(r => r.cuisine_description))].sort()
+);
+
+let filteredRestaurants = $derived(
+  data.restaurants.filter(r => {
+    if (selectedBorough !== '' && r.boro !== selectedBorough) return false;
+    if (selectedCuisine !== '' && r.cuisine_description !== selectedCuisine) return false;
+    return true;
+  })
+);
+
 let displayed = $derived(filteredRestaurants.slice(0, 100));
 ```
 
@@ -539,8 +597,27 @@ The good news: it uses the exact same `bind:value` pattern you already know. The
 
 Add a state variable for the search query at the stop of `+page.svelte`:
 
-```js
+```js {emphasize-lines="6"}
+let { data } = $props();
+$inspect(data.restaurants);
+
+let selectedBorough = $state("");
+let selectedCuisine = $state("");
 let searchQuery = $state("");
+
+let cuisines = $derived(
+  [...new Set(data.restaurants.map(r => r.cuisine_description))].sort()
+);
+
+let filteredRestaurants = $derived(
+  data.restaurants.filter(r => {
+    if (selectedBorough !== '' && r.boro !== selectedBorough) return false;
+    if (selectedCuisine !== '' && r.cuisine_description !== selectedCuisine) return false;
+    return true;
+  })
+);
+
+let displayed = $derived(filteredRestaurants.slice(0, 100));
 ```
 
 Update the `filteredRestaurants` filter to add a third condition. If `searchQuery` is set, keep only restaurants whose name contains the query:
