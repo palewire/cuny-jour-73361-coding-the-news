@@ -214,7 +214,7 @@ In this case, we're returning an object with one property: `restaurants`, which 
 Because the name of the variable we imported matches the name of the key in our `{}` object, we can use shorthand syntax and just write `restaurants` instead of `restaurants: restaurants`. That's a JavaScript quirk that can be confusing at first.
 </Aside>
 
-Now open `src/routes/+page.svelte`. At the top of the script block, we need to receive the data that the load function prepared. Replace the existing props line or add this new one:
+Now open `src/routes/+page.svelte`. At the bottom of the script block, we need to receive the data that the load function prepared. Add this line, which is just the like one we used to receive properties in our components:
 
 ```js
 let { data } = $props();
