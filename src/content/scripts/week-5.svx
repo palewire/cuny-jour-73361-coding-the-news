@@ -355,10 +355,10 @@ Start by adding a `$state` variable to your script block in `+page.svelte` for t
 let selectedBorough = $state("");
 ```
 
-Now we need to create a `restaurants` variable that filters the data based on the selection. Add this below your props:
+Now we need to create a `filteredRestaurants` variable that filters the data based on the selection. Add this below your props:
 
 ```js
-let restaurants = $derived(
+let filteredRestaurants = $derived(
   selectedBorough === ''
     ? data.restaurants
     : data.restaurants.filter(r => r.boro === selectedBorough)
@@ -367,7 +367,7 @@ let restaurants = $derived(
 
 This reads: if `selectedBorough` is empty, use the full array. Otherwise, keep only restaurants where the `boro` field matches the selection.
 
-Because `restaurants` is `$derived`, the table will update automatically whenever `selectedBorough` changes.
+Because `filteredRestaurants` is `$derived`, the table will update automatically whenever `selectedBorough` changes.
 
 Now add a `<select>` dropdown to your page, above the table. We'll use `bind:value` to connect it to our state variable, just like we did with the tip calculator [last week](/docs/coding-the-news/scripts/week-4/).
 
@@ -385,10 +385,10 @@ Now add a `<select>` dropdown to your page, above the table. We'll use `bind:val
 </div>
 ```
 
-And update the table to use our filtered `restaurants` variable:
+And update the table to use our filtered `filteredRestaurants` variable:
 
 ```svelte
-<RestaurantTable data={restaurants} />
+<RestaurantTable data={filteredRestaurants} />
 ```
 
 Save and check your browser. Select "Brooklyn" from the dropdown.
@@ -417,10 +417,10 @@ This line does a few things at once. The `.map()` method pulls the `cuisine_desc
 
 Notice we derive the cuisine list from `data.restaurants` — the full, unfiltered dataset — so the dropdown always shows all available cuisines regardless of the current borough selection.
 
-Now update the `restaurants` variable to account for both dropdowns:
+Now update the `filteredRestaurants` variable to account for both dropdowns:
 
 ```js
-let restaurants = $derived(
+let filteredRestaurants = $derived(
   data.restaurants.filter(r => {
     if (selectedBorough !== '' && r.boro !== selectedBorough) return false;
     if (selectedCuisine !== '' && r.cuisine_description !== selectedCuisine) return false;
@@ -463,28 +463,28 @@ Save and check your browser. Try different combinations — Mexican restaurants 
 
 After filtering, you may still have hundreds of matching restaurants. Rendering thousands of DOM nodes at once is slow and overwhelming. A simple fix: use JavaScript's [`.slice()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) method to cap how many rows the table shows.
 
-Add a new derived variable below `restaurants`:
+Add a new derived variable below `filteredRestaurants`:
 
 ```js
-let displayed = $derived(restaurants.slice(0, 100));
+let displayed = $derived(filteredRestaurants.slice(0, 100));
 ```
 
-This creates a new array containing only the first 100 items from the filtered set. Now update the table to use `displayed` instead of `restaurants`:
+This creates a new array containing only the first 100 items from the filtered set. Now update the table to use `displayed` instead of `filteredRestaurants`:
 
 ```svelte
 <RestaurantTable data={displayed} />
 ```
 
-Save and check your browser. The table is capped at 100 rows no matter how many records match the current filters. Notice you kept `restaurants` pointing to the full filtered set.
+Save and check your browser. The table is capped at 100 rows no matter how many records match the current filters. Notice you kept `filteredRestaurants` pointing to the full filtered set.
 
 We can use that to show readers how many total results exist. Add a short line of text above the table:
 
 ```svelte {emphasize-lines="1"}
-<p class="count">Showing {displayed.length} of {restaurants.length} restaurants</p>
+<p class="count">Showing {displayed.length} of {filteredRestaurants.length} restaurants</p>
 <RestaurantTable data={displayed} />
 ```
 
-Now when you filter, the count updates automatically — no extra work needed, because both variables are `$derived` from `restaurants`.
+Now when you filter, the count updates automatically — no extra work needed, because both variables are `$derived` from `filteredRestaurants`.
 
 It works, but it's bare. Let's add a little CSS to the bottom of `+page.svelte` to make the filters look nicer and give the table some breathing room.
 
@@ -539,10 +539,10 @@ Add a state variable for the search query at the stop of `+page.svelte`:
 let searchQuery = $state("");
 ```
 
-Update the `restaurants` filter to add a third condition. If `searchQuery` is set, keep only restaurants whose name contains the query:
+Update the `filteredRestaurants` filter to add a third condition. If `searchQuery` is set, keep only restaurants whose name contains the query:
 
 ```js
-let restaurants = $derived(
+let filteredRestaurants = $derived(
   data.restaurants.filter(r => {
     if (selectedBorough !== '' && r.boro !== selectedBorough) return false;
     if (selectedCuisine !== '' && r.cuisine_description !== selectedCuisine) return false;
@@ -611,7 +611,7 @@ Above the table, add a row of `BigNumber` components inside a `Dashboard` parent
 - The number that received a B
 - The number that received a C
 
-These counts should update reactively whenever the user changes any filter — borough, cuisine, search query or grade. Use `$derived()` to calculate them from your filtered restaurants array.
+These counts should update reactively whenever the user changes any filter — borough, cuisine, search query or grade. Use `$derived()` to calculate them from your `filteredRestaurants` array.
 You'll need to import the BigNumber and Dashboard components we built in [Week 3](/docs/coding-the-news/scripts/week-3/).
 
 If you don't remember how they work, revisit your code from that week or ask Copilot to remind you. There's a hint in how we calculated the count of displayed restaurants above our table in tonight's lesson.
