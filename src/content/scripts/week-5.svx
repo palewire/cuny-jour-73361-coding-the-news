@@ -220,7 +220,7 @@ Now open `src/routes/+page.svelte`. At the bottom of the script block, we need t
 let { data } = $props();
 ```
 
-The `data` prop is another SvelteKit convention. It automatically contains whatever your `+page.js` load function returned. So `data.restaurants` is our array of inspection records.
+The `data` property is another SvelteKit convention. It automatically contains whatever your `+page.js` load function returned. So `data.restaurants` is our array of inspection records.
 
 Let's verify it works. Add a `$inspect()` call right after the props line. It's the special Svelte function that logs a variable to the browser console.
 
