@@ -269,7 +269,7 @@ Inside the block, we use the familiar curly-brace syntax to insert each field. T
 
 Save and check your browser. You'll see all 5,000 records printed out on one page. Way more than we'd ever want to show. You get the point. One loop was able to print out the entire dataset.
 
-### Extracting a RestaurantTable component
+### Creating a RestaurantTable component
 
 Let's clean things up by extracting your table into a reusable component, just like you've done in previous weeks.
 
