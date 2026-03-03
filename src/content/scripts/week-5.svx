@@ -73,8 +73,9 @@ Clone it to your computer, open it in Visual Studio Code. Run `npm install` in t
 Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code. It's a Node.js script that will hit the city's data API, ask for the last 50,000 records and then save the most recent grade for each restaurant to a JSON file in our project.
 
 ```js
-// Node's built-in file system module — lets us write files to disk
+// Node's built-in file system and path modules — lets us write files to disk
 import fs from "fs";
+import path from "node:path";
 
 // The NYC Open Data API endpoint for restaurant inspections
 const apiUrl = "https://data.cityofnewyork.us/resource/43nn-pn8j.json";
@@ -91,6 +92,10 @@ const params = new URLSearchParams({
 const url = `${apiUrl}?${params.toString()}`;
 
 console.log(`Fetching data from NYC Open Data...`);
+
+// Ensure the data directory exists so we can write the output file without a separate mkdir command
+const dataDir = path.join("src", "lib", "data");
+fs.mkdirSync(dataDir, { recursive: true });
 
 // fetch() makes an HTTP GET request to the API and returns a Promise
 fetch(url)
@@ -119,10 +124,8 @@ fetch(url)
 
     // Write the cleaned data to a JSON file so our app can use it
     // JSON.stringify with null, 2 formats the output with 2-space indentation
-    fs.writeFileSync(
-      "src/lib/data/restaurants.json",
-      JSON.stringify(restaurants, null, 2),
-    );
+    const outputPath = path.join(dataDir, "restaurants.json");
+    fs.writeFileSync(outputPath, JSON.stringify(restaurants, null, 2));
     console.log("Saved to src/lib/data/restaurants.json");
   })
   // If anything goes wrong (network error, bad JSON, etc.), log it
@@ -133,13 +136,7 @@ fetch(url)
 
 You don't need to understand everything it does here. The important thing to understand is that as a page designer, your job is to take a data file from the outside world and bring it to life. In some cases, you'll get that data from a colleague who has already cleaned it up for you. In other cases, you'll have to figure it out on your own. In a working newsroom, it can go either way, depending on the project.
 
-Before you can run the script, you need to create the folder where it will save the data. In the terminal, make a new directory for your data file:
-
-```bash
-mkdir -p src/lib/data
-```
-
-Now run the script.
+Now run the script — it will create `src/lib/data` for you.
 
 ```bash
 node fetch-data.js
