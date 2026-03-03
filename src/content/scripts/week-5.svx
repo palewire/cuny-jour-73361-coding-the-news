@@ -545,7 +545,7 @@ let searchQuery = $state("");
 
 Update the `filteredRestaurants` filter to add a third condition. If `searchQuery` is set, keep only restaurants whose name contains the query:
 
-```js
+```js {emphasize-lines="5"}
 let filteredRestaurants = $derived(
   data.restaurants.filter(r => {
     if (selectedBorough !== '' && r.boro !== selectedBorough) return false;
