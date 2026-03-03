@@ -403,7 +403,7 @@ The table shrinks to show only Brooklyn restaurants. Switch to "Queens" and it a
 
 Let's add a second dropdown for cuisine type. This works the same way, but since there are dozens of cuisine types in the data, we'll generate the options from the dataset itself.
 
-Add another state variable in `+page.svelte` for the selected cuisine:
+Add another state variable in the script section at the top `+page.svelte` for the selected cuisine:
 
 ```js
 let selectedCuisine = $state("");
