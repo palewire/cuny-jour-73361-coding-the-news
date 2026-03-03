@@ -628,8 +628,10 @@ Before you build something, you have to know why it's worth building. This week'
 
 Browse the [NYC Open Data portal](https://data.cityofnewyork.us/) and find a dataset you think could support a useful application for New York City readers.
 
-Prepare a short pitch for the thing you'd want to build. You'll deliver your idea in two minutes or less at the start of next week's class, so keep it concise. Your pitch should answer:
+Prepare a short pitch for the thing you'd hypothetically build. You'll deliver your idea in two minutes or less at the start of next week's class, so keep it concise. Your pitch should answer:
 
 - What dataset would you use?
 - What would the headline of your page be?
 - How would you present the data in a way that's interesting?
+
+Don't worry about having to actually make the idea. We're just practicing the process of finding and pitching ideas. The more creative, the better.
