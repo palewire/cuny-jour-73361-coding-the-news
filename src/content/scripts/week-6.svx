@@ -13,11 +13,13 @@ locked: true
 
 ## Part 1: Introduction to design systems
 
-Every great news page is built on a set of invisible rules. The font choices, the spacing between elements, the way a layout reflows on a phone — none of it is accidental. The best newsrooms codify these rules into what designers call a "design system": a shared vocabulary of colors, type sizes, spacing values and layout patterns that keeps every page consistent, no matter who builds it.
+Every webpage is controlled by a set of invisible rules. The fonts, the spacing, the colors, the layout. All of it is dictated by the computer code that governs how browsers render the page.
 
-You've already been using one, whether you knew it or not. Our class template's `app.scss` file contains a set of CSS variables — `--color-accent`, `--font-serif`, `--spacing-md` and so on — that your components have been referencing since Week 3. That was a design system. Today, we're going to understand it, improve it, and then learn how to break out of it when a story demands something different.
+In the static-site frameworks that newsrooms use to create custom pages, these rules are codified in a set of common files used across every project. Much like the components we covered in previous classes, they offer a _pret a porter_ visual language that developers can use to build pages, relieving them of the need to continually reconsider, and recode, the fundamental design.
 
-To see what a mature design system looks like, consider the Reuters Graphics component library we explored in [Week 3](/docs/coding-the-news/scripts/week-3/).
+These base rules serve as a foundation that story designers are more than just convienience and constraint. With all of the basic design decisions taken care of, page builders can focus their energy on the creative work of telling the story, which may sometimes require breaking the rules in thoughtful, deliberate ways.
+
+A great example of a mature design system looks like, consider the Reuters Graphics component library we explored in [Week 3](/docs/coding-the-news/scripts/week-3/).
 
 <Screenshot
   src="/screenshots/week-3/reuters-graphics-components.png"
