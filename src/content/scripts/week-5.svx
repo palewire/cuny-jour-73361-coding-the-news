@@ -9,7 +9,7 @@ locked: false
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
-  import { Filter, LayoutDashboard, Zap } from 'lucide-svelte';
+  import { Filter, LayoutDashboard } from 'lucide-svelte';
 </script>
 
 ## Part 1: Introduction to interactive databases
@@ -25,7 +25,7 @@ When ["Dollar for Docs"](https://projects.propublica.org/docdollars/) finally la
   alt="ProPublica's Dollars for Docs database showing a search interface where users can look up doctors by name and see pharmaceutical company payments"
   chromeTitle="Dollars for Docs"
   chromeUrl="https://projects.propublica.org/docdollars/"
-  maxWidth="960px"Zap
+  maxWidth="960px"
 />
 
 
@@ -229,8 +229,6 @@ Start the development server with `npm run dev` and open your browser to [localh
 
 You should see your data array logged in the console. Click the arrow to expand it and explore individual records. This is a useful trick for understanding any dataset — log it, expand it, poke at it.
 
-Once you've confirmed it's working, you can remove the `$inspect()` line. We won't need it anymore.
-
 ## Part 3: Looping through lists with `{#each}`
 
 You have data flowing into your page. Now what? The whole point is to show it to readers. And since we have hundreds or thousands of records, we need a way to render them all without writing each one by hand.
@@ -337,7 +335,7 @@ import RestaurantTable from '$lib/components/RestaurantTable.svelte';
 Now delete the table you wrote in `+page.svelte` and replace it with the new component, passing in the data as a property.
 
 ```svelte
-<RestaurantTable data={data.restaurants} />
+<RestaurantTable restaurantList={data.restaurants} />
 ```
 
 Save and reload. Similar result, a little cleaner though.
@@ -397,7 +395,7 @@ Now add a `<select>` dropdown to your page, above the table. We'll use `bind:val
 And update the table to use our filtered `filteredRestaurants` variable:
 
 ```svelte
-<RestaurantTable data={filteredRestaurants} />
+<RestaurantTable restaurantList={filteredRestaurants} />
 ```
 
 Save and check your browser. Select "Brooklyn" from the dropdown.
@@ -531,7 +529,7 @@ let displayed = $derived(filteredRestaurants.slice(0, 100));
 This creates a new array containing only the first 100 items from the filtered set. Now update the table to use `displayed` instead of `filteredRestaurants`:
 
 ```svelte
-<RestaurantTable data={displayed} />
+<RestaurantTable restaurantList={displayed} />
 ```
 
 Save and check your browser. The table is capped at 100 rows no matter how many records match the current filters. Notice you kept `filteredRestaurants` pointing to the full filtered set.
@@ -540,7 +538,7 @@ We can use that to show readers how many total results exist. Add a short line o
 
 ```svelte {emphasize-lines="1"}
 <p class="count">Showing {displayed.length} of {filteredRestaurants.length} restaurants</p>
-<RestaurantTable data={displayed} />
+<RestaurantTable restaurantList={displayed} />
 ```
 
 Now when you filter, the count updates automatically — no extra work needed, because both variables are `$derived` from `filteredRestaurants`.
@@ -695,8 +693,8 @@ You'll need to import the BigNumber and Dashboard components we built in [Week 3
 I've added them to our class template's shared component library, so you can now import them from a fresh clone of the template like this:
 
 ```js
-import { BigNumber } from '$lib/components/BigNumber.svelte';
-import { Dashboard } from '$lib/components/Dashboard.svelte';
+import BigNumber from '$lib/components/BigNumber.svelte';
+import Dashboard from '$lib/components/Dashboard.svelte';
 ```
 
 If you don't remember how they work, revisit your code from that week or ask Copilot to remind you. There's a hint in how we calculated the count of displayed restaurants above our table in tonight's lesson.
