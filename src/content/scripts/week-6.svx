@@ -32,8 +32,10 @@ Every component in the library draws from the same set of shared variables — t
 You can see this in action in Reuters' recent visual explainer, ["Mapping the crisis in Iran."](https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/) The page is built from the same component library we browsed in Week 3 — the same headline styles, the same caption treatments, the same spacing rhythm — applied to a completely different story. The design system does the work of making it feel like Reuters without any designer having to reinvent the wheel.
 
 <Screenshot
-  src="/screenshots/week-6/reuters-iran-maps.gif"
+  src="/screenshots/week-6/reuters-iran-maps.png"
   alt="Reuters Graphics visual explainer 'Mapping the crisis in Iran' showing maps and charts with consistent Reuters typography, spacing and layout"
+  chromeTitle="Mapping the crisis in Iran"
+  chromeUrl="https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/"
   maxWidth="960px"
 />
 
