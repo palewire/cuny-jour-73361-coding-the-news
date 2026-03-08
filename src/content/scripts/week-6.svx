@@ -15,11 +15,11 @@ locked: true
 
 Every webpage is controlled by a set of invisible rules. The fonts, the spacing, the colors, the layout. All of it is dictated by the computer code that governs how browsers render the page.
 
-In the static-site frameworks that newsrooms use to create custom pages, these rules are codified in a set of common files used across every project. Much like the components we covered in previous classes, they offer a _pret a porter_ visual language that developers can use to build pages, relieving them of the need to continually reconsider, and recode, the fundamental design.
+In the static-site frameworks that newsrooms use to create custom pages, these rules are typically codified in a set of common files used across every project. Much like the components we covered in previous classes, they offer a _prêt-à-porter_ visual language that developers can use to build pages, relieving them of the need to continually reconsider, and recode, the fundamental design.
 
-These base rules serve as a foundation that story designers are more than just convienience and constraint. With all of the basic design decisions taken care of, page builders can focus their energy on the creative work of telling the story, which may sometimes require breaking the rules in thoughtful, deliberate ways.
+These base rules are more than just convenience and constraint, they are a foundation to build on. With all of the basic design decisions taken care of, page makers can focus on the creative work of telling the story, which may sometimes require breaking the rules in thoughtful, deliberate ways.
 
-A great example of a mature design system looks like, consider the Reuters Graphics component library we explored in [Week 3](/docs/coding-the-news/scripts/week-3/).
+A great example of a mature design system is the component library published by the Reuters Graphics team, introduced in [Week 3](/docs/coding-the-news/scripts/week-3/).
 
 <Screenshot
   src="/screenshots/week-3/reuters-graphics-components.png"
@@ -29,9 +29,9 @@ A great example of a mature design system looks like, consider the Reuters Graph
   maxWidth="960px"
 />
 
-Every component in the library draws from the same set of shared variables — the same typeface, the same spacing scale, the same palette. A headline component from one story looks like it belongs next to a chart from another, because they share a common visual foundation. Change one variable and the entire system updates.
+Every component in the library draws from the same set of shared variables, which call for the same typeface, the same spacing scale, the same palette Change one variable and the entire system updates for every story going forward. This kind of library is sometimes called a design system, or a visual vocabulary.
 
-You can see this in action in Reuters' recent visual explainer, ["Mapping the crisis in Iran."](https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/) The page is built from the same component library we browsed in Week 3 — the same headline styles, the same caption treatments, the same spacing rhythm — applied to a completely different story. The design system does the work of making it feel like Reuters without any designer having to reinvent the wheel.
+You can see it in action in ["Mapping the crisis in Iran."](https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/), a page the Reuters Graphics department published in the days after the US and Israel launched an attack. The design system does the work of making it feel like a Reuters story, allowing the journalists to focus on telling the story on a tight deadline.
 
 <Screenshot
   src="/screenshots/week-6/reuters-iran-maps.png"
@@ -41,9 +41,9 @@ You can see this in action in Reuters' recent visual explainer, ["Mapping the cr
   maxWidth="960px"
 />
 
-The Washington Post, The New York Times, The Pudding and virtually every serious digital newsroom operates this way. The specifics vary, but the principle is universal: define the rules once, apply them everywhere.
+While the specifics vary, virtually every serious digital newsroom has a system like this. When you build your own static site template, you're be expected to use that newsroom's preferred vocabulary.
 
-Today we'll start by understanding the system that's already in our template. Then we'll find its weak spots and fix them. Finally, we'll learn how to override the defaults when a specific story calls for a different look — the way a Reuters feature about Iran can have its own visual identity while still feeling like Reuters.
+Today we'll cover how SvelteKit implements design systems by taking a tour of our class template's visual grammar. Then we'll extend it to make it more complete, before breaking out to build to something new on top of it.
 
 ### Create your repository
 
