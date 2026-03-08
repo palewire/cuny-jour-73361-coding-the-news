@@ -104,7 +104,6 @@ function shikiHighlighter(code, lang = 'text', meta = '') {
 const config = {
   extensions: ['.svelte', '.svx'],
   preprocess: [
-    vitePreprocess(),
     mdsvex({
       extensions: ['.svx'],
       smartypants: false,
@@ -116,6 +115,7 @@ const config = {
         highlighter: shikiHighlighter,
       },
     }),
+    vitePreprocess(),
   ],
   kit: {
     paths: {

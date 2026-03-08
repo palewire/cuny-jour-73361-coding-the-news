@@ -456,7 +456,7 @@ It produces this plain CSS:
 That tells the browser: "When the screen is 768px wide or more, make the headline `2.75rem`." On narrower screens, it falls back to the base size of `2rem`. This is the responsive pattern you'll see throughout the template — smaller base styles for mobile, with `@include` blocks that enhance the layout for larger screens.
 
 <Aside>
-One more Sass feature you'll spot in the components: nesting. In `SiteHeader.svelte`, you'll see things like `&::after` and `&:hover` inside a parent rule. The `&` symbol refers to the parent selector, so `.nav-link { &:hover { ... } }` compiles to `.nav-link:hover { ... }`. It's a convenience that keeps related styles grouped together.
+One more Sass feature you'll spot in the components: nesting. In <code>SiteHeader.svelte</code>, you'll see things like <code>&amp;::after</code> and <code>&amp;:hover</code> inside a parent rule. The <code>&amp;</code> symbol refers to the parent selector, so <code>.nav-link {'{'} &amp;:hover {'{'} ... {'}'} {'}'}</code> compiles to <code>.nav-link:hover {'{'} ... {'}'}</code>. It's a convenience that keeps related styles grouped together.
 </Aside>
 
 ### Adding responsive behavior to BigNumber
