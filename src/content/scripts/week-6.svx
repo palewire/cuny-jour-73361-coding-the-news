@@ -32,10 +32,8 @@ Every component in the library draws from the same set of shared variables — t
 You can see this in action in Reuters' recent visual explainer, ["Mapping the crisis in Iran."](https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/) The page is built from the same component library we browsed in Week 3 — the same headline styles, the same caption treatments, the same spacing rhythm — applied to a completely different story. The design system does the work of making it feel like Reuters without any designer having to reinvent the wheel.
 
 <Screenshot
-  src="/screenshots/week-6/reuters-iran-maps.png"
+  src="/screenshots/week-6/reuters-iran-maps.gif"
   alt="Reuters Graphics visual explainer 'Mapping the crisis in Iran' showing maps and charts with consistent Reuters typography, spacing and layout"
-  chromeTitle="Mapping the crisis in Iran"
-  chromeUrl="https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/"
   maxWidth="960px"
 />
 
@@ -67,13 +65,6 @@ Let's walk through them.
 ### The global stylesheet: `app.scss`
 
 Open `src/app.scss` in your editor. This is the file that governs the entire site. Everything else builds on top of it.
-
-<Screenshot
-  src="/screenshots/week-6/vscode-app-scss.png"
-  alt="Visual Studio Code showing the app.scss file with CSS custom properties"
-  showChrome={false}
-  maxWidth="960px"
-/>
 
 You'll notice the file ends in `.scss` rather than `.css`, and there are a couple of import lines at the top. We'll come back to what those mean later. For now, scroll past them to the heart of the file.
 
@@ -347,14 +338,6 @@ This is the discipline at the core of a design system. Every value should come f
 ### Making BigNumber respond to screen size
 
 Now try something. Open the browser's developer tools — right-click anywhere and select "Inspect," then click the device toolbar icon in the top left (the one that looks like a phone and tablet side by side).
-
-<Screenshot
-  src="/screenshots/week-6/responsive-devtools.png"
-  alt="Chrome developer tools showing the responsive device toolbar with a mobile viewport selected"
-  chromeTitle="Developer Tools"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
 
 Drag the viewport to a narrow phone width. Notice that the BigNumber cards look oversized — the `2.75rem` number that felt right on a laptop overwhelms a small screen. Meanwhile, look at the headline at the top of the page. It gets smaller on phones. How does the template do that?
 
