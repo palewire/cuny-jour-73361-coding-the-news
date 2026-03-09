@@ -260,7 +260,7 @@ Let's fix it:
 
   .footnote {
     display: block;
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     color: var(--color-white);
     margin-top: var(--spacing-xs);
     font-style: italic;
@@ -442,7 +442,7 @@ It produces this plain CSS:
 }
 ```
 
-Now let's apply this pattern to our BigNumber component. We want the big number to be smaller on phones and full-sized on wider screens.
+Now let's apply this pattern to our BigNumber component. We want the big number fonts to be smaller on phones and full-sized on wider screens.
 
 First, change the `<style>` tag to use Sass and import the mixins:
 
@@ -451,166 +451,41 @@ First, change the `<style>` tag to use Sass and import the mixins:
   @use '../styles' as *;
 ```
 
-Now set the base `.number` font size to something that works on a phone, and add an `@include tablet` block that bumps it up on wider screens:
+Now set the font sizes to something that scales down on mobile:
 
-```scss {emphasize-lines="8-13"}
-  .number {
-    display: block;
-    font-size: var(--font-size-3xl);
-    font-weight: bold;
-    color: var(--color-white);
-    line-height: var(--leading-tight);
-  }
-
-  @include tablet {
-    .number {
-      font-size: var(--font-size-4xl);
-    }
-  }
-```
-
-On mobile, the number displays at `--font-size-3xl` (1.75rem). On tablets and up, it grows to `--font-size-4xl` (2.75rem). We also want to tighten the padding and shrink the label text on small screens, then expand both on wider screens:
-
-```scss
-  .big-number {
-    text-align: center;
-    padding: var(--spacing-sm);
-    background-color: var(--color-accent);
-    color: var(--color-white);
-    border-radius: 8px;
-  }
-
-  .label {
-    display: block;
-    font-size: var(--font-size-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: var(--spacing-xs);
-  }
-
-  @include tablet {
-    .big-number {
-      padding: var(--spacing-md);
-    }
-
-    .label {
-      font-size: var(--font-size-base);
-    }
-  }
-```
-
-Here's the complete updated component:
-
-```svelte
-<script>
-  let { number, label, footnote } = $props();
-</script>
-
-<div class="big-number">
-  <span class="number">{number}</span>
-  <span class="label">{label}</span>
-  {#if footnote}
-    <span class="footnote">{footnote}</span>
-  {/if}
-</div>
-
-<style lang="scss">
-  @use '../styles' as *;
-
-  .big-number {
-    text-align: center;
-    padding: var(--spacing-sm);
-    background-color: var(--color-accent);
-    color: var(--color-white);
-    border-radius: 8px;
-  }
-
-  .number {
-    display: block;
-    font-size: var(--font-size-3xl);
-    font-weight: bold;
-    color: var(--color-white);
-    line-height: var(--leading-tight);
-  }
-
-  .label {
-    display: block;
-    font-size: var(--font-size-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: var(--spacing-xs);
-  }
-
+```scss {emphasize-lines="8-30"}
   .footnote {
     display: block;
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     color: var(--color-white);
     margin-top: var(--spacing-xs);
     font-style: italic;
   }
 
-  @include tablet {
+
+  @include mobile {
     .big-number {
-      padding: var(--spacing-md);
+      padding: var(--spacing-sm);
     }
 
     .number {
-      font-size: var(--font-size-4xl);
+      font-size: var(--font-size-3xl);
     }
 
     .label {
-      font-size: var(--font-size-base);
+      margin-top: var(--spacing-xs);
+      font-size: var(--font-size-sm);
+    }
+
+    .footnote {
+      margin-top: var(--spacing-xs);
+      font-size: var(--font-size-xs);
     }
   }
 </style>
 ```
 
-Save and test it. Use the device toolbar to toggle between phone and tablet widths. The numbers should shrink on narrow screens and grow on wider ones.
-
-### Making Dashboard stack on mobile
-
-The Dashboard component uses `flex-wrap: wrap` with a `min-width: 200px` on each child, so the cards already wrap when they can't fit side by side. But on very narrow phones, three cards crammed into a row can still feel tight. Let's make the dashboard explicitly stack into a single column on mobile and switch to a row on wider screens.
-
-Update `Dashboard.svelte` to use Sass:
-
-```svelte
-<script>
-  let { children } = $props();
-</script>
-
-<div class="row">
-  {@render children()}
-</div>
-
-<style lang="scss">
-  @use '../styles' as *;
-
-  .row {
-    margin: var(--spacing-lg) 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-
-  @include tablet {
-    .row {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .row > :global(*) {
-      flex: 1;
-      min-width: 200px;
-      max-width: 300px;
-    }
-  }
-</style>
-```
-
-On mobile, `flex-direction: column` stacks the cards vertically. On tablets and up, it switches to a horizontal row with the flexible sizing we had before.
-
-Save and test it at different widths. On a phone, the BigNumber cards will stack neatly in a column. Widen the viewport past 768px and they'll snap into a row.
+Save and test it. Toggle between phone and tablet widths. The numbers should shrink on narrow screens and grow on wider ones.
 
 ## Part 4: Breaking out of the box
 
