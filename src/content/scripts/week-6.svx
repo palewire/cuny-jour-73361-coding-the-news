@@ -528,9 +528,9 @@ Everything we've done so far has preserved the template's NYCity News Service lo
 
 Let's do that now with the page we already have. We'll transform the template's default CUNY article into something that feels more like a bolder feature story, while still using the same architecture underneath.
 
-CSS custom properties can be overridden at any level of the page. If you redefine a variable inside a specific element, that new value applies to everything inside it — without changing the global default.
+CSS custom properties can be overridden at any level of the page. If you redefine a variable inside a specific element, that new value applies to everything inside it without changing the global default.
 
-We'll use this to create a story-specific color scheme. Add a `<style>` block at the bottom of your `+page.svelte`:
+We'll use this to create a story-specific color scheme. Add a `<style>` block at the bottom of your `+page.svelte`.
 
 ```svelte
 <style lang="scss">
@@ -545,19 +545,27 @@ We'll use this to create a story-specific color scheme. Add a `<style>` block at
 
 We're using `:global()` again here — same idea as in the Dashboard component. Svelte's style scoping works by adding a unique hash to your class names at compile time. Without `:global()`, Svelte would transform `.story-theme` into something like `.story-theme.svelte-abc123`, which wouldn't match the plain `.story-theme` class in your markup. Wrapping it in `:global()` tells Svelte to leave the selector alone.
 
-Now add that class to the existing container div in your markup:
+Now add that class to the existing container div in your markup.
 
 ```svelte
 <div class="container story-theme">
 ```
 
-Save and check your browser. The BigNumber cards have turned orange — without any changes to the components themselves. Because we wired them up to use `var(--color-accent)` in Part 3, and our `.story-theme` overrides `--color-accent` to `#fe8807`, the new color cascades through automatically. The accent border on the article metadata has changed too. So have the link hover colors. One class, five variable overrides, and the entire page shifted personality.
+Save and check your browser. The `BigNumber` cards have turned orange without any changes to the components themselves.
 
-But the site header and footer — which sit outside the container in the layout — still use the original CUNY Blue. The system holds, even as you customize within it.
+<Screenshot
+  src="/screenshots/week-6/orange-big-number.png"
+  alt="The template site with orange BigNumber stat cards and orange accent colors after applying story-theme CSS variable overrides"
+  chromeTitle="localhost:5173"
+/>
+
+Because we wired them up to use `var(--color-accent)` in Part 3, and our `.story-theme` overrides `--color-accent` to `#fe8807`, the new color cascades through automatically. The accent border on the article metadata has changed too. So have the link hover colors. One class, two variable overrides, and the page's personality has completely shifted.
+
+But the site header and footer — which sit outside the `.container` tag in the layout — still use the original CUNY Blue. The broader system holds, even as you customize within it.
 
 ### Designing a splashy header
 
-Let's start by getting the site's blue gradient header bar out of the way. Open `src/routes/+page.js`. You'll see a `load` function that returns settings for the page:
+Since we want to go big at the top of the page, let's get that header bar out of the way. Open `src/routes/+page.js`. You'll see a `load` function that returns settings for the page.
 
 ```js
 export function load() {
@@ -568,7 +576,9 @@ export function load() {
 }
 ```
 
-Change `showHeader` to `false`:
+This is a function that will run on the server before the page loads. It returns an object with two properties: `showHeader` and `showFooter`. These are used by the `+layout.svelte` file to determine whether to render the header and footer components. By default, both are set to `true`, which is why you see the blue header bar and the footer on the page.
+
+Change `showHeader` to `false`.
 
 ```js {emphasize-lines="3"}
 export function load() {
@@ -581,7 +591,13 @@ export function load() {
 
 Save and check your browser. The blue gradient bar is gone. The page feels open and clean.
 
-The template's `ArticleHeader` component is designed for standard news articles. For a feature story, we want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. We'll place the school's logo at the top, centered, followed by the headline and supporting text.
+<Screenshot
+  src="/screenshots/week-6/no-header.png"
+  alt="The template site with the blue navigation header removed, showing the page starting directly with the headline"
+  chromeTitle="localhost:5173"
+/>
+
+The template's `ArticleHeader` component is designed for standard news articles. For a feature story, we want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. We'll place the site's name at the top, centered, followed by the headline and supporting text.
 
 Let's start by loading a display font that will make our headline feel like the cover of a magazine. Your page already has a `<svelte:head>` block with a title and meta description. Add a font link inside it:
 
@@ -655,7 +671,7 @@ Now update the styles at the bottom of the `+page.svelte` file.
     --color-accent: #fe8807;
     --color-border: #fe8807;
 
-     .story-header {
+    .story-header {
       text-align: center;
       padding: var(--spacing-xxl) var(--spacing-md);
     }
@@ -718,15 +734,21 @@ Now update the styles at the bottom of the `+page.svelte` file.
 
 Save and check your browser. The page should look dramatically different from the standard template.
 
-Compare it to what the template looked like at the start of class. The whole page has been reshaped — different colors, a new headline font, a completely different layout — but the underlying architecture is the same. The body text, the Image component and the RelatedLinks section all still draw from the same variables.
+<Screenshot
+  src="/screenshots/week-6/final.gif"
+  alt="The fully customized page with a centered splash header, display font headline, and orange accent theme replacing the standard template design"
+  chromeTitle="localhost:5173"
+/>
+
+The whole page has been reshaped but the underlying architecture is the same. The body text, the Image component and the RelatedLinks section all still draw from the same variables.
 
 ## Homework
 
-### Task 1: Extract a SplashHeader component
+### Task 1: Create a SplashHeader component
 
 Take the header we built in class and move it out of `+page.svelte` into a reusable component at `src/lib/components/SplashHeader.svelte`.
 
-Your component should accept props for the parts that would change from story to story: the kicker, headline, deck, and publication date. The logo, the decorative rule and all the styling should be built into the component itself.
+Your component should accept properties for the parts that would change from story to story: the kicker, headline, deck, and publication date. The decorative rule and all the styling should be built into the component itself.
 
 Once it's working, your `+page.svelte` should be able to use it like this:
 

@@ -21,6 +21,7 @@
  *   --quality       JPEG quality 0-100 (default: 90)
  *   --deviceScale   Device scale factor (default: 2 for retina)
  *   --session       Named session to use for authenticated captures
+ *   --phone         Use mobile phone viewport (375x812)
  */
 
 const { chromium } = require('playwright');
@@ -48,6 +49,7 @@ function parseArgs(args) {
     quality: 90,
     deviceScale: 2,
     session: null,
+    phone: false,
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -95,6 +97,9 @@ function parseArgs(args) {
       case '--session':
         options.session = args[++i];
         break;
+      case '--phone':
+        options.phone = true;
+        break;
     }
   }
 
@@ -130,6 +135,12 @@ async function captureScreenshot(options) {
       console.error(`Run: node save-session.cjs --session ${options.session}`);
       process.exit(1);
     }
+  }
+
+  // Apply phone preset
+  if (options.phone) {
+    options.width = 375;
+    options.height = 812;
   }
 
   // Launch browser
@@ -249,6 +260,7 @@ Options:
   --quality       JPEG quality 0-100 (default: 90)
   --deviceScale   Device scale factor for retina (default: 2)
   --session       Named session for authenticated captures (use save-session.cjs first)
+  --phone         Use mobile phone viewport (375x812)
 
 Examples:
   # Basic screenshot
