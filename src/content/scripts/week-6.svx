@@ -589,7 +589,7 @@ Now remove the `<ArticleHeader ... />` tag from your markup and add this custom 
 ```svelte
 <div class="story-header">
   <span class="kicker">Craig Newmark Graduate School of Journalism</span>
-  <h1>Become a Force<br>for Good</h1>
+  <h1>Become a Force for Good</h1>
   <hr class="rule" />
   <p class="deck">
     At CUNY's journalism school, change is in our DNA. Here's a look
@@ -600,10 +600,6 @@ Now remove the `<ArticleHeader ... />` tag from your markup and add this custom 
   </p>
 </div>
 ```
-
-Notice the `<br>` in the headline. In a centered layout, you often want to control where long headlines break so they feel balanced on the page. This is a typographic judgment call, not a hard rule.
-
-The `<hr class="rule" />` is a thin horizontal line that separates the headline from the deck. It's a classic magazine device — a small visual pause that lets the big type breathe before the reader moves on.
 
 Now update the styles:
 
@@ -685,38 +681,31 @@ Compare it to what the template looked like at the start of class. The whole pag
 
 ### Task 1: Extract a SplashHeader component
 
-Take the magazine-style header we built in class — the logo, kicker, headline, rule, deck and byline — and move it out of `+page.svelte` into a reusable component at `src/lib/components/SplashHeader.svelte`.
+Take the magazine-style header we built in class and move it out of `+page.svelte` into a reusable component at `src/lib/components/SplashHeader.svelte`.
 
-Your component should accept props for the parts that would change from story to story: the kicker, headline, deck, byline and publication date. The logo, the decorative rule and all the styling should be built into the component itself.
+Your component should accept props for the parts that would change from story to story: the kicker, headline, deck, and publication date. The logo, the decorative rule and all the styling should be built into the component itself.
 
 Once it's working, your `+page.svelte` should be able to use it like this:
 
 ```svelte
 <SplashHeader
-  kicker="Craig Newmark Graduate School of Journalism"
+  kicker="NYCity News Service"
   headline="Become a Force for Good"
-  deck="At CUNY's journalism school, change is in our DNA."
-  byline="NYCity News Service"
+  deck="At CUNY's journalism school, change is in our DNA"
   pubDate="Jan. 31, 2026"
 />
 ```
 
-A challenge: try to do this by hand rather than asking a code assistant to do it for you. You've built several components from scratch in this course — a Blockquote, a BigNumber, a ReadMore toggle. This is the same process: identify what's reusable, decide what the props should be, move the markup and styles into a new file, import it and use it. Practicing this without AI will strengthen the skill for the times when you need to understand what your assistant is generating.
+A challenge: try to do this by hand rather than asking a code assistant to do it for you. Practicing this without AI will strengthen the skill for the times when you need to understand what your assistant is generating.
 
 ### Task 2: Design your own theme
 
-Starting from a fresh clone of our template, create your own story-specific design for the CUNY article. Override the template's default colors and fonts to create a unique visual identity. Use your new SplashHeader component. Include a Dashboard with BigNumber statistics. Make everything responsive using the SCSS mixins we learned today.
-
-Every CSS value in your page styles should reference a variable from the design system. No hardcoded colors, sizes or spacing.
+Starting from a fresh clone of our template, create your own story-specific design for the CUNY article. Override the template's default colors and fonts to create a unique visual identity. Use your new SplashHeader component. Include a Dashboard with BigNumber statistics. Every CSS value in your page styles should reference a variable from the design system. No hardcoded colors, sizes or spacing.
 
 Deploy it to GitHub Pages and send me the link.
 
-### Task 3: Find a story that breaks out of the box
+### Task 3: Find a story that changes the rules
 
-Browse the websites of news organizations you admire and find a story page that has a custom design — something that looks different from the publication's standard article template. It could be a feature with a dramatic header, a data project with its own color palette, an interactive with custom typography, or anything else that caught your eye.
+Browse the websites of news organizations you admire and find a story page that looks different from the publication's standard article template. It could be a feature with a dramatic header, a data project with its own color palette, an interactive page with custom typography.
 
-Come to class ready to share the link and explain what the designers changed from the publication's default look to make the page fit the story. What colors did they override? What fonts did they swap in? How does the layout differ from a standard article? Pick something you like — we'll look at them together.
-
-### Task 4: Prepare questions for next week
-
-Next week's class will be a refresher and open Q&A session. Think about what concepts from the first six weeks you'd like to revisit or learn more about. Come with at least one question you'd like to discuss. I'll send out a survey during the week so I can prepare.
+Come to class ready to share the link and explain what the designers changed from the publication's default look to make the page fit the story.
