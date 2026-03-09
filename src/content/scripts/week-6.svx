@@ -29,9 +29,9 @@ A great example of a mature design system is the component library published by 
   maxWidth="960px"
 />
 
-Every component in the library draws from the same set of shared variables, which call for the same typeface, the same spacing scale, the same palette Change one variable and the entire system updates for every story going forward. This kind of library is sometimes called a design system, or a visual vocabulary.
+Every component in the library draws from the same set of shared variables, which call for the same typeface, the same spacing scale, the same palette. Change one variable and the entire system updates for every story going forward. This kind of library is sometimes called a design system, or a visual vocabulary.
 
-You can see it in action in ["Mapping the crisis in Iran."](https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/), a page the Reuters Graphics department published in the days after the US and Israel launched an attack. The design system does the work of making it feel like a Reuters story, allowing the journalists to focus on telling the story on a tight deadline.
+You can see it in action in ["Maps and charts of the Iran crisis](https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/), a page the department published in the days after the US and Israel launched an attack. The design system provides all the fundamentals, allowing the journalists to focus on a tight deadline.
 
 <Screenshot
   src="/screenshots/week-6/reuters-iran-maps.png"
@@ -41,9 +41,7 @@ You can see it in action in ["Mapping the crisis in Iran."](https://www.reuters.
   maxWidth="960px"
 />
 
-While the specifics vary, virtually every serious digital newsroom has a system like this. When you build your own static site template, you're be expected to use that newsroom's preferred vocabulary.
-
-Today we'll cover how SvelteKit implements design systems by taking a tour of our class template's visual grammar. Then we'll extend it to make it more complete, before breaking out to build to something new on top of it.
+While the specifics vary, virtually every developed digital newsroom has a system like this. Today we'll cover how Svelte implements design systems by taking a tour of our class template's design system, then break out to build something new.
 
 ### Create your repository
 
@@ -60,21 +58,13 @@ Click the green "Use this template" button. Name your new repository `my-first-d
 
 Clone it, open it in Visual Studio Code, and run `npm install` in the terminal. Start the development server with `npm run dev` and open your browser to [localhost:5173](http://localhost:5173) so you can see the page as we work.
 
-## Part 2: Walking through the template's design system
+## Part 2: Touring our template's design system
 
 Our template is styled to look like CUNY's [NYCity News Service](https://nycitynewsservice.com/). It has a blue gradient header, serif headlines, sans-serif body text, and a particular set of colors and spacing. None of that happened by accident. It's all governed by a set of files working together.
 
-Let's walk through them.
-
-### The global stylesheet: `app.scss`
-
 Open `src/app.scss` in your editor. This is the file that governs the entire site. Everything else builds on top of it.
 
-You'll notice the file ends in `.scss` rather than `.css`, and there are a couple of import lines at the top. We'll come back to what those mean later. For now, scroll past them to the heart of the file.
-
-### The CSS variables
-
-The [`:root`](https://developer.mozilla.org/en-US/docs/Web/CSS/:root) block is where all the CSS [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) live — the named variables that every component on the site references.
+The [`:root`](https://developer.mozilla.org/en-US/docs/Web/CSS/:root) block is where all the CSS [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) live. You know them by their `--` prefix. Because they are defined in the `:root` selector, they are global variables that can be reused anywhere in the CSS. Defining them in one place creates a single source of truth for the site's visual language. If you want to change the accent color, you change `--color-accent` here and it updates everywhere.
 
 ```scss
 :root {
@@ -128,21 +118,21 @@ The [`:root`](https://developer.mozilla.org/en-US/docs/Web/CSS/:root) block is w
 }
 ```
 
-This is organized into groups, each handling a different concern. Let's walk through them.
-
-**Colors** come first. The palette is built around CUNY Blue (`#0033A1`) as the accent color, with a range of neutrals for text, backgrounds and borders. The gradient colors power the animated header bar. Every component that needs a color references one of these names rather than typing a hex code directly.
-
-**Typography** defines two font stacks. The `--font-serif` stack starts with PT Serif and falls back through Georgia and Times New Roman if it can't load. The `--font-sans` stack starts with Droid Sans and falls back through a long chain of system fonts. Listing fallbacks ensures the page looks decent on any device, even if Google Fonts fails to load.
-
-**Font sizes** form a type scale — a set of predefined sizes from `xs` (12px) through `xl` (20px). Notice they use `rem` units, which are relative to the browser's default font size (16px). So `1rem` equals 16px, `0.5rem` equals 8px, and so on. The advantage of `rem` is accessibility. If a reader has configured their browser to use a larger base font size — a common accessibility setting — all your type scales up proportionally.
-
-**Line heights** control the vertical space between lines of text. The name "leading" comes from the strips of lead that typesetters used to place between lines of metal type. Tighter values like `--leading-tight` work for headlines, where you want the text to feel punchy and compact. Looser values like `--leading-relaxed` improve readability for body text, where the reader's eye needs room to track across and back.
-
-**Spacing** follows the same principle as font sizes. Every margin, padding and gap on the site should use one of these values rather than an arbitrary number. The scale runs from `xs` (8px) through `xxl` (64px). Sticking to the scale forces visual consistency — the space between a headline and its byline uses the same rhythm as the space between paragraphs or between sections.
-
-**Layout** sets the maximum widths for content containers. The `--max-width` of 800px creates a text column that's comfortable to read, roughly 65-75 characters per line. The `--max-width-wide` gives room for dashboards or data tables that need more space.
-
 Below the `:root` block, the rest of `app.scss` applies these variables to base HTML elements — body text, headings, links, images and a `.container` utility class. Scroll through and notice how nearly every value references a variable rather than hardcoding a number.
+
+A root variable can be used by calling the `var()` function, like `var(--color-text)`. You can see it in action in the `body` rule, which defines the base typography and colors for the entire site.
+
+```scss
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background-color: var(--color-white);
+}
+````
+
+Try making some changes to the variables and see how they affect the page. Change `--color-text` to `#ff0000` and watch all the body text turn red. Change `--font-sans` to a different font stack and see the typography update across the site. Then change them back to their original values before moving on.
 
 ## Part 3: Finding and fixing the gaps
 
