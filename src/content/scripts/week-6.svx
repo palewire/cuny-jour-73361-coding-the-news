@@ -560,7 +560,7 @@ Let's start by loading a display font that will make our headline feel like the 
 
 This loads [Playfair Display](https://fonts.google.com/specimen/Playfair+Display) from Google Fonts. Nothing uses it yet. We'll put it to work in the next step.
 
-Now let's update the script block at the top of the page. We can remove the `ArticleHeader` import, since we won't be using that component anymore. We can also remove the `byline` and `pubDate` variables, since our new header will handle those differently. Update the `headline` variable to our new text — it's still used in the `<svelte:head>` title tag.
+Now let's update the script block at the top of the page. We can remove the `ArticleHeader` import, since we won't be using that component anymore, and make a few tweaks to the article metadata.
 
 
 ```svelte
@@ -573,7 +573,10 @@ Now let's update the script block at the top of the page. We can remove the `Art
   import Dashboard from '$lib/components/Dashboard.svelte';
 
   // Article metadata
+  let kicker = 'NYCity News Service';
   let headline = 'Become a Force for Good';
+  let deck = "At CUNY's journalism school, change is in our DNA";
+  let pubDate = 'March 9, 2026';
 
   // Related stories
   const relatedStories = [
@@ -586,20 +589,16 @@ Now let's update the script block at the top of the page. We can remove the `Art
 
 Now remove the `<ArticleHeader ... />` tag from your markup and add this custom header block in its place:
 
-```svelte {emphasize-lines="4-14"}
+```svelte {emphasize-lines="4-10"}
 <!-- Your page content goes here -->
 <div class="container story-theme">
 
   <div class="story-header">
-    <span class="kicker">NYCity News Service</span>
-    <h1>Become a Force<br>for Good</h1>
+    <span class="kicker">{kicker}</span>
+    <h1>{headline}</h1>
     <hr class="rule" />
-    <p class="deck">
-      At CUNY's journalism school, change is in our DNA
-    </p>
-    <p class="byline">
-      March 9, 2026
-    </p>
+    <p class="deck">{deck}</p>
+    <p class="byline">{pubDate}</p>
   </div>
 
   <!-- Lead Image: Animated gif of students at the journalism school -->
