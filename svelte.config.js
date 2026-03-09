@@ -55,6 +55,7 @@ const highlighter = await createHighlighter({
     'typescript',
     'html',
     'css',
+    'scss',
     'svelte',
     'json',
     'bash',

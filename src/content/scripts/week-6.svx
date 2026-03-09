@@ -453,7 +453,7 @@ First, change the `<style>` tag to use Sass and import the mixins:
 
 Now set the font sizes to something that scales down on mobile:
 
-```scss {emphasize-lines="8-30"}
+```scss {emphasize-lines="10-28"}
   .footnote {
     display: block;
     font-size: var(--font-size-sm);
@@ -544,7 +544,7 @@ export function load() {
 }
 ```
 
-Save and check your browser. The blue gradient bar is gone. The page feels open and clean — a blank canvas for our custom header.
+Save and check your browser. The blue gradient bar is gone. The page feels open and clean.
 
 The template's `ArticleHeader` component is designed for standard news articles. For a feature story, we want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. We'll place the school's logo at the top, centered, followed by the headline and supporting text.
 
@@ -586,22 +586,32 @@ Now let's update the script block at the top of the page. We can remove the `Art
 
 Now remove the `<ArticleHeader ... />` tag from your markup and add this custom header block in its place:
 
-```svelte
-<div class="story-header">
-  <span class="kicker">Craig Newmark Graduate School of Journalism</span>
-  <h1>Become a Force for Good</h1>
-  <hr class="rule" />
-  <p class="deck">
-    At CUNY's journalism school, change is in our DNA. Here's a look
-    at the institution training the next generation of journalists.
-  </p>
-  <p class="pubdate">
-    March 9, 2026
-  </p>
-</div>
+```svelte {emphasize-lines="4-14"}
+<!-- Your page content goes here -->
+<div class="container story-theme">
+
+  <div class="story-header">
+    <span class="kicker">NYCity News Service</span>
+    <h1>Become a Force<br>for Good</h1>
+    <hr class="rule" />
+    <p class="deck">
+      At CUNY's journalism school, change is in our DNA
+    </p>
+    <p class="byline">
+      March 9, 2026
+    </p>
+  </div>
+
+  <!-- Lead Image: Animated gif of students at the journalism school -->
+  <Image
+    src="/example-photo.gif"
+    alt="The Craig Newmark Graduate School of Journalism is at 219 West 40th Street in Midtown Manhattan."
+    caption="The Craig Newmark Graduate School of Journalism is at 219 West 40th Street in Midtown Manhattan."
+    credit="Craig Newmark Graduate School of Journalism"
+  />
 ```
 
-Now update the styles:
+Now update the styles at the bottom of the `+page.svelte` file.
 
 ```svelte
 <style lang="scss">
