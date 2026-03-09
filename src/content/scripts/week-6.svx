@@ -520,7 +520,7 @@ Save and check your browser. The BigNumber cards have turned orange — without 
 
 But the site header and footer — which sit outside the container in the layout — still use the original CUNY Blue. The system holds, even as you customize within it.
 
-### Building a magazine-style header
+### Designing a splashy header
 
 Let's start by getting the site's blue gradient header bar out of the way. Open `src/routes/+page.js`. You'll see a `load` function that returns settings for the page:
 
@@ -689,7 +689,7 @@ Compare it to what the template looked like at the start of class. The whole pag
 
 ### Task 1: Extract a SplashHeader component
 
-Take the magazine-style header we built in class and move it out of `+page.svelte` into a reusable component at `src/lib/components/SplashHeader.svelte`.
+Take the header we built in class and move it out of `+page.svelte` into a reusable component at `src/lib/components/SplashHeader.svelte`.
 
 Your component should accept props for the parts that would change from story to story: the kicker, headline, deck, and publication date. The logo, the decorative rule and all the styling should be built into the component itself.
 
