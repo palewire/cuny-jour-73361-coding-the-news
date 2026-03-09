@@ -130,7 +130,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-white);
 }
-````
+```
 
 Try making some changes to the variables and see how they affect the page. Change `--color-text` to `#ff0000` and watch all the body text turn red. Change `--font-sans` to a different font stack and see the typography update across the site. Then change them back to their original values before moving on.
 
@@ -343,7 +343,7 @@ Open `app.scss` and scroll to the bottom. You'll see something that doesn't look
   }
 
   h3 {
-    font-size 1.25rem;
+    font-size: 1.25rem;
   }
 }
 ```
@@ -416,7 +416,7 @@ So when the compiler sees this in `app.scss`:
   }
 
   h3 {
-    font-size 1.25rem;
+    font-size: 1.25rem;
   }
 }
 ```
@@ -437,7 +437,7 @@ It produces this plain CSS:
   }
 
   h3 {
-    font-size 1.25rem;
+    font-size: 1.25rem;
   }
 }
 ```
@@ -603,8 +603,7 @@ Now remove the `<ArticleHeader ... />` tag from your markup and add this custom 
 
 Now update the styles:
 
-```scss
-
+```svelte
 <style lang="scss">
   @use '$lib/styles' as *;
 
