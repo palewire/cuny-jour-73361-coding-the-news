@@ -6,6 +6,7 @@
     id,
     intro = '',
     homework = '',
+    disclosure = '',
     children,
     background = 'white',
   } = $props();
@@ -37,6 +38,12 @@
           <p>{homework}</p>
         </div>
       {/if}
+      {#if disclosure}
+        <div class="homework-summary">
+          <h3>About this site</h3>
+          <p>{@html disclosure}</p>
+        </div>
+      {/if}
     </div>
   </div>
 </section>
@@ -58,6 +65,7 @@
     padding: var(--spacing-lg);
     border-radius: 0 8px 8px 0;
     max-width: 800px;
+    margin-top: var(--spacing-xl);
   }
 
   .homework-summary h3 {

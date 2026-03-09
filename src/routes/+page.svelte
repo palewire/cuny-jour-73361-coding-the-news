@@ -108,6 +108,7 @@
       id={content.scripts.id}
       intro={content.scripts.intro}
       background={content.scripts.background}
+      disclosure={content.scripts.disclosure}
     >
       <div class="grid grid-3">
         {#each scripts as script}

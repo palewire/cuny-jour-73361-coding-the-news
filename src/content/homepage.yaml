@@ -163,3 +163,4 @@ scripts:
   id: 'scripts'
   intro: 'A step-by-step guide with all of the commands, links and assignments is published for each class.'
   background: 'white'
+  disclosure: This syllabus and its classroom scripts were developed with the assistance of Anthropic's <a href="https://en.wikipedia.org/wiki/Claude_(language_model)">Claude</a>. The source code is free and open on <a href="https://github.com/palewire/cuny-jour-73361-coding-the-news">GitHub</a>.
