@@ -3,7 +3,7 @@ title: "Design Systems"
 summary: "How to build expressive pages using a disciplined visual grammar"
 date: "March 9, 2026"
 week: 6
-locked: true
+locked: false
 ---
 
 <script>
