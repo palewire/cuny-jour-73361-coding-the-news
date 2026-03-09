@@ -489,15 +489,11 @@ Save and test it. Toggle between phone and tablet widths. The numbers should shr
 
 ## Part 4: Breaking out of the box
 
-Everything we've done so far has preserved the template's NYCity News Service look. That's the point of a design system — it maintains consistency across pages.
+Everything we've done so far has preserved the template's NYCity News Service look. But sometimes a story needs its own signature identity. A feature about the journalism school's impact shouldn't look exactly like a daily news brief about a city council vote. The best newsrooms solve this by overriding their system's defaults at the page level, keeping the underlying structure but swapping out colors, fonts and layout to match the story's tone.
 
-But sometimes a story needs its own visual identity. A feature about the journalism school's impact shouldn't look exactly like a daily news brief about a city council vote. The best newsrooms solve this by overriding their system's defaults at the page level, keeping the underlying structure but swapping out colors, fonts and layout to match the story's tone.
+Let's do that now with the page we already have. We'll transform the template's default CUNY article into something that feels more like a bolder feature story, while still using the same architecture underneath.
 
-Let's do that now with the page we already have. We'll transform the template's default CUNY article into something that feels more like a feature story — bolder, more dramatic — while still using the same architecture underneath.
-
-### Overriding the palette
-
-Now for the magic trick. CSS custom properties can be overridden at any level of the page. If you redefine a variable inside a specific element, that new value applies to everything inside it — without changing the global default.
+CSS custom properties can be overridden at any level of the page. If you redefine a variable inside a specific element, that new value applies to everything inside it — without changing the global default.
 
 We'll use this to create a story-specific color scheme. Add a `<style>` block at the bottom of your `+page.svelte`:
 
@@ -506,11 +502,8 @@ We'll use this to create a story-specific color scheme. Add a `<style>` block at
   @use '$lib/styles' as *;
 
   :global(.story-theme) {
-    --color-accent: #e63946;
-    --color-dark: #1d3557;
-    --color-text: #2b2d42;
-    --color-light-gray: #f1faee;
-    --color-border: #a8dadc;
+    --color-accent: #fe8807;
+    --color-border: #fe8807;
   }
 </style>
 ```
@@ -523,31 +516,11 @@ Now add that class to the existing container div in your markup:
 <div class="container story-theme">
 ```
 
-Save and check your browser. The BigNumber cards have turned red — without any changes to the components themselves. Because we wired them up to use `var(--color-accent)` in Part 3, and our `.story-theme` overrides `--color-accent` to `#e63946`, the new color cascades through automatically. The accent border on the article metadata has changed too. So have the link hover colors. One class, five variable overrides, and the entire page shifted personality.
+Save and check your browser. The BigNumber cards have turned orange — without any changes to the components themselves. Because we wired them up to use `var(--color-accent)` in Part 3, and our `.story-theme` overrides `--color-accent` to `#fe8807`, the new color cascades through automatically. The accent border on the article metadata has changed too. So have the link hover colors. One class, five variable overrides, and the entire page shifted personality.
 
 But the site header and footer — which sit outside the container in the layout — still use the original CUNY Blue. The system holds, even as you customize within it.
 
-### Loading a custom headline font
-
-The template's PT Serif is a workhorse — good for everyday articles. But a feature story deserves something with more personality. Let's load a display font that will make our headline feel like the cover of a magazine.
-
-Your page already has a `<svelte:head>` block with a title and meta description. Add a font link inside it:
-
-```svelte
-<svelte:head>
-  <title>{headline} | NYCity News Service</title>
-  <meta name="description" content="At the Craig Newmark Graduate School of Journalism..." />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
-</svelte:head>
-```
-
-This loads [Playfair Display](https://fonts.google.com/specimen/Playfair+Display) from Google Fonts — a high-contrast serif with dramatic thick-thin strokes. It's the kind of typeface you see on magazine covers and feature story openers, where the headline needs to stop you in your tracks.
-
-The font is now available but nothing uses it yet. We'll put it to work in the next step.
-
 ### Building a magazine-style header
-
-The template's `ArticleHeader` component is designed for standard news articles — left-aligned, compact, understated. For a feature story, we want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page.
 
 Let's start by getting the site's blue gradient header bar out of the way. Open `src/routes/+page.js`. You'll see a `load` function that returns settings for the page:
 
@@ -562,7 +535,7 @@ export function load() {
 
 Change `showHeader` to `false`:
 
-```js
+```js {emphasize-lines="3"}
 export function load() {
   return {
     showHeader: false,
@@ -573,29 +546,48 @@ export function load() {
 
 Save and check your browser. The blue gradient bar is gone. The page feels open and clean — a blank canvas for our custom header.
 
-Now let's build the replacement. We'll place the school's logo at the top, centered, followed by the headline and supporting text.
+The template's `ArticleHeader` component is designed for standard news articles. For a feature story, we want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. We'll place the school's logo at the top, centered, followed by the headline and supporting text.
 
-In your script block, remove the `import` line for `ArticleHeader`. You can also remove the `byline` and `pubDate` variables, since the new header will handle those differently. Update the `headline` variable to our new text — it's still used in the `<svelte:head>` title tag:
+Let's start by loading a display font that will make our headline feel like the cover of a magazine. Your page already has a `<svelte:head>` block with a title and meta description. Add a font link inside it:
 
-```js
-let headline = 'Become a Force for Good';
+```svelte {emphasize-lines="4"}
+<svelte:head>
+  <title>{headline} | NYCity News Service</title>
+  <meta name="description" content="At the Craig Newmark Graduate School of Journalism..." />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+</svelte:head>
 ```
 
-Add an import for SvelteKit's `asset` helper, which we need to reference the logo image:
+This loads [Playfair Display](https://fonts.google.com/specimen/Playfair+Display) from Google Fonts. Nothing uses it yet. We'll put it to work in the next step.
 
-```js
-import { asset } from '$app/paths';
-```
+Now let's update the script block at the top of the page. We can remove the `ArticleHeader` import, since we won't be using that component anymore. We can also remove the `byline` and `pubDate` variables, since our new header will handle those differently. Update the `headline` variable to our new text — it's still used in the `<svelte:head>` title tag.
+
+
+```svelte
+<script>
+  // Import all the news furniture components
+  import ArticleBody from '$lib/components/ArticleBody.svelte';
+  import Image from '$lib/components/Image.svelte';
+  import RelatedLinks from '$lib/components/RelatedLinks.svelte';
+  import BigNumber from '$lib/components/BigNumber.svelte';
+  import Dashboard from '$lib/components/Dashboard.svelte';
+
+  // Article metadata
+  let headline = 'Become a Force for Good';
+
+  // Related stories
+  const relatedStories = [
+    { headline: 'How America\'s top news organizations escape rigid publishing systems to design beautiful data-driven stories on deadline.', href: 'https://palewi.re/docs/coding-the-news/' },
+    { headline: 'How to install, configure and use Visual Studio Code, GitHub and Copilot', href: 'https://palewi.re/docs/coding-the-news/scripts/week-1/' },
+    { headline: "How to publish a website with Node.JS and GitHub Actions", href:"https://palewi.re/docs/coding-the-news/scripts/week-2/"},
+  ];
+</script>
+````
 
 Now remove the `<ArticleHeader ... />` tag from your markup and add this custom header block in its place:
 
 ```svelte
 <div class="story-header">
-  <img
-    class="logo"
-    src={asset('/cuny-footer-logo.svg')}
-    alt="Craig Newmark Graduate School of Journalism at CUNY"
-  />
   <span class="kicker">Craig Newmark Graduate School of Journalism</span>
   <h1>Become a Force<br>for Good</h1>
   <hr class="rule" />
@@ -603,131 +595,91 @@ Now remove the `<ArticleHeader ... />` tag from your markup and add this custom 
     At CUNY's journalism school, change is in our DNA. Here's a look
     at the institution training the next generation of journalists.
   </p>
-  <p class="byline">
-    By <strong>NYCity News Service</strong>&ensp;|&ensp;Jan. 31, 2026
+  <p class="pubdate">
+    March 9, 2026
   </p>
 </div>
 ```
-
-The logo image is the same CUNY SVG that the site footer uses. Placing it at the top of our custom header gives the page a sense of identity without the heavy blue gradient bar.
 
 Notice the `<br>` in the headline. In a centered layout, you often want to control where long headlines break so they feel balanced on the page. This is a typographic judgment call, not a hard rule.
 
 The `<hr class="rule" />` is a thin horizontal line that separates the headline from the deck. It's a classic magazine device — a small visual pause that lets the big type breathe before the reader moves on.
 
-Now add the styles:
+Now update the styles:
 
 ```scss
-  .story-header {
-    text-align: center;
-    padding: var(--spacing-xxl) var(--spacing-md);
-    margin-bottom: var(--spacing-xl);
-  }
 
-  .logo {
-    display: block;
-    max-width: 280px;
-    height: auto;
-    margin: 0 auto var(--spacing-lg);
-  }
+<style lang="scss">
+  @use '$lib/styles' as *;
 
-  .kicker {
-    display: block;
-    font-family: var(--font-sans);
-    font-size: var(--font-size-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--color-accent);
-    margin-bottom: var(--spacing-md);
-  }
+  :global(.story-theme) {
+    --color-accent: #fe8807;
+    --color-border: #fe8807;
 
-  .story-header h1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: var(--font-size-4xl);
-    font-weight: 900;
-    line-height: var(--leading-tight);
-    color: var(--color-dark);
-    margin-bottom: var(--spacing-md);
-  }
+     .story-header {
+      text-align: center;
+      padding: var(--spacing-xxl) var(--spacing-md);
+    }
 
-  .rule {
-    border: none;
-    border-top: var(--border-width-accent) solid var(--color-accent);
-    width: 60px;
-    margin: 0 auto var(--spacing-md);
-  }
-
-  .deck {
-    font-family: var(--font-serif);
-    font-size: var(--font-size-xl);
-    line-height: var(--leading-normal);
-    color: var(--color-text);
-    max-width: 480px;
-    margin: 0 auto var(--spacing-md);
-  }
-
-  .byline {
-    font-family: var(--font-sans);
-    font-size: var(--font-size-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-medium-gray);
-  }
-
-  @include mobile {
-    .logo {
-      max-width: 200px;
+    .kicker {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: var(--font-size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-accent);
+      margin-bottom: var(--spacing-sm);
     }
 
     .story-header h1 {
-      font-size: var(--font-size-3xl);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: var(--font-size-4xl);
+      font-weight: 900;
+      line-height: var(--leading-tight);
+      color: var(--color-dark);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .rule {
+      border: none;
+      border-top: var(--border-width-accent) solid var(--color-accent);
+      width: 60px;
+      margin: 0 auto var(--spacing-sm);
     }
 
     .deck {
+      font-family: var(--font-serif);
       font-size: var(--font-size-lg);
+      line-height: var(--leading-normal);
+      color: var(--color-text);
+      max-width: 480px;
+      margin: 0 auto var(--spacing-sm);
     }
-  }
+
+    .pubdate {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-medium-gray);
+    }
+
+    @include mobile {
+      .story-header h1 {
+        font-size: var(--font-size-3xl);
+      }
+
+      .deck {
+        font-size: var(--font-size-lg);
+      }
+    }
+}
+</style>
 ```
 
-Save and check your browser. The page should look dramatically different from the standard template. The CUNY logo sits quietly at the top. Below it, the headline is centered and enormous, set in Playfair Display's heavy weight. The short red rule draws the eye downward into the deck. The generous whitespace above and below gives the header room to breathe.
+Save and check your browser. The page should look dramatically different from the standard template.
 
-Compare it to what the template looked like at the start of class. The whole page has been reshaped — different colors, a new headline font, a completely different layout — but the underlying architecture is the same. The body text, the Image component and the RelatedLinks section all still draw from the same variables. They've picked up the new colors automatically, but the fonts are still PT Serif and Droid Sans. We'll fix that next.
-
-### Testing responsive behavior
-
-Use the device toolbar in your browser's developer tools to test the page at different widths. Watch the header headline shrink on small screens. Watch the BigNumber cards stack into a column on phones and snap into a row on wider screens. Watch the deck text step down a size.
-
-This is the responsive design cycle: test at many widths, not just two. The combination of CSS variables for values and SCSS mixins for breakpoints gives you a system that adapts without requiring you to write separate mobile and desktop stylesheets.
-
-## Part 5: Changing the whole page's identity
-
-We loaded Playfair Display for the headline, but the rest of the page still uses PT Serif and Droid Sans. The headline looks like a magazine; the body text still looks like NYCity News Service. Let's close the gap by overriding the font variables across the entire story theme.
-
-Add a font import for the body text. Update the Google Fonts link in your `<svelte:head>` block to load Source Sans 3 alongside Playfair Display:
-
-```svelte
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-```
-
-Now add font overrides to your `.story-theme` block in the styles:
-
-```scss
-  :global(.story-theme) {
-    --color-accent: #e63946;
-    --color-dark: #1d3557;
-    --color-text: #2b2d42;
-    --color-light-gray: #f1faee;
-    --color-border: #a8dadc;
-    --font-serif: 'Playfair Display', Georgia, serif;
-    --font-sans: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
-  }
-```
-
-Save and check your browser. Now the entire page has shifted. The body text is crisper. The subheadings and captions have a different rhythm. The BigNumber labels and the RelatedLinks section have picked up the new sans-serif automatically, because they reference `--font-sans`. You changed two variables and every component that uses them updated at once.
-
-Try experimenting with other combinations. [Google Fonts](https://fonts.google.com/) has thousands of options. Ask Copilot to suggest pairings — "What's a good serif and sans-serif pairing for a feature story?" — and swap them in. Each pair gives the page a completely different personality while the layout, spacing and responsive behavior stay exactly the same.
-
-This is what working designers do every day. The system provides the skeleton. The variables provide the skin. A good design system lets you change the skin without rebuilding the skeleton.
+Compare it to what the template looked like at the start of class. The whole page has been reshaped — different colors, a new headline font, a completely different layout — but the underlying architecture is the same. The body text, the Image component and the RelatedLinks section all still draw from the same variables.
 
 ## Homework
 
