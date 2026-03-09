@@ -66,7 +66,7 @@ Open `src/app.scss` in your editor. This is the file that governs the entire sit
 
 The [`:root`](https://developer.mozilla.org/en-US/docs/Web/CSS/:root) block is where all the CSS [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) live. You know them by their `--` prefix. Because they are defined in the `:root` selector, they are global variables that can be reused anywhere in the CSS. Defining them in one place creates a single source of truth for the site's visual language. If you want to change the accent color, you change `--color-accent` here and it updates everywhere.
 
-```scss
+```css
 :root {
   /* NYCity News Service Colors */
   --color-accent: #0033A1;        /* CUNY Blue (PMS 286) */
@@ -122,7 +122,7 @@ Below the `:root` block, the rest of `app.scss` applies these variables to base 
 
 A root variable can be used by calling the `var()` function, like `var(--color-text)`. You can see it in action in the `body` rule, which defines the base typography and colors for the entire site.
 
-```scss
+```css
 body {
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -134,15 +134,13 @@ body {
 
 Try making some changes to the variables and see how they affect the page. Change `--color-text` to `#ff0000` and watch all the body text turn red. Change `--font-sans` to a different font stack and see the typography update across the site. Then change them back to their original values before moving on.
 
-## Part 3: Finding and fixing the gaps
+## Part 3: Expanding the system
 
 Our template's design system is solid, but it's not perfect. Let's find the weak spots and fix them together. This is a normal part of working with any codebase — design systems evolve over time as you discover what's missing.
 
-### The type scale doesn't reach high enough
-
 Look back at `app.scss`. The font-size variables stop at `--font-size-xl` (20px). But scroll down to the heading styles:
 
-```scss
+```css
 h1 {
   font-size: 2.75rem;
   font-weight: 400;
@@ -161,7 +159,7 @@ These sizes — 2.75rem, 1.75rem, 1.5rem — are hardcoded. They don't reference
 
 Let's fix this by extending the type scale. Replace the font-size section of your `:root` block with:
 
-```scss
+```css
   /* Font Sizes */
   --font-size-xs: 0.75rem;    /* 12px — footnotes, labels */
   --font-size-sm: 0.875rem;   /* 14px — captions, metadata */
@@ -175,7 +173,7 @@ Let's fix this by extending the type scale. Replace the font-size section of you
 
 Now update the heading rules to use them:
 
-```scss
+```css
 h1 {
   font-size: var(--font-size-4xl);
   font-weight: 400;
@@ -190,11 +188,9 @@ h3 {
 }
 ```
 
-Save and check your browser. The page should look exactly the same — we haven't changed any values, just moved them into variables. But now the system is complete. Every size on the site is governed by a named variable.
+Save and check your browser. The page should look exactly the same — we haven't changed any values, just moved them into variables. But now the system is more complete.
 
-### BigNumber and Dashboard have hardcoded values
-
-Open `src/lib/components/BigNumber.svelte`. Look at the styles:
+Now open `src/lib/components/BigNumber.svelte`. Look at the styles:
 
 ```svelte
 <style>
@@ -232,7 +228,7 @@ Open `src/lib/components/BigNumber.svelte`. Look at the styles:
 </style>
 ```
 
-This component uses some CSS variables — `var(--color-accent)`, `var(--color-white)` — but also has raw numbers everywhere else: `1.5rem`, `3rem`, `1rem`, `0.5rem`, `0.75rem`, `0.25rem`, `8px`. These are the fingerprints of a component that was written quickly (we built it in [Week 3](/docs/coding-the-news/scripts/week-3/)) and never brought into line with the system.
+This component uses some CSS variables, but also has raw numbers everywhere else: `1.5rem`, `3rem`, `1rem`, `0.5rem`, `0.75rem`, `0.25rem`, `8px`. These are the fingerprints of a component that was written quickly and never brought into line with the system.
 
 Let's fix it:
 
@@ -292,11 +288,11 @@ Now do the same for `Dashboard.svelte`:
 </style>
 ```
 
-There's something new here: [`:global(*)`](https://svelte.dev/docs/svelte/global-styles). By default, Svelte scopes all CSS to the component it's written in — styles in `Dashboard.svelte` can't affect elements inside `BigNumber.svelte`, even if BigNumber is a child in the markup. This is usually what you want, because it prevents styles from leaking across components.
+There's something new here: [`:global(*)`](https://svelte.dev/docs/svelte/global-styles). By default, Svelte scopes all CSS to the component it's written in, so styles in `Dashboard.svelte` can't affect elements inside `BigNumber.svelte`, even if BigNumber is a child in the markup.
 
-But Dashboard's whole job is to arrange its children. The `.row > *` selector needs to reach into the BigNumber cards and set their `flex` behavior. The `:global()` wrapper tells Svelte to skip the scoping for that specific selector, allowing it to style child components.
+This is usually what you want, because it prevents styles from leaking across components. But Dashboard's whole job as a parent component is to arrange its children. The `.row > *` selector needs to reach into the BigNumber cards and set their `flex` behavior. The `:global()` wrapper tells Svelte to skip the scoping for that specific selector, allowing it to style child components.
 
-Save both files and check your browser. But wait — BigNumber and Dashboard aren't actually on the page yet. We've been editing the component files, but the template's `+page.svelte` doesn't use them. Let's add them so we can see our changes.
+Save both files. BigNumber and Dashboard aren't actually on the page yet. We've been editing the component files, but the template's `+page.svelte` doesn't use them. Let's add them so we can see our changes.
 
 Open `src/routes/+page.svelte` and add the imports at the top of the script block:
 
@@ -305,7 +301,7 @@ import BigNumber from '$lib/components/BigNumber.svelte';
 import Dashboard from '$lib/components/Dashboard.svelte';
 ```
 
-Now add a Dashboard between the `ArticleHeader` and the `Image` component, using the same CUNY statistics from [Week 3](/docs/coding-the-news/scripts/week-3/):
+Now add a Dashboard after `Image` component, using the same CUNY statistics from [Week 3](/docs/coding-the-news/scripts/week-3/):
 
 ```svelte
 <Dashboard>
@@ -325,42 +321,36 @@ Now add a Dashboard between the `ArticleHeader` and the `Image` component, using
 </Dashboard>
 ```
 
-Save and check your browser. You should see three blue stat cards in a row. Every value — the padding, font sizes, spacing — is coming from the design system variables we just wired up.
+Save and check your browser. You should see three blue stat cards in a row. Every value — the padding, font sizes, spacing — is coming from the design system variables we just wired up. This is the discipline at the core of a good design system. When every value comes from the shared vocabulary, your sites look consistent, and you can make sweeping changes by updating a single variable.
 
-This is the discipline at the core of a design system. Every value should come from the shared vocabulary. When something doesn't, it becomes a weak link — a place where the system can drift out of sync.
+### Responsive design with Sass mixins
 
-### Making BigNumber respond to screen size
+Now try something. Drag the viewport of your browser to a narrow phone width. Notice that the BigNumber cards look oversized — the `2.75rem` number that felt right on a laptop overwhelms a small screen. Meanwhile, look at the headline at the top of the page. It gets smaller on phones. How does the template do that?
 
-Now try something. Open the browser's developer tools — right-click anywhere and select "Inspect," then click the device toolbar icon in the top left (the one that looks like a phone and tablet side by side).
+Open `app.scss` and scroll to the bottom. You'll see something that doesn't look like normal CSS:
 
-Drag the viewport to a narrow phone width. Notice that the BigNumber cards look oversized — the `2.75rem` number that felt right on a laptop overwhelms a small screen. Meanwhile, look at the headline at the top of the page. It gets smaller on phones. How does the template do that?
-
-Open `ArticleHeader.svelte` and scroll to the bottom of the `<style>` block. You'll see something that doesn't look like normal CSS:
-
-```svelte
-<style lang="scss">
-  @use '../styles' as *;
-
-  .headline {
-    font-size: 2rem;
-    /* ... */
+```scss
+@include mobile {
+  html {
+    font-size: 15px;
+  }
+  h1 {
+    font-size: 1.75rem;
   }
 
-  @include tablet {
-    .headline {
-      font-size: var(--font-size-4xl);
-    }
+  h2 {
+    font-size: 1.5rem;
   }
-</style>
+
+  h3 {
+    font-size 1.25rem;
+  }
+}
 ```
 
-What is `@include tablet`? This is where the `.scss` file extension becomes important.
+What is `@include mobile`? This comes from [Sass](https://sass-lang.com/), a popular extension of CSS that adds features like reusable code blocks, additional variable types and file imports. Sass files get compiled into plain CSS before the browser sees them, so everything we write still becomes regular CSS in the end. The `.scss` extension on `app.scss` tells the compiler to process the file first.
 
-### Introduction to Sass
-
-Our template uses [Sass](https://sass-lang.com/), a popular extension of CSS that adds features like reusable code blocks, additional variable types and file imports. Sass files get compiled into plain CSS before the browser sees them, so everything we write still becomes regular CSS in the end. The `.scss` extension tells the compiler to process the file first.
-
-The `@include tablet` syntax calls a [mixin](https://sass-lang.com/documentation/at-rules/mixin/) — a reusable block of CSS defined somewhere else. To find where it's defined, look at the very first line of `app.scss`:
+The `@include mobile` syntax calls a [mixin](https://sass-lang.com/documentation/at-rules/mixin/) — a reusable block of CSS defined somewhere else. To find where it's defined, look at the very first line of `app.scss`:
 
 ```scss
 @use '$lib/styles' as *;
@@ -368,7 +358,7 @@ The `@include tablet` syntax calls a [mixin](https://sass-lang.com/documentation
 
 The [`@use`](https://sass-lang.com/documentation/at-rules/use/) directive imports code from another file. This one brings in everything from our `$lib/styles` folder. Open that folder in your Explorer — it's at `src/lib/styles/`. You'll find three files.
 
-**`_index.scss`** is the entry point. It uses Sass's [`@forward`](https://sass-lang.com/documentation/at-rules/forward/) directive to bundle the other files together:
+The `_index.scss` file is the entry point. It uses Sass's [`@forward`](https://sass-lang.com/documentation/at-rules/forward/) directive to bundle other files together:
 
 ```scss
 @forward 'variables';
@@ -377,7 +367,7 @@ The [`@use`](https://sass-lang.com/documentation/at-rules/use/) directive import
 
 The underscore prefix is a Sass convention meaning "this file is a partial — don't compile it on its own." Partials are meant to be imported into other files.
 
-**`_variables.scss`** contains Sass variables with a `$` prefix:
+The `_variables.scss` file contains Sass variables with a `$` prefix:
 
 ```scss
 $breakpoint-sm: 768px;
@@ -386,7 +376,7 @@ $breakpoint-lg: 1200px;
 
 Why `$` variables instead of the `--` CSS custom properties we just learned? Because CSS custom properties have a limitation: they can't be used inside [`@media` query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) conditions. You can't write `@media (max-width: var(--breakpoint))` — the browser won't accept it. So for breakpoints, we use Sass variables, which get resolved at compile time before the browser ever sees them.
 
-**`_mixins.scss`** is where `@include tablet` comes from. It defines three mixins:
+**`_mixins.scss`** is where `@include mobile` comes from. It defines three mixins:
 
 ```scss
 @mixin mobile {
@@ -410,33 +400,47 @@ Why `$` variables instead of the `--` CSS custom properties we just learned? Bec
 
 Each mixin wraps a [media query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) — the CSS feature that applies different styles depending on the width of the browser window. Instead of writing `@media (min-width: 768px) { ... }` every time you want tablet styles, you write `@include tablet { ... }`. It's more readable, and if you ever change the breakpoint value, you only change it in one place.
 
-So when the compiler sees this in `ArticleHeader.svelte`:
+So when the compiler sees this in `app.scss`:
 
 ```scss
-@include tablet {
-  .headline {
-    font-size: var(--font-size-4xl);
+@include mobile {
+  html {
+    font-size: 15px;
+  }
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size 1.25rem;
   }
 }
 ```
 
 It produces this plain CSS:
 
-```css
-@media (min-width: 768px) {
-  .headline {
-    font-size: var(--font-size-4xl);
+```css {emphasize-lines="1"}
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size 1.25rem;
   }
 }
 ```
-
-That tells the browser: "When the screen is 768px wide or more, make the headline `2.75rem`." On narrower screens, it falls back to the base size of `2rem`. This is the responsive pattern you'll see throughout the template — smaller base styles for mobile, with `@include` blocks that enhance the layout for larger screens.
-
-<Aside>
-One more Sass feature you'll spot in the components: nesting. In <code>SiteHeader.svelte</code>, you'll see things like <code>&amp;::after</code> and <code>&amp;:hover</code> inside a parent rule. The <code>&amp;</code> symbol refers to the parent selector, so <code>.nav-link {'{'} &amp;:hover {'{'} ... {'}'} {'}'}</code> compiles to <code>.nav-link:hover {'{'} ... {'}'}</code>. It's a convenience that keeps related styles grouped together.
-</Aside>
-
-### Adding responsive behavior to BigNumber
 
 Now let's apply this pattern to our BigNumber component. We want the big number to be smaller on phones and full-sized on wider screens.
 
@@ -449,7 +453,7 @@ First, change the `<style>` tag to use Sass and import the mixins:
 
 Now set the base `.number` font size to something that works on a phone, and add an `@include tablet` block that bumps it up on wider screens:
 
-```scss
+```scss {emphasize-lines="8-13"}
   .number {
     display: block;
     font-size: var(--font-size-3xl);
