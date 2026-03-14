@@ -757,7 +757,7 @@ Once it's working, your `+page.svelte` should be able to use it like this:
   kicker="NYCity News Service"
   headline="Become a Force for Good"
   deck="At CUNY's journalism school, change is in our DNA"
-  pubDate="Jan. 31, 2026"
+  pubDate="March 6, 2026"
 />
 ```
 
