@@ -9,13 +9,14 @@ locked: false
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
+  import PhoneScreenshot from '$lib/components/PhoneScreenshot.svelte';
 </script>
 
 ## Part 1: Introduction to design systems
 
-Every webpage is controlled by a set of invisible rules. The fonts, the spacing, the colors, the layout. All of it is dictated by the computer code that governs how browsers render the page.
+Every webpage is controlled by a set of invisible rules. The fonts, the spacing, the colors, the layout. All of it is dictated by the computer code that governs how browsers render its design.
 
-In the static-site frameworks that newsrooms use to create custom pages, these rules are typically codified in a set of common files used across every project. Much like the components we covered in previous classes, they offer a _prêt-à-porter_ visual language that developers can use to build pages, relieving them of the need to continually reconsider, and recode, the fundamental design.
+In the [static-site frameworks](../week-2/) that newsrooms use to create custom pages, these rules are typically codified in a set of common files used across every project. Much like the components we covered in previous classes, they offer a _prêt-à-porter_ visual language that developers can use to build pages, relieving them of the need to continually reconsider, and recode, the fundamental design.
 
 These base rules are more than just convenience and constraint, they are a foundation to build on. With all of the basic design decisions taken care of, page makers can focus on the creative work of telling the story, which may sometimes require breaking the rules in thoughtful, deliberate ways.
 
@@ -41,7 +42,7 @@ You can see it in action in ["Maps and charts of the Iran crisis](https://www.re
   maxWidth="960px"
 />
 
-While the specifics vary, virtually every developed digital newsroom has a system like this. Today we'll cover how Svelte implements design systems by taking a tour of our class template's design system, then break out to build something new.
+While the specifics vary, virtually every developed digital newsroom has a system like this. Today we'll cover how Svelte implements design systems by taking a tour of our class template, then break out to build something new.
 
 ### Create your repository
 
@@ -132,13 +133,32 @@ body {
 }
 ```
 
-Try making some changes to the variables and see how they affect the page. Change `--color-text` to `#ff0000` and watch all the body text turn red. Change `--font-sans` to a different font stack and see the typography update across the site. Then change them back to their original values before moving on.
+Try making some changes to the variables and see how they affect the page. Change `--color-text` to `#ff0000` and watch all the body text turn red.
+
+<Screenshot
+  src="/screenshots/week-6/red-text.png"
+  alt="The template site with all body text turned red after changing the --color-text CSS variable to #ff0000"
+  chromeTitle="localhost:5173"
+/>
+
+Then change back to the original value of `#333333` before moving on.
 
 ## Part 3: Expanding the system
 
-Our template's design system is solid, but it's not perfect. Let's find the weak spots and fix them together. This is a normal part of working with any codebase — design systems evolve over time as you discover what's missing.
+Our template's design system is solid, but it's not perfect. Let's find the weak spots and fix them together. This is a normal part of working with any codebase. Design systems evolve over time as you need new features or discover gaps.
 
-Look back at `app.scss`. The font-size variables stop at `--font-size-xl` (20px). But scroll down to the heading styles:
+Look back at `app.scss`. The font-size variables stop at `--font-size-xl`.
+
+```css
+/* Font Sizes */
+--font-size-xs: 0.75rem;    /* 12px */
+--font-size-sm: 0.875rem;   /* 14px */
+--font-size-base: 1rem;     /* 16px */
+--font-size-lg: 1.125rem;   /* 18px */
+--font-size-xl: 1.25rem;    /* 20px */
+```
+
+But scroll down to the heading styles:
 
 ```css
 h1 {
@@ -155,20 +175,20 @@ h3 {
 }
 ```
 
-These sizes — 2.75rem, 1.75rem, 1.5rem — are hardcoded. They don't reference any variable. That means if you wanted to use the same size as an `h1` somewhere else, you'd have to remember (or look up) that it's `2.75rem`. And if you wanted to change the headline size across the entire site, you'd have to find every place it appears.
+These sizes — 2.75rem, 1.75rem, 1.5rem — are hardcoded. They don't reference any variable. That means if you wanted to use the same size as an `h1` somewhere else, you'd have to look up that it's `2.75rem`. And if you wanted to change the headline size across the entire site, you'd have to find every place it appears.
 
 Let's fix this by extending the type scale. Replace the font-size section of your `:root` block with:
 
-```css
-  /* Font Sizes */
-  --font-size-xs: 0.75rem;    /* 12px — footnotes, labels */
-  --font-size-sm: 0.875rem;   /* 14px — captions, metadata */
-  --font-size-base: 1rem;     /* 16px — body text */
-  --font-size-lg: 1.125rem;   /* 18px — lead paragraphs */
-  --font-size-xl: 1.25rem;    /* 20px — subheadings */
-  --font-size-2xl: 1.5rem;    /* 24px — section headers (h3) */
-  --font-size-3xl: 1.75rem;   /* 28px — article subheads (h2) */
-  --font-size-4xl: 2.75rem;   /* 44px — article headlines (h1) */
+```css {emphasize-lines="7-9"}
+/* Font Sizes */
+--font-size-xs: 0.75rem;    /* 12px — footnotes, labels */
+--font-size-sm: 0.875rem;   /* 14px — captions, metadata */
+--font-size-base: 1rem;     /* 16px — body text */
+--font-size-lg: 1.125rem;   /* 18px — lead paragraphs */
+--font-size-xl: 1.25rem;    /* 20px — subheadings */
+--font-size-2xl: 1.5rem;    /* 24px — section headers (h3) */
+--font-size-3xl: 1.75rem;   /* 28px — article subheads (h2) */
+--font-size-4xl: 2.75rem;   /* 44px — article headlines (h1) */
 ```
 
 Now update the heading rules to use them:
@@ -188,7 +208,7 @@ h3 {
 }
 ```
 
-Save and check your browser. The page should look exactly the same — we haven't changed any values, just moved them into variables. But now the system is more complete.
+Save and check your browser. The page should look exactly the same. We haven't changed any values, just moved them into variables. But now the system is more complete.
 
 Now open `src/lib/components/BigNumber.svelte`. Look at the styles:
 
@@ -321,11 +341,19 @@ Now add a Dashboard after `Image` component, using the same CUNY statistics from
 </Dashboard>
 ```
 
-Save and check your browser. You should see three blue stat cards in a row. Every value — the padding, font sizes, spacing — is coming from the design system variables we just wired up. This is the discipline at the core of a good design system. When every value comes from the shared vocabulary, your sites look consistent, and you can make sweeping changes by updating a single variable.
+Save and check your browser. You should see three blue stat cards in a row.
+
+<Screenshot
+  src="/screenshots/week-6/big-number.png"
+  alt="The template site showing three blue BigNumber stat cards in a row displaying year founded, alumni count, and tuition percentage"
+  chromeTitle="localhost:5174"
+/>
+
+Every value — the padding, font sizes, spacing — is coming from the design system variables we just wired up. This is the discipline at the core of a good design system. When every value comes from the shared vocabulary, your sites look consistent, and you can make sweeping changes by updating a single variable.
 
 ### Responsive design with Sass mixins
 
-Now try something. Drag the viewport of your browser to a narrow phone width. Notice that the BigNumber cards look oversized — the `2.75rem` number that felt right on a laptop overwhelms a small screen. Meanwhile, look at the headline at the top of the page. It gets smaller on phones. How does the template do that?
+Now drag the viewport of your browser to a narrow phone width. Notice that the BigNumber cards look oversized — the `2.75rem` number that felt right on a laptop overwhelms a small screen. Meanwhile, look at the headline at the top of the page. It gets smaller on phones. How does the template do that?
 
 Open `app.scss` and scroll to the bottom. You'll see something that doesn't look like normal CSS:
 
@@ -365,7 +393,7 @@ The `_index.scss` file is the entry point. It uses Sass's [`@forward`](https://s
 @forward 'mixins';
 ```
 
-The underscore prefix is a Sass convention meaning "this file is a partial — don't compile it on its own." Partials are meant to be imported into other files.
+The underscore prefix is a Sass convention meaning this is a "partial" file that is meant to be imported into other files. Sass files are often broken into separate partials for organization.
 
 The `_variables.scss` file contains Sass variables with a `$` prefix:
 
@@ -374,9 +402,11 @@ $breakpoint-sm: 768px;
 $breakpoint-lg: 1200px;
 ```
 
-Why `$` variables instead of the `--` CSS custom properties we just learned? Because CSS custom properties have a limitation: they can't be used inside [`@media` query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) conditions. You can't write `@media (max-width: var(--breakpoint))` — the browser won't accept it. So for breakpoints, we use Sass variables, which get resolved at compile time before the browser ever sees them.
+Why `$` variables instead of the `--` CSS custom properties we just learned? Because CSS custom properties have a limitation: they can't be used inside [`@media` query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) conditions that are used to apply different styles at different screen widths.
 
-**`_mixins.scss`** is where `@include mobile` comes from. It defines three mixins:
+You can't write `@media (max-width: var(--breakpoint))`. The browser won't accept it. So for breakpoints, we use Sass variables, which get resolved at compile time before the browser ever sees them.
+
+The `_mixins.scss` file is where `@include mobile` comes from. It defines three functions we can use in our styles.
 
 ```scss
 @mixin mobile {
@@ -398,7 +428,7 @@ Why `$` variables instead of the `--` CSS custom properties we just learned? Bec
 }
 ```
 
-Each mixin wraps a [media query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) — the CSS feature that applies different styles depending on the width of the browser window. Instead of writing `@media (min-width: 768px) { ... }` every time you want tablet styles, you write `@include tablet { ... }`. It's more readable, and if you ever change the breakpoint value, you only change it in one place.
+Each mixin wraps a [media query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries). Instead of writing `@media (max-width: 768px) { ... }` every time you want mobile styles, you write `@include mobile { ... }`. It's more readable, and if you ever change the breakpoint value, you only change it in one place.
 
 So when the compiler sees this in `app.scss`:
 
@@ -442,11 +472,11 @@ It produces this plain CSS:
 }
 ```
 
-Now let's apply this pattern to our BigNumber component. We want the big number fonts to be smaller on phones and full-sized on wider screens.
+Now let's apply this pattern to our `BigNumber` component. We want the big number fonts to be smaller on phones and full-sized on wider screens.
 
 First, change the `<style>` tag to use Sass and import the mixins:
 
-```svelte
+```svelte {emphasize-lines="1-2"}
 <style lang="scss">
   @use '../styles' as *;
 ```
@@ -487,15 +517,20 @@ Now set the font sizes to something that scales down on mobile:
 
 Save and test it. Toggle between phone and tablet widths. The numbers should shrink on narrow screens and grow on wider ones.
 
+<PhoneScreenshot
+  src="/screenshots/week-6/big-number-responsive.png"
+  alt="Mobile view of the template site showing BigNumber stat cards stacked vertically with smaller font sizes from the responsive media query"
+/>
+
 ## Part 4: Breaking out of the box
 
 Everything we've done so far has preserved the template's NYCity News Service look. But sometimes a story needs its own signature identity. A feature about the journalism school's impact shouldn't look exactly like a daily news brief about a city council vote. The best newsrooms solve this by overriding their system's defaults at the page level, keeping the underlying structure but swapping out colors, fonts and layout to match the story's tone.
 
 Let's do that now with the page we already have. We'll transform the template's default CUNY article into something that feels more like a bolder feature story, while still using the same architecture underneath.
 
-CSS custom properties can be overridden at any level of the page. If you redefine a variable inside a specific element, that new value applies to everything inside it — without changing the global default.
+CSS custom properties can be overridden at any level of the page. If you redefine a variable inside a specific element, that new value applies to everything inside it without changing the global default.
 
-We'll use this to create a story-specific color scheme. Add a `<style>` block at the bottom of your `+page.svelte`:
+We'll use this to create a story-specific color scheme. Add a `<style>` block at the bottom of your `+page.svelte`.
 
 ```svelte
 <style lang="scss">
@@ -510,19 +545,27 @@ We'll use this to create a story-specific color scheme. Add a `<style>` block at
 
 We're using `:global()` again here — same idea as in the Dashboard component. Svelte's style scoping works by adding a unique hash to your class names at compile time. Without `:global()`, Svelte would transform `.story-theme` into something like `.story-theme.svelte-abc123`, which wouldn't match the plain `.story-theme` class in your markup. Wrapping it in `:global()` tells Svelte to leave the selector alone.
 
-Now add that class to the existing container div in your markup:
+Now add that class to the existing container div in your markup.
 
 ```svelte
 <div class="container story-theme">
 ```
 
-Save and check your browser. The BigNumber cards have turned orange — without any changes to the components themselves. Because we wired them up to use `var(--color-accent)` in Part 3, and our `.story-theme` overrides `--color-accent` to `#fe8807`, the new color cascades through automatically. The accent border on the article metadata has changed too. So have the link hover colors. One class, five variable overrides, and the entire page shifted personality.
+Save and check your browser. The `BigNumber` cards have turned orange without any changes to the components themselves.
 
-But the site header and footer — which sit outside the container in the layout — still use the original CUNY Blue. The system holds, even as you customize within it.
+<Screenshot
+  src="/screenshots/week-6/orange-big-number.png"
+  alt="The template site with orange BigNumber stat cards and orange accent colors after applying story-theme CSS variable overrides"
+  chromeTitle="localhost:5173"
+/>
+
+Because we wired them up to use `var(--color-accent)` in Part 3, and our `.story-theme` overrides `--color-accent` to `#fe8807`, the new color cascades through automatically. The accent border on the article metadata has changed too. So have the link hover colors. One class, two variable overrides, and the page's personality has completely shifted.
+
+But the site header and footer — which sit outside the `.container` tag in the layout — still use the original CUNY Blue. The broader system holds, even as you customize within it.
 
 ### Designing a splashy header
 
-Let's start by getting the site's blue gradient header bar out of the way. Open `src/routes/+page.js`. You'll see a `load` function that returns settings for the page:
+Since we want to go big at the top of the page, let's get that header bar out of the way. Open `src/routes/+page.js`. You'll see a `load` function that returns settings for the page.
 
 ```js
 export function load() {
@@ -533,7 +576,9 @@ export function load() {
 }
 ```
 
-Change `showHeader` to `false`:
+This is a function that will run on the server before the page loads. It returns an object with two properties: `showHeader` and `showFooter`. These are used by the `+layout.svelte` file to determine whether to render the header and footer components. By default, both are set to `true`, which is why you see the blue header bar and the footer on the page.
+
+Change `showHeader` to `false`.
 
 ```js {emphasize-lines="3"}
 export function load() {
@@ -546,7 +591,13 @@ export function load() {
 
 Save and check your browser. The blue gradient bar is gone. The page feels open and clean.
 
-The template's `ArticleHeader` component is designed for standard news articles. For a feature story, we want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. We'll place the school's logo at the top, centered, followed by the headline and supporting text.
+<Screenshot
+  src="/screenshots/week-6/no-header.png"
+  alt="The template site with the blue navigation header removed, showing the page starting directly with the headline"
+  chromeTitle="localhost:5173"
+/>
+
+The template's `ArticleHeader` component is designed for standard news articles. For a feature story, we want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. We'll place the site's name at the top, centered, followed by the headline and supporting text.
 
 Let's start by loading a display font that will make our headline feel like the cover of a magazine. Your page already has a `<svelte:head>` block with a title and meta description. Add a font link inside it:
 
@@ -620,7 +671,7 @@ Now update the styles at the bottom of the `+page.svelte` file.
     --color-accent: #fe8807;
     --color-border: #fe8807;
 
-     .story-header {
+    .story-header {
       text-align: center;
       padding: var(--spacing-xxl) var(--spacing-md);
     }
@@ -683,15 +734,21 @@ Now update the styles at the bottom of the `+page.svelte` file.
 
 Save and check your browser. The page should look dramatically different from the standard template.
 
-Compare it to what the template looked like at the start of class. The whole page has been reshaped — different colors, a new headline font, a completely different layout — but the underlying architecture is the same. The body text, the Image component and the RelatedLinks section all still draw from the same variables.
+<Screenshot
+  src="/screenshots/week-6/final.gif"
+  alt="The fully customized page with a centered splash header, display font headline, and orange accent theme replacing the standard template design"
+  chromeTitle="localhost:5173"
+/>
+
+The whole page has been reshaped but the underlying architecture is the same. The body text, the Image component and the RelatedLinks section all still draw from the same variables.
 
 ## Homework
 
-### Task 1: Extract a SplashHeader component
+### Task 1: Create a SplashHeader component
 
 Take the header we built in class and move it out of `+page.svelte` into a reusable component at `src/lib/components/SplashHeader.svelte`.
 
-Your component should accept props for the parts that would change from story to story: the kicker, headline, deck, and publication date. The logo, the decorative rule and all the styling should be built into the component itself.
+Your component should accept properties for the parts that would change from story to story: the kicker, headline, deck, and publication date. The decorative rule and all the styling should be built into the component itself.
 
 Once it's working, your `+page.svelte` should be able to use it like this:
 
@@ -700,7 +757,7 @@ Once it's working, your `+page.svelte` should be able to use it like this:
   kicker="NYCity News Service"
   headline="Become a Force for Good"
   deck="At CUNY's journalism school, change is in our DNA"
-  pubDate="Jan. 31, 2026"
+  pubDate="March 6, 2026"
 />
 ```
 

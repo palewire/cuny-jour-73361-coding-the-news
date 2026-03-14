@@ -43,6 +43,7 @@ node .github/skills/browser-screenshots/scripts/capture.cjs \
 | `--execute` | JavaScript to run before capture | - |
 | `--wait` | Milliseconds to wait before capture | 500 |
 | `--dark` | Use dark color scheme | false |
+| `--phone` | Use mobile phone viewport (375x812) | false |
 
 ### Examples
 
@@ -132,6 +133,40 @@ When embedding in `.svx` files, use the Screenshot component:
 | `showChrome` | boolean | `true` | Browser window styling |
 | `chromeTitle` | string | `''` | Title bar text |
 | `chromeUrl` | string | `''` | Address bar URL |
+
+## Phone Screenshots
+
+Use the `--phone` flag to capture at a mobile viewport size, then embed with the `PhoneScreenshot` component which wraps the image in a phone-shaped frame.
+
+### Capture
+
+```bash
+node .github/skills/browser-screenshots/scripts/capture.cjs \
+  --url http://localhost:5174/ \
+  --phone \
+  --output static/screenshots/week-6/mobile-view.png
+```
+
+### Embedding in Tutorials
+
+```svelte
+<script>
+  import PhoneScreenshot from '$lib/components/PhoneScreenshot.svelte';
+</script>
+
+<PhoneScreenshot
+  src="/screenshots/week-6/mobile-view.png"
+  alt="Mobile view of the page showing responsive layout"
+/>
+```
+
+### PhoneScreenshot Component Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | string | required | Path relative to `/static/` |
+| `alt` | string | required | Accessibility description |
+| `maxWidth` | string | `'320px'` | CSS max-width of the phone frame |
 
 ## Recording Videos
 
