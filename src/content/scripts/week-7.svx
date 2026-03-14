@@ -1,0 +1,577 @@
+---
+title: "Another Rep"
+summary: "A refresher exercise that revisits the fundamentals"
+date: "March 16, 2026"
+week: 7
+locked: true
+---
+
+<script>
+  import Screenshot from '$lib/components/Screenshot.svelte';
+</script>
+
+Today's class is a deliberate step back. Before we move into the more advanced projects in Module 2, we're going to slow down and make sure the foundations are solid.
+
+You filled out a survey last week, and it told me something useful: almost everyone wants more practice with JavaScript basics, loading data and interactive inputs. So that's what we're doing today — not new ground, but a chance to revisit the concepts that felt shaky with fresh eyes and a new dataset.
+
+Here's what we're going to build together. Starting from a blank page, we'll:
+
+1. Write a `+page.js` load function that fetches real data from a New York City government API, stopping at each step to examine the JavaScript concepts at work — variables, lists, iteration and results.
+2. Build an interactive list that lets readers click any item to expand a full detail card, using the same `$state` and `onclick` patterns from Week 4, this time applied to an object instead of a boolean.
+3. Style the list and card using the design system variables we set up last week, then refactor the card into its own reusable `FilmPermit.svelte` component.
+
+By the end of class you will have built a complete, styled, interactive data page from scratch. More importantly, you'll have a clearer mental model of what's actually happening at each step — which is what makes the difference between copying code and understanding it.
+
+## Part 1: Load the data
+
+The dataset we're using is [film and television shoot permits](https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p) published by New York City's Mayor's Office of Media and Entertainment. Every time a production company wants to hold parking, block a sidewalk, or otherwise take over a piece of city property to shoot, they file a permit. That data ends up here, and we're going to use it.
+
+One honest caveat before we start: the dataset runs about three months behind. So we're looking at what was shooting in New York last fall, not this week. That's fine for a teaching exercise, and it's a good reminder that "open data" doesn't always mean "real-time data."
+
+### Create your repository
+
+Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+
+<Screenshot
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
+
+Click the green "Use this template" button and create a new repository named `film-permits`. Make sure "Public" is selected, then click "Create repository."
+
+Clone it onto your computer, open it in Visual Studio Code, and run `npm install` in the terminal. These steps should feel familiar by now. Start the development server with `npm run dev` and open your browser to [localhost:5173](http://localhost:5173).
+
+### Step 1: Variables
+
+Before we touch the API, let's talk about variables, because they are the foundation of everything else we are about to do.
+
+Open `src/routes/+page.js` in your editor. Right now it looks like this:
+
+```js
+export function load() {
+  return {
+    showHeader: true,
+    showFooter: true,
+  };
+}
+```
+
+This is the [load function](https://kit.svelte.dev/docs/load) that SvelteKit runs before your page renders. Whatever it returns gets passed into your page as data. We used it in Week 5 to load restaurant inspection data, and we'll use it again now.
+
+Let's replace the contents with something simple to start. We'll declare a variable and log it to the console.
+
+```js
+export function load() {
+  const title = 'Recent Film Permits';
+  console.log(title);
+  return {};
+}
+```
+
+Save the file and look at your browser's developer console. You should see "Recent Film Permits" printed there.
+
+That `const` keyword is how you declare a variable in JavaScript when you know it won't change. If it might change later, you use `let` instead. The short rule is: reach for `const` first, and only switch to `let` when you need to reassign.
+
+```js
+const title = 'Recent Film Permits';  // will never be reassigned
+let count = 0;                         // will be reassigned later: count = count + 1;
+```
+
+You've been writing `let` all semester for Svelte's reactive variables. That's correct there because `$state()` variables do get reassigned as the user interacts with the page. But in a `+page.js` load function, most of the values you create will be constants.
+
+### Step 2: Fetching data into a variable
+
+Now let's pull in real data. Replace your load function with this:
+
+```js
+export async function load() {
+  const url = "https://data.cityofnewyork.us/resource/tg4x-b46p.json?$where=eventtype='Shooting Permit'&$order=startdatetime DESC&$limit=25";
+  const response = await fetch(url);
+  const permits = await response.json();
+  console.log(permits);
+  return {};
+}
+```
+
+Save it and check your console. You should see an array of 25 objects printed there.
+
+Let's unpack what just happened, line by line.
+
+The `url` variable holds the address of the API endpoint. The `$where`, `$order` and `$limit` parts at the end are query parameters in the [Socrata Open Data API](https://dev.socrata.com/) format, which is what NYC Open Data uses. They tell the API to give us only shooting permits, sorted newest first, limited to 25 records. Note that these `$` signs are part of the Socrata query language — they have nothing to do with Svelte's rune syntax.
+
+The `fetch()` function is JavaScript's built-in way of making a web request. It's available in every modern browser and in SvelteKit's server environment. We pass it the URL and it starts talking to the server.
+
+The `await` keyword tells JavaScript to pause here and wait for the server to respond before continuing. This is necessary because network requests take time — a few hundred milliseconds at best. Without `await`, your code would try to use the response before it had arrived, and you'd get nothing.
+
+The `async` keyword at the top of the function declaration is required whenever you use `await` inside a function. It tells JavaScript that this function may pause and resume, rather than running straight through.
+
+The `.json()` call on the second `await` line takes the raw server response — which arrives as a stream of text — and parses it into a JavaScript object. This also takes a moment, which is why it too needs `await`.
+
+The result, stored in `permits`, is an array of objects. You can see that in the console.
+
+### Step 3: Lists
+
+Click on the array in your console to expand it. You're looking at a JavaScript [array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) — an ordered list of items. Each item is an object with the same set of fields.
+
+Arrays in JavaScript are [zero-indexed](https://en.wikipedia.org/wiki/Zero-based_numbering), meaning the first item is at position 0, not position 1. You access items using square brackets.
+
+Add these lines right after your `console.log(permits)`:
+
+```js
+console.log(permits[0]);
+console.log(permits[0].subcategoryname);
+console.log(permits[0].borough);
+```
+
+Save and check your console. The first line prints the entire first permit object. The second and third print individual fields from it.
+
+This bracket-and-dot notation is how you dig into a JavaScript object. The bracket `[0]` gets you the item at position zero. The `.subcategoryname` gets you the field named `subcategoryname` from that item. Every object in the array has the same fields, so `permits[1].subcategoryname` would give you the subcategory of the second permit, and so on.
+
+### Step 4: Iteration
+
+Accessing one item at a time is useful for exploration, but in practice you almost always want to do something with every item in an array. That's where iteration comes in.
+
+JavaScript arrays have a set of built-in methods for this. We'll cover two of them.
+
+The first is [`.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map). It takes a function and applies it to every item in the array, returning a new array of the results. Think of it as "transform every item."
+
+Add this after your individual `console.log` lines:
+
+```js
+const subcategories = permits.map(permit => permit.subcategoryname);
+console.log(subcategories);
+```
+
+Save and check the console. You should see an array of 25 subcategory names — just that field, extracted from every record.
+
+The `permit => permit.subcategoryname` part is an [arrow function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions). It's a compact way to write a function that takes one argument (here called `permit`, though you could name it anything) and returns a value from it. You could also write it the long way:
+
+```js
+const subcategories = permits.map(function(permit) {
+  return permit.subcategoryname;
+});
+```
+
+Both do exactly the same thing. The arrow function version is just shorter.
+
+The second method is [`.filter()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter). It takes a function that returns true or false, and keeps only the items where the function returns true. Think of it as "keep only the items that match."
+
+Add this line:
+
+```js
+const manhattan = permits.filter(permit => permit.borough === 'Manhattan');
+console.log(manhattan.length);
+```
+
+Save and check the console. You should see how many of your 25 permits are in Manhattan.
+
+The `===` operator is JavaScript's [strict equality](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness) check. Always use `===` rather than `==` in JavaScript — the double-equals version has confusing edge cases that have tripped up programmers for decades.
+
+### Step 5: Results
+
+You now know how to get data and explore it. The last step is to pass it to your page so it can be displayed.
+
+Update your load function to return the permits. Clean up all the `console.log` lines we added for exploration — they've done their job.
+
+```js
+export async function load() {
+  const url = "https://data.cityofnewyork.us/resource/tg4x-b46p.json?$where=eventtype='Shooting Permit'&$order=startdatetime DESC&$limit=25";
+  const response = await fetch(url);
+  const permits = await response.json();
+  return { permits };
+}
+```
+
+Now open `src/routes/+page.svelte`. We need to receive the data and render it. Replace the contents with this bare structure:
+
+```svelte
+<script>
+  let { data } = $props();
+
+  function formatDate(str) {
+    return new Date(str).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  }
+</script>
+
+<div class="container">
+  <h1>Recent Film Permits</h1>
+  <ul>
+    {#each data.permits as permit}
+      <li>{permit.subcategoryname} — {permit.borough} — {formatDate(permit.startdatetime)}</li>
+    {/each}
+  </ul>
+</div>
+```
+
+Save and check your browser. You should see a plain bulleted list of 25 film permits, each showing the type of production, the borough and a readable date.
+
+A few things to note. The `let { data } = $props()` line receives everything that `+page.js` returned. Because we returned `{ permits }`, we can access it as `data.permits`.
+
+The `{#each data.permits as permit}` block is Svelte's way of looping over an array. For each item in the array, it renders the markup inside the block, with the current item available as `permit`. You used this same pattern in Week 5.
+
+The `formatDate` function takes the raw timestamp string from the API — something like `2025-12-11T12:00:00.000` — and converts it to something readable like "Dec 11, 2025". The [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) object and [`toLocaleDateString`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString) are built into JavaScript. We pass options to specify the format we want.
+
+---
+
+## Part 2: Click to expand a detail card
+
+We have a list. Now let's make it interactive.
+
+The goal is simple: click any permit in the list and a detail card appears below showing everything we know about that shoot — the street where they're holding parking, the production category, the precinct, the country of origin. Click a close button and the card disappears.
+
+This is a pattern that appears all over news development. Election results pages, sports rosters, candidate guides, restaurant inspection tools — they all use some version of it. You see a summary in a list, you click for the full record.
+
+### Introducing `$state(null)`
+
+You've used `$state()` before to track booleans like `isExpanded = $state(false)` and numbers like `billAmount = $state(0)`. This time we're going to store something different: an entire object, or nothing at all.
+
+Add `$state(null)` to your script block in `+page.svelte`, right below the `$props()` line:
+
+```svelte
+<script>
+  let { data } = $props();
+  let selected = $state(null);
+
+  function formatDate(str) {
+    return new Date(str).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  }
+</script>
+```
+
+The `null` default value means "nothing is selected yet." When a user clicks a permit, we'll replace `null` with that permit's full object. When they close the card, we'll set it back to `null`.
+
+### Wiring up the click handler
+
+Add an `onclick` handler to the `<li>` elements in your list. When clicked, it should set `selected` to the current permit.
+
+```svelte
+<ul>
+  {#each data.permits as permit}
+    <li onclick={() => selected = permit}>
+      {permit.subcategoryname} — {permit.borough} — {formatDate(permit.startdatetime)}
+    </li>
+  {/each}
+</ul>
+```
+
+This is the same `onclick` pattern you used in Week 4 — an arrow function that updates a state variable. The only difference is that instead of flipping a boolean or toggling a number, we're storing the entire `permit` object.
+
+Save the file. The list items won't look any different yet, because nothing is reading from `selected`. Let's fix that.
+
+### Rendering the detail card
+
+Add a conditional block below the list that renders when something is selected:
+
+```svelte
+<ul>
+  {#each data.permits as permit}
+    <li onclick={() => selected = permit}>
+      {permit.subcategoryname} — {permit.borough} — {formatDate(permit.startdatetime)}
+    </li>
+  {/each}
+</ul>
+
+{#if selected}
+  <div class="detail-card">
+    <button onclick={() => selected = null}>Close</button>
+    <h2>{selected.subcategoryname}</h2>
+    <dl>
+      <dt>Type</dt>
+      <dd>{selected.eventtype}</dd>
+      <dt>Category</dt>
+      <dd>{selected.category}</dd>
+      <dt>Location</dt>
+      <dd>{selected.parkingheld}</dd>
+      <dt>Borough</dt>
+      <dd>{selected.borough}</dd>
+      <dt>Dates</dt>
+      <dd>{formatDate(selected.startdatetime)} – {formatDate(selected.enddatetime)}</dd>
+      <dt>Precinct</dt>
+      <dd>{selected.policeprecinct_s}</dd>
+      <dt>Country</dt>
+      <dd>{selected.country}</dd>
+    </dl>
+  </div>
+{/if}
+```
+
+Save and try it. Click any permit in the list. The detail card should appear below with the full record. Click "Close" and it disappears.
+
+A few things to point out. The [`<dl>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl), [`<dt>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dt) and [`<dd>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dd) tags are standard HTML for a description list — a set of term and definition pairs. They are semantically appropriate for a record like this, where each field has a label and a value.
+
+Look at the `parkingheld` field. The value is a raw string like "WEST 48 STREET between 6 AVENUE and 7 AVENUE." That's the actual street where the crew is parking trucks and setting up equipment. It's the most satisfying field in the dataset — specific, local, recognizable.
+
+Now look at `policeprecinct_s` and scroll through a few records. You'll notice values like `18,` — note the trailing comma. The same is true for `communityboard_s` and `zipcode_s`. This is real-world data messiness. The field is designed to hold multiple values separated by commas, but the city's export process leaves a trailing comma even when there's only one value. In a production project you'd clean this with `.replace(/,$/, '')` or a similar fix. For today, let's acknowledge it and move on — it's a useful reminder that data is rarely pristine.
+
+---
+
+## Part 3: Style and refactor
+
+We have a working interactive page. Now let's make it look like something, and then clean up the code by moving the detail card into its own component.
+
+### Styling the list
+
+Open `src/routes/+page.svelte`. Add a `<style lang="scss">` block at the bottom of the file. We'll start with the list.
+
+```svelte
+<style lang="scss">
+  @use '$lib/styles' as *;
+
+  h1 {
+    margin-bottom: var(--spacing-md);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: var(--border-width-thin) solid var(--color-border);
+  }
+
+  li {
+    padding: var(--spacing-sm);
+    border-bottom: var(--border-width-thin) solid var(--color-border);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+
+    &:hover {
+      background-color: var(--color-light-gray);
+    }
+  }
+
+  li.active {
+    background-color: var(--color-light-gray);
+    border-left: var(--border-width-accent) solid var(--color-accent);
+    padding-left: calc(var(--spacing-sm) - var(--border-width-accent));
+  }
+</style>
+```
+
+Save and check your browser. The list should now have clean dividing lines and a hover state. But the `active` class isn't applied yet — we need to wire that up.
+
+### Highlighting the selected row
+
+Svelte has a shorthand for conditionally applying a class called the [class directive](https://svelte.dev/docs/svelte/class). Update your `<li>` tag to use it:
+
+```svelte
+<li
+  onclick={() => selected = permit}
+  class:active={selected === permit}
+>
+```
+
+The `class:active={selected === permit}` attribute adds the `active` class to the element whenever the expression on the right is true — that is, whenever this particular permit is the currently selected one. Save and try clicking a few rows. The selected row should get the blue left border while remaining highlighted after you open the card.
+
+### Styling the detail card
+
+Now let's style the card itself. Add these rules to your `<style lang="scss">` block:
+
+```scss
+  .detail-card {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    border: var(--border-width-thin) solid var(--color-border);
+    background-color: var(--color-light-gray);
+  }
+
+  .detail-card h2 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .detail-card button {
+    float: right;
+    background: none;
+    border: var(--border-width-thin) solid var(--color-border);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+
+    &:hover {
+      background-color: var(--color-border);
+    }
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--spacing-xs) var(--spacing-sm);
+    margin: 0;
+  }
+
+  dt {
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-medium-gray);
+    padding-top: 2px;
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+  }
+```
+
+Save and check your browser. The detail card should now look clean and organized, with the term and definition pairs sitting in a two-column grid.
+
+Notice that every value here comes from the design system variables we set up in Week 6. No hardcoded colors, no hardcoded sizes. If you wanted to use this same page inside a publication with a different accent color, you'd only need to change `--color-accent` in one place.
+
+### Extracting a component
+
+Right now all of the detail card markup lives directly in `+page.svelte`. That's fine for a teaching exercise, but in a real project you'd want to pull it out into its own component — both to keep the page file clean and to make the card reusable.
+
+Let's do that now. Create a new file at `src/lib/components/FilmPermit.svelte`.
+
+This component will need two things from the outside: the permit to display, and a function to call when the user clicks Close. Both will come in as props.
+
+```svelte
+<script>
+  let { permit, onclose } = $props();
+
+  function formatDate(str) {
+    return new Date(str).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  }
+</script>
+
+<div class="film-permit">
+  <button onclick={onclose}>Close</button>
+  <h2>{permit.subcategoryname}</h2>
+  <dl>
+    <dt>Type</dt>
+    <dd>{permit.eventtype}</dd>
+    <dt>Category</dt>
+    <dd>{permit.category}</dd>
+    <dt>Location</dt>
+    <dd>{permit.parkingheld}</dd>
+    <dt>Borough</dt>
+    <dd>{permit.borough}</dd>
+    <dt>Dates</dt>
+    <dd>{formatDate(permit.startdatetime)} – {formatDate(permit.enddatetime)}</dd>
+    <dt>Precinct</dt>
+    <dd>{permit.policeprecinct_s}</dd>
+    <dt>Country</dt>
+    <dd>{permit.country}</dd>
+  </dl>
+</div>
+```
+
+Notice the `onclose` prop. When the user clicks the Close button, it calls whatever function was passed in as `onclose`. The component doesn't need to know anything about what that function does — it just calls it. The parent page is responsible for deciding what "close" means, which in our case is resetting `selected` to `null`.
+
+This is the same principle behind every well-designed component: it handles its own display logic, and it asks the outside world to handle anything that affects the broader page.
+
+Now add the styles. Because the markup has moved into this component, the styles should move here too.
+
+```svelte
+<style lang="scss">
+  @use '../styles' as *;
+
+  .film-permit {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    border: var(--border-width-thin) solid var(--color-border);
+    background-color: var(--color-light-gray);
+  }
+
+  h2 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  button {
+    float: right;
+    background: none;
+    border: var(--border-width-thin) solid var(--color-border);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+
+    &:hover {
+      background-color: var(--color-border);
+    }
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--spacing-xs) var(--spacing-sm);
+    margin: 0;
+  }
+
+  dt {
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-medium-gray);
+    padding-top: 2px;
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+  }
+</style>
+```
+
+Save `FilmPermit.svelte`. Now update `+page.svelte` to use it. Add the import at the top of the script block and replace the `{#if selected}` block with the component.
+
+```svelte
+<script>
+  import FilmPermit from '$lib/components/FilmPermit.svelte';
+
+  let { data } = $props();
+  let selected = $state(null);
+
+  function formatDate(str) {
+    return new Date(str).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  }
+</script>
+
+<div class="container">
+  <h1>Recent Film Permits</h1>
+  <ul>
+    {#each data.permits as permit}
+      <li
+        onclick={() => selected = permit}
+        class:active={selected === permit}
+      >
+        {permit.subcategoryname} — {permit.borough} — {formatDate(permit.startdatetime)}
+      </li>
+    {/each}
+  </ul>
+
+  {#if selected}
+    <FilmPermit permit={selected} onclose={() => selected = null} />
+  {/if}
+</div>
+```
+
+Also remove the `.detail-card`, `dl`, `dt`, `dd` and button styles from the `<style>` block in `+page.svelte`, since those have moved into the component. Your page styles should now only cover the list and the heading.
+
+Save everything and test it. The page should work exactly as before.
+
+Look at how much cleaner `+page.svelte` has become. The page is responsible for fetching the data, managing which permit is selected, and rendering the list. The `FilmPermit` component is responsible for displaying a single permit. Each piece of code has one job.
+
+This is the discipline that separates readable, maintainable projects from the kind that only make sense to the person who wrote them at 2 a.m. before a deadline.
