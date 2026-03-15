@@ -1,5 +1,5 @@
 ---
-title: "Another Rep"
+title: "Practice, Practice, Practice"
 summary: "A refresher exercise that revisits the fundamentals"
 date: "March 16, 2026"
 week: 7
@@ -10,23 +10,19 @@ locked: true
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
-Today's class is a deliberate step back. Before we move into the more advanced projects in Module 2, we're going to slow down and make sure the foundations are solid.
+Today's class is a deliberate step back.
 
-You filled out a survey last week, and it told me something useful: almost everyone wants more practice with JavaScript basics, loading data and interactive inputs. So that's what we're doing today — not new ground, but a chance to revisit the concepts that felt shaky with fresh eyes and a new dataset.
+The findings from our student survey were clear: You want to spend more time on JavaScript fundamentals, the basics we blew by in our early weeks. And then, once you feel more comfortable, drill down on how you can use the language to load data and craft interactive pages.
 
-Here's what we're going to build together. Starting from a blank page, we'll:
+So that's the plan.
 
-1. Write a `+page.js` load function that fetches real data from a New York City government API, stopping at each step to examine the JavaScript concepts at work — variables, lists, iteration and results.
-2. Build an interactive list that lets readers click any item to expand a full detail card, using the same `$state` and `onclick` patterns from Week 4, this time applied to an object instead of a boolean.
-3. Style the list and card using the design system variables we set up last week, then refactor the card into its own reusable `FilmPermit.svelte` component.
+Starting from a blank page, you'll build a new interactive page, step by step, with a focus on understanding the JavaScript concepts at work.
 
-By the end of class you will have built a complete, styled, interactive data page from scratch. More importantly, you'll have a clearer mental model of what's actually happening at each step — which is what makes the difference between copying code and understanding it.
+Once you're finished, you'll be ready to start building real data projects in our class's next phase.
 
-## Part 1: Load the data
+## Part 1: Loading data, learning JavaScript
 
 The dataset we're using is [film and television shoot permits](https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p) published by New York City's Mayor's Office of Media and Entertainment. Every time a production company wants to hold parking, block a sidewalk, or otherwise take over a piece of city property to shoot, they file a permit. That data ends up here, and we're going to use it.
-
-One honest caveat before we start: the dataset runs about three months behind. So we're looking at what was shooting in New York last fall, not this week. That's fine for a teaching exercise, and it's a good reminder that "open data" doesn't always mean "real-time data."
 
 ### Create your repository
 
