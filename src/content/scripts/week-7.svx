@@ -16,7 +16,7 @@ The findings from our student survey were clear: You want to spend more time on 
 
 So that's the plan.
 
-Starting from a blank page, you'll build a new interactive page, step by step, with a focus on understanding the JavaScript concepts at work.
+Starting from a blank page, you'll build a new interactive application, step by step, with a focus on understanding the JavaScript concepts at work.
 
 Once you're finished, you'll be ready to start building real data projects in our class's next phase.
 
