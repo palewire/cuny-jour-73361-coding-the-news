@@ -55,9 +55,9 @@ The New York City Department of Health and Mental Hygiene posts an updated datas
 
 The full dataset contains nearly 300,000 records, each representing an administrative action taken by the city, covering far more than just the final letter grade.
 
-Rather than download the whole thing, you'll write a small Node.js script that talks to the city's data server and asks for exactly the records we want. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
+Rather than download the whole thing, you'll write a small Node.js script that talks to the city's data server and asks for exactly the records you want. This is a common pattern in data journalism — you write a script that fetches, filters and shapes your data before it ever touches your project.
 
-Let's start by creating a new repository from our template. Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+Let's start by creating a new repository from the template. Open your browser and navigate to <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
 <Screenshot
   src="/screenshots/week-2/template-repo-homepage.png"
@@ -70,7 +70,7 @@ Click the green "Use this template" button and name your new repository `my-firs
 
 Clone it to your computer, open it in Visual Studio Code. Run `npm install` in the terminal.
 
-Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code. It's a Node.js script that will hit the city's data API, ask for the last 50,000 records and then save the most recent grade for each restaurant to a JSON file in our project.
+Next, create a new file in the root of your project called `fetch-data.js`. Paste in the following code. It's a Node.js script that will hit the city's data API, ask for the last 50,000 records and then save the most recent grade for each restaurant to a JSON file in your project.
 
 ```js
 // Node's built-in file system and path modules — lets us write files to disk
@@ -165,7 +165,7 @@ You should see a message reporting how many raw records were downloaded and how 
   },
 ```
 
-Scroll to the bottom and you should see inspections from early January 2025, which is the cutoff we set in our script.
+Scroll to the bottom and you should see inspections from early January 2025, which is the cutoff you set in your script.
 
 ```json
   {
@@ -187,7 +187,7 @@ SvelteKit has an official pattern for getting data into your pages. It's called 
 
 Before your page component renders, SvelteKit runs the load function to prepare whatever data the page needs. The page then receives that data as a property. This separates getting the data from displaying it, which keeps your component focused on presentation.
 
-This is the pattern used by complicated news applications with multiple data sources, authentication, pagination and more. It's also the pattern used by our simple project, because it's important to learn it from the start.
+This is the pattern used by complicated news applications with multiple data sources, authentication, pagination and more. It's also the pattern used by your simple project, because it's important to learn it from the start.
 
 Create a new file at `src/routes/+page.js`. This file must be named exactly `+page.js` — SvelteKit looks for this specific filename.
 
@@ -201,23 +201,23 @@ export function load() {
 }
 ```
 
-This is a simple example of a `+page.js`. The first line imports our JSON data file, as it would any other Node.js library.
+This is a simple example of a `+page.js`. The first line imports your JSON data file, as it would any other Node.js library.
 
 The `load` function is the special function that SvelteKit calls before rendering the page. Whatever object you return from it becomes available to your page component.
 
 <Aside>
-In this case, we're returning an object with one property: `restaurants`, which contains the full array of inspection records from our JSON file.
+In this case, you're returning an object with one property: `restaurants`, which contains the full array of inspection records from your JSON file.
 
-Because the name of the variable we imported matches the name of the key in our `{}` object, we can use shorthand syntax and just write `restaurants` instead of `restaurants: restaurants`. That's a JavaScript quirk that can be confusing at first.
+Because the name of the variable you imported matches the name of the key in your return object, you can use shorthand syntax and just write `restaurants` instead of `restaurants: restaurants`. That's a JavaScript quirk that can be confusing at first.
 </Aside>
 
-Now open `src/routes/+page.svelte`. At the bottom of the script block, we need to receive the data that the load function prepared. Add this line, which is just the like one we used to receive properties in our components:
+Now open `src/routes/+page.svelte`. At the bottom of the script block, you need to receive the data that the load function prepared. Add this line, which is just like the one you used to receive properties in your components:
 
 ```js
 let { data } = $props();
 ```
 
-The `data` property is another SvelteKit convention. It automatically contains whatever your `+page.js` load function returned. So `data.restaurants` is our array of inspection records.
+The `data` property is another SvelteKit convention. It automatically contains whatever your `+page.js` load function returned. So `data.restaurants` is your array of inspection records.
 
 Let's verify it works. Add a `$inspect()` call right after the props line. It's the special Svelte function that logs a variable to the browser console.
 
@@ -231,7 +231,7 @@ You should see your data array logged in the console. Click the arrow to expand 
 
 ## Part 3: Looping through lists with `{#each}`
 
-You have data flowing into your page. Now what? The whole point is to show it to readers. And since we have hundreds or thousands of records, we need a way to render them all without writing each one by hand.
+You have data flowing into your page. Now what? The whole point is to show it to readers. And since you have hundreds or thousands of records, you need a way to render them all without writing each one by hand.
 
 That's where Svelte's [`{#each}`](https://svelte.dev/docs/svelte/each) block comes in. It loops over an array and renders one row at a time. It's the tool you'll reach for anytime you need to display a list, a table, a grid of cards, or any other repeating pattern.
 
@@ -260,9 +260,9 @@ Inside the `ArticleBody` in `+page.svelte`, add an HTML table that uses an `{#ea
 </table>
 ```
 
-Inside the block, we use the familiar curly-brace syntax to insert each field. The `row.dba` expression pulls the business name. The `row.boro` gets the borough. And so on.
+Inside the block, you use the familiar curly-brace syntax to insert each field. The `row.dba` expression pulls the business name. The `row.boro` gets the borough. And so on.
 
-Save and check your browser. You'll see all 5,000 records printed out on one page. Way more than we'd ever want to show. You get the point. One loop was able to print out the entire dataset.
+Save and check your browser. You'll see all 5,000 records printed out on one page. Way more than you'd ever want to show. You get the point. One loop was able to print out the entire dataset.
 
 ### Creating a RestaurantTable component
 
@@ -324,7 +324,7 @@ Create a new file at `src/lib/components/RestaurantTable.svelte`. Add this:
 </style>
 ```
 
-Notice how it's the same code as in our `+page.svelte`, but now it's wrapped in a component with a `restaurantList` property, that can be passed in from the outside.
+Notice how it's the same code as in your `+page.svelte`, but now it's wrapped in a component with a `restaurantList` property, that can be passed in from the outside.
 
 Back in `src/routes/+page.svelte`, import the component.
 
@@ -342,13 +342,13 @@ Save and reload. Similar result, a little cleaner though.
 
 ## Part 4: Filtering with reactive state
 
-We have a table. But it shows every restaurant in the dataset at once. What if a reader only cares about restaurants in their borough? Or wants to see just the places that got a C?
+You have a table. But it shows every restaurant in the dataset at once. What if a reader only cares about restaurants in their borough? Or wants to see just the places that got a C?
 
 You'll take what you learned last week and add dropdown menus that let readers filter the data.
 
 ### Adding a borough filter
 
-Start by adding a `$state` variable to your script block in `+page.svelte` for the selected borough. We'll default it to an empty string, which will represent "show all boroughs."
+Start by adding a `$state` variable to your script block in `+page.svelte` for the selected borough. You'll default it to an empty string, which will represent "show all boroughs."
 
 ```js {emphasize-lines="4"}
 let { data } = $props();
@@ -357,7 +357,7 @@ $inspect(data.restaurants);
 let selectedBorough = $state("");
 ```
 
-Now we need to create a `filteredRestaurants` variable that filters the data based on the selection. Add this below your props:
+Now you need to create a `filteredRestaurants` variable that filters the data based on the selection. Add this below your props:
 
 ```js {emphasize-lines="6-12"}
 let { data } = $props();
@@ -376,7 +376,7 @@ This reads: if `selectedBorough` is empty, use the full array. Otherwise, keep o
 
 Because `filteredRestaurants` is `$derived`, the table will update automatically whenever `selectedBorough` changes.
 
-Now add a `<select>` dropdown to your page, above the table. We'll use `bind:value` to connect it to our state variable, just like we did with the tip calculator [last week](/docs/coding-the-news/scripts/week-4/).
+Now add a `<select>` dropdown to your page, above the table. You'll use `bind:value` to connect it to your state variable, just like you did with the tip calculator [last week](/docs/coding-the-news/scripts/week-4/).
 
 ```svelte
 <div class="filters">
@@ -392,7 +392,7 @@ Now add a `<select>` dropdown to your page, above the table. We'll use `bind:val
 </div>
 ```
 
-And update the table to use our filtered `filteredRestaurants` variable:
+And update the table to use your filtered `filteredRestaurants` variable:
 
 ```svelte
 <RestaurantTable restaurantList={filteredRestaurants} />
@@ -404,7 +404,7 @@ The table shrinks to show only Brooklyn restaurants. Switch to "Queens" and it a
 
 ### Adding a cuisine filter
 
-Let's add a second dropdown for cuisine type. This works the same way, but since there are dozens of cuisine types in the data, we'll generate the options from the dataset itself.
+Let's add a second dropdown for cuisine type. This works the same way, but since there are dozens of cuisine types in the data, you'll generate the options from the dataset itself.
 
 Add another state variable in the script section at the top `+page.svelte` for the selected cuisine:
 
@@ -422,7 +422,7 @@ let filteredRestaurants = $derived(
 );
 ```
 
-We'll need a list of all the unique cuisine types in the data. Add a derived value that extracts them:
+You'll need a list of all the unique cuisine types in the data. Add a derived value that extracts them:
 
 ```js {emphasize-lines="7-9"}
 let { data } = $props();
@@ -444,7 +444,7 @@ let filteredRestaurants = $derived(
 
 This line does a few things at once. The `.map()` method pulls the `cuisine_description` from every record. Wrapping it in `new Set()` eliminates duplicates, since a Set can only contain unique values. The `[...]` [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax) converts the Set back into an array. And `.sort()` puts them in alphabetical order.
 
-Notice we derive the cuisine list from `data.restaurants` — the full, unfiltered dataset — so the dropdown always shows all available cuisines regardless of the current borough selection.
+Notice that the cuisine list is derived from `data.restaurants` — the full, unfiltered dataset — so the dropdown always shows all available cuisines regardless of the current borough selection.
 
 Now update the `filteredRestaurants` variable to account for both dropdowns:
 
@@ -494,7 +494,7 @@ Add a second dropdown next to the first:
 </div>
 ```
 
-Notice we're using `{#each}` again — this time to generate `<option>` tags from our list of cuisines. The same tool that renders table rows can render any repeating element.
+Notice you're using `{#each}` again — this time to generate `<option>` tags from your list of cuisines. The same tool that renders table rows can render any repeating element.
 
 Save and check your browser. Try different combinations — Mexican restaurants in the Bronx, Italian restaurants in Manhattan, pizza places across all boroughs. The table updates with each selection.
 
@@ -534,7 +534,7 @@ This creates a new array containing only the first 100 items from the filtered s
 
 Save and check your browser. The table is capped at 100 rows no matter how many records match the current filters. Notice you kept `filteredRestaurants` pointing to the full filtered set.
 
-We can use that to show readers how many total results exist. Add a short line of text above the table:
+You can use that to show readers how many total results exist. Add a short line of text above the table:
 
 ```svelte {emphasize-lines="1"}
 <p class="count">Showing {displayed.length} of {filteredRestaurants.length} restaurants</p>
@@ -688,16 +688,16 @@ Above the table, add a row of `BigNumber` components inside a `Dashboard` parent
 - The number that received a C
 
 These counts should update reactively whenever the user changes any filter — borough, cuisine, search query or grade. Use `$derived()` to calculate them from your `filteredRestaurants` array.
-You'll need to import the BigNumber and Dashboard components we built in [Week 3](/docs/coding-the-news/scripts/week-3/).
+You'll need to import the BigNumber and Dashboard components built in [Week 3](/docs/coding-the-news/scripts/week-3/).
 
-I've added them to our class template's shared component library, so you can now import them from a fresh clone of the template like this:
+I've added them to the class template's shared component library, so you can now import them from a fresh clone of the template like this:
 
 ```js
 import BigNumber from '$lib/components/BigNumber.svelte';
 import Dashboard from '$lib/components/Dashboard.svelte';
 ```
 
-If you don't remember how they work, revisit your code from that week or ask Copilot to remind you. There's a hint in how we calculated the count of displayed restaurants above our table in tonight's lesson.
+If you don't remember how they work, revisit your code from that week or ask Copilot to remind you. There's a hint in how you calculated the count of displayed restaurants above your table in tonight's lesson.
 
 As with task one, send me the link to a working GitHub Pages url with your dashboard.
 

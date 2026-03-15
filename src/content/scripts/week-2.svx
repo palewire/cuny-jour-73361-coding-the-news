@@ -45,11 +45,11 @@ One, they follow a web development approach known as static-site generation. Thi
 
 It's a popular development pattern for simple sites, and it dominates newsroom projects. Static sites are cheaper, more secure, more stable and easier to archive than sites that rely on dy­nam­ic systems.
 
-Two, they all use the Node.js programming system, which will be the first thing we need to install.
+Two, they all use the Node.js programming system, which will be the first thing you need to install.
 
 ## Part 2: Introduction to Node.js
 
-[Node.js](https://en.wikipedia.org/wiki/Node.js) is a system that lets you run [JavaScript](https://en.wikipedia.org/wiki/JavaScript), the programming language of the web, on your computer, not just in a web browser. It's the engine that powers most modern web development tools, including all of the newsroom frameworks we just discussed.
+[Node.js](https://en.wikipedia.org/wiki/Node.js) is a system that lets you run [JavaScript](https://en.wikipedia.org/wiki/JavaScript), the programming language of the web, on your computer, not just in a web browser. It's the engine that powers most modern web development tools, including all of the newsroom frameworks discussed above.
 
 <Screenshot
   src="/screenshots/week-2/nodejs-homepage.png"
@@ -64,7 +64,7 @@ You can learn more about it at [nodejs.org](https://nodejs.org/).
 
 ### Check if Node.js is already installed
 
-Before we install anything, let's check if you already have Node.js on your computer. Some of you may have installed it for another class or project.
+Before you install anything, let's check if you already have Node.js on your computer. Some of you may have installed it for another class or project.
 
 Open Visual Studio Code. If you don't have a project open, that's fine. Click Terminal in the menu bar and select New Terminal.
 
@@ -78,7 +78,7 @@ If Node.js is installed, you'll see a version number like `v20.11.0` or similar.
 
 If you see an error message like `command not found: node`, that means Node.js isn't installed yet.
 
-We'll fix that with a tool called [Node Version Manager](https://www.nvmnode.com/).
+You'll fix that with a tool called [Node Version Manager](https://www.nvmnode.com/).
 
 ### Install nvm
 
@@ -91,7 +91,7 @@ Node Version Manager, also known as `nvm`, is a command-line tool that makes it 
   chromeUrl="https://www.nvmnode.com"
 />
 
-Before we can use it to install Node.js, we need to install nvm itself.
+Before you can use it to install Node.js, you need to install nvm itself.
 
 Copy and paste this command into your terminal and press Enter:
 
@@ -140,7 +140,7 @@ You should see a version number like `0.40.4`. Now you're ready to install Node.
 
 ### Install Node.js with nvm
 
-Now we can use nvm to install Node.js by typing this command:
+Now you can use nvm to install Node.js by typing this command:
 
 ```bash
 nvm install --lts
@@ -167,7 +167,7 @@ node --version
 
 You should now see a version number like `v24.13.0`, or whatever the current LTS version is.
 
-You should also check that the Node Package Manager was installed alongside Node.js, which is the tool we'll use to install additional packages.
+You should also check that the Node Package Manager was installed alongside Node.js, which is the tool you'll use to install additional packages.
 
 ```bash
 npm --version
@@ -175,11 +175,11 @@ npm --version
 
 You should see a version number like `11.6.2`.
 
-You now have Node.js installed and ready to use. This is the foundation that will power all the web development tools we'll use throughout the rest of this course.
+You now have Node.js installed and ready to use. This is the foundation that will power all the web development tools you'll use throughout the rest of this course.
 
 ## Part 3: Creating a page from a static-site template
 
-Now that you have Node.js installed, let's put it to work. We're going to use a GitHub template I've created for this class. It's a minimal framework configured to build static websites in the style of CUNY's [NYCity News Service](https://nycitynewsservice.com/).
+Now that you have Node.js installed, let's put it to work. You're going to use a GitHub template I've created for this class. It's a minimal framework configured to build static websites in the style of CUNY's [NYCity News Service](https://nycitynewsservice.com/).
 
 <Screenshot
   src="/screenshots/week-2/template-live-preview.gif"
@@ -221,13 +221,13 @@ After a moment, you'll be redirected to your new repository's page.
 
 ### Clone the repository to your computer
 
-Now let's get this code onto your computer using the techniques we covered in week one.
+Now let's get this code onto your computer using the techniques covered in week one.
 
 Open a new window in Visual Studio Code. Click on the "Source Control" icon in the left sidebar, the one that looks like a Y or a branch, and click the "Clone Repository" button.
 
 A popup will appear at the top of the window asking for a repository URL. Go back to your browser, copy the URL to your new repository and paste it into the popup. Press enter.
 
-A file dialog will open asking where to save the project. Navigate to your `Code` folder we made last week and click "Select Repository Location." After a few moments, VS Code will ask if you want to open the cloned repository. Click "Open."
+A file dialog will open asking where to save the project. Navigate to your `Code` folder from last week and click "Select Repository Location." After a few moments, VS Code will ask if you want to open the cloned repository. Click "Open."
 
 You should now see the project files in the Explorer sidebar. Take a moment to look around. You'll see folders like `src` and `static`, and files like `package.json` and `svelte.config.js`.
 
@@ -239,7 +239,7 @@ You should now see the project files in the Explorer sidebar. Take a moment to l
 
 ### Install the project dependencies
 
-Before we can run the project, we need to install its dependencies. These are external packages of code that the project needs to work. They're listed in the `package.json` file.
+Before you can run the project, you need to install its dependencies. These are external packages of code that the project needs to work. They're listed in the `package.json` file.
 
 <Screenshot
   src="/screenshots/week-2/vscode-package-json.png"
@@ -292,7 +292,7 @@ Open your browser and navigate to that URL, `http://localhost:5173`. You should 
   chromeUrl="http://localhost:5173"
 />
 
-Congratulations! You're running a local web server. Unlike the demonstration page we saw earlier, this page you see is being generated by the code in your project folder.
+Congratulations! You're running a local web server. Unlike the demonstration page shown earlier, this page you see is being generated by the code in your project folder.
 
 ### Make your first edit
 
@@ -304,7 +304,7 @@ Let's change something. In VS Code's Explorer sidebar, navigate to `src/routes/+
   showChrome={false}
 />
 
-This is the homepage of your site. There's a lot going on here. We'll cover it all in detail later. For now, just focus on the top part of the file, the part inside the script tags.
+This is the homepage of your site. There's a lot going on here. You'll cover it all in detail later. For now, just focus on the top part of the file, the part inside the script tags.
 
 Find the line that says:
 
@@ -331,7 +331,7 @@ Try making a few more changes. Edit the byline and publication date. Get a feel 
 
 ### The project structure
 
-We'll dig into more later, but let's pause briefly for an overview of the main files and folders in this project:
+You'll dig into more later, but let's pause briefly for an overview of the main files and folders in this project:
 
 | Files | Description |
 |-------------|-------------|
@@ -373,7 +373,7 @@ I routinely use to publish hobby projects, like [cummings.ee](https://cummings.e
   chromeUrl="https://github.io"
 />
 
-To take advantage of it, we need to tell GitHub to serve your repository as a website. Go to your `my-first-static-site` repository on GitHub in your browser.
+To take advantage of it, you need to tell GitHub to serve your repository as a website. Go to your `my-first-static-site` repository on GitHub in your browser.
 
 Click on "Settings" in the top navigation bar and then select "Pages" from the left sidebar.
 
@@ -431,7 +431,7 @@ Open the `.github/workflows/deploy.yml` file in your project. This file defines 
 
 That means all you have to do to publish your page is commit and push the changes you made earlier to `+page.svelte`.
 
-In Visual Studio Code, open the "Source Control" panel we learned about last week. Commit your changes with a message like "Updated headline" and push them to GitHub.
+In Visual Studio Code, open the "Source Control" panel you learned about last week. Commit your changes with a message like "Updated headline" and push them to GitHub.
 
 ### Watch the workflow run
 

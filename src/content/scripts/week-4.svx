@@ -16,7 +16,7 @@ locked: false
 
 ## Part 1: Introduction to reactivity
 
-This week we'll venture further into what you can do with Svelte by learning how to create reactive components.
+This week you'll venture further into what you can do with Svelte by learning how to create reactive components.
 
 [Reactivity](https://en.wikipedia.org/wiki/Reactive_programming) is the arcane term that developers use to describe features that respond instantly to new data or user input. It's what allows news developers to create engaging applications that wouldn't be possible in print or a one-way broadcast.
 
@@ -39,7 +39,7 @@ It asks readers a series of questions about the words they choose — do you say
   attribution="Josh Katz"
 />
 
-Today we're going to learn the fundamentals you need to build interactive components like the Times quiz. Each part will introduce a concept you need to know.
+Today you're going to learn the fundamentals you need to build interactive components like the Times quiz. Each part will introduce a concept you need to know.
 
 ### Create your repository
 
@@ -52,9 +52,9 @@ Before we begin, open your browser and navigate to our template repository at <a
   chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
 />
 
-Just like our previous classes, click the green "Use this template" button near the top right of the page. This week, let's name our repository `my-first-interactive-components`. Make sure "Public" is selected, then click "Create repository."
+Just like in previous classes, click the green "Use this template" button near the top right of the page. This week, let's name your repository `my-first-interactive-components`. Make sure "Public" is selected, then click "Create repository."
 
-Clone the repository and its code onto your computer using the techniques we covered in [week one](/docs/coding-the-news/scripts/week-1). Open it in Visual Studio Code. Start a terminal and run `npm install` to fetch the template's dependencies. These steps should start to feel like second nature.
+Clone the repository and its code onto your computer using the techniques covered in [week one](/docs/coding-the-news/scripts/week-1). Open it in Visual Studio Code. Start a terminal and run `npm install` to fetch the template's dependencies. These steps should start to feel like second nature.
 
 ## Part 2: Introduction to state
 
@@ -70,9 +70,9 @@ Let's ease into using state by building a component that shows or hides content 
 
 ### Creating a ReadMore component
 
-We'll illustrate this by building a component that shows a "Read more" button. When clicked, it will reveal hidden content. Click again and the content will disappear.
+You'll illustrate this by building a component that shows a "Read more" button. When clicked, it will reveal hidden content. Click again and the content will disappear.
 
-Create a new file at `src/lib/components/` directory we used last week. Call it `ReadMore.svelte`. Start with a simple script block at the top.
+Create a new file in the `src/lib/components/` directory you used last week. Call it `ReadMore.svelte`. Start with a simple script block at the top.
 
 ```svelte
 <script>
@@ -109,7 +109,7 @@ The [`onclick`](https://www.w3schools.com/jsref/event_onclick.asp) attribute is 
 
 The `{isExpanded ? '▼' : '▶'}` syntax is called a [ternary operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator). It's a shorthand way of saying "if `isExpanded` is true, show a down arrow; otherwise, show a right arrow." This gives the user a visual cue about whether the content is expanded or collapsed.
 
-You can see that our `title` variable is being used right after the arrow. When we use the `ReadMore` component, whatever we pass as the `title` property will appear here.
+You can see that our `title` variable is being used right after the arrow. When you use the `ReadMore` component, whatever you pass as the `title` property will appear here.
 
 The `{#if isExpanded}` block is Svelte's conditional rendering syntax. Everything inside this block only appears on the page when `isExpanded` is true. When the user clicks the button and `isExpanded` becomes true, Svelte automatically adds this content to the page. When it becomes false, Svelte removes it.
 
@@ -163,7 +163,7 @@ Save your `ReadMore.svelte` file and open `src/routes/+page.svelte`. Add an impo
 import ReadMore from '$lib/components/ReadMore.svelte';
 ```
 
-Now add the component somewhere inside the `ArticleBody`. We'll pass in the same title and content that Katz and Andrews used in their dialect quiz:
+Now add the component somewhere inside the `ArticleBody`. You'll pass in the same title and content that Katz and Andrews used in their dialect quiz:
 
 ```svelte
 <ReadMore title="About This Quiz">
@@ -192,7 +192,7 @@ Now add the component somewhere inside the `ArticleBody`. We'll pass in the same
 </ReadMore>
 ```
 
-Save the file. As we've done in previous weeks, open a terminal and execute `npm run dev` to start the development server.
+Save the file. As you've done in previous weeks, open a terminal and execute `npm run dev` to start the development server.
 
 When you check your browser at [localhost:5173](http://localhost:5173). You should see a button with our title and a right arrow. Click it, and the methodology text appears. Click again, and it disappears.
 
@@ -435,7 +435,7 @@ This is `$derived()` in action. You change the input, and every value that depen
 
 ### Adding more services
 
-One service isn't much of a calculator. Let's add the rest of the major streaming platforms. First, we need to store the prices somewhere. A JavaScript object is perfect for this. Let's add the prices of each service to the top of our script block, and a state variable for each one:
+One service isn't much of a calculator. Let's add the rest of the major streaming platforms. First, you need to store the prices somewhere. A JavaScript object is perfect for this. Let's add the prices of each service to the top of your script block, and a state variable for each one:
 
 ```svelte {emphasize-lines="1-8,11-15"}
   const prices = {
@@ -529,7 +529,7 @@ Save and check your browser. Click different combinations of services.  See the 
 
 ## Part 4: Introduction to binding
 
-So far, we've handled simple interactions where the user clicks a button and the page changes. That's a nice start, but some inputs are more fluid than that. Think of a text box, which gradually updates as the user types in more text.
+So far, you've handled simple interactions where the user clicks a button and the page changes. That's a nice start, but some inputs are more fluid than that. Think of a text box, which gradually updates as the user types in more text.
 
 Svelte handles these situations with [`bind:value`](https://svelte.dev/docs/svelte/bind#input-bind:value). It creates a live connection between an input and a `$state` variable. When the user types, drags or touches, everything stays in sync automatically.
 
@@ -563,7 +563,7 @@ Create a new file in the `src/lib/components/` directory. Call it `TipCalculator
 </script>
 ```
 
-The first line creates a state variable called `billAmount` with a default value of 0. The second line uses `$derived()` to calculate 20% of the bill using a fixed value we've entered into the code. Whenever `billAmount` changes, the tip will automatically recalculate at that rate.
+The first line creates a state variable called `billAmount` with a default value of 0. The second line uses `$derived()` to calculate 20% of the bill using a fixed value you've entered into the code. Whenever `billAmount` changes, the tip will automatically recalculate at that rate.
 
 Now let's add the markup that will display the input and result, much like your subscription survey. The key difference: You'll fit `bind:value` on a text input.
 
@@ -667,7 +667,7 @@ Save your `TipCalculator.svelte` file and open `src/routes/+page.svelte`. Add an
 import TipCalculator from '$lib/components/TipCalculator.svelte';
 ```
 
-Now place the component somewhere inside the `ArticleBody`, as we did with our other components.
+Now place the component somewhere inside the `ArticleBody`, as you did with your other components.
 
 ```svelte
 <TipCalculator />
@@ -684,7 +684,7 @@ Check your browser. Type a bill amount and watch the tip calculate instantly.
 
 ### Adding a custom tip percentage
 
-Now let's complicate things and add a way to customize the percentage. In the script tag at the top of the component, add a new `$state` variable with default tip percentage. Then replace our `tip` variable with a `$derived` variable that calculates the amount based on the two inputs.
+Now let's complicate things and add a way to customize the percentage. In the script tag at the top of the component, add a new `$state` variable with default tip percentage. Then replace your `tip` variable with a `$derived` variable that calculates the amount based on the two inputs.
 
 ```svelte {emphasize-lines="3-4"}
 <script>
@@ -694,7 +694,7 @@ Now let's complicate things and add a way to customize the percentage. In the sc
 </script>
 ```
 
-Down in the markup, add a range slider bound to the `tipPercent` variable that lets users adjust the value. Then update the final box to print the `tipPercent` in our bottom line.
+Down in the markup, add a range slider bound to the `tipPercent` variable that lets users adjust the value. Then update the final box to print the `tipPercent` in your bottom line.
 
 ```svelte {emphasize-lines="4-14,30-33"}
 <div class="calculator">
@@ -829,7 +829,7 @@ Add a third input for the number of people, after the tip slider and before the 
   </div>
 ```
 
-Notice we use `min="1"` on the input to ensure we never go below 1 person. The label dynamically shows "person" or "people" using a ternary operator.
+Notice you use `min="1"` on the input to ensure the count never goes below 1 person. The label dynamically shows "person" or "people" using a ternary operator.
 
 Add the per-person result. The `{#if numPeople > 1}` only shows this line when splitting among multiple people.
 
@@ -863,11 +863,11 @@ Congratulations, you've used `$state`, `$derived` and `bind:value` together to c
 
 ## Part 5: Introduction to subcomponents
 
-Let's return to our streaming cost calculator from Part 3. Look at the markup — it has six nearly identical button blocks, each using the native `onclick` handler to the toggle the checkout and update the page. It works fine, but there's a lot of repetition, and now that we have the `bind` syntax in our toolbox, we can do better.
+Let's return to your streaming cost calculator from Part 3. Look at the markup — it has six nearly identical button blocks, each using the native `onclick` handler to the toggle the checkout and update the page. It works fine, but there's a lot of repetition, and now that you have the `bind` syntax in your toolbox, you can do better.
 
 ### Creating a ServiceButton component
 
-The pattern we used for each service is:
+The pattern you used for each service is:
 
 ```svelte
 <button class="service" onclick={() => netflix = !netflix}>
@@ -927,7 +927,7 @@ Now let's update `StreamingCost.svelte` to use the new component. First, add an 
 import ServiceButton from './ServiceButton.svelte';
 ```
 
-Now replace all six button blocks with our new component. Instead of `bind:value`, we use `bind:selected` to match our property name.
+Now replace all six button blocks with the new component. Instead of `bind:value`, you use `bind:selected` to match your property name.
 
 ```svelte {emphasize-lines="5-10"}
 <div class="calculator">
@@ -959,7 +959,7 @@ This pattern is fundamental to streamlining interactive applications. The parent
 
 Find a story published in the past year by a news organization you admire that would benefit from an interactive component. Then build it.
 
-Your component should use at least two of the three reactive concepts we covered today: `$state`, `$derived` and `bind:value`. You should build it inside a fresh copy of our class template.
+Your component should use at least two of the three reactive concepts covered today: `$state`, `$derived` and `bind:value`. You should build it inside a fresh copy of the class template.
 
 Some examples of what this might look like:
 
