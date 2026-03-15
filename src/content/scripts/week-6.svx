@@ -312,7 +312,7 @@ There's something new here: [`:global(*)`](https://svelte.dev/docs/svelte/global
 
 This is usually what you want, because it prevents styles from leaking across components. But Dashboard's whole job as a parent component is to arrange its children. The `.row > *` selector needs to reach into the BigNumber cards and set their `flex` behavior. The `:global()` wrapper tells Svelte to skip the scoping for that specific selector, allowing it to style child components.
 
-Save both files. BigNumber and Dashboard aren't actually on the page yet. We've been editing the component files, but the template's `+page.svelte` doesn't use them. Let's add them so we can see our changes.
+Save both files. BigNumber and Dashboard aren't actually on the page yet. You've been editing the component files, but the template's `+page.svelte` doesn't use them. Let's add them so we can see our changes.
 
 Open `src/routes/+page.svelte` and add the imports at the top of the script block:
 
@@ -404,9 +404,9 @@ $breakpoint-lg: 1200px;
 
 Why `$` variables instead of the `--` CSS custom properties we just learned? Because CSS custom properties have a limitation: they can't be used inside [`@media` query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) conditions that are used to apply different styles at different screen widths.
 
-You can't write `@media (max-width: var(--breakpoint))`. The browser won't accept it. So for breakpoints, we use Sass variables, which get resolved at compile time before the browser ever sees them.
+You can't write `@media (max-width: var(--breakpoint))`. The browser won't accept it. So for breakpoints, you use Sass variables, which get resolved at compile time before the browser ever sees them.
 
-The `_mixins.scss` file is where `@include mobile` comes from. It defines three functions we can use in our styles.
+The `_mixins.scss` file is where `@include mobile` comes from. It defines three functions you can use in your styles.
 
 ```scss
 @mixin mobile {
@@ -524,13 +524,13 @@ Save and test it. Toggle between phone and tablet widths. The numbers should shr
 
 ## Part 4: Breaking out of the box
 
-Everything we've done so far has preserved the template's NYCity News Service look. But sometimes a story needs its own signature identity. A feature about the journalism school's impact shouldn't look exactly like a daily news brief about a city council vote. The best newsrooms solve this by overriding their system's defaults at the page level, keeping the underlying structure but swapping out colors, fonts and layout to match the story's tone.
+Everything you've done so far has preserved the template's NYCity News Service look. But sometimes a story needs its own signature identity. A feature about the journalism school's impact shouldn't look exactly like a daily news brief about a city council vote. The best newsrooms solve this by overriding their system's defaults at the page level, keeping the underlying structure but swapping out colors, fonts and layout to match the story's tone.
 
-Let's do that now with the page we already have. We'll transform the template's default CUNY article into something that feels more like a bolder feature story, while still using the same architecture underneath.
+Let's do that now with the page we already have. You'll transform the template's default CUNY article into something that feels more like a bolder feature story, while still using the same architecture underneath.
 
 CSS custom properties can be overridden at any level of the page. If you redefine a variable inside a specific element, that new value applies to everything inside it without changing the global default.
 
-We'll use this to create a story-specific color scheme. Add a `<style>` block at the bottom of your `+page.svelte`.
+You'll use this to create a story-specific color scheme. Add a `<style>` block at the bottom of your `+page.svelte`.
 
 ```svelte
 <style lang="scss">
@@ -597,7 +597,7 @@ Save and check your browser. The blue gradient bar is gone. The page feels open 
   chromeTitle="localhost:5173"
 />
 
-The template's `ArticleHeader` component is designed for standard news articles. For a feature story, we want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. We'll place the site's name at the top, centered, followed by the headline and supporting text.
+The template's `ArticleHeader` component is designed for standard news articles. For a feature story, you want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. We'll place the site's name at the top, centered, followed by the headline and supporting text.
 
 Let's start by loading a display font that will make our headline feel like the cover of a magazine. Your page already has a `<svelte:head>` block with a title and meta description. Add a font link inside it:
 
@@ -609,9 +609,9 @@ Let's start by loading a display font that will make our headline feel like the 
 </svelte:head>
 ```
 
-This loads [Playfair Display](https://fonts.google.com/specimen/Playfair+Display) from Google Fonts. Nothing uses it yet. We'll put it to work in the next step.
+This loads [Playfair Display](https://fonts.google.com/specimen/Playfair+Display) from Google Fonts. Nothing uses it yet. You'll put it to work in the next step.
 
-Now let's update the script block at the top of the page. We can remove the `ArticleHeader` import, since we won't be using that component anymore, and make a few tweaks to the article metadata.
+Now let's update the script block at the top of the page. You can remove the `ArticleHeader` import, since we won't be using that component anymore, and make a few tweaks to the article metadata.
 
 
 ```svelte

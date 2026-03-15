@@ -104,7 +104,7 @@ const permits = await response.json();
 console.log(permits);
 ```
 
-The [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) function is JavaScript's built-in way of making a web request. We pass it the URL and it starts talking to the server.
+The [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) function is JavaScript's built-in way of making a web request. You pass it the URL and it starts talking to the server.
 
 The [`await`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await) keyword tells JavaScript to pause and wait for the server to respond before continuing. Without `await`, your code would try to use the response variable before the data had arrived, and you'd get nothing.
 
@@ -150,7 +150,7 @@ This bracket-and-dot notation is how you dig into a JavaScript object. The brack
 
 Accessing one item at a time is useful for exploration, but in practice you almost always want to do something with every item in an array. That's what programmers call [iteration](https://en.wikipedia.org/wiki/Iteration).
 
-JavaScript arrays have a set of built-in methods for this. We'll cover two of them.
+JavaScript arrays have a set of built-in methods for this. You'll cover two of them.
 
 The first is [`.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map). It takes a function and applies it to every item in the array, returning a new array of the results. Think of it as "transform every item."
 
@@ -228,7 +228,7 @@ JSON VSCODE SCREENSHOT
 
 This is the same pattern we used in Week 5 to download restaurant inspection data. The script runs once, saves the data to a file, and your page reads from that file. The API never gets hit when someone loads your page.
 
-Just as in Week 5, we need to introduce the local data file to our Svelte system by importing it in `src/routes/+page.js`.
+Just as in Week 5, you need to introduce the local data file to the Svelte system by importing it in `src/routes/+page.js`.
 
 Open it in your editor. Right now you can see the options I added in Week 6 for showing and hiding the header and footer, but no data yet.
 
@@ -270,11 +270,11 @@ export function load() {
 }
 ```
 
-Because the name of the variable we imported matches the key we want in our return object, we can use JavaScript's shorthand syntax and just write `permits` instead of `permits: permits`. You saw this same pattern in Week 5.
+Because the name of the variable you imported matches the key you want in the return object, you can use JavaScript's shorthand syntax and just write `permits` instead of `permits: permits`. You saw this same pattern in Week 5.
 
 ### Step 7: Display the data
 
-Now open `src/routes/+page.svelte`, the crucial page where we choose what to show our readers. Right now it's full of boilerplate content from the template — the journalism school description, the example photo, the related links. We're going to clear all of that out and replace it with our permit data.
+Now open `src/routes/+page.svelte`, the crucial page where you choose what to show your readers. Right now it's full of boilerplate content from the template — the journalism school description, the example photo, the related links. You're going to clear all of that out and replace it with the permit data.
 
 Delete everything below the `ArticleHeader` component — the `Image`, the `ArticleBody` with all its paragraphs, and the `RelatedLinks`. Also update the headline and other metadata in the script block. Feel free to copy and paste this entire block into your file:
 
@@ -311,7 +311,7 @@ Delete everything below the `ArticleHeader` component — the `Image`, the `Arti
 </div>
 ```
 
-The `let { data } = $props()` line receives everything that `+page.js` returned. Because we passed it along as `{ permits }`, we can access it as `data.permits`.
+The `let { data } = $props()` line receives everything that `+page.js` returned. Because you passed it along as `{ permits }`, we can access it as `data.permits`.
 
 You may remember that the `{#each data.permits as permit}` block is Svelte's way of looping over an array. For each item in the array, it renders the markup inside the block, with the current item available as `permit`. Each `permit` has all the fields from the original JSON, so we can access them with dot notation like `permit.subcategoryname` and `permit.borough`.
 
@@ -329,7 +329,7 @@ This is a pattern that appears all over the web. You see a summary in a list, yo
 
 ### Revisiting `$state`
 
-You've used `$state()` before to track booleans like `isExpanded = $state(false)` and numbers like `billAmount = $state(0)`. This time we're going to store something different: an entire object, or nothing at all.
+You've used `$state()` before to track booleans like `isExpanded = $state(false)` and numbers like `billAmount = $state(0)`. This time you're going to store something different: an entire object, or nothing at all.
 
 Add `$state(null)` to your script block in `+page.svelte`, right below the `$props()` line. Null is the word computer programmers use to refer to "nothing" or "no value." It's a common default for a variable that will later hold an object.
 
@@ -346,7 +346,7 @@ Add `$state(null)` to your script block in `+page.svelte`, right below the `$pro
 </script>
 ```
 
-The `null` default value means "nothing is selected yet." When a user clicks a permit, we'll replace `null` with that permit's full object. When they close the card, we'll set it back to `null`.
+The `null` default value means "nothing is selected yet." When a user clicks a permit, you'll replace `null` with that permit's full object. When they close the card, you'll set it back to `null`.
 
 ### Wiring up a click handler
 
@@ -403,7 +403,7 @@ We have a working interactive page. Now let's make it look like something.
 
 ### Styling the cards
 
-Open `src/routes/+page.svelte`. Add a `<style lang="scss">` block at the bottom of the file. We'll start with the card grid.
+Open `src/routes/+page.svelte`. Add a `<style lang="scss">` block at the bottom of the file. You'll start with the card grid.
 
 ```svelte
 <style lang="scss">
@@ -429,7 +429,7 @@ Open `src/routes/+page.svelte`. Add a `<style lang="scss">` block at the bottom 
 
 The `.permits` rule uses [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout) to arrange the cards. The `repeat(auto-fill, minmax(200px, 1fr))` expression tells the browser to create as many columns as will fit, each at least 200 pixels wide. On a wide screen you'll see four or five columns; on a narrow screen, fewer. The layout adapts automatically.
 
-Notice the `&:hover` inside the `.card` block. That's [SCSS](https://sass-lang.com/documentation/style-rules/parent-selector/) syntax — the `&` character refers to the parent selector, so `&:hover` compiles to `.card:hover`. It lets you keep related styles grouped together instead of writing a separate rule. This is the reason we use `<style lang="scss">` instead of plain `<style>` — it gives us this nesting shorthand.
+Notice the `&:hover` inside the `.card` block. That's [SCSS](https://sass-lang.com/documentation/style-rules/parent-selector/) syntax — the `&` character refers to the parent selector, so `&:hover` compiles to `.card:hover`. It lets you keep related styles grouped together instead of writing a separate rule. This is the reason you use `<style lang="scss">` instead of plain `<style>` — it gives us this nesting shorthand.
 
 Save and check your browser. The permits should now appear as a grid of small cards with a hover state.
 
@@ -495,7 +495,7 @@ Send me the link to your working GitHub Pages URL.
 
 Remember the dataset you pitched from the [NYC Open Data portal](https://data.cityofnewyork.us/) in your earlier homework? Now it's time to start building it.
 
-Create a new repository from our template. Write a `fetch-data.js` script that downloads the dataset you pitched and saves it to `src/lib/data/` as a JSON file. Use the same pattern we followed in today's lesson — `fetch` the Socrata API endpoint, filter or limit the results with query parameters, and write the output with `fs.writeFileSync`.
+Create a new repository from our template. Write a `fetch-data.js` script that downloads the dataset you pitched and saves it to `src/lib/data/` as a JSON file. Use the same pattern you followed in today's lesson — `fetch` the Socrata API endpoint, filter or limit the results with query parameters, and write the output with `fs.writeFileSync`.
 
 Your script should run cleanly with `node fetch-data.js` and produce a readable JSON file. Send me the link to your GitHub repository.
 

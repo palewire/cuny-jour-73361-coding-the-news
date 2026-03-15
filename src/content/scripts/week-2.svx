@@ -45,7 +45,7 @@ One, they follow a web development approach known as static-site generation. Thi
 
 It's a popular development pattern for simple sites, and it dominates newsroom projects. Static sites are cheaper, more secure, more stable and easier to archive than sites that rely on dy­nam­ic systems.
 
-Two, they all use the Node.js programming system, which will be the first thing we need to install.
+Two, they all use the Node.js programming system, which will be the first thing you need to install.
 
 ## Part 2: Introduction to Node.js
 
@@ -78,7 +78,7 @@ If Node.js is installed, you'll see a version number like `v20.11.0` or similar.
 
 If you see an error message like `command not found: node`, that means Node.js isn't installed yet.
 
-We'll fix that with a tool called [Node Version Manager](https://www.nvmnode.com/).
+You'll fix that with a tool called [Node Version Manager](https://www.nvmnode.com/).
 
 ### Install nvm
 
@@ -91,7 +91,7 @@ Node Version Manager, also known as `nvm`, is a command-line tool that makes it 
   chromeUrl="https://www.nvmnode.com"
 />
 
-Before we can use it to install Node.js, we need to install nvm itself.
+Before you can use it to install Node.js, you need to install nvm itself.
 
 Copy and paste this command into your terminal and press Enter:
 
@@ -140,7 +140,7 @@ You should see a version number like `0.40.4`. Now you're ready to install Node.
 
 ### Install Node.js with nvm
 
-Now we can use nvm to install Node.js by typing this command:
+Now you can use nvm to install Node.js by typing this command:
 
 ```bash
 nvm install --lts
@@ -167,7 +167,7 @@ node --version
 
 You should now see a version number like `v24.13.0`, or whatever the current LTS version is.
 
-You should also check that the Node Package Manager was installed alongside Node.js, which is the tool we'll use to install additional packages.
+You should also check that the Node Package Manager was installed alongside Node.js, which is the tool you'll use to install additional packages.
 
 ```bash
 npm --version
@@ -175,11 +175,11 @@ npm --version
 
 You should see a version number like `11.6.2`.
 
-You now have Node.js installed and ready to use. This is the foundation that will power all the web development tools we'll use throughout the rest of this course.
+You now have Node.js installed and ready to use. This is the foundation that will power all the web development tools you'll use throughout the rest of this course.
 
 ## Part 3: Creating a page from a static-site template
 
-Now that you have Node.js installed, let's put it to work. We're going to use a GitHub template I've created for this class. It's a minimal framework configured to build static websites in the style of CUNY's [NYCity News Service](https://nycitynewsservice.com/).
+Now that you have Node.js installed, let's put it to work. You're going to use a GitHub template I've created for this class. It's a minimal framework configured to build static websites in the style of CUNY's [NYCity News Service](https://nycitynewsservice.com/).
 
 <Screenshot
   src="/screenshots/week-2/template-live-preview.gif"
@@ -239,7 +239,7 @@ You should now see the project files in the Explorer sidebar. Take a moment to l
 
 ### Install the project dependencies
 
-Before we can run the project, we need to install its dependencies. These are external packages of code that the project needs to work. They're listed in the `package.json` file.
+Before you can run the project, you need to install its dependencies. These are external packages of code that the project needs to work. They're listed in the `package.json` file.
 
 <Screenshot
   src="/screenshots/week-2/vscode-package-json.png"
@@ -304,7 +304,7 @@ Let's change something. In VS Code's Explorer sidebar, navigate to `src/routes/+
   showChrome={false}
 />
 
-This is the homepage of your site. There's a lot going on here. We'll cover it all in detail later. For now, just focus on the top part of the file, the part inside the script tags.
+This is the homepage of your site. There's a lot going on here. You'll cover it all in detail later. For now, just focus on the top part of the file, the part inside the script tags.
 
 Find the line that says:
 
@@ -331,7 +331,7 @@ Try making a few more changes. Edit the byline and publication date. Get a feel 
 
 ### The project structure
 
-We'll dig into more later, but let's pause briefly for an overview of the main files and folders in this project:
+You'll dig into more later, but let's pause briefly for an overview of the main files and folders in this project:
 
 | Files | Description |
 |-------------|-------------|
@@ -373,7 +373,7 @@ I routinely use to publish hobby projects, like [cummings.ee](https://cummings.e
   chromeUrl="https://github.io"
 />
 
-To take advantage of it, we need to tell GitHub to serve your repository as a website. Go to your `my-first-static-site` repository on GitHub in your browser.
+To take advantage of it, you need to tell GitHub to serve your repository as a website. Go to your `my-first-static-site` repository on GitHub in your browser.
 
 Click on "Settings" in the top navigation bar and then select "Pages" from the left sidebar.
 

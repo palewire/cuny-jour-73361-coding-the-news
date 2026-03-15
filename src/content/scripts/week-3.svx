@@ -114,9 +114,9 @@ Let's find out by building our own.
 
 ## Part 2: Creating your first component
 
-We'll start simple. We will build a component that displays a quote in large type, along with the name of the person being quoted.
+You'll start simple. You will build a component that displays a quote in large type, along with the name of the person being quoted.
 
-Before we start coding, we should remember to install the project dependencies. Since we created a new repository for today's work, we'll need to do this step over again.
+Before you start coding, you should remember to install the project dependencies. Since you created a new repository for today's work, you'll need to do this step over again.
 
 Open a terminal in Visual Studio Code and run the same command as last week. If you don't have it memorized yet, you will soon because you'll need to execute it every time you start a new project.
 
@@ -143,7 +143,7 @@ The file will open in the editor, completely empty.
   maxWidth="960px"
 />
 
-We'll build this component step by step, starting with the simplest possible version.
+You'll build this component step by step, starting with the simplest possible version.
 
 Begin by adding a traditional [`<blockquote>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/blockquote) tag to the file, just as you would in a traditional HTML document. Inside it, add a placeholder quote in the [`<p>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/p) tag and a [`<cite>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/cite) tag for the attribution.
 
@@ -164,9 +164,9 @@ This is HTML that you could find in any web page. If we included it in our page,
 
 If we wanted to display another quote, we'd have to copy this snippet, paste it somewhere else and then change the content, which would duplicate work and open the door to errors and inconsistencies.
 
-We can make our component reusable by replacing the hardcoded quote with a placeholder that accepts input from the outside. This is done using a Svelte feature called [`$props`](https://svelte.dev/docs/svelte/$props), which is short for properties. It's how components receive data from the pages where they are put to use.
+You can make the component reusable by replacing the hardcoded quote with a placeholder that accepts input from the outside. This is done using a Svelte feature called [`$props`](https://svelte.dev/docs/svelte/$props), which is short for properties. It's how components receive data from the pages where they are put to use.
 
-We can introduce properties to our blockquote by adding a `<script>` block at the top of the file. We can define variables for as many inputs as we like. They'll be passed in as a JavaScript object via Svelte's magic `$props()` function, which can be unpacked into separate variables using a technique called [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring).
+You can introduce properties to the blockquote by adding a `<script>` block at the top of the file. You can define variables for as many inputs as you like. They'll be passed in as a JavaScript object via Svelte's magic `$props()` function, which can be unpacked into separate variables using a technique called [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring).
 
 ```svelte
 <script>
@@ -176,7 +176,7 @@ We can introduce properties to our blockquote by adding a `<script>` block at th
 
 In this example, I've decided to allow two inputs: `quote` and `attribution`, which correspond to the content of the `<q>` and `<cite>` tags, respectively. You can name these variables whatever you like. They are just placeholders for whatever data you'd like to have passed in.
 
-Next, we need to tell Svelte to insert these variables into the markup. We do this by replacing the hardcoded text with curly braces `{}` that reference our variables:
+Next, you need to tell Svelte to insert these variables into the markup. You do this by replacing the hardcoded text with curly braces `{}` that reference our variables:
 
 ```svelte
 <script>
@@ -191,7 +191,7 @@ Next, we need to tell Svelte to insert these variables into the markup. We do th
 
 Before we test it out, let's make it look a little nicer.
 
-Add a `<style>` tag at the bottom of the file, where we can write CSS. Here's something to get us started. Copy and paste what I've provided. It will use the color scheme defined in our project's `app.css` file, which is available to all components.
+Add a `<style>` tag at the bottom of the file, where you can write CSS. Here's something to get you started. Copy and paste what I've provided. It will use the color scheme defined in the project's `app.css` file, which is available to all components.
 
 ```svelte
 <script>
@@ -246,7 +246,7 @@ import Blockquote from '$lib/components/Blockquote.svelte';
 
 The [`$lib`](https://svelte.dev/docs/kit/$lib) path is a special alias in SvelteKit projects that points to your `src/lib` folder. It saves you from writing long relative paths like `../../lib/components/`.
 
-Now scroll down to the main content area of the page, inside of the `ArticleBody` component. This is where the content of our page lives. We can add our blockquote here between the existing paragraph tags. Feel free to put in any quote you like, or use the one I provided below.
+Now scroll down to the main content area of the page, inside of the `ArticleBody` component. This is where the content of the page lives. You can add the blockquote here between the existing paragraph tags. Feel free to put in any quote you like, or use the one I provided below.
 
 ```svelte
 <Blockquote
@@ -325,7 +325,7 @@ The interior content is placed inside the component by the `{@render children()}
 
 To demonstrate the power of this pattern, let's build a new component that wraps other components in a horizontal row.
 
-We'll use it to package a group of statistics pumped up in larger type, like the big, stylized numbers you see on top of data dashboards or mixed into graphics stories.
+You'll use it to package a group of statistics pumped up in larger type, like the big, stylized numbers you see on top of data dashboards or mixed into graphics stories.
 
 Create a new file at `src/lib/components/BigNumber.svelte`. Add this code I've created as a starting point.
 
@@ -425,7 +425,7 @@ Save and check your browser. You should see three blue boxes with white numbers,
 
 It's a start, but they'd look better side by side in a three-column layout.
 
-That's where our parent component comes in. We'll call it `Dashboard`, and it will be responsible for arranging its children in a horizontal row with some spacing.
+That's where our parent component comes in. You'll call it `Dashboard`, and it will be responsible for arranging its children in a horizontal row with some spacing.
 
 Create a new file at `src/lib/components/Dashboard.svelte`. Drop this in:
 
@@ -457,7 +457,7 @@ Create a new file at `src/lib/components/Dashboard.svelte`. Drop this in:
 
 Just like ArticleBody, this component accepts `children` as a prop, which will contain whatever we place between the opening and closing tags of the Dashboard component in our page.
 
-The markup is simple. We wrap the children in a `<div>` with a class of "row," which we will style using CSS to create a horizontal layout.
+The markup is simple. We wrap the children in a `<div>` with a class of "row," which you will style using CSS to create a horizontal layout.
 
 One important extra bit of CSS is the [`:global(*)`](https://svelte.dev/docs/svelte/global-styles) selector (where the asterisk means "all elements"). This is a special Svelte syntax that allows us to target child elements of the row, even though they are technically outside the scope of this component. This is necessary to apply the flex properties to the BigNumber components inside.
 
