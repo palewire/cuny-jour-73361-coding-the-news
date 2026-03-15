@@ -26,7 +26,7 @@
       <p class="section-intro">{description}</p>
     {/if}
     <div class="grid grid-4 speakers-grid">
-      {#each speakers as speaker}
+      {#each speakers as speaker (speaker.name)}
         <div class="speaker-card">
           <div class="speaker-avatar">
             <Avatar

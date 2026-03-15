@@ -26,7 +26,7 @@
       <p class="section-intro">{intro}</p>
     {/if}
     <div class="grid grid-3">
-      {#each criteria as criterion}
+      {#each criteria as criterion (criterion.title)}
         <TopicCard
           icon={criterion.icon}
           title={criterion.title}

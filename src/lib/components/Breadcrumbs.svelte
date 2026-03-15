@@ -6,7 +6,7 @@
 
 <nav class="breadcrumbs container" aria-label="Breadcrumb">
   <a href={base}>Home</a>
-  {#each items as item, i}
+  {#each items as item (item.label)}
     <span aria-hidden="true">/</span>
     {#if item.href}
       <a href={item.href}>{item.label}</a>

@@ -30,7 +30,7 @@
     {/if}
     {#if meta.length > 0}
       <div class="course-meta">
-        {#each meta as item}
+        {#each meta as item (item)}
           <p>{@html item}</p>
         {/each}
       </div>

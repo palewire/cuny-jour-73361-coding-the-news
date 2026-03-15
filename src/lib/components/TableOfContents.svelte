@@ -17,7 +17,7 @@
   <nav class="table-of-contents">
     <h3>Table of Contents</h3>
     <ul>
-      {#each headings as heading}
+      {#each headings as heading (heading.id)}
         <li>
           <a href="#{heading.id}">{heading.text}</a>
         </li>

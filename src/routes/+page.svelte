@@ -51,7 +51,7 @@
 <main>
   <Hero />
 
-  {#each content.modules as module}
+  {#each content.modules as module (module.id)}
     <Module
       number={module.number}
       title={module.title}
@@ -63,7 +63,7 @@
       <div
         class="grid {module.gridClass || 'grid-3 grid-constrained'} grid-stack"
       >
-        {#each module.topics as topic}
+        {#each module.topics as topic (topic.title)}
           <TopicCard
             icon={getIcon(topic.icon)}
             title={topic.title}
@@ -111,7 +111,7 @@
       disclosure={content.scripts.disclosure}
     >
       <div class="grid grid-3">
-        {#each scripts as script}
+        {#each scripts as script (script.slug)}
           <ScriptCard {...script} />
         {/each}
       </div>
