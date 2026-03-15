@@ -311,7 +311,7 @@ Delete everything below the `ArticleHeader` component — the `Image`, the `Arti
 </div>
 ```
 
-The `let { data } = $props()` line receives everything that `+page.js` returned. Because you passed it along as `{ permits }`, we can access it as `data.permits`.
+The `let { data } = $props()` line receives everything that `+page.js` returned. Because you passed it along as `{ permits }`, you can access it as `data.permits`.
 
 You may remember that the `{#each data.permits as permit}` block is Svelte's way of looping over an array. For each item in the array, it renders the markup inside the block, with the current item available as `permit`. Each `permit` has all the fields from the original JSON, so we can access them with dot notation like `permit.subcategoryname` and `permit.borough`.
 
