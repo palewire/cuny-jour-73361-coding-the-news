@@ -51,7 +51,7 @@ Start the development server with `npm run dev` and open your browser to [localh
 
 ### Step 1: Variables
 
-In Week 5, you wrote a Node.js script to download restaurant inspection data before your page ever loaded. You're going to do the same thing here with film permits. This time you'll take it slow and talk through every line of code, so you understand exactly what's happening, and learn some JavaScript along the way.
+In Week 5, you wrote a Node.js script to download restaurant inspection data You're going to do the same thing here with film permits. This time you'll take it slow and I'll talk through every line of code, so you understand exactly what's happening, and learn some JavaScript along the way.
 
 Create a new file in the root of your project called `fetch-data.js`. Start with this:
 
@@ -64,7 +64,7 @@ It starts with a single variable declaration. A variable is a named container fo
 
 The `console.log` function is a built-in way to print something out. It's a crucial tool for debugging your code.
 
-Now run it in your terminal:
+Now open a new terminal run it.
 
 ```bash
 node fetch-data.js
@@ -91,11 +91,11 @@ let count = 0;
 
 You've been writing `let` all semester for Svelte's reactive variables. That's correct there because `$state()` variables get reassigned as the user interacts with the page. But in a standalone script like this one, most of the values you create can be constants.
 
-The `url` variable holds the address of the API endpoint. The `$where`, `$order` and `$limit` parts at the end are query parameters in the [Socrata Open Data API](https://dev.socrata.com/) format, which is what NYC Open Data uses. They tell the API to give us only shooting permits, sorted newest first, limited to 25 records. Note that these `$` signs are part of the Socrata query language. They have nothing to do with Svelte's rune syntax.
+The `url` variable holds the address of the API endpoint. The `$where`, `$order` and `$limit` parts at the end are query parameters in the [Socrata Open Data API](https://dev.socrata.com/) format, which is what NYC Open Data uses. They tell the API to give us only shooting permits, sorted newest first, limited to 25 records. Note that these `$` signs are part of the Socrata query language. They have nothing to do with Svelte's syntax, which uses `$` for reactive variables. It's just a coincidence that they look the same.
 
 ### Step 2: Fetching data
 
-Now let's actually talk to the server. Update `fetch-data.js` to make a network request:
+Now let's actually talk to the server. Update `fetch-data.js` to make a web request.
 
 ```js {emphasize-lines='2-4'}
 const url = "https://data.cityofnewyork.us/resource/tg4x-b46p.json?$where=eventtype='Shooting Permit'&$order=startdatetime DESC&$limit=25";
@@ -118,13 +118,51 @@ To see them, run the script again:
 node fetch-data.js
 ```
 
+You should see see a list of 25 permit objects printed in your terminal. Here's what the top of that looks like.
+
+```bash
+$ node fetch-data.js
+[
+  {
+    eventid: '904687',
+    eventtype: 'Shooting Permit',
+    enddatetime: '2025-12-11T20:00:00.000',
+    enteredon: '2025-12-08T15:26:10.000',
+    eventagency: "Mayor's Office of Media & Entertainment",
+    parkingheld: "ST ANN'S AVENUE between EAST  143 STREET and EAST  144 STREET",
+    borough: 'Bronx',
+    communityboard_s: '1,',
+    policeprecinct_s: '40,',
+    category: 'Television',
+    subcategoryname: 'Cable-episodic',
+    country: 'United States of America',
+    zipcode_s: '10454,'
+  },
+  {
+    eventid: '894297',
+    eventtype: 'Shooting Permit',
+    enddatetime: '2025-10-11T02:30:00.000',
+    enteredon: '2025-10-08T06:14:00.000',
+    eventagency: "Mayor's Office of Media & Entertainment",
+    parkingheld: 'WATER STREET between PECK SLIP and DOVER STREET,  PECK SLIP between WATER STREET and SOUTH STREET,  PECK SLIP between WATER STREET and FRONT STREET,  FRONT STREET between DOVER STREET and PECK SLIP,  BROOME STREET between BOWERY and ELIZABETH STREET,  DOVER STREET between PEARL STREET and FRONT STREET,  PELL STREET between BOWERY and MOTT STREET,  MOSCO STREET between MOTT STREET and MULBERRY STREET,  MOTT STREET between CANAL STREET and WORTH STREET,  CANAL STREET between MOTT STREET and ELIZABETH STREET,  CHATHAM SQUARE between DOYERS STREET and MOTT STREET,  EAST BROADWAY between MARKET STREET and PIKE STREET,  DOYER STREET between PELL STREET and BOWERY,  PEARL STREET between PECK SLIP and BEEKMAN STREET,  BOWERY between CANAL STREET and KENMARE STREET',
+    borough: 'Manhattan',
+    communityboard_s: '1, 2, 3,',
+    policeprecinct_s: '1, 5,',
+    category: 'Television',
+    subcategoryname: 'Episodic series',
+    country: 'United States of America',
+    zipcode_s: '10002, 10012, 10013, 10038,'
+  },
+  ...
+```
+
 ### Step 3: Lists
 
 You're looking at a JavaScript [array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array), which is the fancy computer programming term for an ordered list of items.
 
 In this case, each item in the list is an [`object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object), which is the fancy computer programming term for a thing that has named fields that store values, much like how a row in a spreadsheet is defined by its column names.
 
-So, you should see 25 permit objects printed in your terminal, each with an identical set of fields like `borough`, `startdatetime`, `subcategoryname` and so on. Those names are from the header row of the original spreadsheet that the city published, and they are how you access the data you need in each object.
+So, you should see 25 permit objects printed in your terminal, each with an identical set of fields like `borough`, `parkingheld`, `subcategoryname` and so on. Those names are from the header row of the original spreadsheet that the city published, and they are how you access the data you need in each object.
 
 You access items in your code based on their position within the list using square brackets. Arrays in JavaScript, and most other programming languages, are [zero-indexed](https://en.wikipedia.org/wiki/Zero-based_numbering), meaning the first item is at position 0, not position 1.
 
@@ -144,6 +182,26 @@ node fetch-data.js
 
 The first line prints the entire first permit object. The second and third print individual fields.
 
+```bash
+{
+  eventid: '904687',
+  eventtype: 'Shooting Permit',
+  enddatetime: '2025-12-11T20:00:00.000',
+  enteredon: '2025-12-08T15:26:10.000',
+  eventagency: "Mayor's Office of Media & Entertainment",
+  parkingheld: "ST ANN'S AVENUE between EAST  143 STREET and EAST  144 STREET",
+  borough: 'Bronx',
+  communityboard_s: '1,',
+  policeprecinct_s: '40,',
+  category: 'Television',
+  subcategoryname: 'Cable-episodic',
+  country: 'United States of America',
+  zipcode_s: '10454,'
+}
+Cable-episodic
+Bronx
+```
+
 This bracket-and-dot notation is how you dig into a JavaScript object. The bracket `[0]` gets you the item at position zero. The `.subcategoryname` gets you the field named `subcategoryname` from that item. Every object in the array has the same fields, so `permits[1].subcategoryname` would give you the subcategory of the second permit, and so on.
 
 ### Step 4: Iteration
@@ -161,9 +219,33 @@ const subcategories = permits.map(permit => permit.subcategoryname);
 console.log(subcategories);
 ```
 
-Run the script and check the output. You should see an array of 25 subcategory names — just that field, extracted from every record.
+Run the script and check the output.
 
-The `permit => permit.subcategoryname` part is an [arrow function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions). It's a compact way to write a function that takes one argument (here called `permit`, though you could name it anything) and returns a value from it.
+``bash
+node fetch-data.js
+```
+
+You should see an array of 25 subcategory names — just that field, extracted from every record.
+
+```bash
+[
+  'Cable-episodic',  'Episodic series',
+  'Cable-episodic',  'Cable-episodic',
+  'Episodic series', 'Episodic series',
+  'Not Applicable',  'Feature',
+  'Feature',         'Commercial',
+  'Episodic series', 'Not Applicable',
+  'Feature',         'Feature',
+  'Feature',         'Feature',
+  'Not Applicable',  'Feature',
+  'Feature',         'Commercial',
+  'Feature',         'Cable-episodic',
+  'Feature',         'Feature',
+  'Feature'
+]
+```
+
+The `permit => permit.subcategoryname` part is an [arrow function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions). It's a compact way to write a function that takes one argument and returns a value from it.
 
 The second method is [`.filter()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter). It takes a function that returns true or false, and keeps only the items where the function returns true. Think of it as "keep only the items that match."
 
@@ -174,9 +256,19 @@ const manhattan = permits.filter(permit => permit.borough === 'Manhattan');
 console.log(manhattan.length);
 ```
 
-Run the script and check the output. You should see how many of your 25 permits are in Manhattan.
+The `===` operator is JavaScript's [strict equality](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness) check. It returns true if the value on the left is exactly equal to the value on the right, and false otherwise. In this case, it checks whether the `borough` field of each permit is "Manhattan."
 
-The `===` operator is JavaScript's [strict equality](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness) check.
+Run the script and check the output.
+
+```bash
+node fetch-data.js
+```
+
+You should see how many of your 25 permits are in Manhattan.
+
+```bash
+14
+```
 
 ### Step 5: Save the data
 
@@ -214,7 +306,7 @@ The `outputPath` variable uses `path.join` again to build the full path to the f
 
 The [`fs.writeFileSync()`](https://nodejs.org/api/fs.html#fswritefilesyncfile-data-options) call writes data to that file. The first argument is the path, and the second is the content to write. Since `permits` is a JavaScript array, we need to convert it to a text string first with [`JSON.stringify()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify). The extra arguments `null, 2` tell it to format the output with two-space indentation, so the file is human-readable when you open it in your editor.
 
-Run it:
+Run it.
 
 ```bash
 node fetch-data.js
@@ -222,7 +314,12 @@ node fetch-data.js
 
 You should see a message confirming how many permits were fetched and where the file was saved. Open `src/lib/data/permits.json` in Visual Studio Code and take a look. You'll see an array of 25 permit objects.
 
-JSON VSCODE SCREENSHOT
+<Screenshot
+  src="/screenshots/week-7/vscode-permits-json.png"
+  alt="Visual Studio Code showing permits.json with an array of film permit objects, each containing fields like eventid, eventtype, borough and subcategoryname"
+  showChrome={false}
+  maxWidth="960px"
+/>
 
 ### Step 6: Load data into the page
 
