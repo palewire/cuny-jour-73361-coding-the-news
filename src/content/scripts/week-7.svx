@@ -12,7 +12,7 @@ locked: true
 
 Today's class is a deliberate step back.
 
-The findings from our student survey were clear: You want to spend more time on JavaScript fundamentals, the basics covered quickly in the early weeks. And then, once you feel more comfortable, drill down on how you can use the language to load data and craft interactive pages.
+The findings from our student survey were clear: You want to spend more time on JavaScript fundamentals, the basics we rushed past quickly in earlier weeks. And then, once you feel more comfortable, revisit how to load data and craft interactive pages.
 
 So that's the plan.
 
