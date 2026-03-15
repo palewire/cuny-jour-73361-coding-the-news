@@ -15,7 +15,7 @@ locked: false
 
 ## Part 1: Introduction to components
 
-Today we're learning to build what web developers call "components." That's the vague term nerds have settled on to describe a reusable piece of code that defines a specific feature. A headline. A button. A chart. An image with a caption. You define it once and then use it everywhere.
+Today you're learning to build what web developers call "components." That's the vague term nerds have settled on to describe a reusable piece of code that defines a specific feature. A headline. A button. A chart. An image with a caption. You define it once and then use it everywhere.
 
 Many of today's web frameworks are organized using components so that the different parts of a page can be built in isolation, then assembled together without getting all of the code tangled up.
 
@@ -72,7 +72,7 @@ For a real-world example, check out the open-source library released by the [Reu
   maxWidth="960px"
 />
 
-In today's class, we'll stick with the simple set of components I've seeded in our class template. We'll learn how they're structured and then build a few simple ones from scratch. In the weeks to come, we'll get more advanced, building components that fetch data, handle user interactions and integrate with each other.
+In today's class, you'll stick with the simple set of components I've seeded in the class template. You'll learn how they're structured and then build a few simple ones from scratch. In the weeks to come, you'll get more advanced, building components that fetch data, handle user interactions and integrate with each other.
 
 But let's start with the basics.
 
@@ -85,11 +85,11 @@ Open your browser and navigate to our template repository at <a href="https://gi
   chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
 />
 
-Just like last week, click the green "Use this template" button near the top right of the page. This week, let's name our repository something different, like `my-first-svelte-components`. Make sure "Public" is selected, then click "Create repository."
+Just like last week, click the green "Use this template" button near the top right of the page. This week, let's name your repository something different, like `my-first-svelte-components`. Make sure "Public" is selected, then click "Create repository."
 
-Now let's get this code onto your computer using the techniques we covered in [week one](/docs/coding-the-news/scripts/week-1).
+Now let's get this code onto your computer using the techniques covered in [week one](/docs/coding-the-news/scripts/week-1).
 
-In the Explorer sidebar, we're going to navigate to a folder we didn't explore last week, `src/lib/components/`. You should see a few files there already.
+In the Explorer sidebar, you're going to navigate to a folder you didn't explore last week, `src/lib/components/`. You should see a few files there already.
 
 These are Svelte components. Open one of them and take a look. I suggest starting with `Image.svelte`.
 
@@ -110,7 +110,7 @@ This three-part structure is the anatomy of every Svelte component. The script h
 
 Seems simple enough, right?
 
-Let's find out by building our own.
+Let's find out by building your own.
 
 ## Part 2: Creating your first component
 
@@ -130,7 +130,7 @@ Then start the development server at [localhost:5173](http://localhost:5173):
 npm run dev
 ```
 
-Now we're ready.
+Now you're ready.
 
 Right-click on the `src/lib/components/` folder in Visual Studio Code's left-hand Explorer and select "New File." Name it `Blockquote.svelte`.
 
@@ -160,9 +160,9 @@ Begin by adding a traditional [`<blockquote>`](https://developer.mozilla.org/en-
 </blockquote>
 ```
 
-This is HTML that you could find in any web page. If we included it in our page, it would render perfectly. But it's not reusable.
+This is HTML that you could find in any web page. If you included it in your page, it would render perfectly. But it's not reusable.
 
-If we wanted to display another quote, we'd have to copy this snippet, paste it somewhere else and then change the content, which would duplicate work and open the door to errors and inconsistencies.
+If you wanted to display another quote, you'd have to copy this snippet, paste it somewhere else and then change the content, which would duplicate work and open the door to errors and inconsistencies.
 
 You can make the component reusable by replacing the hardcoded quote with a placeholder that accepts input from the outside. This is done using a Svelte feature called [`$props`](https://svelte.dev/docs/svelte/$props), which is short for properties. It's how components receive data from the pages where they are put to use.
 
@@ -176,7 +176,7 @@ You can introduce properties to the blockquote by adding a `<script>` block at t
 
 In this example, I've decided to allow two inputs: `quote` and `attribution`, which correspond to the content of the `<q>` and `<cite>` tags, respectively. You can name these variables whatever you like. They are just placeholders for whatever data you'd like to have passed in.
 
-Next, you need to tell Svelte to insert these variables into the markup. You do this by replacing the hardcoded text with curly braces `{}` that reference our variables:
+Next, you need to tell Svelte to insert these variables into the markup. You do this by replacing the hardcoded text with curly braces `{}` that reference your variables:
 
 ```svelte
 <script>
@@ -189,7 +189,7 @@ Next, you need to tell Svelte to insert these variables into the markup. You do 
 </blockquote>
 ```
 
-Before we test it out, let's make it look a little nicer.
+Before you test it out, let's make it look a little nicer.
 
 Add a `<style>` tag at the bottom of the file, where you can write CSS. Here's something to get you started. Copy and paste what I've provided. It will use the color scheme defined in the project's `app.css` file, which is available to all components.
 
@@ -232,13 +232,13 @@ Add a `<style>` tag at the bottom of the file, where you can write CSS. Here's s
 
 These styles will only apply to the blockquote component, and won't affect any other blockquotes or paragraphs on the page. This is a technique that computer programmers refer to as [scoping](https://en.wikipedia.org/wiki/Scope_(computer_programming)).
 
-By limiting styles to a specific component, we can be confident that our CSS will not have unintended consequences elsewhere in our project. It's another way that components help us write clean, maintainable code.
+By limiting styles to a specific component, you can be confident that your CSS will not have unintended consequences elsewhere in your project. It's another way that components help you write clean, maintainable code.
 
-Save your `Blockquote.svelte` file and we're ready to see it in action.
+Save your `Blockquote.svelte` file and you're ready to see it in action.
 
 Open `src/routes/+page.svelte` in your editor.
 
-At the top of the file, add an import statement inside the existing `<script>` block, which will bring our new component into this page.
+At the top of the file, add an import statement inside the existing `<script>` block, which will bring your new component into this page.
 
 ```js
 import Blockquote from '$lib/components/Blockquote.svelte';
@@ -311,7 +311,7 @@ A simple example of this in our template is the `ArticleBody` component, which w
 
 Rather than accept traditional properties, ArticleBody accepts "children," which is a special prop that contains whatever is placed between the opening and closing tags of the component in your page.
 
-For example, in `src/routes/+page.svelte`, we have something like this:
+For example, in `src/routes/+page.svelte`, you have something like this:
 
 ```svelte
 <ArticleBody>
@@ -385,7 +385,7 @@ In this case, I wanted to make the footnote optional. Some components will have 
 
 By nesting the footnote in an `{#if}` block, Svelte will only render that part of the markup if a `footnote` property is provided. If it's not provided, the component will simply skip that section and render the rest.
 
-Let's try it out on our page.
+Let's try it out on your page.
 
 Open `src/routes/+page.svelte` again. Add another import at the top:
 
@@ -425,7 +425,7 @@ Save and check your browser. You should see three blue boxes with white numbers,
 
 It's a start, but they'd look better side by side in a three-column layout.
 
-That's where our parent component comes in. You'll call it `Dashboard`, and it will be responsible for arranging its children in a horizontal row with some spacing.
+That's where your parent component comes in. You'll call it `Dashboard`, and it will be responsible for arranging its children in a horizontal row with some spacing.
 
 Create a new file at `src/lib/components/Dashboard.svelte`. Drop this in:
 

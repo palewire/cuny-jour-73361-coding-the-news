@@ -12,7 +12,7 @@ locked: true
 
 Today's class is a deliberate step back.
 
-The findings from our student survey were clear: You want to spend more time on JavaScript fundamentals, the basics we blew by in our early weeks. And then, once you feel more comfortable, drill down on how you can use the language to load data and craft interactive pages.
+The findings from our student survey were clear: You want to spend more time on JavaScript fundamentals, the basics covered quickly in the early weeks. And then, once you feel more comfortable, drill down on how you can use the language to load data and craft interactive pages.
 
 So that's the plan.
 
@@ -51,7 +51,7 @@ Start the development server with `npm run dev` and open your browser to [localh
 
 ### Step 1: Variables
 
-In Week 5, we wrote a Node.js script to download restaurant inspection data before our page ever loaded. We're going to do the same thing here with film permits. This time we'll take it slow and talk through every line of code, so you understand exactly what's happening, and learn some JavaScript along the way.
+In Week 5, you wrote a Node.js script to download restaurant inspection data before your page ever loaded. You're going to do the same thing here with film permits. This time you'll take it slow and talk through every line of code, so you understand exactly what's happening, and learn some JavaScript along the way.
 
 Create a new file in the root of your project called `fetch-data.js`. Start with this:
 
@@ -60,7 +60,7 @@ const url = "https://data.cityofnewyork.us/resource/tg4x-b46p.json?$where=eventt
 console.log(url);
 ```
 
-It starts with a single variable declaration. A variable is a named container for a value. In this case, the variable is called `url` and it holds the address of the API endpoint where our data lives.
+It starts with a single variable declaration. A variable is a named container for a value. In this case, the variable is called `url` and it holds the address of the API endpoint where your data lives.
 
 The `console.log` function is a built-in way to print something out. It's a crucial tool for debugging your code.
 
@@ -180,7 +180,7 @@ The `===` operator is JavaScript's [strict equality](https://developer.mozilla.o
 
 ### Step 5: Save the data
 
-You've explored the data enough. Now let's trim down `fetch-data.js` so it downloads the permits and saves them to a file that our page can use.
+You've explored the data enough. Now let's trim down `fetch-data.js` so it downloads the permits and saves them to a file that your page can use.
 
 Remove all the `console.log` and exploration lines. Replace the contents of `fetch-data.js` with this:
 
@@ -210,7 +210,7 @@ The `dataDir` variable uses [`path.join()`](https://nodejs.org/api/path.html#pat
 
 The [`fs.mkdirSync()`](https://nodejs.org/api/fs.html#fsmkdirsyncpath-options) call creates that directory if it doesn't already exist. The `{ recursive: true }` option tells it to create any missing parent folders along the way, so you don't get an error if `src/lib` hasn't been created yet. The `Sync` suffix means the function finishes before the next line executes, which is the simple behavior you'd expect, and similar to how `await` works with other functions.
 
-The `outputPath` variable uses `path.join` again to build the full path to the file we want to write: `src/lib/data/permits.json`.
+The `outputPath` variable uses `path.join` again to build the full path to the file you want to write: `src/lib/data/permits.json`.
 
 The [`fs.writeFileSync()`](https://nodejs.org/api/fs.html#fswritefilesyncfile-data-options) call writes data to that file. The first argument is the path, and the second is the content to write. Since `permits` is a JavaScript array, we need to convert it to a text string first with [`JSON.stringify()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify). The extra arguments `null, 2` tell it to format the output with two-space indentation, so the file is human-readable when you open it in your editor.
 
@@ -226,7 +226,7 @@ JSON VSCODE SCREENSHOT
 
 ### Step 6: Load data into the page
 
-This is the same pattern we used in Week 5 to download restaurant inspection data. The script runs once, saves the data to a file, and your page reads from that file. The API never gets hit when someone loads your page.
+This is the same pattern you used in Week 5 to download restaurant inspection data. The script runs once, saves the data to a file, and your page reads from that file. The API never gets hit when someone loads your page.
 
 Just as in Week 5, you need to introduce the local data file to the Svelte system by importing it in `src/routes/+page.js`.
 
@@ -241,7 +241,7 @@ export function load() {
 }
 ```
 
-Just as in Week 5, add an import at the top of the file. This pulls in the JSON file we just created:
+Just as in Week 5, add an import at the top of the file. This pulls in the JSON file you just created:
 
 ```js {emphasize-lines="1"}
 import permits from '$lib/data/permits.json';
@@ -254,7 +254,7 @@ export function load() {
 }
 ```
 
-Remember that the `$lib` prefix is a SvelteKit shortcut that points to your `src/lib` directory. Because our JSON file lives at `src/lib/data/permits.json`, this import pulls from the right place.
+Remember that the `$lib` prefix is a SvelteKit shortcut that points to your `src/lib` directory. Because your JSON file lives at `src/lib/data/permits.json`, this import pulls from the right place.
 
 Now the final step is to return it so the page can use it. Update the return statement:
 
@@ -313,7 +313,7 @@ Delete everything below the `ArticleHeader` component — the `Image`, the `Arti
 
 The `let { data } = $props()` line receives everything that `+page.js` returned. Because you passed it along as `{ permits }`, you can access it as `data.permits`.
 
-You may remember that the `{#each data.permits as permit}` block is Svelte's way of looping over an array. For each item in the array, it renders the markup inside the block, with the current item available as `permit`. Each `permit` has all the fields from the original JSON, so we can access them with dot notation like `permit.subcategoryname` and `permit.borough`.
+You may remember that the `{#each data.permits as permit}` block is Svelte's way of looping over an array. For each item in the array, it renders the markup inside the block, with the current item available as `permit`. Each `permit` has all the fields from the original JSON, so you can access them with dot notation like `permit.subcategoryname` and `permit.borough`.
 
 Save your file and reload your page. You should see a simple list of the 25 most recent film permits, showing the subcategory and borough for each.
 
@@ -321,9 +321,9 @@ UNORDERED LIST SCREENSHOT
 
 ## Part 2: Click to expand
 
-We have a list. Now let's make it interactive.
+You have a list. Now let's make it interactive.
 
-Here's a simple goal. What if you could click any permit in the list and see everything we know about that shoot: the street where they're holding parking, the production category, the precinct, the country of origin. Click a close button, and it disappears.
+Here's a simple goal. What if you could click any permit in the list and see all the details of that shoot: the street where they're holding parking, the production category, the precinct, the country of origin. Click a close button, and it disappears.
 
 This is a pattern that appears all over the web. You see a summary in a list, you click for the full record.
 
@@ -363,7 +363,7 @@ Add an `onclick` handler to the card `<div>` elements in your grid. When clicked
 </div>
 ```
 
-This is the same `onclick` pattern you used in Week 4 — an arrow function that updates a state variable. The only difference is that instead of flipping a boolean or toggling a number, we're storing the entire `permit` object.
+This is the same `onclick` pattern you used in Week 4 — an arrow function that updates a state variable. The only difference is that instead of flipping a boolean or toggling a number, you're storing the entire `permit` object.
 
 Save the file. The cards won't look any different yet, because nothing is reading from `selected`. Let's fix that.
 
@@ -399,7 +399,7 @@ SELECTED PERMIT SCREENSHOT
 
 ## Part 3: Styling with CSS variables
 
-We have a working interactive page. Now let's make it look like something.
+You have a working interactive page. Now let's make it look like something.
 
 ### Styling the cards
 
@@ -477,7 +477,7 @@ Save and check your browser. The detail card should now look clean and organized
 
 FINAL SCREENSHOT
 
-Notice that every value here comes from the design system variables we set up in Week 6. No hardcoded colors, no hardcoded sizes. If you wanted to use this same page inside a publication with a different accent color, you'd only need to change `--color-accent` in one place.
+Notice that every value here comes from the design system variables you set up in Week 6. No hardcoded colors, no hardcoded sizes. If you wanted to use this same page inside a publication with a different accent color, you'd only need to change `--color-accent` in one place.
 
 ## Homework
 
@@ -495,7 +495,7 @@ Send me the link to your working GitHub Pages URL.
 
 Remember the dataset you pitched from the [NYC Open Data portal](https://data.cityofnewyork.us/) in your earlier homework? Now it's time to start building it.
 
-Create a new repository from our template. Write a `fetch-data.js` script that downloads the dataset you pitched and saves it to `src/lib/data/` as a JSON file. Use the same pattern you followed in today's lesson — `fetch` the Socrata API endpoint, filter or limit the results with query parameters, and write the output with `fs.writeFileSync`.
+Create a new repository from the template. Write a `fetch-data.js` script that downloads the dataset you pitched and saves it to `src/lib/data/` as a JSON file. Use the same pattern you followed in today's lesson — `fetch` the Socrata API endpoint, filter or limit the results with query parameters, and write the output with `fs.writeFileSync`.
 
 Your script should run cleanly with `node fetch-data.js` and produce a readable JSON file. Send me the link to your GitHub repository.
 

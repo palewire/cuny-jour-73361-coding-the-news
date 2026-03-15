@@ -16,7 +16,7 @@ locked: false
 
 ## Part 1: Introduction to reactivity
 
-This week we'll venture further into what you can do with Svelte by learning how to create reactive components.
+This week you'll venture further into what you can do with Svelte by learning how to create reactive components.
 
 [Reactivity](https://en.wikipedia.org/wiki/Reactive_programming) is the arcane term that developers use to describe features that respond instantly to new data or user input. It's what allows news developers to create engaging applications that wouldn't be possible in print or a one-way broadcast.
 
@@ -39,7 +39,7 @@ It asks readers a series of questions about the words they choose — do you say
   attribution="Josh Katz"
 />
 
-Today we're going to learn the fundamentals you need to build interactive components like the Times quiz. Each part will introduce a concept you need to know.
+Today you're going to learn the fundamentals you need to build interactive components like the Times quiz. Each part will introduce a concept you need to know.
 
 ### Create your repository
 
@@ -52,9 +52,9 @@ Before we begin, open your browser and navigate to our template repository at <a
   chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
 />
 
-Just like our previous classes, click the green "Use this template" button near the top right of the page. This week, let's name our repository `my-first-interactive-components`. Make sure "Public" is selected, then click "Create repository."
+Just like in previous classes, click the green "Use this template" button near the top right of the page. This week, let's name your repository `my-first-interactive-components`. Make sure "Public" is selected, then click "Create repository."
 
-Clone the repository and its code onto your computer using the techniques we covered in [week one](/docs/coding-the-news/scripts/week-1). Open it in Visual Studio Code. Start a terminal and run `npm install` to fetch the template's dependencies. These steps should start to feel like second nature.
+Clone the repository and its code onto your computer using the techniques covered in [week one](/docs/coding-the-news/scripts/week-1). Open it in Visual Studio Code. Start a terminal and run `npm install` to fetch the template's dependencies. These steps should start to feel like second nature.
 
 ## Part 2: Introduction to state
 
@@ -435,7 +435,7 @@ This is `$derived()` in action. You change the input, and every value that depen
 
 ### Adding more services
 
-One service isn't much of a calculator. Let's add the rest of the major streaming platforms. First, you need to store the prices somewhere. A JavaScript object is perfect for this. Let's add the prices of each service to the top of our script block, and a state variable for each one:
+One service isn't much of a calculator. Let's add the rest of the major streaming platforms. First, you need to store the prices somewhere. A JavaScript object is perfect for this. Let's add the prices of each service to the top of your script block, and a state variable for each one:
 
 ```svelte {emphasize-lines="1-8,11-15"}
   const prices = {
@@ -667,7 +667,7 @@ Save your `TipCalculator.svelte` file and open `src/routes/+page.svelte`. Add an
 import TipCalculator from '$lib/components/TipCalculator.svelte';
 ```
 
-Now place the component somewhere inside the `ArticleBody`, as we did with our other components.
+Now place the component somewhere inside the `ArticleBody`, as you did with your other components.
 
 ```svelte
 <TipCalculator />
@@ -684,7 +684,7 @@ Check your browser. Type a bill amount and watch the tip calculate instantly.
 
 ### Adding a custom tip percentage
 
-Now let's complicate things and add a way to customize the percentage. In the script tag at the top of the component, add a new `$state` variable with default tip percentage. Then replace our `tip` variable with a `$derived` variable that calculates the amount based on the two inputs.
+Now let's complicate things and add a way to customize the percentage. In the script tag at the top of the component, add a new `$state` variable with default tip percentage. Then replace your `tip` variable with a `$derived` variable that calculates the amount based on the two inputs.
 
 ```svelte {emphasize-lines="3-4"}
 <script>
@@ -694,7 +694,7 @@ Now let's complicate things and add a way to customize the percentage. In the sc
 </script>
 ```
 
-Down in the markup, add a range slider bound to the `tipPercent` variable that lets users adjust the value. Then update the final box to print the `tipPercent` in our bottom line.
+Down in the markup, add a range slider bound to the `tipPercent` variable that lets users adjust the value. Then update the final box to print the `tipPercent` in your bottom line.
 
 ```svelte {emphasize-lines="4-14,30-33"}
 <div class="calculator">
@@ -829,7 +829,7 @@ Add a third input for the number of people, after the tip slider and before the 
   </div>
 ```
 
-Notice you use `min="1"` on the input to ensure we never go below 1 person. The label dynamically shows "person" or "people" using a ternary operator.
+Notice you use `min="1"` on the input to ensure the count never goes below 1 person. The label dynamically shows "person" or "people" using a ternary operator.
 
 Add the per-person result. The `{#if numPeople > 1}` only shows this line when splitting among multiple people.
 
@@ -863,7 +863,7 @@ Congratulations, you've used `$state`, `$derived` and `bind:value` together to c
 
 ## Part 5: Introduction to subcomponents
 
-Let's return to our streaming cost calculator from Part 3. Look at the markup — it has six nearly identical button blocks, each using the native `onclick` handler to the toggle the checkout and update the page. It works fine, but there's a lot of repetition, and now that you have the `bind` syntax in your toolbox, you can do better.
+Let's return to your streaming cost calculator from Part 3. Look at the markup — it has six nearly identical button blocks, each using the native `onclick` handler to the toggle the checkout and update the page. It works fine, but there's a lot of repetition, and now that you have the `bind` syntax in your toolbox, you can do better.
 
 ### Creating a ServiceButton component
 
@@ -927,7 +927,7 @@ Now let's update `StreamingCost.svelte` to use the new component. First, add an 
 import ServiceButton from './ServiceButton.svelte';
 ```
 
-Now replace all six button blocks with the new component. Instead of `bind:value`, you use `bind:selected` to match our property name.
+Now replace all six button blocks with the new component. Instead of `bind:value`, you use `bind:selected` to match your property name.
 
 ```svelte {emphasize-lines="5-10"}
 <div class="calculator">
@@ -959,7 +959,7 @@ This pattern is fundamental to streamlining interactive applications. The parent
 
 Find a story published in the past year by a news organization you admire that would benefit from an interactive component. Then build it.
 
-Your component should use at least two of the three reactive concepts we covered today: `$state`, `$derived` and `bind:value`. You should build it inside a fresh copy of our class template.
+Your component should use at least two of the three reactive concepts covered today: `$state`, `$derived` and `bind:value`. You should build it inside a fresh copy of the class template.
 
 Some examples of what this might look like:
 
