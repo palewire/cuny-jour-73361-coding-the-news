@@ -323,11 +323,9 @@ You should see a message confirming how many permits were fetched and where the 
 
 ### Step 6: Load data into the page
 
-This is the same pattern you used in Week 5 to download restaurant inspection data. The script runs once, saves the data to a file, and your page reads from that file. The API never gets hit when someone loads your page.
+Just as in [Week 5](../week-5/), you need to introduce the local data file to the Svelte system by importing it in `src/routes/+page.js`.
 
-Just as in Week 5, you need to introduce the local data file to the Svelte system by importing it in `src/routes/+page.js`.
-
-Open it in your editor. Right now you can see the options I added in Week 6 for showing and hiding the header and footer, but no data yet.
+Open it in your editor. Right now you can see the options I added in [Week 6](../week-6/) for showing and hiding the header and footer, but no data yet.
 
 ```js
 export function load() {
@@ -371,9 +369,9 @@ Because the name of the variable you imported matches the key you want in the re
 
 ### Step 7: Display the data
 
-Now open `src/routes/+page.svelte`, the crucial page where you choose what to show your readers. Right now it's full of boilerplate content from the template — the journalism school description, the example photo, the related links. You're going to clear all of that out and replace it with the permit data.
+Now open `src/routes/+page.svelte`, the crucial page where you choose what to show your readers. Right now it's full of boilerplate content from the template. You're going to clear all of that out and replace it with the permit data.
 
-Delete everything below the `ArticleHeader` component — the `Image`, the `ArticleBody` with all its paragraphs, and the `RelatedLinks`. Also update the headline and other metadata in the script block. Feel free to copy and paste this entire block into your file:
+Copy and paste this entire block into your file.
 
 ```svelte
 <script>
@@ -398,7 +396,7 @@ Delete everything below the `ArticleHeader` component — the `Image`, the `Arti
   />
 
   <div class="permits">
-    {#each data.permits as permit}
+    {#each data.permits as permit (permit.eventid)}
       <div class="card">
         <h3>{permit.subcategoryname}</h3>
         <p>{permit.borough}</p>
@@ -410,11 +408,17 @@ Delete everything below the `ArticleHeader` component — the `Image`, the `Arti
 
 The `let { data } = $props()` line receives everything that `+page.js` returned. Because you passed it along as `{ permits }`, you can access it as `data.permits`.
 
-You may remember that the `{#each data.permits as permit}` block is Svelte's way of looping over an array. For each item in the array, it renders the markup inside the block, with the current item available as `permit`. Each `permit` has all the fields from the original JSON, so you can access them with dot notation like `permit.subcategoryname` and `permit.borough`.
+You may remember that the `{#each data.permits as permit (permit.eventid)}` block is Svelte's way of looping over an array. For each item in the array, it renders the markup inside the block, with the current item available as `permit`. Each `permit` has all the fields from the original JSON, so you can access them with dot notation like `permit.subcategoryname` and `permit.borough`.
 
 Save your file and reload your page. You should see a simple list of the 25 most recent film permits, showing the subcategory and borough for each.
 
-UNORDERED LIST SCREENSHOT
+<Screenshot
+  src="/screenshots/week-7/unstyled-card-grid.png"
+  alt="The page showing unstyled film permit cards in a vertical list, each displaying a subcategory name and borough"
+  chromeTitle="Recent Film Permits"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
 ## Part 2: Click to expand
 
@@ -485,18 +489,24 @@ Add a conditional block below the grid that renders when something is selected:
     <p><strong>Category:</strong> {selected.category}</p>
     <p><strong>Location:</strong> {selected.parkingheld}</p>
     <p><strong>Borough:</strong> {selected.borough}</p>
-    <p><strong>Dates:</strong> {selected.startdatetime} – {selected.enddatetime}</p>
+    <p><strong>Date:</strong> {selected.enteredon}</p>
   </div>
 {/if}
 ```
 
 Save and try it. Click any card in the grid. A detail panel should appear below with a summary of that record. Click "Close" and it disappears.
 
-SELECTED PERMIT SCREENSHOT
+<Screenshot
+  src="/screenshots/week-7/selected-permit-card.png"
+  alt="The bottom of the page after clicking a permit card, showing a detail panel with the subcategory, category, location, borough and dates for a Cable-episodic shoot in the Bronx"
+  chromeTitle="Recent Film Permits"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
 ## Part 3: Styling with CSS variables
 
-You have a working interactive page. Now let's make it look like something.
+You have a working interactive page. It's just really ugly. So let's make it look like something normal.
 
 ### Styling the cards
 
