@@ -208,7 +208,7 @@ The `load` function is the special function that SvelteKit calls before renderin
 <Aside>
 In this case, we're returning an object with one property: `restaurants`, which contains the full array of inspection records from our JSON file.
 
-Because the name of the variable you imported matches the name of the key in our `{}` object, we can use shorthand syntax and just write `restaurants` instead of `restaurants: restaurants`. That's a JavaScript quirk that can be confusing at first.
+Because the name of the variable you imported matches the name of the key in your return object, you can use shorthand syntax and just write `restaurants` instead of `restaurants: restaurants`. That's a JavaScript quirk that can be confusing at first.
 </Aside>
 
 Now open `src/routes/+page.svelte`. At the bottom of the script block, you need to receive the data that the load function prepared. Add this line, which is just like the one you used to receive properties in our components:
