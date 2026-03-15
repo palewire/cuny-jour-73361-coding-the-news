@@ -1,7 +1,0 @@
-[
-  {
-    "key": "cmd+r",
-    "command": "workbench.action.tasks.runTask",
-    "args": "Dev Server"
-  }
-]
