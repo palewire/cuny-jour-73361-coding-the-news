@@ -498,3 +498,7 @@ Remember the dataset you pitched from the [NYC Open Data portal](https://data.ci
 Create a new repository from our template. Write a `fetch-data.js` script that downloads the dataset you pitched and saves it to `src/lib/data/` as a JSON file. Use the same pattern we followed in today's lesson — `fetch` the Socrata API endpoint, filter or limit the results with query parameters, and write the output with `fs.writeFileSync`.
 
 Your script should run cleanly with `node fetch-data.js` and produce a readable JSON file. Send me the link to your GitHub repository.
+
+### Task 3: Load it into this same page
+
+Now import your new JSON file into `src/routes/+page.js` and return it from the `load` function. Update `+page.svelte` to display something from your new dataset instead of the film permits. You can keep the same card and detail layout, just swap out the fields you're showing.
