@@ -597,7 +597,7 @@ Save and check your browser. The blue gradient bar is gone. The page feels open 
   chromeTitle="localhost:5173"
 />
 
-The template's `ArticleHeader` component is designed for standard news articles. For a feature story, you want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. We'll place the site's name at the top, centered, followed by the headline and supporting text.
+The template's `ArticleHeader` component is designed for standard news articles. For a feature story, you want something completely different: centered, generous with whitespace, and anchored by a headline that dominates the page. You'll place the site's name at the top, centered, followed by the headline and supporting text.
 
 Let's start by loading a display font that will make our headline feel like the cover of a magazine. Your page already has a `<svelte:head>` block with a title and meta description. Add a font link inside it:
 
