@@ -3,7 +3,7 @@ title: "Practice, Practice, Practice"
 summary: "A refresher exercise that revisits the fundamentals"
 date: "March 16, 2026"
 week: 7
-locked: true
+locked: false
 ---
 
 <script>
