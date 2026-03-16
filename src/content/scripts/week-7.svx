@@ -468,9 +468,9 @@ This is the same `onclick` pattern you used in Week 4 — an arrow function that
 
 Save the file. The cards won't look any different yet, because nothing is reading from `selected`. Let's fix that.
 
-### Rendering the detail card
+### Rendering a popup
 
-Add a conditional block below the grid that renders when something is selected:
+Add a conditional block after the grid that renders a modal overlay when something is selected:
 
 ```svelte
 <div class="permits">
@@ -483,18 +483,22 @@ Add a conditional block below the grid that renders when something is selected:
 </div>
 
 {#if selected}
-  <div class="detail-card">
-    <button onclick={() => selected = null}>Close</button>
-    <h2>{selected.subcategoryname}</h2>
-    <p><strong>Category:</strong> {selected.category}</p>
-    <p><strong>Location:</strong> {selected.parkingheld}</p>
-    <p><strong>Borough:</strong> {selected.borough}</p>
-    <p><strong>Date:</strong> {selected.enteredon}</p>
+  <div class="overlay" onclick={() => selected = null}>
+    <div class="popup" onclick={(e) => e.stopPropagation()}>
+      <button class="close-btn" onclick={() => selected = null}>&times;</button>
+      <h2>{selected.subcategoryname}</h2>
+      <p><strong>Category:</strong> {selected.category}</p>
+      <p><strong>Location:</strong> {selected.parkingheld}</p>
+      <p><strong>Borough:</strong> {selected.borough}</p>
+      <p><strong>Date:</strong> {selected.enteredon}</p>
+    </div>
   </div>
 {/if}
 ```
 
-Save and try it. Click any card in the grid. A detail panel should appear below with a summary of that record. Click "Close" and it disappears.
+There are two layers here. The `.overlay` is a full-screen backdrop that covers the entire page. Clicking it sets `selected` back to `null`, which closes the popup. The `.popup` inside it is the white box with the actual content. The `e.stopPropagation()` on the popup prevents clicks inside it from bubbling up to the overlay and accidentally closing it.
+
+Save and try it. Click any card in the grid. A popup should appear over the page with the permit details. Click "Close" or click outside the popup to dismiss it.
 
 <Screenshot
   src="/screenshots/week-7/selected-permit-card.png"
@@ -534,78 +538,90 @@ Open `src/routes/+page.svelte`. Add a `<style lang="scss">` block at the bottom 
 </style>
 ```
 
-The `.permits` rule uses [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout) to arrange the cards. The `repeat(auto-fill, minmax(200px, 1fr))` expression tells the browser to create as many columns as will fit, each at least 200 pixels wide. On a wide screen you'll see four or five columns; on a narrow screen, fewer. The layout adapts automatically.
+The `.permits` rule uses [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout) to arrange the cards. The `repeat(auto-fill, minmax(200px, 1fr))` expression tells the browser to create as many columns as will fit, each at least 200 pixels wide. On a wide screen you'll see many columns. On a narrow screen, fewer.
 
-Notice the `&:hover` inside the `.card` block. That's [SCSS](https://sass-lang.com/documentation/style-rules/parent-selector/) syntax — the `&` character refers to the parent selector, so `&:hover` compiles to `.card:hover`. It lets you keep related styles grouped together instead of writing a separate rule. This is the reason you use `<style lang="scss">` instead of plain `<style>` — it gives us this nesting shorthand.
+Notice the `&:hover` inside the `.card` block. That's [SCSS](https://sass-lang.com/documentation/style-rules/parent-selector/) syntax again. The `&` character refers to the parent selector, so `&:hover` compiles to `.card:hover`. It lets you keep related styles grouped together instead of writing a separate rule. This is the reason you use `<style lang="scss">` instead of plain `<style>`. Tt gives us this nesting shorthand, along with all the responsive mixins and other tricks we covered in Week 6.
 
 Save and check your browser. The permits should now appear as a grid of small cards with a hover state.
 
-### Highlighting the selected card
+<Screenshot
+  src="/screenshots/week-7/styled-card-grid.png"
+  alt="The page showing film permit cards arranged in a three-column CSS grid, each card displaying a subcategory name and borough with a border and hover state"
+  chromeTitle="Recent Film Permits"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
-When you click a card, the detail panel appears, but nothing in the grid tells you which permit you're looking at. Let's fix that by highlighting the selected card.
+### Styling the popup
 
-Svelte has a shorthand for conditionally applying a class called the [class directive](https://svelte.dev/docs/svelte/class). Update your card `<div>` to use it:
-
-```svelte
-<div class="card" class:active={selected === permit} onclick={() => selected = permit}>
-```
-
-The `class:active={selected === permit}` attribute adds the `active` class to the element whenever the expression on the right is true — that is, whenever this particular permit is the currently selected one.
-
-Now add the style for it. Add this rule to your `<style lang="scss">` block:
+Now let's style the overlay and popup. Add these rules to your `<style lang="scss">` block:
 
 ```scss
-  .card.active {
-    background-color: var(--color-light-gray);
-    border-color: var(--color-accent);
-  }
-```
-
-Save and try clicking a few cards. The selected card should get an accent-colored border while the detail panel shows below.
-
-### Styling the detail card
-
-Now let's style the card itself. Add these rules to your `<style lang="scss">` block:
-
-```scss
-  .detail-card {
-    margin-top: var(--spacing-lg);
-    padding: var(--spacing-md);
-    background-color: var(--color-light-gray);
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .detail-card button {
+  .popup {
+    background: white;
+    padding: var(--spacing-lg);
+    max-width: 500px;
+    width: 90%;
+  }
+
+  .popup button {
     float: right;
     cursor: pointer;
   }
+
+  .close-btn {
+    position: absolute;
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    background: none;
+    border: none;
+    font-size: var(--font-size-3xl);
+    line-height: 1;
+    color: var(--color-medium-gray);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-dark);
+    }
+  }
 ```
 
-Save and check your browser. The detail card should now look clean and organized.
+The `.overlay` uses `position: fixed` to cover the entire browser window, regardless of scroll position. The semi-transparent black background dims the page behind it. The `display: flex` with `align-items: center` and `justify-content: center` places the popup right in the middle of the screen.
 
-FINAL SCREENSHOT
+The `.close-btn` styles the close button in the top-right corner of the popup. It uses absolute positioning to sit on top of the popup content, and changes color on hover using the same SCSS trick as before.
 
-Notice that every value here comes from the design system variables you set up in Week 6. No hardcoded colors, no hardcoded sizes. If you wanted to use this same page inside a publication with a different accent color, you'd only need to change `--color-accent` in one place.
+Save and check your browser. Click a card and the popup should appear centered over a dimmed backdrop.
+
+<Screenshot
+  src="/screenshots/week-7/styled-popup.png"
+  alt="The page with a styled popup overlay showing permit details for a Cable-episodic shoot in the Bronx, centered over the dimmed card grid"
+  chromeTitle="Recent Film Permits"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
 ## Homework
 
-### Task 1: Extract a FilmPermit component
-
-Right now all of the detail card markup lives directly in `+page.svelte`. In a real project you'd want to pull it out into its own component — both to keep the page file clean and to make the card reusable.
-
-Create a new file at `src/lib/components/FilmPermit.svelte`. Move the detail card markup and its styles out of `+page.svelte` and into this new component. The component should accept the permit to display and a function to call when the user clicks Close as props.
-
-Once it's working, import it in `+page.svelte` and replace the `{#if selected}` block with the component. Your page styles should now only cover the cards.
-
-Send me the link to your working GitHub Pages URL.
-
-### Task 2: Fetch your own dataset
+### Task 1: Fetch your own dataset
 
 Remember the dataset you pitched from the [NYC Open Data portal](https://data.cityofnewyork.us/) in your earlier homework? Now it's time to start building it.
 
-Create a new repository from the template. Write a `fetch-data.js` script that downloads the dataset you pitched and saves it to `src/lib/data/` as a JSON file. Use the same pattern you followed in today's lesson — `fetch` the Socrata API endpoint, filter or limit the results with query parameters, and write the output with `fs.writeFileSync`.
+Rewrite the `fetch-data.js` script in this repository to download the dataset you pitched last week and save it to `src/lib/data/` as a JSON file. Use the same pattern you followed in today's lesson.
 
 Your script should run cleanly with `node fetch-data.js` and produce a readable JSON file. Send me the link to your GitHub repository.
 
-### Task 3: Load it into this same page
+### Task 2: Load it into this same page
 
-Now import your new JSON file into `src/routes/+page.js` and return it from the `load` function. Update `+page.svelte` to display something from your new dataset instead of the film permits. You can keep the same card and detail layout, just swap out the fields you're showing.
+Now import your new JSON file into `src/routes/+page.js` and return it from the `load` function. Update `+page.svelte` to display something from your new dataset instead of the film permits. You can keep the same card and detail layout, just swap out the fields you're showing. Publish the page via GitHub Pages and send me the link.
