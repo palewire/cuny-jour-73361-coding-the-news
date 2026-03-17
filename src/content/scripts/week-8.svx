@@ -1,0 +1,320 @@
+---
+title: "Practice, Practice, Practice, Part 2"
+summary: "Loading downloaded data into Svelte components"
+date: "March 23, 2026"
+week: 8
+locked: false
+---
+
+<script>
+  import Screenshot from '$lib/components/Screenshot.svelte';
+</script>
+
+Last week you built a Node.js script that fetches film permit data from NYC Open Data and saves it to a local JSON file. You also covered the core JavaScript concepts at work: variables, fetching, arrays, objects, iteration, and writing files.
+
+Today you'll pick up where you left off and take that downloaded data the rest of the way — importing it into your Svelte page, rendering it as a grid of cards, and making it interactive with click-to-expand behavior. Then you'll clean it up with CSS.
+
+## Part 1: From script to page
+
+You have a JSON file full of permit data sitting in `src/lib/data/permits.json`. Now you need to connect it to your Svelte page so you can display it to readers.
+
+### Step 1: Load data into the page
+
+Just as in [Week 5](../week-5/), you need to introduce the local data file to the Svelte system by importing it in `src/routes/+page.js`.
+
+Open it in your editor. Right now you can see the options added in [Week 6](../week-6/) for showing and hiding the header and footer, but no data yet.
+
+```js
+export function load() {
+  return {
+    showHeader: true,
+    showFooter: true,
+  };
+}
+```
+
+Just as in Week 5, add an import at the top of the file. This pulls in the JSON file you just created:
+
+```js {emphasize-lines="1"}
+import permits from '$lib/data/permits.json';
+
+export function load() {
+  return {
+    showHeader: true,
+    showFooter: true,
+  };
+}
+```
+
+Remember that the `$lib` prefix is a SvelteKit shortcut that points to your `src/lib` directory. Because your JSON file lives at `src/lib/data/permits.json`, this import pulls from the right place.
+
+Now the final step is to return it so the page can use it. Update the return statement:
+
+```js {emphasize-lines="7"}
+import permits from '$lib/data/permits.json';
+
+export function load() {
+  return {
+    showHeader: true,
+    showFooter: true,
+    permits,
+  };
+}
+```
+
+Because the name of the variable you imported matches the key you want in the return object, you can use JavaScript's shorthand syntax and just write `permits` instead of `permits: permits`. You saw this same pattern in Week 5.
+
+### Step 2: Display the data
+
+Now open `src/routes/+page.svelte`, the crucial page where you choose what to show your readers. Right now it's full of boilerplate content from the template. You're going to clear all of that out and replace it with the permit data.
+
+Copy and paste this entire block into your file.
+
+```svelte
+<script>
+  import ArticleHeader from '$lib/components/ArticleHeader.svelte';
+
+  let { data } = $props();
+
+  let headline = 'Recent Film Permits';
+  let byline = 'NYCity News Service';
+  let pubDate = '2026-03-16';
+</script>
+
+<svelte:head>
+  <title>{headline} | NYCity News Service</title>
+</svelte:head>
+
+<div class="container">
+  <ArticleHeader
+    {headline}
+    {byline}
+    {pubDate}
+  />
+
+  <div class="permits">
+    {#each data.permits as permit (permit.eventid)}
+      <div class="card">
+        <h3>{permit.subcategoryname}</h3>
+        <p>{permit.borough}</p>
+      </div>
+    {/each}
+  </div>
+</div>
+```
+
+The `let { data } = $props()` line receives everything that `+page.js` returned. Because you passed it along as `{ permits }`, you can access it as `data.permits`.
+
+You may remember that the `{#each data.permits as permit (permit.eventid)}` block is Svelte's way of looping over an array. For each item in the array, it renders the markup inside the block, with the current item available as `permit`. Each `permit` has all the fields from the original JSON, so you can access them with dot notation like `permit.subcategoryname` and `permit.borough`.
+
+Save your file and reload your page. You should see a simple list of the 25 most recent film permits, showing the subcategory and borough for each.
+
+<Screenshot
+  src="/screenshots/week-7/unstyled-card-grid.png"
+  alt="The page showing unstyled film permit cards in a vertical list, each displaying a subcategory name and borough"
+  chromeTitle="Recent Film Permits"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+## Part 2: Click to expand
+
+You have a list. Now let's make it interactive.
+
+Here's a simple goal. What if you could click any permit in the list and see all the details of that shoot: the street where they're holding parking, the production category, the precinct, the country of origin. Click a close button, and it disappears.
+
+This is a pattern that appears all over the web. You see a summary in a list, you click for the full record.
+
+### Revisiting `$state`
+
+You've used `$state()` before to track booleans like `isExpanded = $state(false)` and numbers like `billAmount = $state(0)`. This time you're going to store something different: an entire object, or nothing at all.
+
+Add `$state(null)` to your script block in `+page.svelte`, right below the `$props()` line. Null is the word computer programmers use to refer to "nothing" or "no value." It's a common default for a variable that will later hold an object.
+
+```svelte {emphasize-lines="5"}
+<script>
+  import ArticleHeader from '$lib/components/ArticleHeader.svelte';
+
+  let { data } = $props();
+  let selected = $state(null);
+
+  let headline = 'Recent Film Permits';
+  let byline = 'NYCity News Service';
+  let pubDate = '2026-03-16';
+</script>
+```
+
+The `null` default value means "nothing is selected yet." When a user clicks a permit, you'll replace `null` with that permit's full object. When they close the card, you'll set it back to `null`.
+
+### Wiring up a click handler
+
+Add an `onclick` handler to the card `<div>` elements in your grid. When clicked, it should set `selected` to the current permit.
+
+```svelte
+<div class="permits">
+  {#each data.permits as permit}
+    <div class="card" onclick={() => selected = permit}>
+      <h3>{permit.subcategoryname}</h3>
+      <p>{permit.borough}</p>
+    </div>
+  {/each}
+</div>
+```
+
+This is the same `onclick` pattern you used in Week 4 — an arrow function that updates a state variable. The only difference is that instead of flipping a boolean or toggling a number, you're storing the entire `permit` object.
+
+Save the file. The cards won't look any different yet, because nothing is reading from `selected`. Let's fix that.
+
+### Rendering a popup
+
+Add a conditional block after the grid that renders a modal overlay when something is selected:
+
+```svelte
+<div class="permits">
+  {#each data.permits as permit}
+    <div class="card" onclick={() => selected = permit}>
+      <h3>{permit.subcategoryname}</h3>
+      <p>{permit.borough}</p>
+    </div>
+  {/each}
+</div>
+
+{#if selected}
+  <div class="overlay" onclick={() => selected = null}>
+    <div class="popup" onclick={(e) => e.stopPropagation()}>
+      <button class="close-btn" onclick={() => selected = null}>&times;</button>
+      <h2>{selected.subcategoryname}</h2>
+      <p><strong>Category:</strong> {selected.category}</p>
+      <p><strong>Location:</strong> {selected.parkingheld}</p>
+      <p><strong>Borough:</strong> {selected.borough}</p>
+      <p><strong>Date:</strong> {selected.enteredon}</p>
+    </div>
+  </div>
+{/if}
+```
+
+There are two layers here. The `.overlay` is a full-screen backdrop that covers the entire page. Clicking it sets `selected` back to `null`, which closes the popup. The `.popup` inside it is the white box with the actual content. The `e.stopPropagation()` on the popup prevents clicks inside it from bubbling up to the overlay and accidentally closing it.
+
+Save and try it. Click any card in the grid. A popup should appear over the page with the permit details. Click "Close" or click outside the popup to dismiss it.
+
+<Screenshot
+  src="/screenshots/week-7/selected-permit-card.png"
+  alt="The bottom of the page after clicking a permit card, showing a detail panel with the subcategory, category, location, borough and dates for a Cable-episodic shoot in the Bronx"
+  chromeTitle="Recent Film Permits"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+## Part 3: Styling with CSS variables
+
+You have a working interactive page. It's just really ugly. So let's make it look like something normal.
+
+### Styling the cards
+
+Open `src/routes/+page.svelte`. Add a `<style lang="scss">` block at the bottom of the file. You'll start with the card grid.
+
+```svelte
+<style lang="scss">
+  @use '$lib/styles' as *;
+
+  .permits {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+  }
+
+  .card {
+    padding: var(--spacing-sm);
+    border: var(--border-width-thin) solid var(--color-border);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-light-gray);
+    }
+  }
+</style>
+```
+
+The `.permits` rule uses [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout) to arrange the cards. The `repeat(auto-fill, minmax(200px, 1fr))` expression tells the browser to create as many columns as will fit, each at least 200 pixels wide. On a wide screen you'll see many columns. On a narrow screen, fewer.
+
+Notice the `&:hover` inside the `.card` block. That's [SCSS](https://sass-lang.com/documentation/style-rules/parent-selector/) syntax again. The `&` character refers to the parent selector, so `&:hover` compiles to `.card:hover`. It lets you keep related styles grouped together instead of writing a separate rule. This is the reason you use `<style lang="scss">` instead of plain `<style>`. It gives us this nesting shorthand, along with all the responsive mixins and other tricks we covered in Week 6.
+
+Save and check your browser. The permits should now appear as a grid of small cards with a hover state.
+
+<Screenshot
+  src="/screenshots/week-7/styled-card-grid.png"
+  alt="The page showing film permit cards arranged in a three-column CSS grid, each card displaying a subcategory name and borough with a border and hover state"
+  chromeTitle="Recent Film Permits"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+### Styling the popup
+
+Now let's style the overlay and popup. Add these rules to your `<style lang="scss">` block:
+
+```scss
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .popup {
+    background: white;
+    padding: var(--spacing-lg);
+    max-width: 500px;
+    width: 90%;
+  }
+
+  .popup button {
+    float: right;
+    cursor: pointer;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    background: none;
+    border: none;
+    font-size: var(--font-size-3xl);
+    line-height: 1;
+    color: var(--color-medium-gray);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-dark);
+    }
+  }
+```
+
+The `.overlay` uses `position: fixed` to cover the entire browser window, regardless of scroll position. The semi-transparent black background dims the page behind it. The `display: flex` with `align-items: center` and `justify-content: center` places the popup right in the middle of the screen.
+
+The `.close-btn` styles the close button in the top-right corner of the popup. It uses absolute positioning to sit on top of the popup content, and changes color on hover using the same SCSS trick as before.
+
+Save and check your browser. Click a card and the popup should appear centered over a dimmed backdrop.
+
+<Screenshot
+  src="/screenshots/week-7/styled-popup.png"
+  alt="The page with a styled popup overlay showing permit details for a Cable-episodic shoot in the Bronx, centered over the dimmed card grid"
+  chromeTitle="Recent Film Permits"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+## Homework
+
+### Task 1: Load your dataset into the page
+
+If you haven't already, make sure your `fetch-data.js` script from last week's homework is downloading your own dataset and saving it to `src/lib/data/`. If you ran into trouble with that, get it working now before moving on.
+
+Once you have a JSON file, import it into `src/routes/+page.js` and return it from the `load` function. Update `+page.svelte` to display something from your new dataset instead of the film permits. You can keep the same card and detail layout from today's class — just swap out the fields you're showing.
+
+Publish the page via GitHub Pages and send me the link.
