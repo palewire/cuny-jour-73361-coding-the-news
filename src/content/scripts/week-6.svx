@@ -763,13 +763,15 @@ Once it's working, your `+page.svelte` should be able to use it like this:
 
 A challenge: try to do this by hand rather than asking a code assistant to do it for you. Practicing this without AI will strengthen the skill for the times when you need to understand what your assistant is generating.
 
+Send me a link to the finished component on GitHub.
+
 ### Task 2: Design your own theme
 
 Starting from a fresh clone of the template, create your own story-specific design for the CUNY article. Override the template's default colors and fonts to create a unique visual identity. Use your new SplashHeader component. Include a Dashboard with BigNumber statistics. Every CSS value in your page styles should reference a variable from the design system. No hardcoded colors, sizes or spacing.
 
 Deploy it to GitHub Pages and send me the link.
 
-### Task 3: Find a story that changes the rules
+### Task 3: Find a story that breaks the rules
 
 Browse the websites of news organizations you admire and find a story page that looks different from the publication's standard article template. It could be a feature with a dramatic header, a data project with its own color palette, an interactive page with custom typography.
 
