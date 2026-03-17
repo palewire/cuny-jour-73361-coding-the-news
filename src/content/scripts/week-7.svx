@@ -329,4 +329,4 @@ Remember the dataset you pitched from the [NYC Open Data portal](https://data.ci
 
 Rewrite the `fetch-data.js` script in this repository to download the dataset you pitched last week and save it to `src/lib/data/` as a JSON file. Use the same pattern you followed in today's lesson.
 
-Your script should run cleanly with `node fetch-data.js` and produce a readable JSON file. Send me the link to your GitHub repository.
+Your script should run cleanly with `node fetch-data.js` and produce a readable JSON file. Send me the link to the data file your GitHub repository.
