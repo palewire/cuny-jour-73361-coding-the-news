@@ -1,6 +1,6 @@
 ---
-title: "Practice, Practice, Practice, Part 2"
-summary: "Loading downloaded data into Svelte components"
+title: "Practice, Practice, Practice"
+summary: "Another refresher exercise revisiting data loading and interactive inputs"
 date: "March 23, 2026"
 week: 8
 locked: false
@@ -12,7 +12,7 @@ locked: false
 
 Last week you built a Node.js script that fetches film permit data from NYC Open Data and saves it to a local JSON file. You also covered the core JavaScript concepts at work: variables, fetching, arrays, objects, iteration, and writing files.
 
-Today you'll pick up where you left off and take that downloaded data the rest of the way — importing it into your Svelte page, rendering it as a grid of cards, and making it interactive with click-to-expand behavior. Then you'll clean it up with CSS.
+Today you'll pick up where you left off and take that downloaded data the rest of the way — importing it into your Svelte page, rendering it as a grid of cards, and making it interactive.
 
 ## Part 1: From script to page
 
