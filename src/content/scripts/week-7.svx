@@ -20,8 +20,6 @@ Starting from a blank page, you'll build a new interactive application, step by 
 
 Once you're finished, you'll be ready to start building real data projects in our class's next phase.
 
-## Part 1: Loading data, learning JavaScript
-
 The data you're using is [film and television shoot permits](https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p) published by New York City's Mayor's Office of Media and Entertainment. Every time a production company wants to prevent parking, block a sidewalk or take over a piece of city property, they file a permit. After a few months go by, those notices end up here.
 
 <Screenshot
@@ -31,8 +29,6 @@ The data you're using is [film and television shoot permits](https://data.cityof
   chromeUrl="https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p"
   maxWidth="960px"
 />
-
-### Create your repository
 
 Before you start using it, get your tools out. Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
@@ -49,7 +45,7 @@ Clone it onto your computer, open it in Visual Studio Code, and run `npm install
 
 Start the development server with `npm run dev` and open your browser to [localhost:5173](http://localhost:5173).
 
-### Step 1: Variables
+## Part 1: Variables
 
 In Week 5, you wrote a Node.js script to download restaurant inspection data You're going to do the same thing here with film permits. This time you'll take it slow and I'll talk through every line of code, so you understand exactly what's happening, and learn some JavaScript along the way.
 
@@ -93,7 +89,7 @@ You've been writing `let` all semester for Svelte's reactive variables. That's c
 
 The `url` variable holds the address of the API endpoint. The `$where`, `$order` and `$limit` parts at the end are query parameters in the [Socrata Open Data API](https://dev.socrata.com/) format, which is what NYC Open Data uses. They tell the API to give us only shooting permits, sorted newest first, limited to 25 records. Note that these `$` signs are part of the Socrata query language. They have nothing to do with Svelte's syntax, which uses `$` for reactive variables. It's just a coincidence that they look the same.
 
-### Step 2: Fetching data
+## Part 2: Fetching data
 
 Now let's actually talk to the server. Update `fetch-data.js` to make a web request.
 
@@ -156,7 +152,7 @@ $ node fetch-data.js
   ...
 ```
 
-### Step 3: Lists
+## Part 3: Lists
 
 You're looking at a JavaScript [array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array), which is the fancy computer programming term for an ordered list of items.
 
@@ -204,7 +200,7 @@ Bronx
 
 This bracket-and-dot notation is how you dig into a JavaScript object. The bracket `[0]` gets you the item at position zero. The `.subcategoryname` gets you the field named `subcategoryname` from that item. Every object in the array has the same fields, so `permits[1].subcategoryname` would give you the subcategory of the second permit, and so on.
 
-### Step 4: Iteration
+## Part 4: Iteration
 
 Accessing one item at a time is useful for exploration, but in practice you almost always want to do something with every item in an array. That's what programmers call [iteration](https://en.wikipedia.org/wiki/Iteration).
 
@@ -270,7 +266,7 @@ You should see how many of your 25 permits are in Manhattan.
 14
 ```
 
-### Step 5: Save the data
+## Part 5: Saving data
 
 You've explored the data enough. Now let's trim down `fetch-data.js` so it downloads the permits and saves them to a file that your page can use.
 
