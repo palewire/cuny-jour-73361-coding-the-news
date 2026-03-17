@@ -325,7 +325,7 @@ You should see a message confirming how many permits were fetched and where the 
 
 ### Task 1: Fetch your own dataset
 
-Remember the dataset you pitched from the [NYC Open Data portal](https://data.cityofnewyork.us/) in your earlier homework? Now it's time to start building it.
+Remember the dataset you pitched from the [NYC Open Data portal](https://data.cityofnewyork.us/) in your earlier homework?
 
 Rewrite the `fetch-data.js` script in this repository to download the dataset you pitched last week and save it to `src/lib/data/` as a JSON file. Use the same pattern you followed in today's lesson.
 
