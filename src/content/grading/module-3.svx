@@ -1,5 +1,5 @@
 ---
-title: "Module 3 Evaluation"
+title: "The Real Deal"
 summary: "Deliver a page that is ready to publish on a real news site"
 module: 3
 locked: false

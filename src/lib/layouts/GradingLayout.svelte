@@ -4,13 +4,17 @@
   import Meta from '$lib/components/Meta.svelte';
   import GradingNavigation from '$lib/components/GradingNavigation.svelte';
 
-  let { children, title, summary, previousGrading, nextGrading } = $props();
+  let { children, title, summary, module, previousGrading, nextGrading } =
+    $props();
+
+  const kicker = $derived(module ? `Module ${module}` : undefined);
+  const pageTitle = $derived(kicker ? `${kicker} ${title}` : title);
 </script>
 
-<Meta {title} description={summary} />
+<Meta title={pageTitle} description={summary} />
 
 <Breadcrumbs items={[{ label: 'Grading' }]} />
-<ScriptHero {title} {summary} />
+<ScriptHero {title} {summary} {kicker} />
 
 <section class="section grading">
   <div class="container">

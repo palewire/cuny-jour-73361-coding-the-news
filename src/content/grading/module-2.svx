@@ -1,5 +1,5 @@
 ---
-title: "Module 2 Evaluation"
+title: "Simple Applications"
 summary: "Demonstrate professional effort and experimentation"
 module: 2
 locked: false

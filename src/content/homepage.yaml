@@ -86,15 +86,15 @@ evaluation:
   background: 'light-gray'
   criteria:
     - icon: 'ClipboardCheck'
-      title: 'Module 1'
+      title: 'Module 1: Fundamental Tools'
       description: 'Show up, participate and complete your homework'
       href: '/grading/module-1/'
     - icon: 'Star'
-      title: 'Module 2'
+      title: 'Module 2: Simple Applications'
       description: 'Demonstrate professional effort and experimentation'
       href: '/grading/module-2/'
     - icon: 'Trophy'
-      title: 'Module 3'
+      title: 'Module 3: The Real Deal'
       description: 'Deliver a page that is ready to publish on a real news site'
       href: '/grading/module-3/'
 

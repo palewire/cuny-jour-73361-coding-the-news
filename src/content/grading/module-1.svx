@@ -1,5 +1,5 @@
 ---
-title: "Module 1 Evaluation"
+title: "Fundamental Tools"
 summary: "Show up, participate and complete your homework"
 module: 1
 locked: false

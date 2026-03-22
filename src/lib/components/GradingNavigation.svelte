@@ -12,7 +12,9 @@
         <ChevronLeft size={20} />
         <span class="nav-content">
           <span class="nav-label">Previous</span>
-          <span class="nav-title">{previousGrading.title}</span>
+          <span class="nav-title"
+            >Module {previousGrading.module}: {previousGrading.title}</span
+          >
         </span>
       </a>
     {/if}
@@ -23,7 +25,9 @@
       <a href="{base}/grading/{nextGrading.slug}">
         <span class="nav-content">
           <span class="nav-label">Next</span>
-          <span class="nav-title">{nextGrading.title}</span>
+          <span class="nav-title"
+            >Module {nextGrading.module}: {nextGrading.title}</span
+          >
         </span>
         <ChevronRight size={20} />
       </a>

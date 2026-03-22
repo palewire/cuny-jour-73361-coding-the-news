@@ -1,12 +1,14 @@
 <script>
-  let { title, summary, date, week } = $props();
+  let { title, summary, date, week, kicker = undefined } = $props();
+
+  const displayKicker = $derived(kicker ?? (week ? `Week ${week}` : undefined));
 </script>
 
 <section class="script-hero">
   <div class="container">
     <div class="script-header">
-      {#if week}
-        <span class="kicker">Week {week}</span>
+      {#if displayKicker}
+        <span class="kicker">{displayKicker}</span>
       {/if}
       <h1 class="script-title">{title}</h1>
     </div>
