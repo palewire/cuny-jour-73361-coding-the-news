@@ -8,7 +8,7 @@
     $props();
 
   const kicker = $derived(module ? `Module ${module}` : undefined);
-  const pageTitle = $derived(kicker ? `${kicker} ${title}` : title);
+  const pageTitle = $derived(kicker ? `${kicker}: ${title}` : title);
 </script>
 
 <Meta title={pageTitle} description={summary} />
