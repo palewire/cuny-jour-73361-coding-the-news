@@ -8,6 +8,7 @@
   import Evaluation from '$lib/components/Evaluation.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import ScriptCard from '$lib/components/ScriptCard.svelte';
+  import Meta from '$lib/components/Meta.svelte';
   import * as icons from 'lucide-svelte';
 
   let { data } = $props();
@@ -29,22 +30,12 @@
   );
 </script>
 
-<svelte:head>
-  <title>{content.meta.title}</title>
-  <meta name="description" content={content.meta.description} />
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Coding the News | JOUR 73361" />
-  <meta property="og:description" content={content.meta.description} />
-  <meta property="og:image" content={content.meta.ogImage} />
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Coding the News | JOUR 73361" />
-  <meta name="twitter:description" content={content.meta.description} />
-  <meta name="twitter:image" content={content.meta.ogImage} />
-</svelte:head>
+<Meta
+  title={content.meta.title}
+  description={content.meta.description}
+  ogTitle="Coding the News | JOUR 73361"
+  ogImage={content.meta.ogImage}
+/>
 
 <Masthead />
 

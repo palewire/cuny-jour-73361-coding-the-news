@@ -4,6 +4,7 @@
   import ScriptHero from '$lib/components/ScriptHero.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
   import ScriptNavigation from '$lib/components/ScriptNavigation.svelte';
+  import Meta from '$lib/components/Meta.svelte';
 
   let { children, title, summary, date, week, previousScript, nextScript } =
     $props();
@@ -28,33 +29,11 @@
     });
   });
 
-  const shareImage = 'https://palewi.re/docs/coding-the-news/social-share.jpg';
-
   // Breadcrumb label (week info is now shown as a kicker in ScriptHero)
   const breadcrumbLabel = 'Script';
 </script>
 
-<svelte:head>
-  <title>{title} | Coding the News</title>
-  <meta
-    name="description"
-    content={summary || `${title} - JOUR 73361: Coding the News`}
-  />
-  <meta property="og:title" content={title} />
-  <meta
-    property="og:description"
-    content={summary || `${title} - JOUR 73361: Coding the News`}
-  />
-  <meta property="og:image" content={shareImage} />
-  <meta property="og:type" content="article" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={title} />
-  <meta
-    name="twitter:description"
-    content={summary || `${title} - JOUR 73361: Coding the News`}
-  />
-  <meta name="twitter:image" content={shareImage} />
-</svelte:head>
+<Meta {title} description={summary} ogType="article" />
 
 <Breadcrumbs items={[{ label: breadcrumbLabel }]} />
 <ScriptHero {title} {summary} {date} {week} />

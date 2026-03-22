@@ -1,17 +1,12 @@
 <script>
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
+  import Meta from '$lib/components/Meta.svelte';
 
   let { children, title, summary } = $props();
 </script>
 
-<svelte:head>
-  <title>{title} | Coding the News</title>
-  <meta
-    name="description"
-    content={summary || `${title} - JOUR 73361: Coding the News`}
-  />
-</svelte:head>
+<Meta {title} description={summary} />
 
 <Breadcrumbs items={[{ label: 'Grading' }]} />
 <ScriptHero {title} {summary} />
