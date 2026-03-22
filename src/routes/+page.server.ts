@@ -44,7 +44,8 @@ export const load: PageServerLoad = async () => {
   });
 
   const homepageSource = homepageFiles['/src/content/homepage.yaml'];
-  const content = yaml.load(homepageSource ?? '');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const content = yaml.load(homepageSource ?? '') as Record<string, any>;
 
   return {
     scripts,

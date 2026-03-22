@@ -8,7 +8,8 @@
     description,
     href = null,
   } = $props<{
-    icon: Component;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    icon: Component<any>;
     title: string;
     description: string;
     href?: string | null;

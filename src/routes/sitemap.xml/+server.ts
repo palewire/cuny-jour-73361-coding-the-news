@@ -11,11 +11,11 @@ export const GET: RequestHandler = () => {
   const siteBase = `${SITE_URL}${base}`;
 
   const scriptSlugs = Object.keys(scriptModules).map((path) =>
-    path.split('/').pop().replace('.svx', '')
+    path.split('/').pop()!.replace('.svx', '')
   );
 
   const gradingSlugs = Object.keys(gradingModules).map((path) =>
-    path.split('/').pop().replace('.svx', '')
+    path.split('/').pop()!.replace('.svx', '')
   );
 
   const urls = [

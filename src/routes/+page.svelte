@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Component } from 'svelte';
   import Masthead from '$lib/components/Masthead.svelte';
   import Hero from '$lib/components/Hero.svelte';
   import Module from '$lib/components/Module.svelte';
@@ -56,9 +57,13 @@
   const scripts = $derived(data.scripts);
   const content = $derived(data.content);
 
-  function getIcon(iconName: string) {
-    return iconMap[iconName as keyof typeof iconMap];
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  function getIcon(iconName: string): Component<any> {
+    return iconMap[
+      iconName as keyof typeof iconMap
+    ] as unknown as Component<any>;
   }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   // Transform evaluation criteria with icon components
   const evaluationCriteria = $derived(
