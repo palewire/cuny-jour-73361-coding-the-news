@@ -1,16 +1,16 @@
 ---
-title: "Module 3 Grading Rubric"
+title: "Module 3 Evaluation"
 summary: "Deliver a page that is ready to publish on a real news site"
 module: 3
 locked: false
 layout: grading
 ---
 
-The capstone is the culmination of the semester. You will conceive, build, and deploy an original, interactive, data-driven project of your own design. If you don't have an idea, you may choose from a set of challenge projects provided by the instructor.
+The final project is the culmination of the semester. You will conceive, build, and deploy an original, interactive, data-driven project of your own design. If you don't have an idea, you may choose from a set of challenge projects provided by the instructor.
 
 This is your chance to demonstrate everything you've learned — not just that you can make something that works, but that you can make something worth reading.
 
-The capstone is graded as a single final deliverable, presented to the class in our final session, on a 20-point scale across five criteria.
+The final project is graded as a single final deliverable, presented to the class in our final session, on a 10-point scale across four criteria.
 
 ## Delivery
 
@@ -18,11 +18,10 @@ Your project is deployed to a live URL and functions correctly.
 
 | Points | Criteria |
 |--------|----------|
-| 6 | The site loads without errors and all features — navigation, interactivity, data display — work as intended across desktop and mobile. |
-| 4–5 | The site works but has minor issues — a layout problem at certain screen sizes, a feature that's slightly off, or a rough edge that doesn't break the experience. |
-| 2–3 | The site is deployed but has significant problems — broken interactivity, data that doesn't load, or sections that are clearly incomplete. |
-| 1 | An attempt was made but the site does not load or is not deployed. |
-| 0 | No submission. |
+| 3 | The site loads without errors and all features — navigation, interactivity, data display — work as intended across desktop and mobile |
+| 2 | The site works but has minor issues — a layout problem at certain screen sizes, a feature that's slightly off, or a rough edge that doesn't break the experience |
+| 1 | The site is deployed but has significant problems — broken interactivity, data that doesn't load, or sections that are clearly incomplete |
+| 0 | No submission or the site does not load |
 
 ## Storytelling
 
@@ -30,21 +29,9 @@ Your project demonstrates editorial judgment — a clear topic, a reason the rea
 
 | Points | Criteria |
 |--------|----------|
-| 5 | The project has a clear editorial focus. The headline, text, and structure guide the reader through the material. Data and interactive elements serve the story rather than existing for their own sake. |
-| 3–4 | The editorial intent is there but uneven — the topic is clear but the writing is thin, or the interactive elements feel disconnected from the narrative. |
-| 1–2 | The project feels more like a technical exercise than a story. There's data on the page but little editorial framing to help the reader make sense of it. |
-| 0 | No discernible editorial intent. |
-
-## Understanding
-
-Your repository includes a README that explains your project and your code.
-
-| Points | Criteria |
-|--------|----------|
-| 3 | The README explains what the project is, identifies at least two specific technical choices you made, and explains why in your own words. It's clear you understand how the pieces fit together. |
-| 2 | The README covers the basics but is vague on the technical details, or only explains one aspect of the code. |
-| 1 | The README is present but superficial. |
-| 0 | No README. |
+| 2 | The project has a clear editorial focus — the headline, text, and structure guide the reader through the material, and data and interactive elements serve the story rather than existing for their own sake |
+| 1 | The editorial intent is there but uneven — the topic is clear but the writing is thin, or the interactive elements feel disconnected from the narrative |
+| 0 | No discernible editorial intent, or the project feels more like a technical exercise than a story |
 
 ## Ambition
 
@@ -52,30 +39,31 @@ Your project incorporates techniques or features that go beyond what we covered 
 
 | Points | Criteria |
 |--------|----------|
-| 3 | The project includes multiple features or techniques we did not build together — a new library, a novel interactive pattern, an ambitious design treatment, or a creative data approach. |
-| 2 | The project includes one notable addition beyond what we covered in class. |
-| 1 | The project mostly applies familiar techniques but with some minor additions or variations. |
-| 0 | The project does not go beyond what we built in class. |
+| 2 | The project includes multiple features or techniques we did not build together — a new library, a novel interactive pattern, an ambitious design treatment, or a creative data approach |
+| 1 | The project includes one notable addition beyond what we covered, or mostly applies familiar techniques with some minor additions or variations |
+| 0 | The project does not go beyond what we built in class |
 
 ## Presentation
 
-You present your project to the class in our final session.
+You present your project to the class during the final critique session.
 
 | Points | Criteria |
 |--------|----------|
-| 3 | You walked the class through your project clearly — what it is, why you made it, how it works, and what you learned. You could answer questions about your technical and editorial choices. |
-| 2 | You presented but were unclear on some aspects — struggled to explain a technical decision, or the walkthrough was disorganized. |
-| 1 | You presented but only briefly or with little substance. |
-| 0 | No presentation. |
+| 3 | You walked the class through your project clearly — what it is, why you made it, how it works, and what you learned — and could answer questions about your technical and editorial choices |
+| 2 | You presented clearly but were unclear on some aspects — struggled to explain a technical decision, or the walkthrough was disorganized |
+| 1 | You presented but only briefly or with little substance |
+| 0 | No presentation |
 
-## Grade Scale
+## Grading
 
 | Points | Grade |
 |--------|-------|
-| 18–20 | A |
-| 16–17 | A- |
-| 14–15 | B+ |
-| 12–13 | B |
-| 10–11 | B- |
-| 7–9 | C |
-| Below 7 | D or below |
+| 10 | A |
+| 9 | A- |
+| 8 | B+ |
+| 7 | B |
+| 5–6 | B-/C+ |
+| 3–4 | C/C- |
+| 1–2 | D |
+| 0 | F |
+
