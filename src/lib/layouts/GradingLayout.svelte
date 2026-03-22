@@ -49,7 +49,7 @@
   :global(.grading-body th),
   :global(.grading-body td) {
     text-align: left;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm) var(--spacing-xs) 0;
     border-bottom: 1px solid var(--color-border);
     vertical-align: top;
   }

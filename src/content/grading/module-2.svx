@@ -14,11 +14,11 @@ You are expected to develop a working project that is deployed to a live URL and
 
 | Points | Criteria |
 |--------|----------|
-| 7 | The site loads without errors, all features work as expected, and the project is built with a different topic/dataset than the one we used in class. |
-| 5–6 | The site loads but has minor issues — a broken layout at certain screen sizes, a feature that doesn't quite work, or incomplete data. |
-| 3–4 | The site is deployed but has significant problems — key features are broken, the data doesn't load, or large sections are incomplete. |
-| 1–2 | An attempt was made but the site does not load or is not deployed. |
-| 0 | No submission. |
+| 7 | The site loads without errors, all features work as expected, and the project is built with a different topic/dataset than the one we used in class |
+| 5–6 | The site loads but has minor issues — a broken layout at certain screen sizes, a feature that doesn't quite work, or incomplete data |
+| 3–4 | The site is deployed but has significant problems — key features are broken, the data doesn't load, or large sections are incomplete |
+| 1–2 | An attempt was made but the site does not load or is not deployed |
+| 0 | No submission |
 
 ## Experimentation
 
@@ -26,8 +26,8 @@ You are expected to include something the in-class version did not have.
 
 | Points | Criteria |
 |--------|----------|
-| 1 | You added a feature, design element, or interactive component that goes beyond what we built together. This could be an extra filter, a different chart type, a custom design treatment, a new section, an animation — anything that shows initiative. |
-| 0 | The project closely follows the in-class version with only the topic/dataset changed. |
+| 1 | You added a feature, design element, or interactive component that goes beyond what we built together. This could be an extra filter, a different chart type, a custom design treatment, a new section, an animation — anything that shows initiative |
+| 0 | The project closely follows the in-class version with only the topic/dataset changed |
 
 ## Presentation
 
@@ -35,9 +35,9 @@ You are expected to present your work in class, sharing what you built and demon
 
 | Points | Criteria |
 |--------|----------|
-| 2 | Presented your project when asked, clearly explaining what you built and how it works. |
-| 1 | Presented your project but with limited explanation or clarity. |
-| 0 | Did not present when asked. |
+| 2 | Presented your project when asked, clearly explaining what you built and how it works |
+| 1 | Presented your project but with limited explanation or clarity |
+| 0 | Did not present when asked |
 
 ## Grading Scale
 
