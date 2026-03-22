@@ -1,6 +1,6 @@
 ---
 title: "Database Explorer"
-summary: "How to build a searchable, filterable database with detail pages"
+summary: "How to build a searchable directory with detail pages for individual records"
 date: "March 30, 2026"
 week: 8
 locked: true

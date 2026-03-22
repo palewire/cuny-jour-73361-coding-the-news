@@ -1,6 +1,6 @@
 ---
 title: "Interactive Map"
-summary: "How to build an interactive map with MapLibre and public safety data"
+summary: "How to build a geographic visualization that lets readers explore data"
 date: "Apr. 20, 2026"
 week: 11
 locked: false

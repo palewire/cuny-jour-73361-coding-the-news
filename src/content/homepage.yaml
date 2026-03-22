@@ -48,7 +48,7 @@ modules:
         description: 'A photo-driven story page that weaves together images and text'
       - icon: 'Map'
         title: 'Interactive Map'
-        description: 'A geographic visualization that lets readers explore the data'
+        description: 'A geographic visualization that lets readers explore data'
       - icon: 'User'
         title: 'Portfolio Site'
         description: 'A personal site that showcases your best work'
