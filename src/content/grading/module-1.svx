@@ -10,7 +10,7 @@ Module 1 is about learning the fundamentals. The goal is to build fluency with t
 
 Module 1 is graded on three components, each on a 10-point scale.
 
-## Attendance and Punctuality (10 points)
+## Attendance
 
 You are expected to attend every class and arrive on time. We meet once a week, so each session matters.
 
@@ -23,7 +23,19 @@ You are expected to attend every class and arrive on time. We meet once a week, 
 
 Per J-School policy, more than three unexcused absences in a 15-week class will result in a failing grade. If you can't attend a session, email me as early as possible.
 
-## Homework Completion (10 points)
+## Participation
+
+This class runs on active engagement. Participation means following along during walkthroughs, asking questions, sharing what you learned (or what confused you) when presenting homework, and being a generous collaborator when classmates need help.
+
+| Points | Criteria |
+|--------|----------|
+| 10 | Consistently engaged — followed along in class, asked or answered questions, contributed during discussions, and presented homework when asked. |
+| 7–9 | Generally engaged with occasional lapses — quiet during discussions or unprepared to present on one or two occasions. |
+| 4–6 | Minimal engagement — frequently distracted, rarely contributed to discussion, or regularly unprepared to share work. |
+| 0–3 | Disengaged — little evidence of participation beyond physical presence. |
+
+
+## Homework
 
 Each week includes a homework assignment. These are graded on completion, not quality. Did you do the work and submit it on time?
 
@@ -36,17 +48,6 @@ Each week includes a homework assignment. These are graded on completion, not qu
 | 0–2 | Little to no homework submitted. |
 
 A submitted assignment means the work is done and the link or file has been sent to me. It does not need to be perfect and it does not need to be on time. Broken code, messy layouts, and dead ends are all fine — the point is that you tried.
-
-## Participation (10 points)
-
-This class runs on active engagement. Participation means following along during walkthroughs, asking questions, sharing what you learned (or what confused you) when presenting homework, and being a generous collaborator when classmates need help.
-
-| Points | Criteria |
-|--------|----------|
-| 10 | Consistently engaged — followed along in class, asked or answered questions, contributed during discussions, and presented homework when asked. |
-| 7–9 | Generally engaged with occasional lapses — quiet during discussions or unprepared to present on one or two occasions. |
-| 4–6 | Minimal engagement — frequently distracted, rarely contributed to discussion, or regularly unprepared to share work. |
-| 0–3 | Disengaged — little evidence of participation beyond physical presence. |
 
 ## Grade Scale
 

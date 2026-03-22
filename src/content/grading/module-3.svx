@@ -12,7 +12,7 @@ This is your chance to demonstrate everything you've learned — not just that y
 
 The capstone is graded as a single final deliverable, presented to the class in our final session, on a 20-point scale across five criteria.
 
-## It works (up to 6 points)
+## Delivery
 
 Your project is deployed to a live URL and functions correctly.
 
@@ -24,7 +24,7 @@ Your project is deployed to a live URL and functions correctly.
 | 1 | An attempt was made but the site does not load or is not deployed. |
 | 0 | No submission. |
 
-## It tells a story (up to 5 points)
+## Storytelling
 
 Your project demonstrates editorial judgment — a clear topic, a reason the reader should care, and thoughtful choices about what to include and how to present it.
 
@@ -35,7 +35,7 @@ Your project demonstrates editorial judgment — a clear topic, a reason the rea
 | 1–2 | The project feels more like a technical exercise than a story. There's data on the page but little editorial framing to help the reader make sense of it. |
 | 0 | No discernible editorial intent. |
 
-## You understand it (up to 3 points)
+## Understanding
 
 Your repository includes a README that explains your project and your code.
 
@@ -46,7 +46,7 @@ Your repository includes a README that explains your project and your code.
 | 1 | The README is present but superficial. |
 | 0 | No README. |
 
-## You went beyond (up to 3 points)
+## Ambition
 
 Your project incorporates techniques or features that go beyond what we covered in class.
 
@@ -57,7 +57,7 @@ Your project incorporates techniques or features that go beyond what we covered 
 | 1 | The project mostly applies familiar techniques but with some minor additions or variations. |
 | 0 | The project does not go beyond what we built in class. |
 
-## You presented it (up to 3 points)
+## Presentation
 
 You present your project to the class in our final session.
 

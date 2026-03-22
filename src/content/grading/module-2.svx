@@ -12,7 +12,7 @@ The portfolio site (Week 10) is the exception. Since it is inherently personal, 
 
 Each homework assignment is graded on a 10-point scale across three tiers.
 
-## It works (up to 7 points)
+## Effort
 
 Your project is deployed to a live URL and functions correctly.
 
@@ -24,7 +24,16 @@ Your project is deployed to a live URL and functions correctly.
 | 1–2 | An attempt was made but the site does not load or is not deployed. |
 | 0 | No submission. |
 
-## You understand it (up to 2 points)
+## Experimentation
+
+Your project includes something the in-class version did not have.
+
+| Points | Criteria |
+|--------|----------|
+| 1 | You added a feature, design element, or interactive component that goes beyond what we built together. This could be an extra filter, a different chart type, a custom design treatment, a new section, an animation — anything that shows initiative. |
+| 0 | The project closely follows the in-class version with only the topic/dataset changed. |
+
+## Understanding
 
 Your repository includes a README that explains a specific piece of your code.
 
@@ -35,15 +44,6 @@ Your repository includes a README that explains a specific piece of your code.
 | 0 | No README or no explanation of the code. |
 
 The explanation does not need to be long. Three to five sentences is enough. Pick the part of the code you find most interesting or the part that gave you the most trouble.
-
-## You went beyond (up to 1 point)
-
-Your project includes something the in-class version did not have.
-
-| Points | Criteria |
-|--------|----------|
-| 1 | You added a feature, design element, or interactive component that goes beyond what we built together. This could be an extra filter, a different chart type, a custom design treatment, a new section, an animation — anything that shows initiative. |
-| 0 | The project closely follows the in-class version with only the topic/dataset changed. |
 
 ## Grade Scale
 
@@ -71,7 +71,3 @@ The portfolio site is graded on the same 10-point scale, adjusted for the fact t
 | 0 | No submission. |
 
 The README and "went beyond" tiers apply the same as above, except Tier 3 asks that your portfolio incorporates a technique from a previous Module 2 week — such as a data filtering component, an embedded map, or a multimedia layout.
-
-## A Note on AI
-
-You are welcome and encouraged to use AI coding assistants on every assignment. The skill we are building is knowing what to ask for, how to evaluate what you get back, and how to debug when things go wrong. The README in Tier 2 is where you demonstrate that you actually understand the code, regardless of how it was produced.
