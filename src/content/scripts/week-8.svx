@@ -95,7 +95,7 @@ Copy and paste this entire block into your file.
   <div class="permits">
     {#each data.permits as permit (permit.eventid)}
       <div class="card">
-        <h3>{permit.subcategoryname}</h3>
+        <h3>{permit.category}</h3>
         <p>{permit.borough}</p>
       </div>
     {/each}
@@ -154,7 +154,7 @@ Add an `onclick` handler to the card `<div>` elements in your grid. When clicked
 <div class="permits">
   {#each data.permits as permit (permit.eventid)}
     <div class="card" onclick={() => selected = permit}>
-      <h3>{permit.subcategoryname}</h3>
+      <h3>{permit.category}</h3>
       <p>{permit.borough}</p>
     </div>
   {/each}
