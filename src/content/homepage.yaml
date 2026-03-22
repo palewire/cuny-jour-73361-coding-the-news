@@ -88,15 +88,15 @@ evaluation:
     - icon: 'ClipboardCheck'
       title: 'Module 1'
       description: 'Show up, participate and complete your homework'
-      href: '/grading/module-1'
+      href: '/grading/module-1/'
     - icon: 'Star'
       title: 'Module 2'
       description: 'Demonstrate professional effort and experimentation'
-      href: '/grading/module-2'
+      href: '/grading/module-2/'
     - icon: 'Trophy'
       title: 'Module 3'
       description: 'Deliver a page that is ready to publish on a real news site'
-      href: '/grading/module-3'
+      href: '/grading/module-3/'
 
 guestSpeakers:
   kicker: 'Outside Experts'

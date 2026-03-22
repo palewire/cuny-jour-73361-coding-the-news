@@ -40,7 +40,7 @@
           <p>
             {homework}
             {#if number}
-              <a href="{base}/grading/module-{number}" class="grading-link"
+              <a href="{base}/grading/module-{number}/" class="grading-link"
                 >View grading criteria &rarr;</a
               >
             {/if}
