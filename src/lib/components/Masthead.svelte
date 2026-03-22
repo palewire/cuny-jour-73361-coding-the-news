@@ -40,6 +40,11 @@
     display: flex;
     align-items: center;
     height: 100%;
+    transition: opacity 0.15s ease;
+  }
+
+  .logo-link:hover {
+    opacity: 0.8;
   }
 
   .logo {

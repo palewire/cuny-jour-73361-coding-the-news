@@ -287,12 +287,12 @@
 
   .footer-nav a {
     font-size: 1rem;
-    color: #fff;
+    color: var(--color-white);
   }
 
   .footer-nav a:hover,
   .footer-nav a:focus {
-    color: #fe8807;
+    color: var(--color-primary-orange);
   }
 
   /* Bottom Section */
