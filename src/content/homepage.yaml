@@ -44,7 +44,7 @@ modules:
         title: 'Database Explorer'
         description: 'A searchable directory with detail pages for individual records'
       - icon: 'ScrollText'
-        title: 'Multimedia Story'
+        title: 'Multimedia Slideshow'
         description: 'A photo-driven story page that weaves together images and text'
       - icon: 'Map'
         title: 'Interactive Map'
