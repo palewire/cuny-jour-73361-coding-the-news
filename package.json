@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{svelte,svx,js,ts,jsx,tsx,css,md,json}\"",
-    "lint": "svelte-check && eslint src/",
+    "lint": "svelte-kit sync && svelte-check && eslint src/",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "prepare": "husky install"
