@@ -1,16 +1,30 @@
 <script>
-  let { icon: Icon, title, description } = $props();
+  import { base } from '$app/paths';
+
+  let { icon: Icon, title, description, href = null } = $props();
 </script>
 
-<div class="topic-card">
-  <div class="card-header">
-    <div class="icon-wrapper">
-      <Icon size={24} strokeWidth={1.5} />
+{#if href}
+  <a class="topic-card topic-card-link" href="{base}{href}">
+    <div class="card-header">
+      <div class="icon-wrapper">
+        <Icon size={24} strokeWidth={1.5} />
+      </div>
+      <h3>{title}</h3>
     </div>
-    <h3>{title}</h3>
+    <p>{description}</p>
+  </a>
+{:else}
+  <div class="topic-card">
+    <div class="card-header">
+      <div class="icon-wrapper">
+        <Icon size={24} strokeWidth={1.5} />
+      </div>
+      <h3>{title}</h3>
+    </div>
+    <p>{description}</p>
   </div>
-  <p>{description}</p>
-</div>
+{/if}
 
 <style>
   .topic-card {
@@ -45,5 +59,15 @@
     line-height: 1.5;
     color: var(--color-medium-gray);
     margin-bottom: 0;
+  }
+
+  .topic-card-link {
+    text-decoration: none;
+    display: block;
+    transition: border-color 0.2s;
+  }
+
+  .topic-card-link:hover {
+    border-color: var(--color-primary-orange);
   }
 </style>

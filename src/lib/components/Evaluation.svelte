@@ -31,6 +31,7 @@
           icon={criterion.icon}
           title={criterion.title}
           description={criterion.description}
+          href={criterion.href}
         />
       {/each}
     </div>

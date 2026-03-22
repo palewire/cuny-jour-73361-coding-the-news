@@ -109,6 +109,7 @@ const config = {
       extensions: ['.svx'],
       smartypants: false,
       layout: {
+        grading: './src/lib/layouts/GradingLayout.svelte',
         _: './src/lib/layouts/ScriptLayout.svelte',
       },
       rehypePlugins: [rehypeSlug],

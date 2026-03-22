@@ -1,0 +1,77 @@
+---
+title: "Module 2 Grading Rubric"
+summary: "Demonstrate professional effort and experimentation"
+module: 2
+locked: false
+layout: grading
+---
+
+Each week in Module 2, we will build a project together in class. For homework, you will build a second version of the same type of project using a different topic and dataset of your choice. You are free to use AI coding assistants throughout the process.
+
+The portfolio site (Week 10) is the exception. Since it is inherently personal, the in-class session and the homework are one and the same.
+
+Each homework assignment is graded on a 10-point scale across three tiers.
+
+## It works (up to 7 points)
+
+Your project is deployed to a live URL and functions correctly.
+
+| Points | Criteria |
+|--------|----------|
+| 7 | The site loads without errors, all features work as expected, and the project is built with a different topic/dataset than the one we used in class. |
+| 5–6 | The site loads but has minor issues — a broken layout at certain screen sizes, a feature that doesn't quite work, or incomplete data. |
+| 3–4 | The site is deployed but has significant problems — key features are broken, the data doesn't load, or large sections are incomplete. |
+| 1–2 | An attempt was made but the site does not load or is not deployed. |
+| 0 | No submission. |
+
+## You understand it (up to 2 points)
+
+Your repository includes a README that explains a specific piece of your code.
+
+| Points | Criteria |
+|--------|----------|
+| 2 | The README identifies a specific section of code (not the whole project) and explains what it does and why it's written that way in your own words. It's clear you understand how that piece works. |
+| 1 | The README is present but vague, overly general, or reads like it was generated without much thought. |
+| 0 | No README or no explanation of the code. |
+
+The explanation does not need to be long. Three to five sentences is enough. Pick the part of the code you find most interesting or the part that gave you the most trouble.
+
+## You went beyond (up to 1 point)
+
+Your project includes something the in-class version did not have.
+
+| Points | Criteria |
+|--------|----------|
+| 1 | You added a feature, design element, or interactive component that goes beyond what we built together. This could be an extra filter, a different chart type, a custom design treatment, a new section, an animation — anything that shows initiative. |
+| 0 | The project closely follows the in-class version with only the topic/dataset changed. |
+
+## Grade Scale
+
+| Points | Grade |
+|--------|-------|
+| 10 | A |
+| 9 | A- |
+| 8 | B+ |
+| 7 | B |
+| 5–6 | B-/C+ |
+| 3–4 | C/C- |
+| 1–2 | D |
+| 0 | F |
+
+## Portfolio Site (Week 10)
+
+The portfolio site is graded on the same 10-point scale, adjusted for the fact that this project is entirely your own from the start. Your portfolio site must be deployed to a live URL and present your work effectively.
+
+| Points | Criteria |
+|--------|----------|
+| 7 | The site loads without errors, includes at least three pieces of work or projects, and has a clear structure with working navigation between sections. |
+| 5–6 | The site loads but is thin — fewer than three pieces of work, some sections feel incomplete, or the navigation has issues. |
+| 3–4 | The site is deployed but has significant problems — broken layout, missing sections, or placeholder content that was never filled in. |
+| 1–2 | An attempt was made but the site does not load or is not deployed. |
+| 0 | No submission. |
+
+The README and "went beyond" tiers apply the same as above, except Tier 3 asks that your portfolio incorporates a technique from a previous Module 2 week — such as a data filtering component, an embedded map, or a multimedia layout.
+
+## A Note on AI
+
+You are welcome and encouraged to use AI coding assistants on every assignment. The skill we are building is knowing what to ask for, how to evaluate what you get back, and how to debug when things go wrong. The README in Tier 2 is where you demonstrate that you actually understand the code, regardless of how it was produced.

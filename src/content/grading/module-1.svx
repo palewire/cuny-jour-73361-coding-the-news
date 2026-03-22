@@ -1,0 +1,61 @@
+---
+title: "Module 1 Grading Rubric"
+summary: "Show up, participate and complete your homework"
+module: 1
+locked: false
+layout: grading
+---
+
+Module 1 is about learning the fundamentals. The goal is to build fluency with the tools and concepts we'll rely on for the rest of the semester. Grades in this module reflect your effort and engagement, not the polish of your output.
+
+Module 1 is graded on three components, each on a 10-point scale.
+
+## Attendance and Punctuality (10 points)
+
+You are expected to attend every class and arrive on time. We meet once a week, so each session matters.
+
+| Points | Criteria |
+|--------|----------|
+| 10 | Attended all Module 1 sessions and arrived on time. |
+| 8–9 | Missed one session or arrived late more than once, with advance notice. |
+| 5–7 | Missed two sessions or a pattern of late arrivals. |
+| 0–4 | Missed three or more sessions. |
+
+Per J-School policy, more than three unexcused absences in a 15-week class will result in a failing grade. If you can't attend a session, email me as early as possible.
+
+## Homework Completion (10 points)
+
+Each week includes a homework assignment. These are graded on completion, not quality. Did you do the work and submit it on time?
+
+| Points | Criteria |
+|--------|----------|
+| 10 | Submitted all homework assignments. |
+| 8–9 | Missed one assignment. |
+| 5–7 | Missed two assignments. |
+| 3–4 | Missed three or more assignments. |
+| 0–2 | Little to no homework submitted. |
+
+A submitted assignment means the work is done and the link or file has been sent to me. It does not need to be perfect and it does not need to be on time. Broken code, messy layouts, and dead ends are all fine — the point is that you tried.
+
+## Participation (10 points)
+
+This class runs on active engagement. Participation means following along during walkthroughs, asking questions, sharing what you learned (or what confused you) when presenting homework, and being a generous collaborator when classmates need help.
+
+| Points | Criteria |
+|--------|----------|
+| 10 | Consistently engaged — followed along in class, asked or answered questions, contributed during discussions, and presented homework when asked. |
+| 7–9 | Generally engaged with occasional lapses — quiet during discussions or unprepared to present on one or two occasions. |
+| 4–6 | Minimal engagement — frequently distracted, rarely contributed to discussion, or regularly unprepared to share work. |
+| 0–3 | Disengaged — little evidence of participation beyond physical presence. |
+
+## Grade Scale
+
+Your Module 1 grade is the average of the three components.
+
+| Average | Grade |
+|---------|-------|
+| 9–10 | A |
+| 8–8.9 | B+ |
+| 7–7.9 | B |
+| 5–6.9 | C |
+| Below 5 | D or below |
