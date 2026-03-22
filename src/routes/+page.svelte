@@ -9,16 +9,55 @@
   import Footer from '$lib/components/Footer.svelte';
   import ScriptCard from '$lib/components/ScriptCard.svelte';
   import Meta from '$lib/components/Meta.svelte';
-  import * as icons from 'lucide-svelte';
+  import {
+    Monitor,
+    Globe,
+    Blocks,
+    Sparkle,
+    BarChart3,
+    Layout,
+    Database,
+    ScrollText,
+    Map,
+    User,
+    Lightbulb,
+    ClipboardList,
+    Hammer,
+    MessageCircle,
+    Presentation,
+    ClipboardCheck,
+    Star,
+    Trophy,
+  } from 'lucide-svelte';
+
+  const iconMap = {
+    Monitor,
+    Globe,
+    Blocks,
+    Sparkle,
+    BarChart3,
+    Layout,
+    Database,
+    ScrollText,
+    Map,
+    User,
+    Lightbulb,
+    ClipboardList,
+    Hammer,
+    MessageCircle,
+    Presentation,
+    ClipboardCheck,
+    Star,
+    Trophy,
+  };
 
   let { data } = $props();
 
   const scripts = $derived(data.scripts);
   const content = $derived(data.content);
 
-  // Helper to get icon component by name
   function getIcon(iconName) {
-    return icons[iconName];
+    return iconMap[iconName];
   }
 
   // Transform evaluation criteria with icon components

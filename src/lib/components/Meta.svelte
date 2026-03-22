@@ -1,5 +1,11 @@
 <script>
-  import { SITE_NAME, COURSE_CODE, SHARE_IMAGE } from '$lib/config.js';
+  import {
+    SITE_NAME,
+    COURSE_CODE,
+    SITE_URL,
+    SHARE_IMAGE,
+  } from '$lib/config.js';
+  import { page } from '$app/state';
 
   let {
     title,
@@ -16,12 +22,15 @@
     description || `${title} - ${COURSE_CODE}: ${SITE_NAME}`
   );
   const socialTitle = $derived(ogTitle || title);
+  const canonicalUrl = $derived(`${SITE_URL}${page.url.pathname}`);
 </script>
 
 <svelte:head>
   <title>{pageTitle}</title>
   <meta name="description" content={pageDescription} />
+  <link rel="canonical" href={canonicalUrl} />
   <meta property="og:type" content={ogType} />
+  <meta property="og:url" content={canonicalUrl} />
   <meta property="og:title" content={socialTitle} />
   <meta property="og:description" content={pageDescription} />
   <meta property="og:image" content={ogImage} />

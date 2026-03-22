@@ -1,4 +1,6 @@
 <script>
+  import { base } from '$app/paths';
+
   let {
     number = null,
     kicker = null,
@@ -35,7 +37,14 @@
       {#if homework}
         <div class="homework-summary">
           <h3>Homework</h3>
-          <p>{homework}</p>
+          <p>
+            {homework}
+            {#if number}
+              <a href="{base}/grading/module-{number}" class="grading-link"
+                >View grading criteria &rarr;</a
+              >
+            {/if}
+          </p>
         </div>
       {/if}
       {#if disclosure}
@@ -79,5 +88,14 @@
     color: var(--color-dark-gray);
     margin-bottom: 0;
     line-height: 1.6;
+  }
+
+  .grading-link {
+    color: var(--color-primary-orange);
+    white-space: nowrap;
+  }
+
+  .grading-link:hover {
+    text-decoration: underline;
   }
 </style>

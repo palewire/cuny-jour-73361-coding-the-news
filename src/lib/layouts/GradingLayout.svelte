@@ -2,8 +2,9 @@
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
   import Meta from '$lib/components/Meta.svelte';
+  import GradingNavigation from '$lib/components/GradingNavigation.svelte';
 
-  let { children, title, summary } = $props();
+  let { children, title, summary, previousGrading, nextGrading } = $props();
 </script>
 
 <Meta {title} description={summary} />
@@ -15,6 +16,7 @@
   <div class="container">
     <div class="grading-body">
       {@render children()}
+      <GradingNavigation {previousGrading} {nextGrading} />
     </div>
   </div>
 </section>

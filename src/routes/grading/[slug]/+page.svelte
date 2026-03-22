@@ -4,4 +4,7 @@
   const Content = $derived(data.content);
 </script>
 
-<Content />
+<Content
+  previousGrading={data.previousGrading}
+  nextGrading={data.nextGrading}
+/>

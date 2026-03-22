@@ -20,8 +20,31 @@ export async function load({ params }) {
 
   const module = await loader();
 
+  // Load all grading modules to find previous/next
+  const allGrading = await Promise.all(
+    Object.entries(gradingModules).map(async ([path, moduleLoader]) => {
+      const mod = await moduleLoader();
+      const gradingSlug = path.split('/').pop().replace('.svx', '');
+      return {
+        slug: gradingSlug,
+        title: mod.metadata?.title || gradingSlug,
+        module: mod.metadata?.module || 0,
+      };
+    })
+  );
+
+  const sorted = allGrading.sort((a, b) => a.module - b.module);
+  const currentIndex = sorted.findIndex((g) => g.slug === slug);
+  const previousGrading = currentIndex > 0 ? sorted[currentIndex - 1] : null;
+  const nextGrading =
+    currentIndex >= 0 && currentIndex < sorted.length - 1
+      ? sorted[currentIndex + 1]
+      : null;
+
   return {
     content: module.default,
     metadata: module.metadata ?? {},
+    previousGrading,
+    nextGrading,
   };
 }
