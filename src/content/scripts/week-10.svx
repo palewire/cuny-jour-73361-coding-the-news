@@ -3,7 +3,7 @@ title: "Multimedia Slideshow"
 summary: "How to build a photo-driven story page that weaves together images and text"
 date: "Apr. 13, 2026"
 week: 10
-locked: false
+locked: true
 ---
 
 <script>

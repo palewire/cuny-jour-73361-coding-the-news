@@ -1,0 +1,516 @@
+---
+title: "Make It Yours"
+summary: "How to build a personal portfolio site that showcases your work"
+date: "Apr. 27, 2026"
+week: 12
+locked: true
+---
+
+<script>
+  import Aside from '$lib/components/Aside.svelte';
+  import Screenshot from '$lib/components/Screenshot.svelte';
+</script>
+
+This is the last week of Module 2. Over the past three weeks you've built a database explorer, a photo essay, and an interactive map. Today, you're building something for yourself — a portfolio site that showcases your work.
+
+Unlike previous weeks, this class is mostly workshop time. I'll walk you through the scaffolding — multi-page routing, navigation, and layout — and then you'll spend the rest of the session building your own site. Ben Jay and I will be circulating to help.
+
+## Part 1: What makes a good portfolio?
+
+Before we code anything, let's look at how working journalists present their work online.
+
+<Screenshot
+  src="/screenshots/week-12/portfolio-examples.png"
+  alt="A grid of four journalist portfolio sites showing different approaches — minimal text-based lists, card grids with thumbnails, full-width featured projects, and magazine-style layouts"
+  chromeTitle="Portfolio Examples"
+  chromeUrl="various"
+  maxWidth="960px"
+/>
+
+A few things the best portfolio sites have in common:
+
+**They lead with the work.** The homepage shows projects, not a biography. Your about page exists for people who want to know more, but most visitors are there to see what you've made.
+
+**They're simple.** A portfolio doesn't need animations, parallax scrolling, or fancy transitions. It needs clear navigation, readable text, and images that load fast. The work is the design.
+
+**They're current.** A portfolio with nothing newer than 2023 sends a signal, and not a good one. Three to five strong, recent pieces are better than a dozen mediocre ones.
+
+**They work on phones.** Editors, recruiters, and classmates will open your link on their phone. If the layout breaks at 375 pixels wide, you've lost them.
+
+Here are a few portfolio sites from journalists and developers worth studying. Look at how they organize their work, what they put on the homepage, and how much (or little) text they include:
+
+- [Allison McCartney](https://allisonmccartney.com/) — one of our guest speakers this semester
+- [Manas Sharma](https://manassharma.me/) — recent CUNY graduate
+- [Andrew Briz](https://briz.cc/) — another guest speaker
+- [Amelia Wattenberger](https://wattenberger.com/) — data visualization designer
+
+Don't try to copy these. Look at them for structure and inspiration, then build something that fits your own work and personality.
+
+## Part 2: Multi-page routing
+
+Every portfolio site you just looked at has more than one page — typically a homepage, individual project pages, and an about page. Up to now, most of our projects have lived on a single page. Let's change that.
+
+You already encountered SvelteKit's routing system in the database explorer, when we created detail pages at `/building/[id]`. The portfolio uses the same principle, but with fixed routes instead of dynamic ones.
+
+### Set up your project
+
+Create a new repo from the class template called `my-portfolio`. Clone it, install dependencies, and start the dev server. You know the drill.
+
+### Creating pages
+
+In SvelteKit, every folder inside `src/routes/` that contains a `+page.svelte` file becomes a page on your site. Here's the structure we're going to build:
+
+```
+src/routes/
+  +page.svelte          → yoursite.com/           (homepage)
+  +layout.svelte        → (wraps every page)
+  about/
+    +page.svelte        → yoursite.com/about      (about page)
+  projects/
+    housing/
+      +page.svelte      → yoursite.com/projects/housing
+    parks/
+      +page.svelte      → yoursite.com/projects/parks
+    shootings/
+      +page.svelte      → yoursite.com/projects/shootings
+```
+
+Create these folders and files now. Each `+page.svelte` can start with a simple placeholder:
+
+For `src/routes/about/+page.svelte`:
+
+```svelte
+<h1>About</h1>
+<p>This page is about me.</p>
+```
+
+For `src/routes/projects/housing/+page.svelte`:
+
+```svelte
+<h1>Bronx Housing Violations</h1>
+<p>My database explorer project.</p>
+```
+
+Do the same for your other project pages. Use whatever project names match your actual work from this semester.
+
+Save the files and test the URLs in your browser. Visit [localhost:5173/about](http://localhost:5173/about) and [localhost:5173/projects/housing](http://localhost:5173/projects/housing). Each should show the placeholder content.
+
+<Screenshot
+  src="/screenshots/week-12/placeholder-pages.png"
+  alt="A browser showing a simple 'About' heading and placeholder text at the /about URL"
+  chromeTitle="About"
+  chromeUrl="http://localhost:5173/about"
+  maxWidth="960px"
+/>
+
+That's all routing is in SvelteKit — folders and files. No configuration, no router library, no JSON manifest. If the folder exists and has a `+page.svelte`, it's a page.
+
+## Part 3: Shared navigation
+
+Right now there's no way to move between pages without editing the URL by hand. We need a navigation bar that appears on every page.
+
+This is what `+layout.svelte` is for. You've seen this file in the template — it wraps every page. Whatever we put in the layout appears on all pages. That makes it the right place for navigation.
+
+### Building a Nav component
+
+Create `src/lib/components/Nav.svelte`:
+
+```svelte
+<script>
+  import { page } from '$app/state';
+  import { base } from '$app/paths';
+</script>
+
+<nav>
+  <a href="{base}/" class:active={page.url.pathname === `${base}/`}>
+    Work
+  </a>
+  <a href="{base}/about" class:active={page.url.pathname === `${base}/about`}>
+    About
+  </a>
+</nav>
+
+<style>
+  nav {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-light-gray);
+    margin-bottom: 2rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--color-dark-gray);
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  a:hover {
+    color: var(--color-black);
+  }
+
+  a.active {
+    color: var(--color-black);
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 0.25rem;
+  }
+</style>
+```
+
+Two new imports here. The `page` object from `$app/state` gives you information about the current page, including its URL. We use `page.url.pathname` to check which page the user is on.
+
+The `class:active` syntax is a Svelte shorthand. `class:active={condition}` adds the CSS class `active` to the element when the condition is true. So when the current URL matches the link's `href`, that link gets the `active` class and its underline turns on.
+
+### Adding it to the layout
+
+Open `src/routes/+layout.svelte`. This file already exists in the template. Replace its content with:
+
+```svelte
+<script>
+  import Nav from '$lib/components/Nav.svelte';
+  let { children } = $props();
+</script>
+
+<div class="site">
+  <header>
+    <h1 class="site-name"><a href="/">Your Name</a></h1>
+    <Nav />
+  </header>
+  <main>
+    {@render children()}
+  </main>
+</div>
+
+<style>
+  .site {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+  }
+
+  .site-name {
+    font-size: 1.25rem;
+    margin: 1rem 0 0;
+  }
+
+  .site-name a {
+    text-decoration: none;
+    color: var(--color-black);
+  }
+
+  main {
+    min-height: 60vh;
+  }
+</style>
+```
+
+Replace "Your Name" with your actual name.
+
+Save and check your browser. Every page should now have your name at the top and a navigation bar with "Work" and "About" links. Click between them — the active state should follow you.
+
+<Screenshot
+  src="/screenshots/week-12/nav-working.png"
+  alt="A page showing 'Your Name' as a site title, a navigation bar with 'Work' and 'About' links (Work is underlined), and placeholder content below"
+  chromeTitle="Your Name"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+## Part 4: The homepage
+
+The homepage is the first thing anyone sees. It should show your projects — not a wall of text about yourself, not a welcome message, just the work.
+
+We'll build it as a grid of project cards, each linking to a project page. Open `src/routes/+page.svelte` and replace the content:
+
+```svelte
+<script>
+  import { base } from '$app/paths';
+
+  const projects = [
+    {
+      title: 'Bronx Housing Violations',
+      description: 'A searchable database of buildings with hazardous housing code violations in the Bronx.',
+      url: `${base}/projects/housing`,
+      image: '/thumbnails/housing.jpg'
+    },
+    {
+      title: 'Harlem, 1943',
+      description: 'A photo essay built from Gordon Parks\'s public domain photographs of Harlem life.',
+      url: `${base}/projects/parks`,
+      image: '/thumbnails/parks.jpg'
+    },
+    {
+      title: 'NYC Shooting Incidents',
+      description: 'An interactive map of shooting incidents across New York City, filterable by borough and severity.',
+      url: `${base}/projects/shootings`,
+      image: '/thumbnails/shootings.jpg'
+    }
+  ];
+</script>
+
+<div class="projects">
+  {#each projects as project}
+    <a class="project-card" href={project.url}>
+      <img src={project.image} alt={project.title} />
+      <h2>{project.title}</h2>
+      <p>{project.description}</p>
+    </a>
+  {/each}
+</div>
+
+<style>
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .project-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .project-card img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .project-card h2 {
+    font-size: 1.125rem;
+    margin: 0.75rem 0 0.25rem;
+  }
+
+  .project-card p {
+    font-size: 0.875rem;
+    color: var(--color-dark-gray);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .project-card:hover img {
+    opacity: 0.85;
+  }
+</style>
+```
+
+For the thumbnail images, take a screenshot of each of your projects and save them to `static/thumbnails/`. They don't need to be high-resolution — a browser screenshot cropped to a 16:9 rectangle works fine. If you don't have screenshots ready, use placeholder images for now and replace them later.
+
+The CSS Grid layout with `repeat(auto-fill, minmax(300px, 1fr))` is a responsive pattern worth understanding. It says: "Fill the row with as many columns as will fit, where each column is at least 300 pixels wide and can stretch to take equal space." On a wide screen, you'll see two or three cards per row. On a phone, it collapses to a single column. No media queries needed.
+
+<Screenshot
+  src="/screenshots/week-12/homepage-grid.png"
+  alt="A portfolio homepage showing three project cards in a responsive grid, each with a thumbnail image, title, and short description"
+  chromeTitle="Your Name"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+### Customizing your project list
+
+Update the `projects` array to reflect your actual work. If you have projects from outside this class — from another course, a personal project, a freelance assignment — include them. Three to five projects is a good target. More than that and the page starts to feel cluttered. Less and it feels empty.
+
+Write each description as a single sentence that tells the reader what the project is, not what tools you used. "A searchable database of Bronx housing violations" is better than "A SvelteKit project using JSON data and dynamic routes."
+
+## Part 5: The about page
+
+The about page is where you tell your story. Keep it short. An editor or recruiter spending 30 seconds on your site wants to know: Who are you? What do you do? How do I contact you?
+
+Open `src/routes/about/+page.svelte`:
+
+```svelte
+<div class="about">
+  <img class="headshot" src="/headshot.jpg" alt="Your Name" />
+
+  <h1>About me</h1>
+
+  <p>
+    I'm a graduate student at the Craig Newmark Graduate School
+    of Journalism at CUNY, focusing on data and interactive journalism.
+    I'm interested in housing, public safety, and making public records
+    accessible to the communities they describe.
+  </p>
+
+  <p>
+    Before CUNY, I [your background]. I'm currently looking for
+    [internship/job/freelance] opportunities in [your area of interest].
+  </p>
+
+  <h2>Contact</h2>
+
+  <p>
+    Email: <a href="mailto:you@email.com">you@email.com</a><br>
+    GitHub: <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a><br>
+    LinkedIn: <a href="https://linkedin.com/in/yourusername" target="_blank">linkedin.com/in/yourusername</a>
+  </p>
+</div>
+
+<style>
+  .about {
+    max-width: 600px;
+  }
+
+  .headshot {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    margin: 0 0 1rem;
+  }
+
+  h2 {
+    margin: 2rem 0 0.5rem;
+  }
+
+  p {
+    line-height: 1.6;
+  }
+</style>
+```
+
+Save a headshot photo to `static/headshot.jpg`. If you don't have a professional headshot, use any photo of yourself, or skip the image for now and add it later.
+
+Rewrite the bio in your own words. First person is fine. Be direct. One or two paragraphs is enough.
+
+<Screenshot
+  src="/screenshots/week-12/about-page.png"
+  alt="An about page showing a circular headshot photo, a short two-paragraph bio, and contact links for email, GitHub, and LinkedIn"
+  chromeTitle="About"
+  chromeUrl="http://localhost:5173/about"
+  maxWidth="960px"
+/>
+
+## Part 6: Project pages
+
+Each project page in your portfolio should tell the story of what you built — not reproduce the project itself. Your actual projects already live at their own GitHub Pages URLs. The portfolio page for each project is a case study: what the project is, why you made it, a screenshot or two, and a link to the live version.
+
+Here's a template for a project page. Open `src/routes/projects/housing/+page.svelte`:
+
+```svelte
+<script>
+  import { base } from '$app/paths';
+</script>
+
+<a href="{base}/" class="back">&larr; Back to all projects</a>
+
+<h1>Bronx Housing Violations</h1>
+
+<img
+  class="hero"
+  src="/thumbnails/housing.jpg"
+  alt="Screenshot of the Bronx Housing Violations database explorer"
+/>
+
+<p>
+  A searchable database of Bronx buildings with open, immediately hazardous
+  housing code violations. Users can search by address, filter by zip code,
+  and click into detail pages for individual buildings showing the full
+  violation record and a locator map.
+</p>
+
+<p>
+  Built with SvelteKit using data from the NYC Department of Housing
+  Preservation and Development, pre-aggregated at the building level
+  from the city's open data portal.
+</p>
+
+<p>
+  <a href="https://yourusername.github.io/bronx-housing-violations/" target="_blank">
+    View the live project &rarr;
+  </a>
+</p>
+
+<style>
+  .back {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-dark-gray);
+  }
+
+  .hero {
+    width: 100%;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  p {
+    line-height: 1.6;
+    max-width: 600px;
+  }
+</style>
+```
+
+Create similar pages for your other projects. Swap in the right titles, descriptions, screenshots, and links. Two to three paragraphs per project is enough. Focus on what the project does and what editorial choices you made, not on the technical implementation.
+
+## Part 7: Workshop
+
+That's the scaffolding. You have multi-page routing, shared navigation, a homepage grid, an about page, and project page templates.
+
+Now it's time to make it yours.
+
+For the rest of class, build out your portfolio. Here's what to work on, roughly in order of priority:
+
+1. **Fill in your real content.** Replace every placeholder with your actual name, bio, project descriptions, and links. Take screenshots of your live projects and save them as thumbnails.
+
+2. **Add your projects.** Create a page for each project you want to showcase. Link to the live versions.
+
+3. **Customize the design.** Change the colors, fonts, spacing, and layout to make the site feel like yours. This is a good time to use your AI coding assistant. Try prompts like:
+   - "Change the color scheme to use dark navy and gold."
+   - "Make the navigation horizontal on desktop and a hamburger menu on mobile."
+   - "Add a subtle hover animation to the project cards."
+   - "Make the site title use a serif font."
+
+4. **Incorporate a technique from a previous week.** The Module 2 rubric awards a point for carrying over a technique from an earlier project. Some ideas:
+   - Embed one of your interactive projects directly in a project page instead of just linking to it
+   - Add a small MapLibre map to your about page showing where you're based
+   - Build the project listing as a filterable grid using `$state` and `$derived`
+   - Use the scroll-snap gallery pattern from the photo essay week for a project showcase
+
+5. **Test on your phone.** Open the site on a real device. Check that the navigation works, the grid collapses to a single column, the text is readable, and nothing overflows the screen.
+
+I'll be walking around the room. Flag me or Ben Jay if you get stuck.
+
+### Check-in
+
+We'll pause halfway through workshop time for a quick round of voluntary screen-shares. If you want to show your progress, share your screen and give us a 30-second tour. This is informal — it's a chance to get feedback and see what your classmates are doing.
+
+## Part 8: Deploy and share
+
+When you're ready, commit and push to GitHub. Watch the Actions tab to make sure the build succeeds.
+
+Once your site is live, share the URL in the class chat. Pull up a few of your classmates' sites. See how differently everyone approached the same structure.
+
+Your portfolio doesn't need to be finished tonight. You have a week to polish it before the homework is due. But by the end of this session, you should have a working multi-page site deployed to a live URL with at least placeholder content on every page.
+
+## Homework
+
+### Task 1: Complete your portfolio
+
+Finish and polish your portfolio site. It must have:
+
+- At least three pieces of work or projects
+- Working navigation between pages
+- An about page with your bio and contact information
+- Screenshots or thumbnails for each project
+- A live deployment on GitHub Pages
+
+Update the content, refine the design, and test on your phone before submitting.
+
+Deploy it to GitHub Pages and send me the link.
+
+### Task 2: Prepare to present
+
+Be ready to show your portfolio to the class. You should be prepared to:
+
+- Walk us through the site on a projector or shared screen
+- Explain one design choice you made and why
+- Show one technique you carried over from a previous Module 2 week
+- Tell us what you'd add or change if you had more time
