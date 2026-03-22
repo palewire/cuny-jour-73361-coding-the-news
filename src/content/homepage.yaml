@@ -42,7 +42,7 @@ modules:
     gridClass: 'grid-2 grid-narrow'
     topics:
       - icon: 'ScrollText'
-        title: 'Longform Story'
+        title: 'Multimedia Story'
         description: 'A story page that weaves together text, images and other media to guide readers through a lengthy narrative.'
       - icon: 'Layers'
         title: 'Graphics Story'
