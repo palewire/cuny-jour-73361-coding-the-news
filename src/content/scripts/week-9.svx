@@ -1,7 +1,7 @@
 ---
 title: "Database Explorer"
 summary: "How to build a searchable, filterable database with detail pages"
-date: "Mar. 23, 2026"
+date: "March 30, 2026"
 week: 8
 locked: true
 ---
