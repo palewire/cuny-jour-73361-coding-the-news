@@ -32,7 +32,9 @@ export const load: PageServerLoad = async () => {
     };
   });
 
-  scripts.sort((a, b) => a.slug.localeCompare(b.slug));
+  scripts.sort((a, b) =>
+    a.slug.localeCompare(b.slug, undefined, { numeric: true })
+  );
 
   // Load homepage content from YAML via Vite's glob import to avoid fs path issues
   const homepageFiles = import.meta.glob<string>('/src/content/homepage.yaml', {
