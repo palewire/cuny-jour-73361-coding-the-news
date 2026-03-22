@@ -12,8 +12,8 @@
     margin: 2rem 0;
     padding: 1.5rem;
     padding-left: 2rem;
-    border-left: 4px solid #f47920;
-    background-color: #f5f5f5;
+    border-left: 4px solid var(--color-primary-orange);
+    background-color: var(--color-light-gray);
     font-style: italic;
   }
 

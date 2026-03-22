@@ -8,7 +8,7 @@
 
 <Masthead />
 
-<main>
+<main id="main-content">
   <Hero linkToHome={true} />
   {@render children()}
 </main>

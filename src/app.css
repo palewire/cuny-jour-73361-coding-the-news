@@ -12,6 +12,7 @@
     url('/fonts/327F7D_0_0.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -24,6 +25,7 @@
     url('/fonts/327F7D_2_0.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -36,6 +38,25 @@
     url('/fonts/327F7D_1_0.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--spacing-md);
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+  background-color: var(--color-primary-orange);
+  color: var(--color-white);
+  font-family: var(--font-family-bold);
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--spacing-xs);
 }
 
 /* CSS Custom Properties */

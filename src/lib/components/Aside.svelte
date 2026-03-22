@@ -15,8 +15,8 @@
   .aside {
     margin: 1.5rem 0;
     padding: 1rem 1.25rem;
-    border-left: 4px solid #f47920;
-    background: #f5f5f5;
+    border-left: 4px solid var(--color-primary-orange);
+    background: var(--color-light-gray);
   }
 
   .aside__title {

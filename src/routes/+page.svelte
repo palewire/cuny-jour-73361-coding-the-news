@@ -39,7 +39,7 @@
 
 <Masthead />
 
-<main>
+<main id="main-content">
   <Hero />
 
   {#each content.modules as module (module.id)}
