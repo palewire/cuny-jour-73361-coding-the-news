@@ -20,7 +20,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run build && npm run preview',
+    command: process.env.CI ? 'npm run preview' : 'npm run build && npm run preview',
     url: `${SERVER_URL}/docs/coding-the-news/`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
