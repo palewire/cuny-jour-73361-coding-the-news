@@ -8,13 +8,17 @@
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{svelte,svx,js,ts,jsx,tsx,css,md,json}\"",
     "lint": "svelte-check && eslint src/",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
     "prepare": "husky install"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
     "@sveltejs/adapter-static": "^3.0.0",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "@types/js-yaml": "^4.0.9",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.15.2",
@@ -26,6 +30,7 @@
     "sass-embedded": "^1.97.3",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
+    "typescript-eslint": "^8.57.1",
     "vite": "^6.0.0"
   },
   "type": "module",

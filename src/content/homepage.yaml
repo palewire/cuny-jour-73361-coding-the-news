@@ -50,8 +50,8 @@ modules:
         title: 'Interactive Map'
         description: 'A geographic visualization that lets readers explore data'
       - icon: 'User'
-        title: 'Portfolio Site'
-        description: 'A personal site that showcases your best work'
+        title: 'Personal Portfolio'
+        description: 'A website that showcases your best work'
 
   - number: 3
     title: 'The Real Deal'

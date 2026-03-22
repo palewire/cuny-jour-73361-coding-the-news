@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+  import type { Component } from 'svelte';
   import TopicCard from './TopicCard.svelte';
 
   let {
@@ -7,6 +8,17 @@
     intro = '',
     criteria,
     background = 'light-gray',
+  }: {
+    kicker?: string;
+    title: string;
+    intro?: string;
+    criteria: {
+      icon: Component;
+      title: string;
+      description: string;
+      href?: string;
+    }[];
+    background?: string;
   } = $props();
 </script>
 

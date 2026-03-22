@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Avatar from './Avatar.svelte';
 
   let {
@@ -7,6 +7,18 @@
     description = '',
     speakers = [],
     background = 'white',
+  }: {
+    kicker?: string;
+    title?: string;
+    description?: string;
+    speakers?: {
+      name: string;
+      image?: string;
+      linkedin?: string;
+      org: string;
+      note?: string;
+    }[];
+    background?: string;
   } = $props();
 </script>
 

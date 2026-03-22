@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+  import type { Snippet } from 'svelte';
+  import type { ScriptNav } from '$lib/types';
   import { onMount } from 'svelte';
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
@@ -6,15 +8,30 @@
   import ScriptNavigation from '$lib/components/ScriptNavigation.svelte';
   import Meta from '$lib/components/Meta.svelte';
 
-  let { children, title, summary, date, week, previousScript, nextScript } =
-    $props();
+  let {
+    children,
+    title,
+    summary,
+    date,
+    week,
+    previousScript,
+    nextScript,
+  }: {
+    children: Snippet;
+    title: string;
+    summary?: string;
+    date?: string;
+    week?: number;
+    previousScript?: ScriptNav | null;
+    nextScript?: ScriptNav | null;
+  } = $props();
 
   onMount(() => {
     const scriptBody = document.querySelector('.script-body');
     if (!scriptBody) return;
 
     scriptBody.addEventListener('click', (e) => {
-      const btn = e.target.closest('.copy-btn');
+      const btn = (e.target as HTMLElement).closest('.copy-btn');
       if (!btn) return;
       const pre = btn.closest('.code-block')?.querySelector('pre');
       if (!pre) return;

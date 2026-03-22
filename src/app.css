@@ -59,6 +59,27 @@
   top: var(--spacing-xs);
 }
 
+/* View Transitions */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 150ms ease-out fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 150ms ease-in fade-in;
+}
+
 /* CSS Custom Properties */
 :root {
   /* Colors - CUNY J-School palette */

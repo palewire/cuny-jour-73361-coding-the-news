@@ -1,7 +1,18 @@
-<script>
+<script lang="ts">
   import { base } from '$app/paths';
+  import type { Component } from 'svelte';
 
-  let { icon: Icon, title, description, href = null } = $props();
+  let {
+    icon: Icon,
+    title,
+    description,
+    href = null,
+  } = $props<{
+    icon: Component;
+    title: string;
+    description: string;
+    href?: string | null;
+  }>();
 </script>
 
 {#if href}
@@ -64,10 +75,16 @@
   .topic-card-link {
     text-decoration: none;
     display: block;
-    transition: border-color 0.2s;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
-  .topic-card-link:hover {
+  .topic-card-link:hover,
+  .topic-card-link:focus-visible {
     border-color: var(--color-primary-orange);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 </style>

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { base } from '$app/paths';
 
   const courseCode = 'JOUR 73361';
@@ -12,7 +12,7 @@
     'Lab 436',
   ];
 
-  let { linkToHome = false } = $props();
+  let { linkToHome = false }: { linkToHome?: boolean } = $props();
 </script>
 
 <section class="hero">

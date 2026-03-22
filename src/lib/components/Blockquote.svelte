@@ -1,5 +1,5 @@
-<script>
-  let { quote, attribution } = $props();
+<script lang="ts">
+  let { quote, attribution } = $props<{ quote: string; attribution: string }>();
 </script>
 
 <blockquote>

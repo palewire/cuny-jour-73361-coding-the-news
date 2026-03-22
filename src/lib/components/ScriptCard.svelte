@@ -1,7 +1,19 @@
-<script>
+<script lang="ts">
   import { base } from '$app/paths';
 
-  let { title, summary = '', date = '', slug, locked = false } = $props();
+  let {
+    title,
+    summary = '',
+    date = '',
+    slug,
+    locked = false,
+  } = $props<{
+    title: string;
+    summary?: string;
+    date?: string | null;
+    slug: string;
+    locked?: boolean;
+  }>();
 
   const href = $derived(`${base}/scripts/${slug}`);
 
@@ -62,12 +74,17 @@
     background: var(--color-white);
     color: var(--color-dark);
     text-decoration: none;
-    transition: border-color 0.15s ease;
+    transition:
+      border-color 0.15s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
   .script-card:hover,
   .script-card:focus-visible {
     border-color: var(--color-primary-orange);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .script-card-disabled {
@@ -81,6 +98,8 @@
   .script-card-disabled:hover,
   .script-card-disabled:focus-visible {
     border-color: var(--color-medium-gray);
+    transform: none;
+    box-shadow: none;
   }
 
   .card-header {

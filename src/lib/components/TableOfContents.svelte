@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
 
-  let headings = $state([]);
+  let headings: { id: string; text: string | null }[] = $state([]);
 
   onMount(() => {
     // Extract all h2 elements from the script body

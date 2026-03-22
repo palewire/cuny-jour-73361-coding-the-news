@@ -1,10 +1,5 @@
-<script>
-  import {
-    SITE_NAME,
-    COURSE_CODE,
-    SITE_URL,
-    SHARE_IMAGE,
-  } from '$lib/config.js';
+<script lang="ts">
+  import { SITE_NAME, COURSE_CODE, SITE_URL, SHARE_IMAGE } from '$lib/config';
   import { page } from '$app/state';
 
   let {
@@ -13,7 +8,13 @@
     ogType = 'website',
     ogTitle = undefined,
     ogImage = SHARE_IMAGE,
-  } = $props();
+  } = $props<{
+    title: string;
+    description?: string;
+    ogType?: string;
+    ogTitle?: string;
+    ogImage?: string;
+  }>();
 
   const pageTitle = $derived(
     title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`

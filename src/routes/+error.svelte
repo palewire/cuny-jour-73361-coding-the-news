@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { page } from '$app/state';
   import { base } from '$app/paths';
   import Masthead from '$lib/components/Masthead.svelte';

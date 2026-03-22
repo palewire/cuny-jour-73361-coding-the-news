@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
   let {
     url,
     title = 'YouTube video',
     allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
-  } = $props();
+  } = $props<{ url: string; title?: string; allow?: string }>();
 </script>
 
 <div class="youtube-embed">

@@ -1,5 +1,5 @@
-<script>
-  let boundVariable = $state('');
+<script lang="ts">
+  let boundVariable: string = $state('');
 </script>
 
 <input type="text" bind:value={boundVariable} />

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Masthead from '$lib/components/Masthead.svelte';
   import Hero from '$lib/components/Hero.svelte';
   import Module from '$lib/components/Module.svelte';
@@ -56,16 +56,23 @@
   const scripts = $derived(data.scripts);
   const content = $derived(data.content);
 
-  function getIcon(iconName) {
-    return iconMap[iconName];
+  function getIcon(iconName: string) {
+    return iconMap[iconName as keyof typeof iconMap];
   }
 
   // Transform evaluation criteria with icon components
   const evaluationCriteria = $derived(
-    content.evaluation.criteria.map((item) => ({
-      ...item,
-      icon: getIcon(item.icon),
-    }))
+    content.evaluation.criteria.map(
+      (item: {
+        icon: string;
+        title: string;
+        description: string;
+        href?: string;
+      }) => ({
+        ...item,
+        icon: getIcon(item.icon),
+      })
+    )
   );
 </script>
 

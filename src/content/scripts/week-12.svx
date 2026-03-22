@@ -1,6 +1,6 @@
 ---
-title: "Make It Yours"
-summary: "How to build a personal portfolio site that showcases your work"
+title: "Personal Portfolio"
+summary: "How to build a website that showcases your best work"
 date: "Apr. 27, 2026"
 week: 12
 locked: true

@@ -1,12 +1,13 @@
-import { SITE_URL } from '$lib/config.js';
+import { SITE_URL } from '$lib/config';
 import { base } from '$app/paths';
+import type { RequestHandler } from './$types';
 
 export const prerender = true;
 
 const scriptModules = import.meta.glob('/src/content/scripts/*.svx');
 const gradingModules = import.meta.glob('/src/content/grading/*.svx');
 
-export function GET() {
+export const GET: RequestHandler = () => {
   const siteBase = `${SITE_URL}${base}`;
 
   const scriptSlugs = Object.keys(scriptModules).map((path) =>
@@ -33,4 +34,4 @@ ${urls.map((loc) => `  <url>\n    <loc>${loc}</loc>\n  </url>`).join('\n')}
       'Content-Type': 'application/xml',
     },
   });
-}
+};

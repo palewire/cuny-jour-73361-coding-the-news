@@ -1,16 +1,30 @@
+import type { Component } from 'svelte';
+import type { PageLoad, EntryGenerator } from './$types';
+import type { GradingNav } from '$lib/types';
+
 export const prerender = true;
 
-const gradingModules = import.meta.glob('/src/content/grading/*.svx');
-
-// Generate static paths for all grading pages
-export async function entries() {
-  return Object.keys(gradingModules).map((path) => {
-    const slug = path.split('/').pop().replace('.svx', '');
-    return { slug };
-  });
+interface SvxModule {
+  default: Component;
+  metadata?: {
+    title?: string;
+    module?: number;
+  };
 }
 
-export async function load({ params }) {
+const gradingModules = import.meta.glob<SvxModule>(
+  '/src/content/grading/*.svx'
+);
+
+// Generate static paths for all grading pages
+export const entries: EntryGenerator = async () => {
+  return Object.keys(gradingModules).map((path) => {
+    const slug = path.split('/').pop()!.replace('.svx', '');
+    return { slug };
+  });
+};
+
+export const load: PageLoad = async ({ params }) => {
   const { slug } = params;
   const loader = gradingModules[`/src/content/grading/${slug}.svx`];
 
@@ -24,7 +38,7 @@ export async function load({ params }) {
   const allGrading = await Promise.all(
     Object.entries(gradingModules).map(async ([path, moduleLoader]) => {
       const mod = await moduleLoader();
-      const gradingSlug = path.split('/').pop().replace('.svx', '');
+      const gradingSlug = path.split('/').pop()!.replace('.svx', '');
       return {
         slug: gradingSlug,
         title: mod.metadata?.title || gradingSlug,
@@ -35,8 +49,9 @@ export async function load({ params }) {
 
   const sorted = allGrading.sort((a, b) => a.module - b.module);
   const currentIndex = sorted.findIndex((g) => g.slug === slug);
-  const previousGrading = currentIndex > 0 ? sorted[currentIndex - 1] : null;
-  const nextGrading =
+  const previousGrading: GradingNav | null =
+    currentIndex > 0 ? sorted[currentIndex - 1] : null;
+  const nextGrading: GradingNav | null =
     currentIndex >= 0 && currentIndex < sorted.length - 1
       ? sorted[currentIndex + 1]
       : null;
@@ -47,4 +62,4 @@ export async function load({ params }) {
     previousGrading,
     nextGrading,
   };
-}
+};

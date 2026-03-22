@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { base } from '$app/paths';
 
   let {
@@ -10,6 +10,15 @@
     borderColor = 'var(--color-primary-orange)',
     textColor = 'var(--color-primary-orange)',
     fontSize = '1.5rem',
+  }: {
+    name?: string;
+    image?: string;
+    link?: string;
+    size?: string;
+    background?: string;
+    borderColor?: string;
+    textColor?: string;
+    fontSize?: string;
   } = $props();
 
   const initials = $derived(

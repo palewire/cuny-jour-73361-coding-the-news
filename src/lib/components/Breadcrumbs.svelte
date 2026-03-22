@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
   import { base } from '$app/paths';
+  import type { BreadcrumbItem } from '$lib/types';
 
-  let { items = [] } = $props();
+  let { items = [] } = $props<{ items?: BreadcrumbItem[] }>();
 </script>
 
 <nav class="breadcrumbs container" aria-label="Breadcrumb">

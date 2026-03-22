@@ -1,16 +1,29 @@
+import type { Component } from 'svelte';
+import type { PageLoad, EntryGenerator } from './$types';
+import type { ScriptNav } from '$lib/types';
+
 export const prerender = true;
 
-const scriptModules = import.meta.glob('/src/content/scripts/*.svx');
-
-// Generate static paths for all scripts
-export async function entries() {
-  return Object.keys(scriptModules).map((path) => {
-    const slug = path.split('/').pop().replace('.svx', '');
-    return { slug };
-  });
+interface SvxModule {
+  default: Component;
+  metadata?: {
+    title?: string;
+    week?: number;
+    locked?: boolean;
+  };
 }
 
-export async function load({ params }) {
+const scriptModules = import.meta.glob<SvxModule>('/src/content/scripts/*.svx');
+
+// Generate static paths for all scripts
+export const entries: EntryGenerator = async () => {
+  return Object.keys(scriptModules).map((path) => {
+    const slug = path.split('/').pop()!.replace('.svx', '');
+    return { slug };
+  });
+};
+
+export const load: PageLoad = async ({ params }) => {
   const { slug } = params;
   const loader = scriptModules[`/src/content/scripts/${slug}.svx`];
 
@@ -24,7 +37,7 @@ export async function load({ params }) {
   const allScripts = await Promise.all(
     Object.entries(scriptModules).map(async ([path, moduleLoader]) => {
       const mod = await moduleLoader();
-      const scriptSlug = path.split('/').pop().replace('.svx', '');
+      const scriptSlug = path.split('/').pop()!.replace('.svx', '');
       return {
         slug: scriptSlug,
         title: mod.metadata?.title || scriptSlug,
@@ -43,9 +56,9 @@ export async function load({ params }) {
   const currentIndex = unlockedScripts.findIndex((s) => s.slug === slug);
 
   // Get previous and next scripts (only if they exist and are unlocked)
-  const previousScript =
+  const previousScript: ScriptNav | null =
     currentIndex > 0 ? unlockedScripts[currentIndex - 1] : null;
-  const nextScript =
+  const nextScript: ScriptNav | null =
     currentIndex >= 0 && currentIndex < unlockedScripts.length - 1
       ? unlockedScripts[currentIndex + 1]
       : null;
@@ -56,4 +69,4 @@ export async function load({ params }) {
     previousScript,
     nextScript,
   };
-}
+};

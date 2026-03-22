@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   let { data } = $props();
 
   const Content = $derived(data.content);

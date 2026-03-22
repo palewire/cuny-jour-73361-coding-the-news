@@ -1,5 +1,10 @@
-<script>
-  let { title = 'Aside', children } = $props();
+<script lang="ts">
+  import type { Snippet } from 'svelte';
+
+  let { title = 'Aside', children } = $props<{
+    title?: string;
+    children: Snippet;
+  }>();
 </script>
 
 <aside class="aside">

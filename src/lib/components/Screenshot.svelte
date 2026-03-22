@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { base } from '$app/paths';
 
   let {
@@ -9,6 +9,14 @@
     chromeUrl = '',
     width = '100%',
     maxWidth = '720px',
+  }: {
+    src: string;
+    alt: string;
+    showChrome?: boolean;
+    chromeTitle?: string;
+    chromeUrl?: string;
+    width?: string;
+    maxWidth?: string;
   } = $props();
 
   // Handle both absolute URLs and relative paths

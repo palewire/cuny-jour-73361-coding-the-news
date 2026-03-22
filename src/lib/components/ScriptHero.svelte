@@ -1,5 +1,17 @@
-<script>
-  let { title, summary, date, week, kicker = undefined } = $props();
+<script lang="ts">
+  let {
+    title,
+    summary,
+    date,
+    week,
+    kicker = undefined,
+  } = $props<{
+    title: string;
+    summary?: string;
+    date?: string;
+    week?: number;
+    kicker?: string;
+  }>();
 
   const displayKicker = $derived(kicker ?? (week ? `Week ${week}` : undefined));
 </script>

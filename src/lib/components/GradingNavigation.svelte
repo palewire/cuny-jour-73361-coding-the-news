@@ -1,8 +1,12 @@
-<script>
+<script lang="ts">
   import { ChevronLeft, ChevronRight } from 'lucide-svelte';
   import { base } from '$app/paths';
+  import type { GradingNav } from '$lib/types';
 
-  let { previousGrading, nextGrading } = $props();
+  let { previousGrading = undefined, nextGrading = undefined } = $props<{
+    previousGrading?: GradingNav | null;
+    nextGrading?: GradingNav | null;
+  }>();
 </script>
 
 <nav class="grading-navigation">

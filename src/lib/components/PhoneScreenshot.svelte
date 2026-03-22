@@ -1,7 +1,11 @@
-<script>
+<script lang="ts">
   import { base } from '$app/paths';
 
-  let { src, alt, maxWidth = '320px' } = $props();
+  let {
+    src,
+    alt,
+    maxWidth = '320px',
+  } = $props<{ src: string; alt: string; maxWidth?: string }>();
 
   const imageSrc = $derived(
     src.startsWith('http') || src.startsWith('//')

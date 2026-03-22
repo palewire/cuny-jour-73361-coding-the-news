@@ -1,8 +1,12 @@
-<script>
+<script lang="ts">
   import { ChevronLeft, ChevronRight } from 'lucide-svelte';
   import { base } from '$app/paths';
+  import type { ScriptNav } from '$lib/types';
 
-  let { previousScript, nextScript } = $props();
+  let { previousScript = undefined, nextScript = undefined } = $props<{
+    previousScript?: ScriptNav | null;
+    nextScript?: ScriptNav | null;
+  }>();
 </script>
 
 <nav class="script-navigation">

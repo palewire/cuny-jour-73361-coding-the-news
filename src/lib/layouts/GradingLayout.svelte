@@ -1,11 +1,26 @@
-<script>
+<script lang="ts">
+  import type { Snippet } from 'svelte';
+  import type { GradingNav } from '$lib/types';
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
   import Meta from '$lib/components/Meta.svelte';
   import GradingNavigation from '$lib/components/GradingNavigation.svelte';
 
-  let { children, title, summary, module, previousGrading, nextGrading } =
-    $props();
+  let {
+    children,
+    title,
+    summary,
+    module,
+    previousGrading,
+    nextGrading,
+  }: {
+    children: Snippet;
+    title: string;
+    summary?: string;
+    module?: number;
+    previousGrading?: GradingNav | null;
+    nextGrading?: GradingNav | null;
+  } = $props();
 
   const kicker = $derived(module ? `Module ${module}` : undefined);
   const pageTitle = $derived(kicker ? `${kicker}: ${title}` : title);

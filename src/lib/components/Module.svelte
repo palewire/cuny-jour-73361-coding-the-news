@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+  import type { Snippet } from 'svelte';
   import { base } from '$app/paths';
 
   let {
@@ -11,6 +12,16 @@
     disclosure = '',
     children,
     background = 'white',
+  }: {
+    number?: number | null;
+    kicker?: string | null;
+    title: string;
+    id: string;
+    intro?: string;
+    homework?: string;
+    disclosure?: string;
+    children: Snippet;
+    background?: string;
   } = $props();
 
   let displayKicker = $derived(kicker ?? (number ? `Module ${number}` : ''));
