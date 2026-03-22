@@ -173,7 +173,7 @@ Add a conditional block after the grid that renders a modal overlay when somethi
 <div class="permits">
   {#each data.permits as permit (permit.eventid)}
     <div class="card" onclick={() => selected = permit}>
-      <h3>{permit.subcategoryname}</h3>
+      <h3>{permit.category}</h3>
       <p>{permit.borough}</p>
     </div>
   {/each}
@@ -205,7 +205,7 @@ Save and try it. Click any card in the grid. A popup should appear over the page
   maxWidth="960px"
 />
 
-## Part 3: Styling with CSS variables
+## Part 3: Styling with CSS
 
 You have a working interactive page. It's just really ugly. So let's make it look like something normal.
 
@@ -309,6 +309,74 @@ Save and check your browser. Click a card and the popup should appear centered o
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
+
+### Breaking out of the box
+
+It looks decent, but notice how the card grid is squeezed into the same narrow column as the headline and byline?
+
+That makes sense for prose, but a grid of data cards could run wider.
+
+This is the kind of design decision we talked about in [Week 6](../week-6/), where you choose to break out of the standard template structure to better fit the content.
+
+Let's make it happen by splitting the page into two zones. The header stays in the narrow `.container` tag. The card grid will move into a new wrapper that's allowed to run wider.
+
+Open `src/routes/+page.svelte` and update the markup. Pull the `.permits` grid out of the `.container` and wrap it in a new `.wide-container` div. You'll need to close the `.container` after the `ArticleHeader` with a new `</div>` tag, then add the new wrapper around the grid.
+
+```svelte
+<div class="container">
+  <ArticleHeader
+    {headline}
+    {byline}
+    {pubDate}
+  />
+</div>
+
+<div class="wide-container">
+  <div class="permits">
+    {#each data.permits as permit (permit.eventid)}
+      <div class="card" onclick={() => selected = permit}>
+        <h3>{permit.category}</h3>
+        <p>{permit.borough}</p>
+      </div>
+    {/each}
+  </div>
+</div>
+
+{#if selected}
+  <div class="overlay" onclick={() => selected = null}>
+    <div class="popup" onclick={(e) => e.stopPropagation()}>
+      <button class="close-btn" onclick={() => selected = null}>&times;</button>
+      <h2>{selected.subcategoryname}</h2>
+      <p><strong>Category:</strong> {selected.category}</p>
+      <p><strong>Location:</strong> {selected.parkingheld}</p>
+      <p><strong>Borough:</strong> {selected.borough}</p>
+      <p><strong>Date:</strong> {selected.enteredon}</p>
+    </div>
+  </div>
+{/if}
+```
+
+Now add a rule for `.wide-container` in your `<style lang="scss">` block:
+
+```scss
+  .wide-container {
+    max-width: 1300px;
+    margin: var(--spacing-md) auto;
+    padding: 0 var(--spacing-sm);
+  }
+```
+
+Save and check your browser. The header should still sit at article width, but the card grid now stretches wider, filling the available space with more columns.
+
+<Screenshot
+  src="/screenshots/week-8/wide-card-grid.png"
+  alt="The page with the article header at narrow width and the film permit card grid breaking wider below it, showing four or five columns on a wide screen"
+  chromeTitle="Recent Film Permits"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+Try resizing your browser window. On a wide screen you'll see four or five columns. Drag it narrower and the grid will reflow down to three, then two, then one. That's the `auto-fill` and `minmax` in your `.permits` rule doing the work — the same CSS, just with more room to use it.
 
 ## Homework
 
