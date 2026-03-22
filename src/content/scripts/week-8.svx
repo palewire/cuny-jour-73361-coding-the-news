@@ -152,7 +152,7 @@ Add an `onclick` handler to the card `<div>` elements in your grid. When clicked
 
 ```svelte
 <div class="permits">
-  {#each data.permits as permit}
+  {#each data.permits as permit (permit.eventid)}
     <div class="card" onclick={() => selected = permit}>
       <h3>{permit.subcategoryname}</h3>
       <p>{permit.borough}</p>
@@ -171,7 +171,7 @@ Add a conditional block after the grid that renders a modal overlay when somethi
 
 ```svelte
 <div class="permits">
-  {#each data.permits as permit}
+  {#each data.permits as permit (permit.eventid)}
     <div class="card" onclick={() => selected = permit}>
       <h3>{permit.subcategoryname}</h3>
       <p>{permit.borough}</p>
@@ -267,6 +267,7 @@ Now let's style the overlay and popup. Add these rules to your `<style lang="scs
   }
 
   .popup {
+    position: relative;
     background: white;
     padding: var(--spacing-lg);
     max-width: 500px;
