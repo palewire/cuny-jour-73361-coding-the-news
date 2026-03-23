@@ -1,4 +1,4 @@
-[![Coding the News scrolling preview](static/videos/homepage-scroll.gif)](https://palewi.re/docs/coding-the-news/)
+[![Coding the News scrolling preview](media/videos/homepage-scroll.gif)](https://palewi.re/docs/coding-the-news/)
 
 The syllabus for "JOUR 73361: Coding the News," a course taught at the City University of New York's Craig Newmark Graduate School of Journalism.
 
