@@ -364,6 +364,7 @@ tr:last-child td {
   .table-of-contents,
   .copy-btn,
   .dropdown-wrapper,
+  .scroll-progress,
   footer {
     display: none !important;
   }

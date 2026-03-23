@@ -2,6 +2,7 @@
   import type { Snippet } from 'svelte';
   import type { ScriptNav } from '$lib/types';
   import { onMount } from 'svelte';
+  import ScrollProgress from '$lib/components/ScrollProgress.svelte';
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
@@ -54,6 +55,7 @@
 
 <Meta {title} description={summary} ogType="article" />
 
+<ScrollProgress />
 <Breadcrumbs items={[{ label: breadcrumbLabel }]} />
 <ScriptHero {title} {summary} {date} {week} />
 

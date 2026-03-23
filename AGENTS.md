@@ -4,6 +4,8 @@ It is designed to publish the syllabus for JOUR 73361: "Coding the News" for the
 
 The site is deployed to `https://palewi.re/docs/coding-the-news/`.
 
+**Keep this file up to date.** When adding new components, utilities, conventions, or other notable changes to the project, update the relevant sections of this document so it remains an accurate reference for agents and contributors.
+
 ## Content Organization
 
 All editorial content lives in `src/content/`:
@@ -81,7 +83,9 @@ This project uses **Svelte 5** syntax. Follow these patterns:
 
 Components are located in `src/lib/components/`:
 
-- **Masthead.svelte** - Header with CUNY J-School logo
+- **Masthead.svelte** - Header bar with CUNY logo linking to syllabus homepage. Accepts an optional `children` snippet for right-side content (used for ScriptDropdown). Sticky on mobile (<600px), static on desktop.
+- **ScriptDropdown.svelte** - Dropdown menu in the Masthead listing all weekly scripts for quick navigation. Loads data from `scriptList.ts`. Shows locked scripts as grayed-out. Highlights the active script on script pages. Full keyboard/ARIA support.
+- **ScrollProgress.svelte** - Thin orange progress bar on script pages tracking scroll position. Sticky below the masthead on mobile, at viewport top on desktop. Rendered in ScriptLayout.
 - **Hero.svelte** - Course title section with flexible metadata display
 - **Module.svelte** - Collapsible module sections for syllabus content
 - **TopicCard.svelte** - Reusable card with icon, title, and description (used in Module content and Evaluation)
@@ -143,7 +147,7 @@ Open Graph and Twitter Card meta tags are configured in `+page.svelte` using the
 
 - A "Skip to main content" link is included site-wide via the root layout.
 - Focus styles are implemented using `:focus-visible` for keyboard navigation.
-- Print styles live in `src/app.css` and are designed to hide navigation chrome (breadcrumbs, TOC, prev/next, footer) and make code blocks readable.
+- Print styles live in `src/app.css` and are designed to hide navigation chrome (breadcrumbs, TOC, prev/next, dropdown, scroll progress, footer) and make code blocks readable.
 - Screenshot components include print-specific overrides to reduce ink usage (hide decorative chrome/frames) and avoid splitting figures across pages.
 
 ## Static Assets
