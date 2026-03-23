@@ -1,8 +1,12 @@
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex, escapeSvelte } from 'mdsvex';
 import rehypeSlug from 'rehype-slug';
 import { createHighlighter } from 'shiki';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Parse a meta string to extract line numbers to highlight
@@ -111,8 +115,8 @@ const config = {
       extensions: ['.svx'],
       smartypants: false,
       layout: {
-        grading: './src/lib/layouts/GradingLayout.svelte',
-        _: './src/lib/layouts/ScriptLayout.svelte',
+        grading: resolve(__dirname, './src/lib/layouts/GradingLayout.svelte'),
+        _: resolve(__dirname, './src/lib/layouts/ScriptLayout.svelte'),
       },
       rehypePlugins: [rehypeSlug],
       highlight: {
