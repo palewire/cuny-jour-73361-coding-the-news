@@ -1,37 +1,41 @@
 <script lang="ts">
   import { ChevronLeft, ChevronRight } from 'lucide-svelte';
-  import { base } from '$app/paths';
-  import type { GradingNav } from '$lib/types';
 
-  let { previousGrading = undefined, nextGrading = undefined } = $props<{
-    previousGrading?: GradingNav | null;
-    nextGrading?: GradingNav | null;
+  interface NavItem {
+    href: string;
+    title: string;
+  }
+
+  let {
+    previous = undefined,
+    next = undefined,
+    ariaLabel = 'Content navigation',
+  } = $props<{
+    previous?: NavItem | null;
+    next?: NavItem | null;
+    ariaLabel?: string;
   }>();
 </script>
 
-<nav class="grading-navigation" aria-label="Grading navigation">
+<nav class="content-navigation" aria-label={ariaLabel}>
   <div class="nav-link previous">
-    {#if previousGrading}
-      <a href="{base}/grading/{previousGrading.slug}">
+    {#if previous}
+      <a href={previous.href}>
         <ChevronLeft size={20} aria-hidden="true" focusable="false" />
         <span class="nav-content">
           <span class="nav-label">Previous</span>
-          <span class="nav-title"
-            >Module {previousGrading.module}: {previousGrading.title}</span
-          >
+          <span class="nav-title">{previous.title}</span>
         </span>
       </a>
     {/if}
   </div>
 
   <div class="nav-link next">
-    {#if nextGrading}
-      <a href="{base}/grading/{nextGrading.slug}">
+    {#if next}
+      <a href={next.href}>
         <span class="nav-content">
           <span class="nav-label">Next</span>
-          <span class="nav-title"
-            >Module {nextGrading.module}: {nextGrading.title}</span
-          >
+          <span class="nav-title">{next.title}</span>
         </span>
         <ChevronRight size={20} aria-hidden="true" focusable="false" />
       </a>
@@ -40,7 +44,7 @@
 </nav>
 
 <style>
-  .grading-navigation {
+  .content-navigation {
     display: flex;
     justify-content: space-between;
     align-items: stretch;
@@ -119,7 +123,7 @@
   }
 
   @media (max-width: 600px) {
-    .grading-navigation {
+    .content-navigation {
       flex-direction: column;
       gap: var(--spacing-sm);
     }

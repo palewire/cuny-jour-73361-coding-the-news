@@ -1,12 +1,13 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import type { ScriptNav } from '$lib/types';
+  import { base } from '$app/paths';
   import { onMount } from 'svelte';
   import ScrollProgress from '$lib/components/ScrollProgress.svelte';
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
-  import ScriptNavigation from '$lib/components/ScriptNavigation.svelte';
+  import ContentNavigation from '$lib/components/ContentNavigation.svelte';
   import Meta from '$lib/components/Meta.svelte';
 
   let {
@@ -67,9 +68,23 @@
 
 <section class="section script">
   <div class="container">
-    <div class="script-body">
+    <div class="content-body script-body">
       {@render children()}
-      <ScriptNavigation {previousScript} {nextScript} />
+      <ContentNavigation
+        previous={previousScript
+          ? {
+              href: `${base}/scripts/${previousScript.slug}`,
+              title: `Week ${previousScript.week}: ${previousScript.title}`,
+            }
+          : null}
+        next={nextScript
+          ? {
+              href: `${base}/scripts/${nextScript.slug}`,
+              title: `Week ${nextScript.week}: ${nextScript.title}`,
+            }
+          : null}
+        ariaLabel="Script navigation"
+      />
     </div>
   </div>
 </section>
@@ -85,10 +100,6 @@
   .section.script {
     margin-top: 0;
     padding-top: var(--spacing-lg);
-  }
-
-  .script-body {
-    max-width: 720px;
   }
 
   :global(.script-body h2),

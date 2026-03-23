@@ -95,9 +95,8 @@ Components are located in `src/lib/components/`:
 - **Footer.svelte** - Full CUNY J-School footer with contact info, navigation links, and social media icons
 - **Screenshot.svelte** - Displays screenshots with optional browser chrome styling, used in script pages
 - **PhoneScreenshot.svelte** - Displays screenshots in a phone frame, used when demonstrating mobile UI
-- **ScriptHero.svelte** - Hero/header for script pages (title, summary, date, week)
-- **ScriptNavigation.svelte** - Previous/next navigation between weekly scripts
-- **GradingNavigation.svelte** - Previous/next navigation between module rubrics
+- **ScriptHero.svelte** - Hero/header for script and grading pages (title, summary, date, week/kicker). Uses global `.section-header` and `.section-kicker` utility classes.
+- **ContentNavigation.svelte** - Shared previous/next navigation used by both script and grading pages. Accepts `previous` and `next` props with `{ href, title }` shape and an `ariaLabel` string.
 - **TableOfContents.svelte** - Auto-generated in-page Table of Contents for scripts (based on `h2` headings)
 - **Breadcrumbs.svelte** - Breadcrumb navigation (used on scripts and grading pages)
 - **Meta.svelte** - SEO + social metadata (Open Graph + Twitter cards)
@@ -132,6 +131,7 @@ Components use common section patterns:
 - `background` prop accepts `'white'` or `'light-gray'` for alternating sections
 - Section headers have orange left border (`border-left: 4px solid var(--color-primary-orange)`)
 - Container max-width: `1200px`
+- Global utility classes in `app.css`: `.section-header` (orange left border + padding), `.section-kicker` (uppercase orange label), `.section-intro` (intro paragraph), `.content-body` (max-width: 720px for content areas)
 
 ### Responsive Breakpoints
 

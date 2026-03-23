@@ -277,6 +277,10 @@ img {
   max-width: 800px;
 }
 
+.content-body {
+  max-width: 720px;
+}
+
 /* Tables */
 table {
   width: 100%;
@@ -362,8 +366,7 @@ tr:last-child td {
 
   .skip-link,
   .breadcrumbs,
-  .script-navigation,
-  .grading-navigation,
+  .content-navigation,
   .table-of-contents,
   .copy-btn,
   .dropdown-wrapper,

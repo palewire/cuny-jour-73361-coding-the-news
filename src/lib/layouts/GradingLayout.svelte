@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import type { GradingNav } from '$lib/types';
+  import { base } from '$app/paths';
   import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
   import ScriptHero from '$lib/components/ScriptHero.svelte';
   import Meta from '$lib/components/Meta.svelte';
-  import GradingNavigation from '$lib/components/GradingNavigation.svelte';
+  import ContentNavigation from '$lib/components/ContentNavigation.svelte';
 
   let {
     children,
@@ -33,9 +34,23 @@
 
 <section class="section grading">
   <div class="container">
-    <div class="grading-body">
+    <div class="content-body grading-body">
       {@render children()}
-      <GradingNavigation {previousGrading} {nextGrading} />
+      <ContentNavigation
+        previous={previousGrading
+          ? {
+              href: `${base}/grading/${previousGrading.slug}`,
+              title: `Module ${previousGrading.module}: ${previousGrading.title}`,
+            }
+          : null}
+        next={nextGrading
+          ? {
+              href: `${base}/grading/${nextGrading.slug}`,
+              title: `Module ${nextGrading.module}: ${nextGrading.title}`,
+            }
+          : null}
+        ariaLabel="Grading navigation"
+      />
     </div>
   </div>
 </section>
@@ -44,10 +59,6 @@
   .section.grading {
     margin-top: 0;
     padding-top: 0;
-  }
-
-  .grading-body {
-    max-width: 720px;
   }
 
   :global(.grading-body h2) {
