@@ -42,6 +42,9 @@ const DEFAULT_DURATION = 10;
 // Default scroll speed in pixels per second
 const DEFAULT_SCROLL_SPEED = 300;
 
+// Default trim seconds from start of recording
+const DEFAULT_TRIM = 3;
+
 // GIF loop count (0 = infinite)
 const GIF_LOOP_COUNT = 0;
 
@@ -56,7 +59,8 @@ function parseArgs(args) {
     duration: DEFAULT_DURATION,
     speed: DEFAULT_SCROLL_SPEED,
     wait: 3000,
-    trim: 3,
+    trim: DEFAULT_TRIM,
+    trimProvided: false,
     title: null,
     noGif: false,
     width: DEFAULT_WIDTH,
@@ -83,6 +87,7 @@ function parseArgs(args) {
         break;
       case '--trim':
         options.trim = parseFloat(args[++i]);
+        options.trimProvided = true;
         break;
       case '--title':
         options.title = args[++i];
@@ -100,6 +105,79 @@ function parseArgs(args) {
   }
 
   return options;
+}
+
+function getReserveChromeSpaceCss() {
+  return `
+    html {
+      margin-top: ${CHROME_HEIGHT}px !important;
+      margin-left: ${CHROME_BORDER}px !important;
+      margin-right: ${CHROME_BORDER}px !important;
+      margin-bottom: ${CHROME_BORDER}px !important;
+      background: #ffffff !important;
+    }
+
+    body {
+      margin-top: 0 !important;
+    }
+  `;
+}
+
+async function waitForPageAssets(page, { extraWaitMs = 0 } = {}) {
+  // Fonts
+  await page
+    .evaluate(async () => {
+      if (!document.fonts || !document.fonts.ready) return;
+      try {
+        await document.fonts.ready;
+      } catch {
+        // Ignore font readiness errors
+      }
+    })
+    .catch(() => {
+      // Ignore evaluation errors
+    });
+
+  // Images (bounded wait)
+  await page
+    .evaluate(async () => {
+      const maxWaitMs = 5000;
+      const start = Date.now();
+      const pending = Array.from(document.images).filter(
+        (img) => !img.complete
+      );
+      if (pending.length === 0) return;
+
+      await Promise.race([
+        Promise.all(
+          pending.map(
+            (img) =>
+              new Promise((resolve) => {
+                const done = () => resolve();
+                img.addEventListener('load', done, { once: true });
+                img.addEventListener('error', done, { once: true });
+              })
+          )
+        ),
+        new Promise((resolve) => {
+          const tick = () => {
+            if (Date.now() - start >= maxWaitMs) return resolve();
+            setTimeout(tick, 50);
+          };
+          tick();
+        }),
+      ]);
+    })
+    .catch(() => {
+      // Ignore evaluation errors
+    });
+
+  if (extraWaitMs > 0) {
+    await page.waitForTimeout(extraWaitMs);
+  }
+
+  // One more frame for layout stability
+  await page.waitForTimeout(200);
 }
 
 // Generate browser chrome overlay CSS and HTML
@@ -292,8 +370,16 @@ function escapeHtml(text) {
 async function injectBrowserChrome(page, title, displayUrl) {
   const chrome = getBrowserChromeOverlay(title, displayUrl);
 
-  await page.addStyleTag({ content: chrome.css });
+  await page.evaluate((css) => {
+    if (document.getElementById('__pw_browser_chrome_css')) return;
+    const style = document.createElement('style');
+    style.id = '__pw_browser_chrome_css';
+    style.textContent = css;
+    (document.head || document.documentElement).appendChild(style);
+  }, chrome.css);
+
   await page.evaluate((html) => {
+    if (document.getElementById('browser-chrome-overlay')) return;
     const container = document.createElement('div');
     container.innerHTML = html;
     // Insert all chrome elements (top bar + frame borders)
@@ -331,9 +417,10 @@ function convertToMp4(webmPath, mp4Path, trimStart = 0) {
   console.log('Converting to MP4...');
   try {
     // Use -pix_fmt yuv420p for better compatibility and looping
-    const trimFlag = trimStart > 0 ? `-ss ${trimStart}` : '';
     execSync(
-      `ffmpeg -y ${trimFlag} -i "${webmPath}" -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -movflags +faststart -an "${mp4Path}"`,
+      `ffmpeg -y -i "${webmPath}"${
+        trimStart > 0 ? ` -ss ${trimStart}` : ''
+      } -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -movflags +faststart -an "${mp4Path}"`,
       { stdio: 'pipe' }
     );
     console.log(`MP4 saved: ${mp4Path}`);
@@ -427,7 +514,7 @@ async function recordVideo(options) {
     // Give the page extra time to finish rendering async assets during setup only
     if (options.wait > 0) {
       console.log(
-        `Waiting ${options.wait}ms for page to settle (setup only)...`
+        `Waiting ${options.wait}ms for page to settle (setup)...`
       );
       await setupPage.waitForTimeout(options.wait);
     }
@@ -462,18 +549,59 @@ async function recordVideo(options) {
       },
     });
 
+    // Reserve chrome space and hide content before first paint to avoid a
+    // visible flash of unstyled/loading content at the start.
+    const reserveCss = getReserveChromeSpaceCss();
+    await recordContext.addInitScript({
+      content: `(() => {
+        const reserve = document.createElement('style');
+        reserve.id = '__pw_chrome_reserve_css';
+        reserve.textContent = ${JSON.stringify(reserveCss)};
+        document.documentElement.appendChild(reserve);
+
+        const hide = document.createElement('style');
+        hide.id = '__pw_hide_until_ready';
+        hide.textContent = 'body{opacity:0 !important;}';
+        document.documentElement.appendChild(hide);
+      })();`,
+    });
+
     const page = await recordContext.newPage();
+
+    const recordStartMs = Date.now();
 
     // Navigate to URL again
     await page.goto(options.url, { waitUntil: 'networkidle', timeout: 60000 });
 
+    // Ensure we're at the top before revealing anything
+    await page.evaluate(() => window.scrollTo(0, 0));
+
+    // Wait for fonts/images and any user-specified extra settle time
+    await waitForPageAssets(page, { extraWaitMs: options.wait });
+
     // Inject browser chrome overlay
     await injectBrowserChrome(page, pageTitle, displayUrl);
 
-    // Wait for chrome to fully render and settle before animation starts
-    // This ensures the browser bar doesn't "snap" during the recording
+    // Let the chrome settle while the page is still hidden
     console.log('Waiting for chrome to settle...');
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(500);
+
+    // Reveal page content only once we're ready to record
+    const revealMs = Date.now();
+    await page.evaluate(() => {
+      const hide = document.getElementById('__pw_hide_until_ready');
+      if (hide) hide.remove();
+      document.body.style.opacity = '1';
+    });
+
+    // Allow a tiny post-reveal settle
+    await page.waitForTimeout(200);
+
+    const autoTrimSeconds = Math.max(0, (revealMs - recordStartMs) / 1000);
+    const trimSeconds = options.trimProvided ? options.trim : autoTrimSeconds;
+    if (!options.trimProvided) {
+      options.trim = trimSeconds;
+    }
 
     // Scroll down for the specified duration
     console.log('Scrolling...');
@@ -491,6 +619,10 @@ async function recordVideo(options) {
       throw new Error('No video file was recorded');
     }
     const recordedVideo = path.join(tempDir, videoFiles[0]);
+
+    if (options.trim > 0) {
+      console.log(`Trimming first ${options.trim.toFixed(2)}s...`);
+    }
 
     // Convert to MP4, trimming the 2-second chrome settling time from the beginning
     const mp4Success = convertToMp4(
