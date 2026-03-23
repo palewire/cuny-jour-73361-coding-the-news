@@ -103,6 +103,8 @@ Include these in your instructions to help users:
 
 Save to `/static/screenshots/week-{week}/` with descriptive kebab-case filenames.
 
+A WebP copy is automatically generated alongside each PNG screenshot (requires `cwebp` — install with `brew install webp`). The Screenshot component serves WebP via `<picture>` elements for better performance. You do not need to reference the `.webp` files manually.
+
 **Naming convention:**
 - ✅ `vscode-source-control.png`
 - ✅ `vscode-readme-preview.png`
