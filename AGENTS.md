@@ -33,6 +33,7 @@ Grading rubrics are served via dynamic routes at `/grading/module-1`, `/grading/
 When referring to UI elements (buttons, menu items, dropdown options, tabs, etc.) in the `.svx` script files:
 
 - Use **quotes** around the element name, not bold
+- Prefer direct address: call students "you" (avoid the "royal we").
 - Good: `Click the "Clone repository" button`
 - Good: `Select "Create a new repository" from the dropdown`
 - Good: `Go to the "Settings" tab`
@@ -46,6 +47,8 @@ When referring to UI elements (buttons, menu items, dropdown options, tabs, etc.
 ## Svelte 5 Conventions
 
 This project uses **Svelte 5** syntax. Follow these patterns:
+
+- Prefer **TypeScript** for site code (use `<script lang="ts">` in components/routes) unless there's a reason a file must be plain JavaScript.
 
 - Use `$props()` for component props:
 
