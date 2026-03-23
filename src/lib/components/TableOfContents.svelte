@@ -18,7 +18,7 @@
 
 {#if headings.length > 0}
   <nav class="table-of-contents" aria-label="Table of contents">
-    <h3>Table of Contents</h3>
+    <h2 class="toc-heading">Table of Contents</h2>
     <ul>
       {#each headings as heading (heading.id)}
         <li>
@@ -37,9 +37,8 @@
     border-left: 4px solid var(--color-primary-orange);
   }
 
-  .table-of-contents h3 {
-    font-family: var(--font-trade-gothic-bold-cond);
-    font-size: 1rem;
+  .toc-heading {
+    font-size: var(--font-size-base);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin: var(--spacing-sm) 0 var(--spacing-sm) 0;

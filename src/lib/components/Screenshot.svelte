@@ -9,6 +9,8 @@
     chromeUrl = '',
     width = '100%',
     maxWidth = '720px',
+    imgWidth = 1440,
+    imgHeight = 900,
   }: {
     src: string;
     alt: string;
@@ -17,6 +19,8 @@
     chromeUrl?: string;
     width?: string;
     maxWidth?: string;
+    imgWidth?: number;
+    imgHeight?: number;
   } = $props();
 
   // Handle both absolute URLs and relative paths
@@ -25,7 +29,30 @@
       ? src
       : `${base}${src.startsWith('/') ? src : '/' + src}`
   );
+
+  // Derive WebP source path for local images (not GIFs or external URLs)
+  const webpSrc = $derived(
+    !src.startsWith('http') && !src.startsWith('//') && !src.endsWith('.gif')
+      ? imageSrc.replace(/\.(png|jpe?g)$/i, '.webp')
+      : null
+  );
 </script>
+
+{#snippet picture()}
+  <picture>
+    {#if webpSrc}
+      <source srcset={webpSrc} type="image/webp" />
+    {/if}
+    <img
+      src={imageSrc}
+      {alt}
+      width={imgWidth}
+      height={imgHeight}
+      loading="lazy"
+      decoding="async"
+    />
+  </picture>
+{/snippet}
 
 <figure class="screenshot" style="max-width: {maxWidth}; width: {width};">
   {#if showChrome}
@@ -67,10 +94,10 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src={imageSrc} {alt} loading="lazy" decoding="async" />
+            {@render picture()}
           </a>
         {:else}
-          <img src={imageSrc} {alt} loading="lazy" decoding="async" />
+          {@render picture()}
         {/if}
       </div>
     </div>
@@ -83,10 +110,10 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img src={imageSrc} {alt} loading="lazy" decoding="async" />
+          {@render picture()}
         </a>
       {:else}
-        <img src={imageSrc} {alt} loading="lazy" decoding="async" />
+        {@render picture()}
       {/if}
     </div>
   {/if}

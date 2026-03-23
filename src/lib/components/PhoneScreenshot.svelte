@@ -5,12 +5,26 @@
     src,
     alt,
     maxWidth = '320px',
-  } = $props<{ src: string; alt: string; maxWidth?: string }>();
+    imgWidth = 390,
+    imgHeight = 844,
+  } = $props<{
+    src: string;
+    alt: string;
+    maxWidth?: string;
+    imgWidth?: number;
+    imgHeight?: number;
+  }>();
 
   const imageSrc = $derived(
     src.startsWith('http') || src.startsWith('//')
       ? src
       : `${base}${src.startsWith('/') ? src : '/' + src}`
+  );
+
+  const webpSrc = $derived(
+    !src.startsWith('http') && !src.startsWith('//') && !src.endsWith('.gif')
+      ? imageSrc.replace(/\.(png|jpe?g)$/i, '.webp')
+      : null
   );
 </script>
 
@@ -20,7 +34,19 @@
       <div class="phone-camera"></div>
     </div>
     <div class="phone-screen">
-      <img src={imageSrc} {alt} loading="lazy" decoding="async" />
+      <picture>
+        {#if webpSrc}
+          <source srcset={webpSrc} type="image/webp" />
+        {/if}
+        <img
+          src={imageSrc}
+          {alt}
+          width={imgWidth}
+          height={imgHeight}
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
     </div>
     <div class="phone-home-bar">
       <div class="home-indicator"></div>

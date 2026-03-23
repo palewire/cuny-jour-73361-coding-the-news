@@ -33,6 +33,10 @@
   const style = $derived(
     `--avatar-size: ${size}; --avatar-bg: ${background}; --avatar-border: ${borderColor}; --avatar-text: ${textColor}; --avatar-font: ${fontSize};`
   );
+
+  const webpImage = $derived(
+    image ? image.replace(/\.(png|jpe?g)$/i, '.webp') : ''
+  );
 </script>
 
 {#if link}
@@ -44,7 +48,19 @@
     {style}
   >
     {#if image}
-      <img src="{base}/{image}" alt={name} />
+      <picture>
+        {#if webpImage}
+          <source srcset="{base}/{webpImage}" type="image/webp" />
+        {/if}
+        <img
+          src="{base}/{image}"
+          alt={name}
+          width="160"
+          height="160"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
     {:else}
       <div class="avatar-placeholder"><span>{initials}</span></div>
     {/if}
@@ -52,7 +68,19 @@
 {:else}
   <div class="avatar" {style}>
     {#if image}
-      <img src="{base}/{image}" alt={name} />
+      <picture>
+        {#if webpImage}
+          <source srcset="{base}/{webpImage}" type="image/webp" />
+        {/if}
+        <img
+          src="{base}/{image}"
+          alt={name}
+          width="160"
+          height="160"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
     {:else}
       <div class="avatar-placeholder"><span>{initials}</span></div>
     {/if}

@@ -106,7 +106,7 @@
 
   .speaker-org {
     font-size: 0.875rem;
-    color: var(--color-primary-orange);
+    color: var(--color-medium-gray);
     margin-bottom: 0;
   }
 

@@ -32,6 +32,28 @@ const os = require('os');
 // Session storage directory
 const SESSION_DIR = path.join(os.homedir(), '.playwright-sessions');
 
+/**
+ * Generate a WebP copy of an image using cwebp (if available).
+ * The Screenshot component serves WebP via <picture> for better performance.
+ */
+function generateWebP(imagePath) {
+  // Skip non-image or GIF files
+  if (!/\.(png|jpe?g)$/i.test(imagePath)) return;
+
+  const webpPath = imagePath.replace(/\.(png|jpe?g)$/i, '.webp');
+  try {
+    require('child_process').execSync(
+      `cwebp -q 80 "${imagePath}" -o "${webpPath}"`,
+      { stdio: 'pipe' }
+    );
+    const origSize = Math.round(fs.statSync(imagePath).size / 1024);
+    const webpSize = Math.round(fs.statSync(webpPath).size / 1024);
+    console.log(`WebP copy saved: ${webpPath} (${origSize} KB → ${webpSize} KB)`);
+  } catch {
+    console.log('Note: cwebp not found, skipping WebP generation. Install with: brew install webp');
+  }
+}
+
 // Parse command line arguments
 function parseArgs(args) {
   const options = {
@@ -230,6 +252,7 @@ async function captureScreenshot(options) {
     }
 
     console.log(`Screenshot saved: ${options.output}`);
+    generateWebP(options.output);
   } finally {
     await browser.close();
   }

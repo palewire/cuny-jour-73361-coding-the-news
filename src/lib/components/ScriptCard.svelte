@@ -88,7 +88,7 @@
   }
 
   .script-card-disabled {
-    opacity: 0.55;
+    opacity: 0.65;
     cursor: not-allowed;
     background: var(--color-light-gray);
     border-color: var(--color-medium-gray);
