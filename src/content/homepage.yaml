@@ -128,6 +128,10 @@ guestSpeakers:
       org: 'Washington Post'
       image: 'joe-fox.jpg'
       linkedin: 'https://www.linkedin.com/in/joemfox/'
+    - name: 'Rich Harris'
+      org: 'Vercel'
+      image: 'rich-harris.jpg'
+      linkedin: 'https://rich-harris.dev'
     - name: Sam Jacoby
       org: 'New York Times'
       image: 'sam-jacoby.jpg'
