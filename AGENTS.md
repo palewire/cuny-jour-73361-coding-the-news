@@ -231,6 +231,7 @@ Note: It is OK for scripts that are locked/unpublished to reference screenshots 
 
 - Run `npm run lint` for typechecking + ESLint.
 - Run `npm test` to execute Playwright end-to-end tests in `tests/`.
+- Run `npm run build && npm run lighthouse` for Lighthouse CI audits (accessibility, best practices, SEO, performance). Configuration is in `lighthouserc.cjs`. Audits the homepage and one script page.
 
 ## Agent Skills
 

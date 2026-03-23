@@ -49,6 +49,19 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
+      - name: Run Lighthouse CI
+        run: npm run lighthouse
+        env:
+          CI: true
+
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v6
+        if: ${{ !cancelled() }}
+        with:
+          name: lighthouse-report
+          path: lighthouse-report/
+          retention-days: 7
+
       - name: Upload release candidate
         uses: actions/upload-artifact@v6
         with:
