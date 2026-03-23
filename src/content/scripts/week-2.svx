@@ -31,13 +31,15 @@ Many newsroom frameworks are published as open source software, including templa
 
 Examples include:
 
-- Reuters' [graphics-kit](https://github.com/reuters-graphics/bluprint_graphics-kit)
-- The Los Angeles Times' [baker](https://github.com/datadesk/baker-example-page-template)
-- The Pudding's [svelte-starter](https://github.com/the-pudding/svelte-starter)
-- The City's [fullpage-react-template](https://github.com/thecityny/fullpage-react-template)
-- The Texas Tribune's [data-visuals-create](https://github.com/texastribune/data-visuals-create)
-- The Seattle Times' [newsapp-template](https://github.com/seattletimes/newsapp-template/)
-- NPR's [dailygraphics](https://github.com/nprapps/dailygraphics)
+| Newsroom | Framework |
+|---|---|
+| Reuters | [graphics-kit](https://github.com/reuters-graphics/bluprint_graphics-kit) |
+| Los Angeles Times | [baker](https://github.com/datadesk/baker-example-page-template) |
+| The Pudding | [svelte-starter](https://github.com/the-pudding/svelte-starter) |
+| The City | [fullpage-react-template](https://github.com/thecityny/fullpage-react-template) |
+| Texas Tribune | [data-visuals-create](https://github.com/texastribune/data-visuals-create) |
+| Seattle Times | [newsapp-template](https://github.com/seattletimes/newsapp-template/) |
+| NPR | [dailygraphics](https://github.com/nprapps/dailygraphics) |
 
 While they were developed separately, they all have two things in common.
 

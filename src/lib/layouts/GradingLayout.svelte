@@ -55,26 +55,6 @@
     margin-bottom: var(--spacing-xs);
   }
 
-  :global(.grading-body table) {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: var(--spacing-md);
-    font-size: 0.9375rem;
-  }
-
-  :global(.grading-body th),
-  :global(.grading-body td) {
-    text-align: left;
-    padding: var(--spacing-xs) var(--spacing-sm) var(--spacing-xs) 0;
-    border-bottom: 1px solid var(--color-border);
-    vertical-align: top;
-  }
-
-  :global(.grading-body th) {
-    font-weight: 600;
-    color: var(--color-dark);
-  }
-
   :global(.grading-body td:first-child) {
     white-space: nowrap;
     width: 5rem;
