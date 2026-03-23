@@ -10,6 +10,7 @@ All editorial content lives in `src/content/`:
 
 - **homepage.yaml** - Homepage data (course metadata, modules, evaluation criteria, guest speakers, instructor info)
 - **scripts/\*.svx** - Weekly script pages in MDsveX format (Markdown + Svelte)
+- **grading/\*.svx** - Grading rubric pages in MDsveX format (one per module)
 
 Script files use frontmatter for metadata:
 
@@ -25,16 +26,18 @@ locked: false
 
 Scripts are served via dynamic routes at `/scripts/week-1`, `/scripts/week-2`, etc. The `[slug]` route in `src/routes/scripts/[slug]/` loads content from `src/content/scripts/` and MDsveX automatically applies `ScriptLayout.svelte`.
 
+Grading rubrics are served via dynamic routes at `/grading/module-1`, `/grading/module-2`, etc. The `[slug]` route in `src/routes/grading/[slug]/` loads content from `src/content/grading/` and MDsveX applies `GradingLayout.svelte`.
+
 ## Writing Style for Scripts
 
 When referring to UI elements (buttons, menu items, dropdown options, tabs, etc.) in the `.svx` script files:
 
 - Use **quotes** around the element name, not bold
--  `Click the "Clone repository" button`
--  `Select "Create a new repository" from the dropdown`
--  `Go to the "Settings" tab`
-- L `Click the **Clone repository** button`
-- L `Select **Create a new repository** from the dropdown`
+- Good: `Click the "Clone repository" button`
+- Good: `Select "Create a new repository" from the dropdown`
+- Good: `Go to the "Settings" tab`
+- Avoid: `Click the **Clone repository** button`
+- Avoid: `Select **Create a new repository** from the dropdown`
 
 ## Development Workflow
 
@@ -64,6 +67,13 @@ This project uses **Svelte 5** syntax. Follow these patterns:
   </div>
   ```
 
+## MDsveX Features
+
+- Code blocks are syntax-highlighted using **Shiki** via the mdsvex highlighter in `svelte.config.js`.
+- Highlighted-line metadata is supported (e.g. `{1,3,5-7}` or `{emphasize-lines="..."}`).
+- Every rendered code block is wrapped in a `.code-block` container and automatically gets a "Copy" button (`.copy-btn`) injected at render time.
+- Heading IDs are automatically added using `rehype-slug`, which powers the scripts Table of Contents.
+
 ## Component Architecture
 
 Components are located in `src/lib/components/`:
@@ -77,6 +87,13 @@ Components are located in `src/lib/components/`:
 - **Instructor.svelte** - Instructor profile card with circular photo, title, bio, and external link
 - **Footer.svelte** - Full CUNY J-School footer with contact info, navigation links, and social media icons
 - **Screenshot.svelte** - Displays screenshots with optional browser chrome styling, used in script pages
+- **PhoneScreenshot.svelte** - Displays screenshots in a phone frame, used when demonstrating mobile UI
+- **ScriptHero.svelte** - Hero/header for script pages (title, summary, date, week)
+- **ScriptNavigation.svelte** - Previous/next navigation between weekly scripts
+- **GradingNavigation.svelte** - Previous/next navigation between module rubrics
+- **TableOfContents.svelte** - Auto-generated in-page Table of Contents for scripts (based on `h2` headings)
+- **Breadcrumbs.svelte** - Breadcrumb navigation (used on scripts and grading pages)
+- **Meta.svelte** - SEO + social metadata (Open Graph + Twitter cards)
 
 ## Dependencies
 
@@ -118,6 +135,13 @@ Components use common section patterns:
 ## Social Sharing
 
 Open Graph and Twitter Card meta tags are configured in `+page.svelte` using the `social-share.jpg` image from the static folder. The image URL uses the base path for proper deployment.
+
+## Accessibility & Print
+
+- A "Skip to main content" link is included site-wide via the root layout.
+- Focus styles are implemented using `:focus-visible` for keyboard navigation.
+- Print styles live in `src/app.css` and are designed to hide navigation chrome (breadcrumbs, TOC, prev/next, footer) and make code blocks readable.
+- Screenshot components include print-specific overrides to reduce ink usage (hide decorative chrome/frames) and avoid splitting figures across pages.
 
 ## Static Assets
 
@@ -181,6 +205,11 @@ static/screenshots/
 ```
 
 Note: It is OK for scripts that are locked/unpublished to reference screenshots that don't exist yet. Those missing assets may show up as 404s during local preview or Playwright web server logging, and should not be treated as a required fix unless the script is being published.
+
+## Testing
+
+- Run `npm run lint` for typechecking + ESLint.
+- Run `npm test` to execute Playwright end-to-end tests in `tests/`.
 
 ## Agent Skills
 
