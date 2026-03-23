@@ -5,16 +5,19 @@
 
   onMount(() => {
     // Extract all h2 elements from the script body
-    const h2Elements = document.querySelectorAll('.script-body h2');
-    headings = Array.from(h2Elements).map((h) => ({
-      id: h.id,
-      text: h.textContent,
-    }));
+    const h2Elements =
+      document.querySelectorAll<HTMLHeadingElement>('.script-body h2');
+    headings = Array.from(h2Elements)
+      .filter((h) => Boolean(h.id))
+      .map((h) => ({
+        id: h.id,
+        text: h.textContent,
+      }));
   });
 </script>
 
 {#if headings.length > 0}
-  <nav class="table-of-contents">
+  <nav class="table-of-contents" aria-label="Table of contents">
     <h3>Table of Contents</h3>
     <ul>
       {#each headings as heading (heading.id)}
@@ -66,6 +69,10 @@
   }
 
   .table-of-contents a:hover {
+    color: var(--color-primary-orange);
+  }
+
+  .table-of-contents a:focus-visible {
     color: var(--color-primary-orange);
   }
 </style>

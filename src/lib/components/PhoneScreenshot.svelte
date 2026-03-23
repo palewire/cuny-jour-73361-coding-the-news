@@ -20,7 +20,7 @@
       <div class="phone-camera"></div>
     </div>
     <div class="phone-screen">
-      <img src={imageSrc} {alt} loading="lazy" />
+      <img src={imageSrc} {alt} loading="lazy" decoding="async" />
     </div>
     <div class="phone-home-bar">
       <div class="home-indicator"></div>
@@ -82,5 +82,30 @@
     height: 4px;
     background: #555;
     border-radius: 2px;
+  }
+
+  @media print {
+    .phone-screenshot {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .phone-frame {
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+      border-radius: 0;
+      overflow: visible;
+    }
+
+    .phone-notch,
+    .phone-home-bar {
+      display: none;
+    }
+
+    .phone-screen {
+      border-radius: 0;
+      border: 1px solid #ccc;
+    }
   }
 </style>

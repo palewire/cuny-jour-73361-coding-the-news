@@ -39,8 +39,10 @@
       const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
       navigator.clipboard.writeText(pre.textContent ?? '').then(() => {
         btn.innerHTML = `${checkIcon}Copied!`;
+        btn.setAttribute('aria-label', 'Copied');
         setTimeout(() => {
           btn.innerHTML = `${copyIcon}Copy`;
+          btn.setAttribute('aria-label', 'Copy code');
         }, 2000);
       });
     });
@@ -186,7 +188,16 @@
     gap: 0.3rem;
   }
 
+  :global(.copy-btn:focus-visible) {
+    outline: 2px solid var(--color-primary-orange);
+    outline-offset: 2px;
+  }
+
   :global(.code-block:hover .copy-btn) {
+    opacity: 1;
+  }
+
+  :global(.code-block:focus-within .copy-btn) {
     opacity: 1;
   }
 

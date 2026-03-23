@@ -9,11 +9,11 @@
   }>();
 </script>
 
-<nav class="script-navigation">
+<nav class="script-navigation" aria-label="Script navigation">
   <div class="nav-link previous">
     {#if previousScript}
       <a href="{base}/scripts/{previousScript.slug}">
-        <ChevronLeft size={20} />
+        <ChevronLeft size={20} aria-hidden="true" focusable="false" />
         <span class="nav-content">
           <span class="nav-label">Previous</span>
           <span class="nav-title"
@@ -33,7 +33,7 @@
             >Week {nextScript.week}: {nextScript.title}</span
           >
         </span>
-        <ChevronRight size={20} />
+        <ChevronRight size={20} aria-hidden="true" focusable="false" />
       </a>
     {/if}
   </div>
@@ -81,7 +81,16 @@
     color: white;
   }
 
+  .nav-link a:focus-visible {
+    background: var(--color-primary-orange);
+    color: white;
+  }
+
   .nav-link a:hover :global(svg) {
+    color: white;
+  }
+
+  .nav-link a:focus-visible :global(svg) {
     color: white;
   }
 

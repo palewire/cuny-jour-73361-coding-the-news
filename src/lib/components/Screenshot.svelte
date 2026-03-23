@@ -65,12 +65,12 @@
             class="screenshot-link"
             href={chromeUrl}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
-            <img src={imageSrc} {alt} loading="lazy" />
+            <img src={imageSrc} {alt} loading="lazy" decoding="async" />
           </a>
         {:else}
-          <img src={imageSrc} {alt} loading="lazy" />
+          <img src={imageSrc} {alt} loading="lazy" decoding="async" />
         {/if}
       </div>
     </div>
@@ -81,12 +81,12 @@
           class="screenshot-link"
           href={chromeUrl}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
-          <img src={imageSrc} {alt} loading="lazy" />
+          <img src={imageSrc} {alt} loading="lazy" decoding="async" />
         </a>
       {:else}
-        <img src={imageSrc} {alt} loading="lazy" />
+        <img src={imageSrc} {alt} loading="lazy" decoding="async" />
       {/if}
     </div>
   {/if}
@@ -238,6 +238,29 @@
     .url-bar-inner {
       font-size: 0.7rem;
       padding: 3px 8px;
+    }
+  }
+
+  @media print {
+    .screenshot {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .browser-chrome {
+      box-shadow: none;
+      border-radius: 0;
+      border: 1px solid #ccc;
+    }
+
+    .chrome-header,
+    .chrome-url-bar {
+      display: none;
+    }
+
+    .screenshot-simple {
+      box-shadow: none;
+      border-radius: 0;
     }
   }
 </style>

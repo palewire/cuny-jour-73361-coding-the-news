@@ -31,7 +31,9 @@ function parseHighlightLines(meta) {
   for (const part of parts) {
     const trimmed = part.trim();
     if (trimmed.includes('-')) {
-      const [start, end] = trimmed.split('-').map((n) => parseInt(n.trim(), 10));
+      const [start, end] = trimmed
+        .split('-')
+        .map((n) => parseInt(n.trim(), 10));
       for (let i = start; i <= end; i++) {
         lines.add(i);
       }
@@ -96,8 +98,8 @@ function shikiHighlighter(code, lang = 'text', meta = '') {
     ],
   });
 
-  const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
-  const wrapped = `<div class="code-block"><button class="copy-btn" aria-label="Copy code">${copyIcon}Copy</button>${html}</div>`;
+  const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+  const wrapped = `<div class="code-block"><button class="copy-btn" type="button" aria-label="Copy code">${copyIcon}Copy</button>${html}</div>`;
   return `{@html \`${escapeSvelte(wrapped)}\`}`;
 }
 

@@ -7,12 +7,19 @@
 
 <nav class="breadcrumbs container" aria-label="Breadcrumb">
   <a href={base}>Home</a>
-  {#each items as item (item.label)}
+  {#each items as item, index (item.label)}
     <span aria-hidden="true">/</span>
     {#if item.href}
-      <a href={item.href}>{item.label}</a>
+      <a
+        href={item.href}
+        aria-current={index === items.length - 1 ? 'page' : undefined}
+      >
+        {item.label}
+      </a>
     {:else}
-      <span>{item.label}</span>
+      <span aria-current={index === items.length - 1 ? 'page' : undefined}>
+        {item.label}
+      </span>
     {/if}
   {/each}
 </nav>

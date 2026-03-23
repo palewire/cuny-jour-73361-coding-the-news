@@ -1,4 +1,4 @@
-This is a static website that hosts a single page application using Svelte and SvelteKit. 
+This is a static website that hosts a single page application using Svelte and SvelteKit.
 
 It is designed to publish the syllabus for JOUR 73361: "Coding the News" for the Craig Newmark Graduate School of Journalism at the City University of New York.
 
@@ -9,14 +9,15 @@ The site is deployed to `https://palewi.re/docs/coding-the-news/`.
 All editorial content lives in `src/content/`:
 
 - **homepage.yaml** - Homepage data (course metadata, modules, evaluation criteria, guest speakers, instructor info)
-- **scripts/*.svx** - Weekly script pages in MDsveX format (Markdown + Svelte)
+- **scripts/\*.svx** - Weekly script pages in MDsveX format (Markdown + Svelte)
 
 Script files use frontmatter for metadata:
+
 ```yaml
 ---
-title: "Week 1: Hello, World"
-summary: "Introduction to the course and tools"
-date: "2026-01-27"
+title: 'Week 1: Hello, World'
+summary: 'Introduction to the course and tools'
+date: '2026-01-27'
 week: 1
 locked: false
 ---
@@ -27,6 +28,7 @@ Scripts are served via dynamic routes at `/scripts/week-1`, `/scripts/week-2`, e
 ## Writing Style for Scripts
 
 When referring to UI elements (buttons, menu items, dropdown options, tabs, etc.) in the `.svx` script files:
+
 - Use **quotes** around the element name, not bold
 -  `Click the "Clone repository" button`
 -  `Select "Create a new repository" from the dropdown`
@@ -43,6 +45,7 @@ When referring to UI elements (buttons, menu items, dropdown options, tabs, etc.
 This project uses **Svelte 5** syntax. Follow these patterns:
 
 - Use `$props()` for component props:
+
   ```svelte
   <script>
     let { prop1, prop2 = defaultValue } = $props();
@@ -50,11 +53,12 @@ This project uses **Svelte 5** syntax. Follow these patterns:
   ```
 
 - Use `{@render children()}` for slot content (not the deprecated `<slot>`):
+
   ```svelte
   <script>
     let { children } = $props();
   </script>
-  
+
   <div>
     {@render children()}
   </div>
@@ -83,6 +87,7 @@ Components are located in `src/lib/components/`:
 Follow CUNY Craig Newmark Graduate School of Journalism design patterns:
 
 ### Colors
+
 - **Primary orange:** `#f47920`
 - **Dark:** `#1a1a1a`
 - **Dark gray:** `#333333`
@@ -90,18 +95,22 @@ Follow CUNY Craig Newmark Graduate School of Journalism design patterns:
 - **White:** `#ffffff`
 
 ### Typography
+
 - **Trade Gothic LT** - Custom font family loaded from `/static/fonts/`
   - `TradeGothicLT` (regular)
   - `TradeGothicLT-Bold` (bold)
   - `TradeGothicLT-BoldCondTwenty` (headlines)
 
 ### Section Styling
+
 Components use common section patterns:
+
 - `background` prop accepts `'white'` or `'light-gray'` for alternating sections
 - Section headers have orange left border (`border-left: 4px solid var(--color-primary-orange)`)
 - Container max-width: `1200px`
 
 ### Responsive Breakpoints
+
 - Desktop: 960px+
 - Tablet: 768px - 959px
 - Mobile: < 768px
@@ -113,6 +122,7 @@ Open Graph and Twitter Card meta tags are configured in `+page.svelte` using the
 ## Static Assets
 
 Located in `/static/`:
+
 - **Logos:** CUNY J-School SVG logos
 - **Photos:** Instructor and guest speaker headshots (JPG)
 - **Fonts:** Trade Gothic LT font files (EOT, WOFF, WOFF2, TTF)
@@ -129,16 +139,16 @@ The `Screenshot.svelte` component displays images with optional browser chrome s
 </script>
 
 <!-- With browser chrome (default) -->
-<Screenshot 
-  src="/screenshots/week-1/vscode-welcome.png" 
+<Screenshot
+  src="/screenshots/week-1/vscode-welcome.png"
   alt="VS Code welcome screen"
   chromeTitle="Visual Studio Code"
   chromeUrl="https://code.visualstudio.com"
 />
 
 <!-- Without browser chrome -->
-<Screenshot 
-  src="/screenshots/week-1/terminal-output.png" 
+<Screenshot
+  src="/screenshots/week-1/terminal-output.png"
   alt="Terminal showing git status"
   showChrome={false}
 />
@@ -146,19 +156,20 @@ The `Screenshot.svelte` component displays images with optional browser chrome s
 
 ### Screenshot Component Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `src` | string | required | Path to image (relative to static/) or absolute URL |
-| `alt` | string | required | Alt text for accessibility |
-| `showChrome` | boolean | `true` | Show browser window chrome |
-| `chromeTitle` | string | `''` | Title in browser title bar |
-| `chromeUrl` | string | `''` | URL displayed in address bar |
-| `width` | string | `'100%'` | CSS width of the figure |
-| `maxWidth` | string | `'720px'` | CSS max-width of the figure |
+| Prop          | Type    | Default   | Description                                         |
+| ------------- | ------- | --------- | --------------------------------------------------- |
+| `src`         | string  | required  | Path to image (relative to static/) or absolute URL |
+| `alt`         | string  | required  | Alt text for accessibility                          |
+| `showChrome`  | boolean | `true`    | Show browser window chrome                          |
+| `chromeTitle` | string  | `''`      | Title in browser title bar                          |
+| `chromeUrl`   | string  | `''`      | URL displayed in address bar                        |
+| `width`       | string  | `'100%'`  | CSS width of the figure                             |
+| `maxWidth`    | string  | `'720px'` | CSS max-width of the figure                         |
 
 ### Screenshot Organization
 
 Store screenshots in `static/screenshots/` organized by week:
+
 ```
 static/screenshots/
    week-1/
@@ -169,11 +180,14 @@ static/screenshots/
        ...
 ```
 
+Note: It is OK for scripts that are locked/unpublished to reference screenshots that don't exist yet. Those missing assets may show up as 404s during local preview or Playwright web server logging, and should not be treated as a required fix unless the script is being published.
+
 ## Agent Skills
 
 Agent Skills are stored in `.github/skills/` following the [VS Code Agent Skills standard](https://code.visualstudio.com/docs/copilot/customization/agent-skills). Each skill has a `SKILL.md` file with instructions that Copilot loads on-demand.
 
 Available skills:
+
 - **browser-screenshots** - Captures browser screenshots using Playwright for embedding in tutorials
 - **vscode-screenshots** - Captures VSCode window screenshots using a semi-automated workflow with countdown timer
 - **page-scroll-video** - Records scrolling videos of web pages with browser chrome for social media promotion
