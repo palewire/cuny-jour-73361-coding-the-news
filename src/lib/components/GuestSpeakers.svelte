@@ -47,7 +47,7 @@
               link={speaker.linkedin}
               size="var(--speaker-avatar-size)"
               background="var(--color-light-gray)"
-              textColor="var(--color-primary-orange)"
+              textColor="var(--color-orange-text)"
               fontSize="1.5rem"
               borderColor="var(--color-primary-orange)"
             />
@@ -100,7 +100,7 @@
   }
 
   .speaker-name a:hover {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
     text-decoration: underline;
   }
 

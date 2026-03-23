@@ -82,6 +82,8 @@
   /* Colors - CUNY J-School palette */
   --color-black: #000000;
   --color-primary-orange: #f47920;
+  --color-orange-text: #b05400; /* WCAG AA accessible orange for text on light backgrounds */
+  --color-orange-on-dark: #f88025; /* WCAG AA accessible orange for text on dark backgrounds */
   --color-dark: #1a1a1a;
   --color-dark-gray: #333333;
   --color-gray: #373737;
@@ -190,7 +192,7 @@ p {
 }
 
 a {
-  color: var(--color-primary-orange);
+  color: var(--color-orange-text);
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -288,7 +290,7 @@ img {
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-primary-orange);
+  color: var(--color-orange-text);
   margin-bottom: var(--spacing-xs);
 }
 

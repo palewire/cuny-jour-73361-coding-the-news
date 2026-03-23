@@ -81,12 +81,12 @@
   }
 
   .nav-link a:hover {
-    background: var(--color-primary-orange);
+    background: var(--color-orange-text);
     color: white;
   }
 
   .nav-link a:focus-visible {
-    background: var(--color-primary-orange);
+    background: var(--color-orange-text);
     color: white;
   }
 
@@ -100,7 +100,7 @@
 
   .nav-link :global(svg) {
     flex-shrink: 0;
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
     transition: color 0.2s ease;
   }
 

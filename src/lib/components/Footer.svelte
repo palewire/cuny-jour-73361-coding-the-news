@@ -178,7 +178,7 @@
 
   a:hover,
   a:focus {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-on-dark);
     text-decoration: none;
   }
 
@@ -292,7 +292,7 @@
 
   .footer-nav a:hover,
   .footer-nav a:focus {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-on-dark);
   }
 
   /* Bottom Section */
@@ -330,7 +330,7 @@
   }
 
   .social a:hover {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-on-dark);
   }
 
   /* Desktop Responsive - 960px+ */
