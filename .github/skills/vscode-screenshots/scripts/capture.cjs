@@ -25,6 +25,24 @@ const fs = require('fs');
 const readline = require('readline');
 const os = require('os');
 
+/**
+ * Generate a WebP copy of an image using cwebp (if available).
+ * The Screenshot component serves WebP via <picture> for better performance.
+ */
+function generateWebP(imagePath) {
+  if (!/\.(png|jpe?g)$/i.test(imagePath)) return;
+
+  const webpPath = imagePath.replace(/\.(png|jpe?g)$/i, '.webp');
+  try {
+    execSync(`cwebp -q 80 "${imagePath}" -o "${webpPath}"`, { stdio: 'pipe' });
+    const origSize = Math.round(fs.statSync(imagePath).size / 1024);
+    const webpSize = Math.round(fs.statSync(webpPath).size / 1024);
+    console.log(`WebP copy saved: ${webpPath} (${origSize} KB → ${webpSize} KB)`);
+  } catch {
+    console.log('Note: cwebp not found, skipping WebP generation. Install with: brew install webp');
+  }
+}
+
 // ANSI color codes for terminal output
 const colors = {
   reset: '\x1b[0m',
@@ -511,6 +529,7 @@ ${colors.green}✓ Screenshot saved!${colors.reset}
   Path: ${options.output}
   Size: ${sizeKB} KB
 `);
+    generateWebP(options.output);
   } else {
     console.error(`${colors.red}✗ Screenshot capture failed${colors.reset}`);
     process.exit(1);

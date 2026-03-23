@@ -92,6 +92,8 @@ node .github/skills/browser-screenshots/scripts/capture.cjs \
 
 Save to `/static/screenshots/week-{week}/` with descriptive kebab-case filenames.
 
+A WebP copy is automatically generated alongside each PNG/JPEG screenshot (requires `cwebp` — install with `brew install webp`). The Screenshot and PhoneScreenshot components serve WebP via `<picture>` elements for better performance. You do not need to reference the `.webp` files manually.
+
 **Naming convention:** Use kebab-case:
 - ✅ `github-new-repo.png`
 - ✅ `homepage-hero-section.png`
