@@ -50,7 +50,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--color-primary-orange);
+    color: var(--color-orange-on-dark);
     margin-bottom: var(--spacing-xs);
   }
 
@@ -68,7 +68,7 @@
 
   .course-title-link:hover,
   .course-title-link:focus {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-on-dark);
   }
 
   .course-subtitle {
@@ -104,7 +104,7 @@
   }
 
   .course-meta :global(a:hover) {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-on-dark);
   }
 
   /* Responsive */

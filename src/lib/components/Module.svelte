@@ -75,7 +75,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
     margin-bottom: var(--spacing-xs);
   }
 
@@ -102,7 +102,7 @@
   }
 
   .grading-link {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
     white-space: nowrap;
   }
 

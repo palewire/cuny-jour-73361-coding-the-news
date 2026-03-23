@@ -54,7 +54,7 @@
   }
 
   .icon-wrapper {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
     display: flex;
     align-items: center;
   }

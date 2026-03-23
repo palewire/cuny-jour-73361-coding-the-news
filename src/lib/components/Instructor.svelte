@@ -42,7 +42,7 @@
           {link}
           size="var(--instructor-avatar-size)"
           background="var(--color-gray)"
-          textColor="var(--color-primary-orange)"
+          textColor="var(--color-orange-on-dark)"
           fontSize="2rem"
           borderColor="var(--color-primary-orange)"
         />
@@ -91,13 +91,13 @@
   }
 
   .instructor-name a:hover {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
     text-decoration: underline;
   }
 
   .instructor-title {
     font-size: 1rem;
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
     font-weight: 600;
     margin-bottom: var(--spacing-xs);
   }

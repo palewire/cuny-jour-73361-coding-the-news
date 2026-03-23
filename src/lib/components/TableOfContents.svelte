@@ -68,10 +68,10 @@
   }
 
   .table-of-contents a:hover {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
   }
 
   .table-of-contents a:focus-visible {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
   }
 </style>

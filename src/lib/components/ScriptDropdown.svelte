@@ -220,14 +220,14 @@
   a.dropdown-item:hover,
   a.dropdown-item:focus-visible {
     background-color: var(--color-light-gray);
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
     text-decoration: none;
   }
 
   .dropdown-item.active {
     border-left-color: var(--color-primary-orange);
     font-family: var(--font-family-bold);
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
   }
 
   .dropdown-item.locked {

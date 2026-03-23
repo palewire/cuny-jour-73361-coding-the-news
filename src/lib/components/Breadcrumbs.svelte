@@ -37,7 +37,7 @@
   }
 
   .breadcrumbs a {
-    color: var(--color-primary-orange);
+    color: var(--color-orange-text);
     text-decoration: none;
   }
 

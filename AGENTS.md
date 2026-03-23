@@ -114,8 +114,11 @@ Follow CUNY Craig Newmark Graduate School of Journalism design patterns:
 All colors are defined as CSS custom properties in `:root`:
 - `--color-black` (#000000), `--color-dark` (#1a1a1a), `--color-dark-gray` (#333333), `--color-gray` (#373737)
 - `--color-medium-gray` (#666666), `--color-border` (#e0e0e0), `--color-light-gray` (#f5f5f5), `--color-white` (#ffffff)
-- `--color-primary-orange` (#f47920)
+- `--color-primary-orange` (#f47920) — decorative uses only (borders, backgrounds, focus outlines)
+- `--color-orange-text` (#b05400) — WCAG AA accessible orange for text on white/light-gray backgrounds
+- `--color-orange-on-dark` (#f88025) — WCAG AA accessible orange for text on dark backgrounds (#373737, #333333)
 - Prefer tokens over raw hex values. The Screenshot component is an exception — its macOS traffic light colors are decorative and not part of the design system.
+- Use `--color-orange-text` for any orange text on light backgrounds and `--color-orange-on-dark` for orange text on dark backgrounds. Reserve `--color-primary-orange` for non-text uses (borders, outlines, underlines, backgrounds).
 
 ### Typography
 
