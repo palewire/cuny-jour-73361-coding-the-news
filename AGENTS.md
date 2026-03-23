@@ -133,6 +133,7 @@ All colors are defined as CSS custom properties in `:root`:
   - `--font-size-2xl` (2rem) — h2
   - `--font-size-3xl` (2.5rem) — h1
   - `--font-size-4xl` (4rem) — hero display
+- **Responsive font sizes:** The `xl` through `4xl` tokens are redefined at the 768px breakpoint (e.g., `--font-size-3xl` becomes 2rem on mobile). Components using these tokens get mobile sizing automatically — no separate overrides needed.
 - **Font weights:** `--font-weight-normal` (400), `--font-weight-semibold` (600), `--font-weight-bold` (700)
 - **Line heights:** `--line-height-tight` (1.2, headings), `--line-height-base` (1.6, body)
 - **Border radii:** `--radius-sm` (4px), `--radius-md` (8px)
