@@ -31,7 +31,7 @@
     "mdsvex": "^0.11.0",
     "prettier-plugin-svelte": "^3.3.2",
     "sass-embedded": "^1.97.3",
-    "svelte": "^5.0.0",
+    "svelte": "^5.54.1",
     "svelte-check": "^4.0.0",
     "typescript-eslint": "^8.57.1",
     "vite": "^6.0.0"
