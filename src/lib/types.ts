@@ -14,3 +14,10 @@ export interface BreadcrumbItem {
   label: string;
   href?: string;
 }
+
+export interface ScriptDropdownItem {
+  slug: string;
+  title: string;
+  week: number;
+  locked: boolean;
+}

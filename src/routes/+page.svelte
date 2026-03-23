@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Component } from 'svelte';
   import Masthead from '$lib/components/Masthead.svelte';
+  import ScriptDropdown from '$lib/components/ScriptDropdown.svelte';
   import Hero from '$lib/components/Hero.svelte';
   import Module from '$lib/components/Module.svelte';
   import TopicCard from '$lib/components/TopicCard.svelte';
@@ -88,7 +89,9 @@
   ogImage={content.meta.ogImage}
 />
 
-<Masthead />
+<Masthead>
+  <ScriptDropdown />
+</Masthead>
 
 <main id="main-content">
   <Hero />

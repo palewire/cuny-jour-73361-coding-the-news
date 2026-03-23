@@ -363,6 +363,7 @@ tr:last-child td {
   .grading-navigation,
   .table-of-contents,
   .copy-btn,
+  .dropdown-wrapper,
   footer {
     display: none !important;
   }

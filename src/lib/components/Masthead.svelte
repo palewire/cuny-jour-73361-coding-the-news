@@ -1,11 +1,18 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
   import { base } from '$app/paths';
 
   let {
     logoSrc,
     logoAlt = 'Craig Newmark Graduate School of Journalism at CUNY',
-    href = 'https://www.journalism.cuny.edu/',
-  } = $props<{ logoSrc?: string; logoAlt?: string; href?: string }>();
+    href = `${base}/`,
+    children,
+  } = $props<{
+    logoSrc?: string;
+    logoAlt?: string;
+    href?: string;
+    children?: Snippet;
+  }>();
 
   // Default logo path uses base for subdirectory deployment
   const resolvedLogoSrc = $derived(logoSrc || `${base}/cuny-logo.svg`);
@@ -16,6 +23,9 @@
     <a {href} class="logo-link">
       <img src={resolvedLogoSrc} alt={logoAlt} class="logo" />
     </a>
+    {#if children}
+      {@render children()}
+    {/if}
   </div>
 </header>
 
@@ -26,6 +36,14 @@
     position: static;
   }
 
+  @media (max-width: 600px) {
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+  }
+
   .masthead-container {
     max-width: var(--max-width);
     margin: 0 auto;
@@ -34,6 +52,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--spacing-sm);
   }
 
   .logo-link {
