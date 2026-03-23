@@ -25,13 +25,13 @@ Use the Playwright-based recording script located at `.github/skills/page-scroll
 ```bash
 node .github/skills/page-scroll-video/scripts/record.cjs \
   --url http://localhost:5173 \
-  --output static/videos/homepage-scroll.mp4
+  --output media/videos/homepage-scroll.mp4
 ```
 
 This generates both:
 
-- `static/videos/homepage-scroll.mp4` - High quality MP4 video (H.264)
-- `static/videos/homepage-scroll.gif` - Animated GIF for quick sharing
+- `media/videos/homepage-scroll.mp4` - High quality MP4 video (H.264)
+- `media/videos/homepage-scroll.gif` - Animated GIF for quick sharing
 
 ### Options
 
@@ -53,7 +53,7 @@ This generates both:
 ```bash
 node .github/skills/page-scroll-video/scripts/record.cjs \
   --url http://localhost:5173 \
-  --output static/videos/homepage-scroll.mp4
+  --output media/videos/homepage-scroll.mp4
 ```
 
 **Record for 15 seconds:**
@@ -61,7 +61,7 @@ node .github/skills/page-scroll-video/scripts/record.cjs \
 ```bash
 node .github/skills/page-scroll-video/scripts/record.cjs \
   --url http://localhost:5173 \
-  --output static/videos/homepage-scroll.mp4 \
+  --output media/videos/homepage-scroll.mp4 \
   --duration 15
 ```
 
@@ -70,7 +70,7 @@ node .github/skills/page-scroll-video/scripts/record.cjs \
 ```bash
 node .github/skills/page-scroll-video/scripts/record.cjs \
   --url http://localhost:5173 \
-  --output static/videos/homepage-scroll.mp4 \
+  --output media/videos/homepage-scroll.mp4 \
   --speed 500
 ```
 
@@ -79,7 +79,7 @@ node .github/skills/page-scroll-video/scripts/record.cjs \
 ```bash
 node .github/skills/page-scroll-video/scripts/record.cjs \
   --url http://localhost:5173/scripts/week-1 \
-  --output static/videos/week-1-scroll.mp4 \
+  --output media/videos/week-1-scroll.mp4 \
   --title "Week 1: Hello, World"
 ```
 
@@ -88,7 +88,7 @@ node .github/skills/page-scroll-video/scripts/record.cjs \
 ```bash
 node .github/skills/page-scroll-video/scripts/record.cjs \
   --url http://localhost:5173 \
-  --output static/videos/homepage-scroll.mp4 \
+  --output media/videos/homepage-scroll.mp4 \
   --no-gif
 ```
 
@@ -114,7 +114,7 @@ node .github/skills/page-scroll-video/scripts/record.cjs \
 
 ## Saving Videos
 
-Save to `/static/videos/` with descriptive kebab-case filenames.
+Save to `/media/videos/` with descriptive kebab-case filenames. These files are for promotion and social media — they are **not** included in the site build. Only files in `static/` are deployed to the site.
 
 **Naming convention:**
 
@@ -125,7 +125,7 @@ Save to `/static/videos/` with descriptive kebab-case filenames.
 **Directory structure:**
 
 ```
-static/videos/
+media/videos/
   homepage-scroll.mp4
   homepage-scroll.gif
   week-1-scroll.mp4
