@@ -81,12 +81,12 @@
   }
 
   .nav-link a:hover {
-    background: var(--color-primary-orange);
+    background: var(--color-orange-text);
     color: white;
   }
 
   .nav-link a:focus-visible {
-    background: var(--color-primary-orange);
+    background: var(--color-orange-text);
     color: white;
   }
 
