@@ -84,7 +84,7 @@
     border-left: 4px solid var(--color-primary-orange);
     padding: var(--spacing-lg);
     border-radius: 0 8px 8px 0;
-    max-width: 800px;
+    max-width: 650px;
     margin-top: var(--spacing-xl);
   }
 
