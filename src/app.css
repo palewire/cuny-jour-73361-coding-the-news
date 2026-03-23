@@ -83,6 +83,7 @@
 /* CSS Custom Properties */
 :root {
   /* Colors - CUNY J-School palette */
+  --color-black: #000000;
   --color-primary-orange: #f47920;
   --color-dark: #1a1a1a;
   --color-dark-gray: #333333;
@@ -111,6 +112,11 @@
   --font-size-2xl: 2rem; /* 32px - h2 */
   --font-size-3xl: 2.5rem; /* 40px - h1 */
   --font-size-4xl: 4rem; /* 64px - hero display */
+
+  /* Typography - Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
   /* Typography - Line Heights */
   --line-height-tight: 1.2;
@@ -164,7 +170,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-family-bold);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   margin-bottom: var(--spacing-sm);
   scroll-margin-top: calc(var(--masthead-height) + var(--spacing-md));
@@ -282,7 +288,7 @@ img {
 .section-kicker {
   display: block;
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-primary-orange);
@@ -319,7 +325,7 @@ td {
 
 th {
   font-family: var(--font-family-bold);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: var(--color-dark);
 }
 
@@ -327,22 +333,17 @@ tr:last-child td {
   border-bottom: none;
 }
 
-/* Responsive Typography */
+/* Responsive Typography - redefine tokens at mobile breakpoint */
 @media (max-width: 768px) {
+  :root {
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.75rem;
+    --font-size-3xl: 2rem;
+    --font-size-4xl: 3rem;
+  }
+
   html {
     font-size: 14px;
-  }
-
-  h1 {
-    font-size: var(--font-size-2xl);
-  }
-
-  h2 {
-    font-size: 1.75rem;
-  }
-
-  h3 {
-    font-size: var(--font-size-lg);
   }
 }
 
@@ -375,12 +376,12 @@ tr:last-child td {
   body {
     font-size: 12pt;
     line-height: 1.4;
-    color: #000;
-    background: #fff;
+    color: var(--color-black);
+    background: var(--color-white);
   }
 
   a {
-    color: #000;
+    color: var(--color-black);
     text-decoration: underline;
   }
 
@@ -398,7 +399,7 @@ tr:last-child td {
   .masthead {
     background: none;
     height: auto;
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid var(--color-black);
     padding: 0.5rem 0;
   }
 
@@ -409,7 +410,7 @@ tr:last-child td {
 
   .hero {
     background: none;
-    color: #000;
+    color: var(--color-black);
     padding: 1rem 0;
   }
 
@@ -417,12 +418,12 @@ tr:last-child td {
   :global(.hero .course-subtitle),
   :global(.hero .course-meta p),
   :global(.hero .course-meta a) {
-    color: #333;
+    color: var(--color-dark-gray);
   }
 
   :global(.hero .course-title) {
-    color: #000;
-    font-size: 2rem;
+    color: var(--color-black);
+    font-size: var(--font-size-2xl);
   }
 
   .section {
@@ -441,13 +442,13 @@ tr:last-child td {
   }
 
   :global(.shiki) {
-    background: #f5f5f5 !important;
-    color: #000 !important;
-    border: 1px solid #ccc;
+    background: var(--color-light-gray) !important;
+    color: var(--color-black) !important;
+    border: 1px solid var(--color-border);
   }
 
   :global(.shiki span) {
-    color: #000 !important;
+    color: var(--color-black) !important;
   }
 
   .topic-card {
@@ -455,6 +456,6 @@ tr:last-child td {
   }
 
   .bg-light-gray {
-    background-color: #fff;
+    background-color: var(--color-white);
   }
 }

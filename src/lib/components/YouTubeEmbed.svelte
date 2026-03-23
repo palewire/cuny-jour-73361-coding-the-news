@@ -17,7 +17,7 @@
     padding-top: 56.25%;
     border-radius: 6px;
     overflow: hidden;
-    background: #000;
+    background: var(--color-black);
   }
 
   .youtube-embed iframe {

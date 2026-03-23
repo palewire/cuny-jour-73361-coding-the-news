@@ -34,13 +34,13 @@
   }
 
   .phone-frame {
-    background: #1a1a1a;
+    background: var(--color-dark);
     border-radius: 40px;
     padding: 12px;
     box-shadow:
       0 8px 24px -4px rgba(0, 0, 0, 0.2),
       0 4px 8px -2px rgba(0, 0, 0, 0.1),
-      inset 0 0 0 2px #333;
+      inset 0 0 0 2px var(--color-dark-gray);
     overflow: hidden;
   }
 
@@ -48,20 +48,20 @@
     display: flex;
     justify-content: center;
     padding: 8px 0 6px;
-    background: #1a1a1a;
+    background: var(--color-dark);
   }
 
   .phone-camera {
     width: 80px;
     height: 24px;
-    background: #0a0a0a;
+    background: var(--color-black);
     border-radius: 12px;
   }
 
   .phone-screen {
     border-radius: 4px;
     overflow: hidden;
-    background: #fff;
+    background: var(--color-white);
   }
 
   .phone-screen img {
@@ -74,13 +74,13 @@
     display: flex;
     justify-content: center;
     padding: 10px 0 4px;
-    background: #1a1a1a;
+    background: var(--color-dark);
   }
 
   .home-indicator {
     width: 100px;
     height: 4px;
-    background: #555;
+    background: var(--color-medium-gray);
     border-radius: 2px;
   }
 
@@ -105,7 +105,7 @@
 
     .phone-screen {
       border-radius: 0;
-      border: 1px solid #ccc;
+      border: 1px solid var(--color-border);
     }
   }
 </style>

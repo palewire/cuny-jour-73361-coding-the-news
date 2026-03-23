@@ -30,13 +30,13 @@
     font-weight: 700;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    color: #1a1a1a;
+    color: var(--color-dark);
   }
 
   .aside__body {
     display: grid;
     gap: 0.75rem;
-    color: #333333;
+    color: var(--color-dark-gray);
     font-size: 0.95rem;
     line-height: 1.6;
   }

@@ -21,13 +21,13 @@
     margin: 0 0 0.75rem 0;
     font-size: 1.25rem;
     line-height: 1.6;
-    color: #333;
+    color: var(--color-dark-gray);
   }
 
   cite {
     display: block;
     font-style: normal;
     font-weight: bold;
-    color: #666;
+    color: var(--color-medium-gray);
   }
 </style>

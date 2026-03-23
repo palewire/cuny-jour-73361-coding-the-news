@@ -111,11 +111,11 @@ Follow CUNY Craig Newmark Graduate School of Journalism design patterns:
 
 ### Colors
 
-- **Primary orange:** `#f47920`
-- **Dark:** `#1a1a1a`
-- **Dark gray:** `#333333`
-- **Light gray background:** `#f5f5f5`
-- **White:** `#ffffff`
+All colors are defined as CSS custom properties in `:root`:
+- `--color-black` (#000000), `--color-dark` (#1a1a1a), `--color-dark-gray` (#333333), `--color-gray` (#373737)
+- `--color-medium-gray` (#666666), `--color-border` (#e0e0e0), `--color-light-gray` (#f5f5f5), `--color-white` (#ffffff)
+- `--color-primary-orange` (#f47920)
+- Prefer tokens over raw hex values. The Screenshot component is an exception — its macOS traffic light colors are decorative and not part of the design system.
 
 ### Typography
 
@@ -133,6 +133,7 @@ Follow CUNY Craig Newmark Graduate School of Journalism design patterns:
   - `--font-size-2xl` (2rem) — h2
   - `--font-size-3xl` (2.5rem) — h1
   - `--font-size-4xl` (4rem) — hero display
+- **Font weights:** `--font-weight-normal` (400), `--font-weight-semibold` (600), `--font-weight-bold` (700)
 - **Line heights:** `--line-height-tight` (1.2, headings), `--line-height-base` (1.6, body)
 - **Border radii:** `--radius-sm` (4px), `--radius-md` (8px)
 

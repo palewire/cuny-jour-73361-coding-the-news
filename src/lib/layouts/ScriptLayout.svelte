@@ -188,7 +188,7 @@
     right: 0.5rem;
     padding: 0.2rem 0.6rem;
     background: rgba(255, 255, 255, 0.1);
-    color: #ccc;
+    color: var(--color-border);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     font-size: 0.75rem;
@@ -216,6 +216,6 @@
 
   :global(.copy-btn:hover) {
     background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    color: var(--color-white);
   }
 </style>
