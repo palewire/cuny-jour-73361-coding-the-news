@@ -120,9 +120,21 @@ Follow CUNY Craig Newmark Graduate School of Journalism design patterns:
 ### Typography
 
 - **Trade Gothic LT** - Custom font family loaded from `/static/fonts/`
-  - `TradeGothicLT` (regular)
-  - `TradeGothicLT-Bold` (bold)
-  - `TradeGothicLT-BoldCondTwenty` (headlines)
+  - `TradeGothicLT` (regular) — `--font-family`
+  - `TradeGothicLT-Bold` (bold) — `--font-family-bold`
+  - `TradeGothicLT-BoldCondTwenty` (headlines) — `--font-family-headline`
+- **Font size scale** (CSS custom properties defined in `:root`):
+  - `--font-size-xs` (0.75rem) — labels, chrome text
+  - `--font-size-sm` (0.875rem) — kickers, small UI, code
+  - `--font-size-base` (1rem) — body text
+  - `--font-size-md` (1.125rem) — intros, card titles
+  - `--font-size-lg` (1.25rem) — subtitles, summaries
+  - `--font-size-xl` (1.5rem) — h3
+  - `--font-size-2xl` (2rem) — h2
+  - `--font-size-3xl` (2.5rem) — h1
+  - `--font-size-4xl` (4rem) — hero display
+- **Line heights:** `--line-height-tight` (1.2, headings), `--line-height-base` (1.6, body)
+- **Border radii:** `--radius-sm` (4px), `--radius-md` (8px)
 
 ### Section Styling
 

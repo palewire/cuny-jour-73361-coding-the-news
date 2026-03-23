@@ -51,7 +51,7 @@
   background-color: var(--color-primary-orange);
   color: var(--color-white);
   font-family: var(--font-family-bold);
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   text-decoration: none;
 }
 
@@ -92,7 +92,7 @@
   --color-medium-gray: #666666;
   --color-border: #e0e0e0;
 
-  /* Typography */
+  /* Typography - Font Families */
   --font-family:
     'TradeGothicLT', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-family-bold:
@@ -100,6 +100,21 @@
   --font-family-headline:
     'TradeGothicLT-BoldCondTwenty', 'Helvetica Neue', Helvetica, Arial,
     sans-serif;
+
+  /* Typography - Font Sizes */
+  --font-size-xs: 0.75rem; /* 12px - labels, chrome text */
+  --font-size-sm: 0.875rem; /* 14px - kickers, small UI, code */
+  --font-size-base: 1rem; /* 16px - body text */
+  --font-size-md: 1.125rem; /* 18px - intros, card titles */
+  --font-size-lg: 1.25rem; /* 20px - subtitles, summaries */
+  --font-size-xl: 1.5rem; /* 24px - h3 */
+  --font-size-2xl: 2rem; /* 32px - h2 */
+  --font-size-3xl: 2.5rem; /* 40px - h1 */
+  --font-size-4xl: 4rem; /* 64px - hero display */
+
+  /* Typography - Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-base: 1.6;
 
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -109,8 +124,13 @@
   --spacing-xl: 3rem;
   --spacing-xxl: 4rem;
 
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
   /* Layout */
   --max-width: 1200px;
+  --content-width: 720px;
   --masthead-height: 60px;
 }
 
@@ -130,8 +150,8 @@ html {
 
 body {
   font-family: var(--font-family);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
   color: var(--color-dark);
   background-color: var(--color-white);
 }
@@ -145,21 +165,21 @@ h5,
 h6 {
   font-family: var(--font-family-bold);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
   margin-bottom: var(--spacing-sm);
   scroll-margin-top: calc(var(--masthead-height) + var(--spacing-md));
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: var(--font-size-3xl);
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: var(--font-size-2xl);
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: var(--font-size-xl);
 }
 
 p {
@@ -261,7 +281,7 @@ img {
 
 .section-kicker {
   display: block;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -270,15 +290,15 @@ img {
 }
 
 .section-intro {
-  font-size: 1.125rem;
-  line-height: 1.6;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-base);
   color: var(--color-dark-gray);
   margin-bottom: var(--spacing-lg);
   max-width: 800px;
 }
 
 .content-body {
-  max-width: 720px;
+  max-width: var(--content-width);
 }
 
 /* Tables */
@@ -286,7 +306,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: var(--spacing-md);
-  font-size: 0.9375rem;
+  font-size: var(--font-size-base);
 }
 
 th,
@@ -314,7 +334,7 @@ tr:last-child td {
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: var(--font-size-2xl);
   }
 
   h2 {
@@ -322,7 +342,7 @@ tr:last-child td {
   }
 
   h3 {
-    font-size: 1.25rem;
+    font-size: var(--font-size-lg);
   }
 }
 
