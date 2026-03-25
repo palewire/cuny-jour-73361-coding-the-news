@@ -156,7 +156,7 @@ Update your script block to import `Card` and a helper called `base`:
   import { base } from '$app/paths';
   import Card from '$lib/components/Card.svelte';
 
-  let sorted = buildings.sort((a, b) => b.violationCount - a.violationCount);
+  let sorted = [...buildings].sort((a, b) => b.violationCount - a.violationCount);
 </script>
 ```
 
