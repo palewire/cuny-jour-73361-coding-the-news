@@ -484,30 +484,65 @@ In a couple of weeks, we'll learn how to build full interactive maps from scratc
 
 ## Part 7: Editorial polish
 
-The data is loaded, the search works, and the detail pages are in place. But right now the page is just a database. It needs a frame — a headline, some context, and a source credit — to make it a piece of journalism.
+The data is loaded, the search works, and the detail pages are in place. But right now the page is just a database. It needs a frame — a bold editorial header and a source credit at the bottom — to make it a piece of journalism.
 
-Go back to `src/routes/+page.svelte` and update the top of the page with an editorial introduction:
+ProPublica, The Marshall Project, and other leading newsrooms rarely start a database explorer with a plain `<h1>`. They lead with a designed topper: large type, a contextual summary, a byline, and often a looping illustration that sets the tone before the data appears. Our template includes a `HeroTopper` component that brings this pattern within reach.
 
-```svelte
-<h1>Bronx Buildings with Hazardous Housing Violations</h1>
+### Get a Lottie animation
 
-<p class="intro">
-  New York City's Department of Housing Preservation and Development inspects
-  residential buildings and issues violations when it finds conditions that
-  violate the housing maintenance code. Class C violations are the most
-  serious — they describe conditions the city considers immediately
-  hazardous to tenants' health and safety, including lead paint, no heat
-  in winter, and pest infestations.
-</p>
+`HeroTopper` uses [Lottie](https://lottiefiles.com/) — a file format for lightweight vector animations — to display a looping illustration alongside your headline.
 
-<p class="intro">
-  The buildings listed below are in the Bronx, the borough with the highest
-  concentration of housing violations in the city. They are ranked by the
-  number of open Class C violations on record.
-</p>
+Go to [lottiefiles.com](https://lottiefiles.com/) and create a free account. Search for an animation that fits your story. For a housing violations project, something like a building, cityscape, or inspection-related animation works well. When you find one you like, click "Download" and choose "Lottie JSON." Save the file as `animation.json` in your project's `static/` folder.
+
+### Install lottie-web
+
+`HeroTopper` renders the animation using [lottie-web](https://www.npmjs.com/package/lottie-web), the standard library for playing Lottie files in a browser. Install it in your project:
+
+```bash
+npm install lottie-web
 ```
 
-At the bottom of the page, after the `{#each}` loop, add a source credit:
+### Add the hero topper
+
+Open `src/routes/+page.svelte` and add the import:
+
+```svelte {emphasize-lines="2"}
+<script>
+  import HeroTopper from '$lib/components/HeroTopper.svelte';
+  import buildings from '$lib/data/bronx-buildings.json';
+  import { base } from '$app/paths';
+  import SearchInput from '$lib/components/SearchInput.svelte';
+  import Dropdown from '$lib/components/Dropdown.svelte';
+  import Card from '$lib/components/Card.svelte';
+  // ... rest of your script
+</script>
+```
+
+Replace the `<h1>` at the top of the template with the component:
+
+```svelte
+<HeroTopper
+  headline="Bronx Buildings with Hazardous Housing Violations"
+  deck="Using city inspection records to surface the most dangerous housing conditions in New York's most violation-prone borough"
+  byline="Your Name"
+  date="March 2026"
+  lottieSrc="/animation.json"
+/>
+```
+
+The `deck` prop is a one- or two-sentence summary — think of it as the lede you'd write for a story. `byline` and `date` appear in smaller type below the deck. `lottieSrc` is the path to the JSON file you placed in `static/`.
+
+<Screenshot
+  src="/screenshots/week-9/hero-topper.png"
+  alt="The database explorer with a bold full-width hero header. On the left: a large headline in white type on a dark background, a summary paragraph, and a byline. On the right: a looping Lottie animation of a building."
+  chromeTitle="Bronx Buildings with Hazardous Housing Violations"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+### Add a source credit
+
+At the bottom of the page, after the `{#each}` loop, add a footer with your source information:
 
 ```svelte
 <footer class="source">
@@ -523,15 +558,9 @@ At the bottom of the page, after the `{#each}` loop, add a source credit:
 </footer>
 ```
 
-Add styles for the intro and footer:
+Add a style for the footer:
 
 ```css
-.intro {
-  font-size: 1.0625rem;
-  line-height: 1.6;
-  max-width: 640px;
-}
-
 .source {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -543,13 +572,13 @@ Add styles for the intro and footer:
 
 <Screenshot
   src="/screenshots/week-9/final-page.png"
-  alt="The finished database explorer showing a headline, two paragraphs of editorial context, the search and filter controls, the list of building cards, and a source credit at the bottom"
+  alt="The finished database explorer showing the bold hero header at the top, the search and filter controls, the list of building cards, and a source credit at the bottom"
   chromeTitle="Bronx Buildings with Hazardous Housing Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-Save, commit, and push to GitHub. Watch the Actions tab to make sure the deploy succeeds, then check your live site.
+Save, commit, and push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds, then check your live site.
 
 Take a moment to browse through the data. Click into the buildings at the top of the list and read the violation descriptions. What patterns do you notice? What stories does this data tell? That instinct — the impulse to look at the records and ask questions — is what separates a database explorer from just a spreadsheet.
 
@@ -563,7 +592,8 @@ Your project must have:
 
 * A searchable or filterable list page with at least two controls (search input, dropdown, toggle — your choice)
 * Detail pages for individual records or groups of records
-* An editorial frame: a headline, introductory text, and a source credit
+* A `HeroTopper` with a Lottie animation, a headline, a deck, and a byline
+* A source credit at the bottom
 
 Some datasets that could work well:
 
