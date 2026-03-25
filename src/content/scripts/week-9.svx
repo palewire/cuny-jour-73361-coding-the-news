@@ -146,7 +146,7 @@ Remove the `console.log` lines once you've confirmed the data is loading. They w
 
 Now let's display the buildings on the page. We'll use the `{#each}` loop you learned in a previous class to iterate through the array and render a card for each building.
 
-This is where working like a real newsroom developer starts to pay off. Our template already includes a `Card` component — a polished, reusable list item with a title, metadata, and a built-in link. Rather than writing card markup from scratch, we can reach for it directly.
+This is where working like a real newsroom developer starts to pay off. Our template already includes a `Card` component — a styled wrapper that turns any content into a clickable linked card. Rather than writing card markup from scratch, we can reach for it directly.
 
 Update your script block to import `Card` and a helper called `base`:
 
@@ -171,15 +171,14 @@ Now replace everything below your headline with an `{#each}` loop that renders a
 <p>{sorted.length} buildings with open Class C violations</p>
 
 {#each sorted as building}
-  <Card
-    href="{base}/building/{building.id}"
-    title={building.address}
-    meta={[building.zip, `${building.violationCount} violations`]}
-  />
+  <Card href="{base}/building/{building.id}">
+    <h3>{building.address}</h3>
+    <p>{building.zip} · {building.violationCount} violations</p>
+  </Card>
 {/each}
 ```
 
-`Card` accepts three props: `href` sets the link target, `title` is the headline text, and `meta` is an array of strings that appear as smaller detail labels below the title. Save and check your browser — you should see a sorted, linked list of building cards.
+`Card` wraps whatever you put inside it in a styled, clickable link. The `href` prop sets where it links. The content between the opening and closing tags — the address, zip code, and count — is entirely up to you. Save and check your browser — you should see a sorted, linked list of building cards.
 
 <Screenshot
   src="/screenshots/week-9/building-cards.png"
@@ -228,11 +227,10 @@ Now add a `SearchInput` above the `{#each}` loop. Our template's `SearchInput` c
 <p>{filtered.length} buildings</p>
 
 {#each filtered as building}
-  <Card
-    href="{base}/building/{building.id}"
-    title={building.address}
-    meta={[building.zip, `${building.violationCount} violations`]}
-  />
+  <Card href="{base}/building/{building.id}">
+    <h3>{building.address}</h3>
+    <p>{building.zip} · {building.violationCount} violations</p>
+  </Card>
 {/each}
 ```
 
@@ -374,12 +372,12 @@ Now create the page that will display the building's details. Create `src/routes
 
 ```svelte
 <script>
-  import BackLink from '$lib/components/BackLink.svelte';
+  import { base } from '$app/paths';
   let { data } = $props();
   let building = data.building;
 </script>
 
-<BackLink href="/" label="← Back to all buildings" />
+<a href="{base}/">← Back to all buildings</a>
 
 <h1>{building.address}</h1>
 
@@ -449,8 +447,6 @@ Because the `Card` component already renders each entry as a link, the list is w
 
 Click the "Back to all buildings" link at the top to return to the list. Your search and filter state will reset — that's expected for a static site. Each page load starts fresh.
 
-The `BackLink` component we imported already handles the `base` path prefix for GitHub Pages, so no extra wiring is needed on the detail page.
-
 ## Part 6: Adding a locator map
 
 Each building in our dataset has latitude and longitude coordinates. Let's use them to add a small map to the detail page that shows where the building is located.
@@ -461,7 +457,7 @@ Open `src/routes/building/[id]/+page.svelte` and add the import:
 
 ```svelte {emphasize-lines="3"}
 <script>
-  import BackLink from '$lib/components/BackLink.svelte';
+  import { base } from '$app/paths';
   import LocatorMap from '$lib/components/LocatorMap.svelte';
   let { data } = $props();
   let building = data.building;
