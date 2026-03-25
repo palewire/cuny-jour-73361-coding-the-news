@@ -368,11 +368,19 @@ Now create the page that will display the building's details. Create `src/routes
 ```svelte
 <script>
   import { base } from '$app/paths';
+  import buildings from '$lib/data/bronx-lead-paint.json';
   import HeroTopper from '$lib/components/HeroTopper.svelte';
-  import Card from '$lib/components/Card.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
   let { data } = $props();
   let building = data.building;
+
+  let oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  let recentCount = building.violations.filter(v => new Date(v.date) >= oneYearAgo).length;
+
+  let rank = [...buildings]
+    .sort((a, b) => b.violationCount - a.violationCount)
+    .findIndex(b => b.id === building.id) + 1;
 </script>
 
 <a href="{base}/">← Back to all buildings</a>
@@ -384,21 +392,46 @@ Now create the page that will display the building's details. Create `src/routes
   date={building.latestDate}
 />
 
+<div class="stats">
+  <div class="stat-box">
+    <span class="stat-number">{building.violationCount}</span>
+    <span class="stat-label">Total open violations</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-number">{recentCount}</span>
+    <span class="stat-label">Issued in the last year</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-number">#{rank}</span>
+    <span class="stat-label">Rank in the Bronx</span>
+  </div>
+</div>
+
 <h2>Violations</h2>
 
-{#each building.violations as violation}
-  <Card href="https://hpdonline.nyc.gov/hpdonline/provide-information">
-    <p class="description">{violation.description}</p>
-    <p class="date">{violation.date}</p>
-  </Card>
-{/each}
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Date issued</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each building.violations as violation}
+      <tr>
+        <td>{violation.description}</td>
+        <td>{violation.date}</td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
 
 <MethodologyBox>
   <p>
     Violation records come from the
     <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
     via NYC Open Data. Only open lead paint violations are shown.
-    Click any violation card to look up the building on
+    For more information about this building, visit
     <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
   </p>
 </MethodologyBox>
@@ -406,22 +439,60 @@ Now create the page that will display the building's details. Create `src/routes
 
 The key line is the first one in the script block: `let { data } = $props()`. When a page has a `+page.js` load function, SvelteKit passes whatever it returns as a `data` prop. So `data.building` is the building object we found in the load function.
 
-Notice that we're reusing the same `HeroTopper`, `Card`, and `MethodologyBox` components from the list page. This is the payoff of a shared component shelf: the same building block that creates a bold list-page header also makes individual building pages feel polished and consistent — just like ProPublica's [Nonprofit Explorer](https://projects.propublica.org/nonprofits/), where every organization page is built from the same template with different data.
+The three stat boxes above the table give readers immediate context before they dig into the violation records. `recentCount` filters the violations array to only those issued within the last twelve months, using JavaScript's built-in `Date` object. `rank` imports the full buildings array, sorts it by violation count, and uses [`.findIndex()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex) to locate this building's position — `+ 1` turns the zero-based index into a human-readable rank.
 
-`HeroTopper` on the detail page works without a `lottieSrc` — leave that prop off and the layout adjusts to fill the full width with just the text. `Card` here links each violation record to the HPD Online lookup page, giving readers a path to verify what they're reading. That's a small but meaningful act of transparency.
+The violations themselves are now in a `<table>` rather than individual cards. A table is the right tool here: the data is structured, each row has the same two fields, and readers will want to scan down the list. Cards work well for heterogeneous content on list pages; a table is better when every record has the same shape.
 
-Add some styles at the bottom:
+Add the styles at the bottom:
 
 ```css
-.description {
-  margin: 0 0 0.25rem;
-  line-height: 1.4;
+.stats {
+  display: flex;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
 }
 
-.date {
-  font-size: 0.875rem;
-  color: var(--color-dark-gray);
-  margin: 0;
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  background: var(--color-light-gray);
+  border-radius: var(--radius-md);
+  flex: 1;
+  min-width: 120px;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1;
+  color: var(--color-dark);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-medium-gray);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  font-weight: bold;
+  background: var(--color-light-gray);
 }
 ```
 
@@ -429,11 +500,11 @@ Save the file.
 
 ### Linking to detail pages
 
-Because the `Card` component already renders each entry as a link, the list is wired up automatically. The `href` we passed in Part 3 — `{base}/building/{building.id}` — points directly to the dynamic route we just created. Save and click on any card to test it.
+Because the `Card` component on the list page already renders each entry as a link, the list is wired up automatically. The `href` we passed in Part 3 — `{base}/building/{building.id}` — points directly to the dynamic route we just created. Save and click on any card to test it.
 
 <Screenshot
   src="/screenshots/week-9/detail-page.png"
-  alt="A detail page for a specific Bronx building showing the address as a headline, a summary box with violation count, zip code, and latest inspection date, followed by a list of individual violations with descriptions and dates"
+  alt="A detail page for a specific Bronx building showing three big-number stat boxes (total violations, violations in the last year, and Bronx rank), followed by a table listing each violation description and date"
   chromeTitle="1520 GRAND CONCOURSE"
   chromeUrl="http://localhost:5173/building/34291"
   maxWidth="960px"
@@ -452,9 +523,9 @@ Open `src/routes/building/[id]/+page.svelte` and add the import:
 ```svelte {emphasize-lines="4"}
 <script>
   import { base } from '$app/paths';
+  import buildings from '$lib/data/bronx-lead-paint.json';
   import HeroTopper from '$lib/components/HeroTopper.svelte';
   import LocatorMap from '$lib/components/LocatorMap.svelte';
-  import Card from '$lib/components/Card.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
   let { data } = $props();
   let building = data.building;
