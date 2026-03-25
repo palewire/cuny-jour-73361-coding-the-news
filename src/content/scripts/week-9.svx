@@ -32,14 +32,9 @@ What these tools have in common is a simple pattern: a list page where you can s
 
 ### Our dataset
 
-We'll be working with housing violation data from the New York City Department of Housing Preservation and Development, known as HPD. Every time an HPD inspector visits a building and finds a problem, they issue a violation. These violations come in four classes:
+We'll be working with lead paint violation data from the New York City Department of Housing Preservation and Development, known as HPD. Under New York City law, landlords must address lead paint hazards in any apartment where a child under six lives. When an HPD inspector finds a lead paint hazard and the landlord fails to correct it, the agency issues a lead paint violation — one of the most serious housing code violations a building owner can receive.
 
-- **Class A** — Non-hazardous. Minor issues like a missing doorbell.
-- **Class B** — Hazardous. More serious problems like a broken lock or a leaky faucet.
-- **Class C** — Immediately hazardous. The most dangerous conditions: no heat in winter, lead paint in a child's room, a rat infestation, a broken fire escape.
-- **Class I** — Information orders. Administrative notices to building owners.
-
-We're going to focus on Class C, the most dangerous category. Our dataset covers the Bronx, the borough with the highest concentration of housing violations in the city.
+Our dataset covers the Bronx, the borough with the highest concentration of open lead paint violations in the city.
 
 <Screenshot
   src="/screenshots/week-7/hpd-open-data.png"
@@ -49,15 +44,15 @@ We're going to focus on Class C, the most dangerous category. Our dataset covers
   maxWidth="960px"
 />
 
-The raw dataset on NYC Open Data contains millions of individual violation records going back to 2010. That's far too much data for a static site to handle. So I've prepared a smaller file for class that rolls up the violations at the building level. Instead of one row per violation, it's one row per building, with a count of how many open Class C violations each building has and the details nested inside.
+The raw dataset on NYC Open Data contains millions of individual violation records going back to 2010. That's far too much data for a static site to handle. So I've prepared a smaller file for class that filters to open lead paint violations and rolls them up at the building level. Instead of one row per violation, it's one row per building, with a count of how many open lead paint violations each building has and the individual violation records nested inside.
 
-The editorial question we're answering: **Which Bronx buildings have the most immediately hazardous housing violations right now?**
+The editorial question we're answering: **Which Bronx buildings have the most unresolved lead paint violations right now?**
 
 ### Set up your project
 
 By now, this part should feel like muscle memory.
 
-Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>. Click "Use this template" and create a new repository called `bronx-housing-violations`. Make sure "Public" is selected, then click "Create repository."
+Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>. Click "Use this template" and create a new repository called `bronx-lead-paint`. Make sure "Public" is selected, then click "Create repository."
 
 Clone the repository to your computer and open it in Visual Studio Code. Open a terminal and run:
 
@@ -75,57 +70,57 @@ Visit [localhost:5173](http://localhost:5173) to make sure it's working. You sho
 
 ## Part 2: Loading the data
 
-I'm going to give you a file called `bronx-buildings.json`. Download it from the link I've posted in the class chat and save it in your project at `src/lib/data/bronx-buildings.json`.
+I'm going to give you a file called `bronx-lead-paint.json`. Download it from the link I've posted in the class chat and save it in your project at `src/lib/data/bronx-lead-paint.json`.
 
 You'll need to create the `data` folder inside `src/lib/` first. Right-click on `src/lib/` in the Explorer sidebar and select "New Folder." Name it `data`. Then move or save the JSON file there.
 
 <Screenshot
   src="/screenshots/week-7/vscode-data-folder.png"
-  alt="VS Code Explorer showing the src/lib/data/ folder with bronx-buildings.json inside it"
+  alt="VS Code Explorer showing the src/lib/data/ folder with bronx-lead-paint.json inside it"
   showChrome={false}
   maxWidth="960px"
 />
 
-Before we do anything with this data, let's look at it. Open `bronx-buildings.json` in VS Code and scroll through it. You'll see an array of objects, each representing a building. Here's what one looks like:
+Before we do anything with this data, let's look at it. Open `bronx-lead-paint.json` in VS Code and scroll through it. You'll see an array of objects, each representing a building. Here's what one looks like:
 
 ```json
 {
   "id": "34291",
   "address": "1520 GRAND CONCOURSE",
   "zip": "10457",
-  "violationCount": 47,
+  "violationCount": 12,
   "latestDate": "2026-02-14",
   "lat": 40.8441,
   "lng": -73.9106,
   "violations": [
     {
-      "description": "SECTION 27-2005 HMC: REPAIR THE BROKEN OR DEFECTIVE PLASTERED SURFACES AND PAINT IN A UNIFORM COLOR HALLWAY, 3RD STORY",
+      "description": "SECTION 27-2056 HMC: ABATE THE LEAD-BASED PAINT HAZARD CONSISTING OF PEELING PAINT SURFACES IN THE ENTIRE APARTMENT, 2ND STORY, APT 2B",
       "date": "2026-02-14"
     },
     {
-      "description": "SECTION 27-2005 HMC: ABATE THE NUISANCE CONSISTING OF VERMIN, ROACH CONDITION IN ENTIRE APARTMENT, 2ND STORY, APARTMENT 2B",
+      "description": "SECTION 27-2056.6 HMC: CORRECT HAZARDOUS CONDITION CONSISTING OF DETERIORATED LEAD-BASED PAINT SURFACES, WINDOW SILLS AND FRAMES, 3RD STORY, APT 3A",
       "date": "2026-01-22"
     }
   ]
 }
 ```
 
-Each building has a handful of top-level fields — `id`, `address`, `zip`, `violationCount`, `latestDate`, `lat`, and `lng` — plus a `violations` array containing the individual violation records with their descriptions and dates.
+Each building has a handful of top-level fields — `id`, `address`, `zip`, `violationCount`, `latestDate`, `lat`, and `lng` — plus a `violations` array containing the individual lead paint violation records with their descriptions and dates.
 
-The descriptions are a bit bureaucratic, but they paint a vivid picture of what tenants are living with. Broken plaster. Roaches. Lead paint. No heat. These are the conditions that HPD considers immediately hazardous to the people who live there.
+The descriptions follow HPD's formal statutory language, but they make the hazard concrete: peeling paint surfaces, deteriorated window sills, a child in the apartment. These are the conditions that make lead poisoning a risk for young tenants.
 
 Now let's load the data into our page. Open `src/routes/+page.svelte`. Clear out the existing template content so we're starting from a clean slate. Replace everything with:
 
 ```svelte
 <script>
-  import buildings from '$lib/data/bronx-buildings.json';
+  import buildings from '$lib/data/bronx-lead-paint.json';
 
   console.log(buildings.length, 'buildings loaded');
   console.log(buildings[0]);
 </script>
 
-<h1>Bronx Housing Violations</h1>
-<p>{buildings.length} buildings with open Class C violations</p>
+<h1>Bronx Lead Paint Violations</h1>
+<p>{buildings.length} buildings with open lead paint violations</p>
 ```
 
 Save the file, then open your browser's developer console (right-click anywhere on the page, select "Inspect," and click the "Console" tab). You should see the number of buildings and the first record logged out.
@@ -133,7 +128,7 @@ Save the file, then open your browser's developer console (right-click anywhere 
 <Screenshot
   src="/screenshots/week-7/console-log.png"
   alt="Browser developer console showing the number of buildings loaded and the first record object expanded to show its fields"
-  chromeTitle="Bronx Housing Violations"
+  chromeTitle="Bronx Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -152,7 +147,7 @@ Update your script block to import `Card` and a helper called `base`:
 
 ```svelte {emphasize-lines="3-4"}
 <script>
-  import buildings from '$lib/data/bronx-buildings.json';
+  import buildings from '$lib/data/bronx-lead-paint.json';
   import { base } from '$app/paths';
   import Card from '$lib/components/Card.svelte';
 
@@ -162,18 +157,18 @@ Update your script block to import `Card` and a helper called `base`:
 
 The [`.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) method takes a comparison function. This one says: "compare two buildings by subtracting `a`'s count from `b`'s count." When the result is positive, `b` comes first. That gives us descending order — the worst buildings at the top.
 
-`base` is a SvelteKit helper that holds the URL prefix for your site on GitHub Pages. Your project will live at a URL like `yourusername.github.io/bronx-housing-violations/` — not at the root of a domain — so any links between your pages need to include that prefix to work correctly.
+`base` is a SvelteKit helper that holds the URL prefix for your site on GitHub Pages. Your project will live at a URL like `yourusername.github.io/bronx-lead-paint/` — not at the root of a domain — so any links between your pages need to include that prefix to work correctly.
 
 Now replace everything below your headline with an `{#each}` loop that renders a `Card` for each building:
 
 ```svelte
-<h1>Bronx Housing Violations</h1>
-<p>{sorted.length} buildings with open Class C violations</p>
+<h1>Bronx Lead Paint Violations</h1>
+<p>{sorted.length} buildings with open lead paint violations</p>
 
 {#each sorted as building}
   <Card href="{base}/building/{building.id}">
     <h3>{building.address}</h3>
-    <p>{building.zip} · {building.violationCount} violations</p>
+    <p>{building.zip} · {building.violationCount} lead paint violations</p>
   </Card>
 {/each}
 ```
@@ -182,8 +177,8 @@ Now replace everything below your headline with an `{#each}` loop that renders a
 
 <Screenshot
   src="/screenshots/week-9/building-cards.png"
-  alt="A styled list of building cards showing addresses, zip codes, and violation counts, sorted with the highest counts first, each card linking to a detail page"
-  chromeTitle="Bronx Housing Violations"
+  alt="A styled list of building cards showing addresses, zip codes, and lead paint violation counts, sorted with the highest counts first, each card linking to a detail page"
+  chromeTitle="Bronx Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -200,7 +195,7 @@ Start by adding a `$state` variable for the search term and a `$derived` variabl
 
 ```svelte {emphasize-lines="4-5,7-14"}
 <script>
-  import buildings from '$lib/data/bronx-buildings.json';
+  import buildings from '$lib/data/bronx-lead-paint.json';
   import { base } from '$app/paths';
   import Card from '$lib/components/Card.svelte';
   import SearchInput from '$lib/components/SearchInput.svelte';
@@ -229,7 +224,7 @@ Now add a `SearchInput` above the `{#each}` loop. Our template's `SearchInput` c
 {#each filtered as building}
   <Card href="{base}/building/{building.id}">
     <h3>{building.address}</h3>
-    <p>{building.zip} · {building.violationCount} violations</p>
+    <p>{building.zip} · {building.violationCount} lead paint violations</p>
   </Card>
 {/each}
 ```
@@ -239,7 +234,7 @@ Save and try it. Type an address into the search box and watch the list narrow i
 <Screenshot
   src="/screenshots/week-9/search-working.png"
   alt="The building list with a search input at the top. The user has typed 'grand' and the list shows only buildings on Grand Concourse."
-  chromeTitle="Bronx Housing Violations"
+  chromeTitle="Bronx Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -250,7 +245,7 @@ Now let's add a dropdown that filters by zip code. First, we need a list of all 
 
 ```svelte {emphasize-lines="6,8"}
 <script>
-  import buildings from '$lib/data/bronx-buildings.json';
+  import buildings from '$lib/data/bronx-lead-paint.json';
   import { base } from '$app/paths';
   import Card from '$lib/components/Card.svelte';
   import SearchInput from '$lib/components/SearchInput.svelte';
@@ -318,7 +313,7 @@ Save and check your browser. You should now be able to search by address, filter
 <Screenshot
   src="/screenshots/week-9/filters-working.png"
   alt="The building list with both a SearchInput and a Dropdown. A zip code is selected and the count shows a smaller number of filtered results."
-  chromeTitle="Bronx Housing Violations"
+  chromeTitle="Bronx Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -348,7 +343,7 @@ Inside that folder, create two files. The first is `+page.js`. This is a new typ
 Create `src/routes/building/[id]/+page.js`:
 
 ```js
-import buildings from '$lib/data/bronx-buildings.json';
+import buildings from '$lib/data/bronx-lead-paint.json';
 
 export function load({ params }) {
   const building = buildings.find(b => b.id === params.id);
@@ -384,7 +379,7 @@ Now create the page that will display the building's details. Create `src/routes
 
 <HeroTopper
   headline={building.address}
-  deck="{building.violationCount} open Class C violations · ZIP {building.zip}"
+  deck="{building.violationCount} open lead paint violations · ZIP {building.zip}"
   byline="NYC HPD Data"
   date={building.latestDate}
 />
@@ -402,7 +397,7 @@ Now create the page that will display the building's details. Create `src/routes
   <p>
     Violation records come from the
     <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
-    via NYC Open Data. Only Class C (immediately hazardous) open violations are shown.
+    via NYC Open Data. Only open lead paint violations are shown.
     Click any violation card to look up the building on
     <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
   </p>
@@ -494,7 +489,7 @@ ProPublica, The Marshall Project, and other leading newsrooms rarely start a dat
 
 `HeroTopper` uses [Lottie](https://lottiefiles.com/) — a file format for lightweight vector animations — to display a looping illustration alongside your headline.
 
-Go to [lottiefiles.com](https://lottiefiles.com/) and create a free account. Search for an animation that fits your story. For a housing violations project, something like a building, cityscape, or inspection-related animation works well. When you find one you like, click "Download" and choose "Lottie JSON." Save the file as `animation.json` in your project's `static/` folder.
+Go to [lottiefiles.com](https://lottiefiles.com/) and create a free account. Search for an animation that fits your story. For a lead paint project, something like a building, a child, or a paint brush animation works well. When you find one you like, click "Download" and choose "Lottie JSON." Save the file as `animation.json` in your project's `static/` folder.
 
 ### Install lottie-web
 
@@ -511,7 +506,7 @@ Open `src/routes/+page.svelte` and add the import:
 ```svelte {emphasize-lines="2"}
 <script>
   import HeroTopper from '$lib/components/HeroTopper.svelte';
-  import buildings from '$lib/data/bronx-buildings.json';
+  import buildings from '$lib/data/bronx-lead-paint.json';
   import { base } from '$app/paths';
   import SearchInput from '$lib/components/SearchInput.svelte';
   import Dropdown from '$lib/components/Dropdown.svelte';
@@ -524,8 +519,8 @@ Replace the `<h1>` at the top of the template with the component:
 
 ```svelte
 <HeroTopper
-  headline="Bronx Buildings with Hazardous Housing Violations"
-  deck="Using city inspection records to surface the most dangerous housing conditions in New York's most violation-prone borough"
+  headline="Bronx Buildings with Open Lead Paint Violations"
+  deck="Using HPD inspection records to surface unresolved lead paint hazards in New York's most violation-prone borough"
   byline="Your Name"
   date="March 2026"
   lottieSrc="/animation.json"
@@ -537,7 +532,7 @@ The `deck` prop is a one- or two-sentence summary — think of it as the lede yo
 <Screenshot
   src="/screenshots/week-9/hero-topper.png"
   alt="The database explorer with a bold full-width hero header. On the left: a large headline in white type on a dark background, a summary paragraph, and a byline. On the right: a looping Lottie animation of a building."
-  chromeTitle="Bronx Buildings with Hazardous Housing Violations"
+  chromeTitle="Bronx Buildings with Open Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -562,9 +557,9 @@ At the bottom of the page, after the `{#each}` loop, drop in the component with 
 <MethodologyBox>
   <p>
     Data comes from the <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
-    via NYC Open Data. This page shows Class C (immediately hazardous) violations
-    for buildings in the Bronx. Records were aggregated at the building level
-    and filtered to violations with an open status as of March 2026.
+    via NYC Open Data. This page shows open lead paint violations for buildings in the Bronx.
+    Records were filtered to lead paint violations under Section 27-2056 HMC and aggregated
+    at the building level as of March 2026.
   </p>
   <p>
     For more information about a specific building's violations, visit
@@ -578,14 +573,14 @@ The component renders an "About the data" box with a bordered left accent and a 
 <Screenshot
   src="/screenshots/week-9/final-page.png"
   alt="The finished database explorer showing the bold hero header at the top, the search and filter controls, the list of building cards, and a methodology box at the bottom"
-  chromeTitle="Bronx Buildings with Hazardous Housing Violations"
+  chromeTitle="Bronx Buildings with Open Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
 Save, commit, and push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds, then check your live site.
 
-Take a moment to browse through the data. Click into the buildings at the top of the list and read the violation descriptions. What patterns do you notice? What stories does this data tell? That instinct — the impulse to look at the records and ask questions — is what separates a database explorer from just a spreadsheet.
+Take a moment to browse through the data. Click into the buildings at the top of the list and read the violation descriptions. What patterns do you notice? Which neighborhoods have the highest concentrations? That instinct — the impulse to look at the records and ask questions — is what separates a database explorer from just a spreadsheet.
 
 ## Homework
 
