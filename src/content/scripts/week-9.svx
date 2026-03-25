@@ -540,39 +540,42 @@ The `deck` prop is a one- or two-sentence summary — think of it as the lede yo
   maxWidth="960px"
 />
 
-### Add a source credit
+### Add a methodology box
 
-At the bottom of the page, after the `{#each}` loop, add a footer with your source information:
+Readers trust data journalism more when they can see exactly where the numbers came from. The template includes a `MethodologyBox` component for just this purpose — a structured, consistently styled block that explains the data's origin, how it was processed, and any caveats a reader should know.
+
+Add the import:
+
+```svelte {emphasize-lines="2"}
+<script>
+  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
+  import HeroTopper from '$lib/components/HeroTopper.svelte';
+  // ... rest of your imports
+</script>
+```
+
+At the bottom of the page, after the `{#each}` loop, drop in the component with your source information as children:
 
 ```svelte
-<footer class="source">
+<MethodologyBox>
   <p>
-    Source: <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>,
-    via NYC Open Data. Class C (immediately hazardous) violations for
-    buildings in the Bronx. Data as of March 2026.
+    Data comes from the <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
+    via NYC Open Data. This page shows Class C (immediately hazardous) violations
+    for buildings in the Bronx. Records were aggregated at the building level
+    and filtered to violations with an open status as of March 2026.
   </p>
   <p>
-    For more information about your building's violations, visit
+    For more information about a specific building's violations, visit
     <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
   </p>
-</footer>
+</MethodologyBox>
 ```
 
-Add a style for the footer:
-
-```css
-.source {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-light-gray);
-  font-size: 0.8125rem;
-  color: var(--color-dark-gray);
-}
-```
+The component renders an "About the data" box with a bordered left accent and a collapsed/expandable toggle so it does not visually compete with the data itself. You can put any mix of paragraphs, lists, and links between its tags — it accepts open-ended children.
 
 <Screenshot
   src="/screenshots/week-9/final-page.png"
-  alt="The finished database explorer showing the bold hero header at the top, the search and filter controls, the list of building cards, and a source credit at the bottom"
+  alt="The finished database explorer showing the bold hero header at the top, the search and filter controls, the list of building cards, and a methodology box at the bottom"
   chromeTitle="Bronx Buildings with Hazardous Housing Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
@@ -593,7 +596,7 @@ Your project must have:
 * A searchable or filterable list page with at least two controls (search input, dropdown, toggle — your choice)
 * Detail pages for individual records or groups of records
 * A `HeroTopper` with a Lottie animation, a headline, a deck, and a byline
-* A source credit at the bottom
+* A `MethodologyBox` at the bottom explaining the data source and how it was processed
 
 Some datasets that could work well:
 
