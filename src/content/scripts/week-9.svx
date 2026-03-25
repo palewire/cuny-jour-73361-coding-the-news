@@ -373,52 +373,51 @@ Now create the page that will display the building's details. Create `src/routes
 ```svelte
 <script>
   import { base } from '$app/paths';
+  import HeroTopper from '$lib/components/HeroTopper.svelte';
+  import Card from '$lib/components/Card.svelte';
+  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
   let { data } = $props();
   let building = data.building;
 </script>
 
 <a href="{base}/">← Back to all buildings</a>
 
-<h1>{building.address}</h1>
-
-<div class="summary">
-  <p><strong>{building.violationCount}</strong> open Class C violations</p>
-  <p>ZIP code: {building.zip}</p>
-  <p>Most recent inspection: {building.latestDate}</p>
-</div>
+<HeroTopper
+  headline={building.address}
+  deck="{building.violationCount} open Class C violations · ZIP {building.zip}"
+  byline="NYC HPD Data"
+  date={building.latestDate}
+/>
 
 <h2>Violations</h2>
 
 {#each building.violations as violation}
-  <div class="violation">
+  <Card href="https://hpdonline.nyc.gov/hpdonline/provide-information">
     <p class="description">{violation.description}</p>
     <p class="date">{violation.date}</p>
-  </div>
+  </Card>
 {/each}
+
+<MethodologyBox>
+  <p>
+    Violation records come from the
+    <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
+    via NYC Open Data. Only Class C (immediately hazardous) open violations are shown.
+    Click any violation card to look up the building on
+    <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
+  </p>
+</MethodologyBox>
 ```
 
 The key line is the first one in the script block: `let { data } = $props()`. When a page has a `+page.js` load function, SvelteKit passes whatever it returns as a `data` prop. So `data.building` is the building object we found in the load function.
 
-The rest is familiar. We display the building's address as a headline, show a summary of its violation count and dates, and then loop through the `violations` array to list each one.
+Notice that we're reusing the same `HeroTopper`, `Card`, and `MethodologyBox` components from the list page. This is the payoff of a shared component shelf: the same building block that creates a bold list-page header also makes individual building pages feel polished and consistent — just like ProPublica's [Nonprofit Explorer](https://projects.propublica.org/nonprofits/), where every organization page is built from the same template with different data.
+
+`HeroTopper` on the detail page works without a `lottieSrc` — leave that prop off and the layout adjusts to fill the full width with just the text. `Card` here links each violation record to the HPD Online lookup page, giving readers a path to verify what they're reading. That's a small but meaningful act of transparency.
 
 Add some styles at the bottom:
 
 ```css
-.summary {
-  padding: 1rem;
-  background: var(--color-light-gray);
-  margin: 1rem 0;
-}
-
-.summary p {
-  margin: 0.25rem 0;
-}
-
-.violation {
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--color-light-gray);
-}
-
 .description {
   margin: 0 0 0.25rem;
   line-height: 1.4;
@@ -455,16 +454,19 @@ Our template includes a `LocatorMap` component that embeds an [OpenStreetMap](ht
 
 Open `src/routes/building/[id]/+page.svelte` and add the import:
 
-```svelte {emphasize-lines="3"}
+```svelte {emphasize-lines="4"}
 <script>
   import { base } from '$app/paths';
+  import HeroTopper from '$lib/components/HeroTopper.svelte';
   import LocatorMap from '$lib/components/LocatorMap.svelte';
+  import Card from '$lib/components/Card.svelte';
+  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
   let { data } = $props();
   let building = data.building;
 </script>
 ```
 
-Place the component in the page, after the summary box and before the violations list. `LocatorMap` accepts two props — `lat` and `lng` — and renders an OpenStreetMap embed centered on those coordinates with a marker at the exact spot:
+Place the component after the `HeroTopper` and before the violations list. `LocatorMap` accepts two props — `lat` and `lng` — and renders an OpenStreetMap embed centered on those coordinates with a marker at the exact spot:
 
 ```svelte
 <LocatorMap lat={building.lat} lng={building.lng} />
