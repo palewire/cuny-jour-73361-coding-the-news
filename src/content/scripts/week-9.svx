@@ -7,7 +7,6 @@ locked: true
 ---
 
 <script>
-  import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
@@ -33,14 +32,9 @@ What these tools have in common is a simple pattern: a list page where you can s
 
 ### Our dataset
 
-We'll be working with housing violation data from the New York City Department of Housing Preservation and Development, known as HPD. Every time an HPD inspector visits a building and finds a problem, they issue a violation. These violations come in four classes:
+We'll be working with lead paint violation data from the New York City Department of Housing Preservation and Development, known as HPD. Under New York City law, landlords must address lead paint hazards in any apartment where a child under six lives. When an HPD inspector finds a lead paint hazard and the landlord fails to correct it, the agency issues a lead paint violation — one of the most serious housing code violations a building owner can receive.
 
-- **Class A** — Non-hazardous. Minor issues like a missing doorbell.
-- **Class B** — Hazardous. More serious problems like a broken lock or a leaky faucet.
-- **Class C** — Immediately hazardous. The most dangerous conditions: no heat in winter, lead paint in a child's room, a rat infestation, a broken fire escape.
-- **Class I** — Information orders. Administrative notices to building owners.
-
-We're going to focus on Class C, the most dangerous category. Our dataset covers the Bronx, the borough with the highest concentration of housing violations in the city.
+Our dataset covers the Bronx, the borough with the highest concentration of open lead paint violations in the city.
 
 <Screenshot
   src="/screenshots/week-7/hpd-open-data.png"
@@ -50,15 +44,15 @@ We're going to focus on Class C, the most dangerous category. Our dataset covers
   maxWidth="960px"
 />
 
-The raw dataset on NYC Open Data contains millions of individual violation records going back to 2010. That's far too much data for a static site to handle. So I've prepared a smaller file for class that rolls up the violations at the building level. Instead of one row per violation, it's one row per building, with a count of how many open Class C violations each building has and the details nested inside.
+The raw dataset on NYC Open Data contains millions of individual violation records going back to 2010. That's far too much data for a static site to handle. So I've prepared a smaller file for class that filters to open lead paint violations and rolls them up at the building level. Instead of one row per violation, it's one row per building, with a count of how many open lead paint violations each building has and the individual violation records nested inside.
 
-The editorial question we're answering: **Which Bronx buildings have the most immediately hazardous housing violations right now?**
+The editorial question we're answering: **Which Bronx buildings have the most unresolved lead paint violations right now?**
 
 ### Set up your project
 
 By now, this part should feel like muscle memory.
 
-Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>. Click "Use this template" and create a new repository called `bronx-housing-violations`. Make sure "Public" is selected, then click "Create repository."
+Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>. Click "Use this template" and create a new repository called `bronx-lead-paint`. Make sure "Public" is selected, then click "Create repository."
 
 Clone the repository to your computer and open it in Visual Studio Code. Open a terminal and run:
 
@@ -76,57 +70,57 @@ Visit [localhost:5173](http://localhost:5173) to make sure it's working. You sho
 
 ## Part 2: Loading the data
 
-I'm going to give you a file called `bronx-buildings.json`. Download it from the link I've posted in the class chat and save it in your project at `src/lib/data/bronx-buildings.json`.
+I'm going to give you a file called `bronx-lead-paint.json`. Download it from the link I've posted in the class chat and save it in your project at `src/lib/data/bronx-lead-paint.json`.
 
 You'll need to create the `data` folder inside `src/lib/` first. Right-click on `src/lib/` in the Explorer sidebar and select "New Folder." Name it `data`. Then move or save the JSON file there.
 
 <Screenshot
   src="/screenshots/week-7/vscode-data-folder.png"
-  alt="VS Code Explorer showing the src/lib/data/ folder with bronx-buildings.json inside it"
+  alt="VS Code Explorer showing the src/lib/data/ folder with bronx-lead-paint.json inside it"
   showChrome={false}
   maxWidth="960px"
 />
 
-Before we do anything with this data, let's look at it. Open `bronx-buildings.json` in VS Code and scroll through it. You'll see an array of objects, each representing a building. Here's what one looks like:
+Before we do anything with this data, let's look at it. Open `bronx-lead-paint.json` in VS Code and scroll through it. You'll see an array of objects, each representing a building. Here's what one looks like:
 
 ```json
 {
   "id": "34291",
   "address": "1520 GRAND CONCOURSE",
   "zip": "10457",
-  "violationCount": 47,
+  "violationCount": 12,
   "latestDate": "2026-02-14",
   "lat": 40.8441,
   "lng": -73.9106,
   "violations": [
     {
-      "description": "SECTION 27-2005 HMC: REPAIR THE BROKEN OR DEFECTIVE PLASTERED SURFACES AND PAINT IN A UNIFORM COLOR HALLWAY, 3RD STORY",
+      "description": "SECTION 27-2056 HMC: ABATE THE LEAD-BASED PAINT HAZARD CONSISTING OF PEELING PAINT SURFACES IN THE ENTIRE APARTMENT, 2ND STORY, APT 2B",
       "date": "2026-02-14"
     },
     {
-      "description": "SECTION 27-2005 HMC: ABATE THE NUISANCE CONSISTING OF VERMIN, ROACH CONDITION IN ENTIRE APARTMENT, 2ND STORY, APARTMENT 2B",
+      "description": "SECTION 27-2056.6 HMC: CORRECT HAZARDOUS CONDITION CONSISTING OF DETERIORATED LEAD-BASED PAINT SURFACES, WINDOW SILLS AND FRAMES, 3RD STORY, APT 3A",
       "date": "2026-01-22"
     }
   ]
 }
 ```
 
-Each building has a handful of top-level fields — `id`, `address`, `zip`, `violationCount`, `latestDate`, `lat`, and `lng` — plus a `violations` array containing the individual violation records with their descriptions and dates.
+Each building has a handful of top-level fields — `id`, `address`, `zip`, `violationCount`, `latestDate`, `lat`, and `lng` — plus a `violations` array containing the individual lead paint violation records with their descriptions and dates.
 
-The descriptions are a bit bureaucratic, but they paint a vivid picture of what tenants are living with. Broken plaster. Roaches. Lead paint. No heat. These are the conditions that HPD considers immediately hazardous to the people who live there.
+The descriptions follow HPD's formal statutory language, but they make the hazard concrete: peeling paint surfaces, deteriorated window sills, a child in the apartment. These are the conditions that make lead poisoning a risk for young tenants.
 
 Now let's load the data into our page. Open `src/routes/+page.svelte`. Clear out the existing template content so we're starting from a clean slate. Replace everything with:
 
 ```svelte
 <script>
-  import buildings from '$lib/data/bronx-buildings.json';
+  import buildings from '$lib/data/bronx-lead-paint.json';
 
   console.log(buildings.length, 'buildings loaded');
   console.log(buildings[0]);
 </script>
 
-<h1>Bronx Housing Violations</h1>
-<p>{buildings.length} buildings with open Class C violations</p>
+<h1>Bronx Lead Paint Violations</h1>
+<p>{buildings.length} buildings with open lead paint violations</p>
 ```
 
 Save the file, then open your browser's developer console (right-click anywhere on the page, select "Inspect," and click the "Console" tab). You should see the number of buildings and the first record logged out.
@@ -134,7 +128,7 @@ Save the file, then open your browser's developer console (right-click anywhere 
 <Screenshot
   src="/screenshots/week-7/console-log.png"
   alt="Browser developer console showing the number of buildings loaded and the first record object expanded to show its fields"
-  chromeTitle="Bronx Housing Violations"
+  chromeTitle="Bronx Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -147,129 +141,44 @@ Remove the `console.log` lines once you've confirmed the data is loading. They w
 
 Now let's display the buildings on the page. We'll use the `{#each}` loop you learned in a previous class to iterate through the array and render a card for each building.
 
-Add an `{#each}` block below the headline:
+This is where working like a real newsroom developer starts to pay off. Our template already includes a `Card` component — a styled wrapper that turns any content into a clickable linked card. Rather than writing card markup from scratch, we can reach for it directly.
+
+Update your script block to import `Card` and a helper called `base`:
+
+```svelte {emphasize-lines="3-4"}
+<script>
+  import buildings from '$lib/data/bronx-lead-paint.json';
+  import { base } from '$app/paths';
+  import Card from '$lib/components/Card.svelte';
+
+  let sorted = [...buildings].sort((a, b) => b.violationCount - a.violationCount);
+</script>
+```
+
+The [`.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) method takes a comparison function. This one says: "compare two buildings by subtracting `a`'s count from `b`'s count." When the result is positive, `b` comes first. That gives us descending order — the worst buildings at the top.
+
+`base` is a SvelteKit helper that holds the URL prefix for your site on GitHub Pages. Your project will live at a URL like `yourusername.github.io/bronx-lead-paint/` — not at the root of a domain — so any links between your pages need to include that prefix to work correctly.
+
+Now replace everything below your headline with an `{#each}` loop that renders a `Card` for each building:
 
 ```svelte
-<script>
-  import buildings from '$lib/data/bronx-buildings.json';
-</script>
+<h1>Bronx Lead Paint Violations</h1>
+<p>{sorted.length} buildings with open lead paint violations</p>
 
-<h1>Bronx Housing Violations</h1>
-<p>{buildings.length} buildings with open Class C violations</p>
-
-{#each buildings as building}
-  <div class="card">
+{#each sorted as building}
+  <Card href="{base}/building/{building.id}">
     <h3>{building.address}</h3>
-    <p>{building.zip} · {building.violationCount} violations</p>
-  </div>
+    <p>{building.zip} · {building.violationCount} lead paint violations</p>
+  </Card>
 {/each}
 ```
 
-Save and check your browser. You should see a long list of buildings with their addresses and violation counts.
+`Card` wraps whatever you put inside it in a styled, clickable link. The `href` prop sets where it links. The content between the opening and closing tags — the address, zip code, and count — is entirely up to you. Save and check your browser — you should see a sorted, linked list of building cards.
 
 <Screenshot
-  src="/screenshots/week-7/raw-list.png"
-  alt="A long unstyled list of Bronx buildings showing addresses and violation counts"
-  chromeTitle="Bronx Housing Violations"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-It works, but the buildings are in whatever order the data file has them. Let's sort them so the buildings with the most violations appear first. We can do this by chaining JavaScript's [`.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) method onto the array right in the `{#each}` block. But a cleaner approach is to create a sorted copy in the script block:
-
-```svelte {emphasize-lines="4"}
-<script>
-  import buildings from '$lib/data/bronx-buildings.json';
-
-  let sorted = buildings.sort((a, b) => b.violationCount - a.violationCount);
-</script>
-```
-
-The `.sort()` method takes a comparison function. This one says: "compare two buildings by subtracting `a`'s count from `b`'s count." When the result is positive, `b` comes first. That gives us descending order — the worst buildings at the top.
-
-Update your `{#each}` to loop over `sorted` instead of `buildings`:
-
-```svelte
-{#each sorted as building}
-```
-
-Save and check. The building with the most violations should now be at the top of the list.
-
-### Extracting a BuildingCard component
-
-Our card markup is going to get more complex as we add features. Let's pull it out into its own component now, while it's still simple.
-
-Create a new file at `src/lib/components/BuildingCard.svelte`:
-
-```svelte
-<script>
-  let { building } = $props();
-</script>
-
-<div class="card">
-  <h3>{building.address}</h3>
-  <div class="meta">
-    <span class="zip">{building.zip}</span>
-    <span class="count">{building.violationCount} violations</span>
-  </div>
-</div>
-
-<style>
-  .card {
-    padding: 1rem;
-    border-bottom: 1px solid var(--color-light-gray);
-    cursor: pointer;
-  }
-
-  .card:hover {
-    background-color: var(--color-light-gray);
-  }
-
-  h3 {
-    margin: 0 0 0.25rem;
-    font-size: 1rem;
-  }
-
-  .meta {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.875rem;
-    color: var(--color-dark-gray);
-  }
-
-  .count {
-    font-weight: bold;
-    color: var(--color-accent);
-  }
-</style>
-```
-
-This component accepts a single `building` prop and renders the card. The styles are scoped to this component so they won't leak into the rest of the page.
-
-Now update `+page.svelte` to use the new component:
-
-```svelte
-<script>
-  import buildings from '$lib/data/bronx-buildings.json';
-  import BuildingCard from '$lib/components/BuildingCard.svelte';
-
-  let sorted = buildings.sort((a, b) => b.violationCount - a.violationCount);
-</script>
-
-<h1>Bronx Housing Violations</h1>
-<p>{sorted.length} buildings with open Class C violations</p>
-
-{#each sorted as building}
-  <BuildingCard {building} />
-{/each}
-```
-
-Notice the shorthand `{building}` instead of `building={building}`. When the prop name and the variable name are the same, Svelte lets you skip the repetition. Save and verify it looks the same.
-
-<Screenshot
-  src="/screenshots/week-7/building-cards.png"
-  alt="A styled list of building cards showing addresses, zip codes, and violation counts, sorted with the highest counts first"
-  chromeTitle="Bronx Housing Violations"
+  src="/screenshots/week-9/building-cards.png"
+  alt="A styled list of building cards showing addresses, zip codes, and lead paint violation counts, sorted with the highest counts first, each card linking to a detail page"
+  chromeTitle="Bronx Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -282,12 +191,14 @@ We'll use the same reactive tools you learned in [Week 4](/docs/coding-the-news/
 
 ### Adding a search input
 
-Start by adding a `$state` variable for the search term and a `$derived` variable for the filtered results. Replace the `sorted` variable:
+Start by adding a `$state` variable for the search term and a `$derived` variable for the filtered results. Replace the `sorted` variable and swap in our template components:
 
-```svelte {emphasize-lines="4-11"}
+```svelte {emphasize-lines="4-5,7-14"}
 <script>
-  import buildings from '$lib/data/bronx-buildings.json';
-  import BuildingCard from '$lib/components/BuildingCard.svelte';
+  import buildings from '$lib/data/bronx-lead-paint.json';
+  import { base } from '$app/paths';
+  import Card from '$lib/components/Card.svelte';
+  import SearchInput from '$lib/components/SearchInput.svelte';
 
   let search = $state('');
 
@@ -303,40 +214,42 @@ The `$derived` expression does two things. First, it filters the buildings array
 
 Whenever `search` changes — because the user typed something — Svelte automatically re-runs the `$derived` expression and updates everything on the page that depends on it.
 
-Now add a text input bound to the `search` variable, above the `{#each}` loop:
+Now add a `SearchInput` above the `{#each}` loop. Our template's `SearchInput` component is a styled text field that wires up `bind:value` exactly like a raw `<input>` would:
 
 ```svelte
-<input
-  type="text"
-  placeholder="Search by address..."
-  bind:value={search}
-/>
+<SearchInput bind:value={search} placeholder="Search by address..." />
 
 <p>{filtered.length} buildings</p>
 
 {#each filtered as building}
-  <BuildingCard {building} />
+  <Card href="{base}/building/{building.id}">
+    <h3>{building.address}</h3>
+    <p>{building.zip} · {building.violationCount} lead paint violations</p>
+  </Card>
 {/each}
 ```
 
 Save and try it. Type an address into the search box and watch the list narrow in real time.
 
 <Screenshot
-  src="/screenshots/week-7/search-working.png"
+  src="/screenshots/week-9/search-working.png"
   alt="The building list with a search input at the top. The user has typed 'grand' and the list shows only buildings on Grand Concourse."
-  chromeTitle="Bronx Housing Violations"
+  chromeTitle="Bronx Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
 ### Adding a zip code filter
 
-Now let's add a dropdown that filters by zip code. First, we need a list of all the unique zip codes in the dataset. We can build it with a JavaScript technique that extracts one value from every record and removes duplicates:
+Now let's add a dropdown that filters by zip code. First, we need a list of all the unique zip codes in the dataset. We can build it with a JavaScript technique that extracts one value from every record and removes duplicates. Add `Dropdown` to your imports and build the zips list:
 
-```svelte {emphasize-lines="5"}
+```svelte {emphasize-lines="6,8"}
 <script>
-  import buildings from '$lib/data/bronx-buildings.json';
-  import BuildingCard from '$lib/components/BuildingCard.svelte';
+  import buildings from '$lib/data/bronx-lead-paint.json';
+  import { base } from '$app/paths';
+  import Card from '$lib/components/Card.svelte';
+  import SearchInput from '$lib/components/SearchInput.svelte';
+  import Dropdown from '$lib/components/Dropdown.svelte';
 
   let zips = [...new Set(buildings.map(b => b.zip))].sort();
   let search = $state('');
@@ -354,7 +267,7 @@ Now let's add a dropdown that filters by zip code. First, we need a list of all 
 </script>
 ```
 
-That first new line does a lot in a small space, so let's unpack it. Reading from the inside out:
+That `zips` line does a lot in a small space, so let's unpack it. Reading from the inside out:
 
 - `buildings.map(b => b.zip)` creates a new array containing just the zip code from every building. If there are 500 buildings, this produces an array of 500 zip codes, many of them duplicates.
 - `new Set(...)` converts that array into a [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set), which is a special JavaScript data structure that automatically removes duplicates.
@@ -365,30 +278,27 @@ The result is a clean list of unique zip codes like `["10451", "10452", "10453",
 
 We also added a `zipFilter` state variable with a default value of `'all'`, and updated the `$derived` filter to check both conditions. A building must match the search text **and** the zip code filter to appear in the results.
 
-Now add a `<select>` dropdown bound to `zipFilter`, next to the search input:
+Now swap in the template's `Dropdown` component next to `SearchInput`. `Dropdown` accepts a `bind:value` binding and an `options` array — each option is an object with a `value` and a `label`:
 
 ```svelte
 <div class="controls">
-  <input
-    type="text"
-    placeholder="Search by address..."
-    bind:value={search}
-  />
+  <SearchInput bind:value={search} placeholder="Search by address..." />
 
-  <select bind:value={zipFilter}>
-    <option value="all">All zip codes</option>
-    {#each zips as zip}
-      <option value={zip}>{zip}</option>
-    {/each}
-  </select>
+  <Dropdown
+    bind:value={zipFilter}
+    options={[
+      { value: 'all', label: 'All zip codes' },
+      ...zips.map(z => ({ value: z, label: z }))
+    ]}
+  />
 </div>
 
 <p>{filtered.length} buildings</p>
 ```
 
-Notice that we're using `{#each}` inside the `<select>` to generate an `<option>` for every zip code. The first option, "All zip codes," has the value `'all'`, which matches the default value of `zipFilter`. When the user selects a specific zip, the filter kicks in.
+The `options` array starts with the "All zip codes" catch-all, then spreads in the dynamic list using the spread operator (`...`). We're building the options array right in the template — no extra variable needed.
 
-Let's add some basic styles. Add a `<style>` block at the bottom of `+page.svelte`:
+Add a `<style>` block at the bottom of `+page.svelte` to lay the controls out side by side:
 
 ```css
 .controls {
@@ -396,27 +306,14 @@ Let's add some basic styles. Add a `<style>` block at the bottom of `+page.svelt
   gap: 1rem;
   margin: 1rem 0;
 }
-
-input[type="text"] {
-  flex: 1;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 2px solid var(--color-light-gray);
-}
-
-select {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 2px solid var(--color-light-gray);
-}
 ```
 
 Save and check your browser. You should now be able to search by address, filter by zip code, or combine both. The count above the list updates automatically as you change the filters.
 
 <Screenshot
-  src="/screenshots/week-7/filters-working.png"
-  alt="The building list with both a search input and a zip code dropdown. A zip code is selected and the count shows a smaller number of filtered results."
-  chromeTitle="Bronx Housing Violations"
+  src="/screenshots/week-9/filters-working.png"
+  alt="The building list with both a SearchInput and a Dropdown. A zip code is selected and the count shows a smaller number of filtered results."
+  chromeTitle="Bronx Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -446,7 +343,7 @@ Inside that folder, create two files. The first is `+page.js`. This is a new typ
 Create `src/routes/building/[id]/+page.js`:
 
 ```js
-import buildings from '$lib/data/bronx-buildings.json';
+import buildings from '$lib/data/bronx-lead-paint.json';
 
 export function load({ params }) {
   const building = buildings.find(b => b.id === params.id);
@@ -470,112 +367,144 @@ Now create the page that will display the building's details. Create `src/routes
 
 ```svelte
 <script>
+  import { base } from '$app/paths';
+  import buildings from '$lib/data/bronx-lead-paint.json';
+  import HeroTopper from '$lib/components/HeroTopper.svelte';
+  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
   let { data } = $props();
   let building = data.building;
+
+  let oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  let recentCount = building.violations.filter(v => new Date(v.date) >= oneYearAgo).length;
+
+  let rank = [...buildings]
+    .sort((a, b) => b.violationCount - a.violationCount)
+    .findIndex(b => b.id === building.id) + 1;
 </script>
 
-<a href="/">&larr; Back to all buildings</a>
+<a href="{base}/">← Back to all buildings</a>
 
-<h1>{building.address}</h1>
+<HeroTopper
+  headline={building.address}
+  deck="{building.violationCount} open lead paint violations · ZIP {building.zip}"
+  byline="NYC HPD Data"
+  date={building.latestDate}
+/>
 
-<div class="summary">
-  <p><strong>{building.violationCount}</strong> open Class C violations</p>
-  <p>ZIP code: {building.zip}</p>
-  <p>Most recent inspection: {building.latestDate}</p>
+<div class="stats">
+  <div class="stat-box">
+    <span class="stat-number">{building.violationCount}</span>
+    <span class="stat-label">Total open violations</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-number">{recentCount}</span>
+    <span class="stat-label">Issued in the last year</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-number">#{rank}</span>
+    <span class="stat-label">Rank in the Bronx</span>
+  </div>
 </div>
 
 <h2>Violations</h2>
 
-{#each building.violations as violation}
-  <div class="violation">
-    <p class="description">{violation.description}</p>
-    <p class="date">{violation.date}</p>
-  </div>
-{/each}
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Date issued</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each building.violations as violation}
+      <tr>
+        <td>{violation.description}</td>
+        <td>{violation.date}</td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
+
+<MethodologyBox>
+  <p>
+    Violation records come from the
+    <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
+    via NYC Open Data. Only open lead paint violations are shown.
+    For more information about this building, visit
+    <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
+  </p>
+</MethodologyBox>
 ```
 
 The key line is the first one in the script block: `let { data } = $props()`. When a page has a `+page.js` load function, SvelteKit passes whatever it returns as a `data` prop. So `data.building` is the building object we found in the load function.
 
-The rest is familiar. We display the building's address as a headline, show a summary of its violation count and dates, and then loop through the `violations` array to list each one.
+The three stat boxes above the table give readers immediate context before they dig into the violation records. `recentCount` filters the violations array to only those issued within the last twelve months, using JavaScript's built-in `Date` object. `rank` imports the full buildings array, sorts it by violation count, and uses [`.findIndex()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex) to locate this building's position — `+ 1` turns the zero-based index into a human-readable rank.
 
-Add some styles at the bottom:
+The violations themselves are now in a `<table>` rather than individual cards. A table is the right tool here: the data is structured, each row has the same two fields, and readers will want to scan down the list. Cards work well for heterogeneous content on list pages; a table is better when every record has the same shape.
+
+Add the styles at the bottom:
 
 ```css
-.summary {
-  padding: 1rem;
+.stats {
+  display: flex;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
   background: var(--color-light-gray);
+  border-radius: var(--radius-md);
+  flex: 1;
+  min-width: 120px;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1;
+  color: var(--color-dark);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-medium-gray);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
   margin: 1rem 0;
 }
 
-.summary p {
-  margin: 0.25rem 0;
+th, td {
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.violation {
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--color-light-gray);
-}
-
-.description {
-  margin: 0 0 0.25rem;
-  line-height: 1.4;
-}
-
-.date {
-  font-size: 0.875rem;
-  color: var(--color-dark-gray);
-  margin: 0;
+th {
+  font-weight: bold;
+  background: var(--color-light-gray);
 }
 ```
 
-Save the file. We can't navigate to a detail page yet because we haven't linked to it. Let's fix that.
+Save the file.
 
 ### Linking to detail pages
 
-Open `src/lib/components/BuildingCard.svelte`. We need to wrap the card in a link that points to the building's detail page.
-
-At the top of the file, add an import for the base path:
-
-```js
-import { base } from '$app/paths';
-```
-
-The `base` variable is a SvelteKit helper that accounts for the fact that your site might not live at the root of a domain. On GitHub Pages, your site is at a URL like `yourusername.github.io/bronx-housing-violations/`, not just `yourusername.github.io/`. The `base` variable contains that `/bronx-housing-violations` prefix so your links work correctly.
-
-Now wrap the card content in an `<a>` tag:
-
-```svelte
-<script>
-  import { base } from '$app/paths';
-  let { building } = $props();
-</script>
-
-<a class="card" href="{base}/building/{building.id}">
-  <h3>{building.address}</h3>
-  <div class="meta">
-    <span class="zip">{building.zip}</span>
-    <span class="count">{building.violationCount} violations</span>
-  </div>
-</a>
-```
-
-We replaced the `<div>` with an `<a>` tag and set its `href` to the detail page URL. The URL is built from three pieces: the base path, the `/building/` prefix, and the building's ID.
-
-Update the styles. Add these rules to make the link behave like a card instead of a traditional blue underlined link:
-
-```css
-a.card {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
-```
-
-Save and click on a building in the list. You should land on a detail page showing that building's address and all of its violations.
+Because the `Card` component on the list page already renders each entry as a link, the list is wired up automatically. The `href` we passed in Part 3 — `{base}/building/{building.id}` — points directly to the dynamic route we just created. Save and click on any card to test it.
 
 <Screenshot
-  src="/screenshots/week-7/detail-page.png"
-  alt="A detail page for a specific Bronx building showing the address as a headline, a summary box with violation count, zip code, and latest inspection date, followed by a list of individual violations with descriptions and dates"
+  src="/screenshots/week-9/detail-page.png"
+  alt="A detail page for a specific Bronx building showing three big-number stat boxes (total violations, violations in the last year, and Bronx rank), followed by a table listing each violation description and date"
   chromeTitle="1520 GRAND CONCOURSE"
   chromeUrl="http://localhost:5173/building/34291"
   maxWidth="960px"
@@ -583,77 +512,27 @@ Save and click on a building in the list. You should land on a detail page showi
 
 Click the "Back to all buildings" link at the top to return to the list. Your search and filter state will reset — that's expected for a static site. Each page load starts fresh.
 
-Also update the back link on the detail page to use the `base` path. In `src/routes/building/[id]/+page.svelte`, add the import and update the link:
-
-```svelte {emphasize-lines="3,7"}
-<script>
-  let { data } = $props();
-  import { base } from '$app/paths';
-  let building = data.building;
-</script>
-
-<a href="{base}/">&larr; Back to all buildings</a>
-```
-
 ## Part 6: Adding a locator map
 
 Each building in our dataset has latitude and longitude coordinates. Let's use them to add a small map to the detail page that shows where the building is located.
 
-We'll create a simple component that embeds an [OpenStreetMap](https://www.openstreetmap.org/) map centered on the building. This doesn't require installing any new packages — it uses an iframe, which is just a way of embedding one web page inside another.
+Our template includes a `LocatorMap` component that embeds an [OpenStreetMap](https://www.openstreetmap.org/) view centered on any set of coordinates. It uses an iframe — a way to embed one web page inside another — and constructs the URL automatically from the coordinates you pass in. No extra packages required.
 
-Create a new file at `src/lib/components/LocatorMap.svelte`:
+Open `src/routes/building/[id]/+page.svelte` and add the import:
 
-```svelte
+```svelte {emphasize-lines="4"}
 <script>
-  let { lat, lng } = $props();
-
-  let src = $derived(
-    `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.005},${lat - 0.005},${lng + 0.005},${lat + 0.005}&layer=mapnik&marker=${lat},${lng}`
-  );
+  import { base } from '$app/paths';
+  import buildings from '$lib/data/bronx-lead-paint.json';
+  import HeroTopper from '$lib/components/HeroTopper.svelte';
+  import LocatorMap from '$lib/components/LocatorMap.svelte';
+  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
+  let { data } = $props();
+  let building = data.building;
 </script>
-
-<div class="map-container">
-  <iframe
-    title="Building location"
-    width="100%"
-    height="300"
-    {src}
-    frameborder="0"
-  ></iframe>
-  <p class="map-credit">
-    Map data © <a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors
-  </p>
-</div>
-
-<style>
-  .map-container {
-    margin: 1rem 0;
-    border: 1px solid var(--color-light-gray);
-  }
-
-  iframe {
-    display: block;
-  }
-
-  .map-credit {
-    font-size: 0.75rem;
-    color: var(--color-dark-gray);
-    text-align: right;
-    padding: 0.25rem 0.5rem;
-    margin: 0;
-  }
-</style>
 ```
 
-The component accepts `lat` and `lng` as props. It constructs a URL for OpenStreetMap's embed service, which takes a bounding box (the area to show) and a marker position. The `$derived` expression builds this URL dynamically. We subtract and add 0.005 degrees from the coordinates to create a small box around the building — that's roughly a couple of blocks in each direction.
-
-Now add the map to the detail page. Open `src/routes/building/[id]/+page.svelte` and import the component:
-
-```js
-import LocatorMap from '$lib/components/LocatorMap.svelte';
-```
-
-Place it in the page, after the summary and before the violations list:
+Place the component after the `HeroTopper` and before the violations list. `LocatorMap` accepts two props — `lat` and `lng` — and renders an OpenStreetMap embed centered on those coordinates with a marker at the exact spot:
 
 ```svelte
 <LocatorMap lat={building.lat} lng={building.lng} />
@@ -662,7 +541,7 @@ Place it in the page, after the summary and before the violations list:
 Save and visit a building's detail page. You should see a small interactive map showing the building's location in the Bronx.
 
 <Screenshot
-  src="/screenshots/week-7/locator-map.png"
+  src="/screenshots/week-9/locator-map.png"
   alt="The detail page now includes a small embedded OpenStreetMap showing a red marker at the building's location, with the surrounding Bronx streets visible"
   chromeTitle="1520 GRAND CONCOURSE"
   chromeUrl="http://localhost:5173/building/34291"
@@ -673,74 +552,106 @@ In a couple of weeks, we'll learn how to build full interactive maps from scratc
 
 ## Part 7: Editorial polish
 
-The data is loaded, the search works, and the detail pages are in place. But right now the page is just a database. It needs a frame — a headline, some context, and a source credit — to make it a piece of journalism.
+The data is loaded, the search works, and the detail pages are in place. But right now the page is just a database. It needs a frame — a bold editorial header and a source credit at the bottom — to make it a piece of journalism.
 
-Go back to `src/routes/+page.svelte` and update the top of the page with an editorial introduction:
+ProPublica, The Marshall Project, and other leading newsrooms rarely start a database explorer with a plain `<h1>`. They lead with a designed topper: large type, a contextual summary, a byline, and often a looping illustration that sets the tone before the data appears. Our template includes a `HeroTopper` component that brings this pattern within reach.
+
+### Get a Lottie animation
+
+`HeroTopper` uses [Lottie](https://lottiefiles.com/) — a file format for lightweight vector animations — to display a looping illustration alongside your headline.
+
+Go to [lottiefiles.com](https://lottiefiles.com/) and create a free account. Search for an animation that fits your story. For a lead paint project, something like a building, a child, or a paint brush animation works well. When you find one you like, click "Download" and choose "Lottie JSON." Save the file as `animation.json` in your project's `static/` folder.
+
+### Install lottie-web
+
+`HeroTopper` renders the animation using [lottie-web](https://www.npmjs.com/package/lottie-web), the standard library for playing Lottie files in a browser. Install it in your project:
+
+```bash
+npm install lottie-web
+```
+
+### Add the hero topper
+
+Open `src/routes/+page.svelte` and add the import:
+
+```svelte {emphasize-lines="2"}
+<script>
+  import HeroTopper from '$lib/components/HeroTopper.svelte';
+  import buildings from '$lib/data/bronx-lead-paint.json';
+  import { base } from '$app/paths';
+  import SearchInput from '$lib/components/SearchInput.svelte';
+  import Dropdown from '$lib/components/Dropdown.svelte';
+  import Card from '$lib/components/Card.svelte';
+  // ... rest of your script
+</script>
+```
+
+Replace the `<h1>` at the top of the template with the component:
 
 ```svelte
-<h1>Bronx Buildings with Hazardous Housing Violations</h1>
-
-<p class="intro">
-  New York City's Department of Housing Preservation and Development inspects
-  residential buildings and issues violations when it finds conditions that
-  violate the housing maintenance code. Class C violations are the most
-  serious — they describe conditions the city considers immediately
-  hazardous to tenants' health and safety, including lead paint, no heat
-  in winter, and pest infestations.
-</p>
-
-<p class="intro">
-  The buildings listed below are in the Bronx, the borough with the highest
-  concentration of housing violations in the city. They are ranked by the
-  number of open Class C violations on record.
-</p>
+<HeroTopper
+  headline="Bronx Buildings with Open Lead Paint Violations"
+  deck="Using HPD inspection records to surface unresolved lead paint hazards in New York's most violation-prone borough"
+  byline="Your Name"
+  date="March 2026"
+  lottieSrc="/animation.json"
+/>
 ```
 
-At the bottom of the page, after the `{#each}` loop, add a source credit:
-
-```svelte
-<footer class="source">
-  <p>
-    Source: <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>,
-    via NYC Open Data. Class C (immediately hazardous) violations for
-    buildings in the Bronx. Data as of March 2026.
-  </p>
-  <p>
-    For more information about your building's violations, visit
-    <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
-  </p>
-</footer>
-```
-
-Add styles for the intro and footer:
-
-```css
-.intro {
-  font-size: 1.0625rem;
-  line-height: 1.6;
-  max-width: 640px;
-}
-
-.source {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-light-gray);
-  font-size: 0.8125rem;
-  color: var(--color-dark-gray);
-}
-```
+The `deck` prop is a one- or two-sentence summary — think of it as the lede you'd write for a story. `byline` and `date` appear in smaller type below the deck. `lottieSrc` is the path to the JSON file you placed in `static/`.
 
 <Screenshot
-  src="/screenshots/week-7/final-page.png"
-  alt="The finished database explorer showing a headline, two paragraphs of editorial context, the search and filter controls, the list of building cards, and a source credit at the bottom"
-  chromeTitle="Bronx Buildings with Hazardous Housing Violations"
+  src="/screenshots/week-9/hero-topper.png"
+  alt="The database explorer with a bold full-width hero header. On the left: a large headline in white type on a dark background, a summary paragraph, and a byline. On the right: a looping Lottie animation of a building."
+  chromeTitle="Bronx Buildings with Open Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-Save, commit, and push to GitHub. Watch the Actions tab to make sure the deploy succeeds, then check your live site.
+### Add a methodology box
 
-Take a moment to browse through the data. Click into the buildings at the top of the list and read the violation descriptions. What patterns do you notice? What stories does this data tell? That instinct — the impulse to look at the records and ask questions — is what separates a database explorer from just a spreadsheet.
+Readers trust data journalism more when they can see exactly where the numbers came from. The template includes a `MethodologyBox` component for just this purpose — a structured, consistently styled block that explains the data's origin, how it was processed, and any caveats a reader should know.
+
+Add the import:
+
+```svelte {emphasize-lines="2"}
+<script>
+  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
+  import HeroTopper from '$lib/components/HeroTopper.svelte';
+  // ... rest of your imports
+</script>
+```
+
+At the bottom of the page, after the `{#each}` loop, drop in the component with your source information as children:
+
+```svelte
+<MethodologyBox>
+  <p>
+    Data comes from the <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
+    via NYC Open Data. This page shows open lead paint violations for buildings in the Bronx.
+    Records were filtered to lead paint violations under Section 27-2056 HMC and aggregated
+    at the building level as of March 2026.
+  </p>
+  <p>
+    For more information about a specific building's violations, visit
+    <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
+  </p>
+</MethodologyBox>
+```
+
+The component renders an "About the data" box with a bordered left accent and a collapsed/expandable toggle so it does not visually compete with the data itself. You can put any mix of paragraphs, lists, and links between its tags — it accepts open-ended children.
+
+<Screenshot
+  src="/screenshots/week-9/final-page.png"
+  alt="The finished database explorer showing the bold hero header at the top, the search and filter controls, the list of building cards, and a methodology box at the bottom"
+  chromeTitle="Bronx Buildings with Open Lead Paint Violations"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+Save, commit, and push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds, then check your live site.
+
+Take a moment to browse through the data. Click into the buildings at the top of the list and read the violation descriptions. What patterns do you notice? Which neighborhoods have the highest concentrations? That instinct — the impulse to look at the records and ask questions — is what separates a database explorer from just a spreadsheet.
 
 ## Homework
 
@@ -752,7 +663,8 @@ Your project must have:
 
 * A searchable or filterable list page with at least two controls (search input, dropdown, toggle — your choice)
 * Detail pages for individual records or groups of records
-* An editorial frame: a headline, introductory text, and a source credit
+* A `HeroTopper` with a Lottie animation, a headline, a deck, and a byline
+* A `MethodologyBox` at the bottom explaining the data source and how it was processed
 
 Some datasets that could work well:
 
