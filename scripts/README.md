@@ -4,7 +4,9 @@ These Python scripts download and process the NYC housing violation and property
 
 ## What the scripts produce
 
-Running the two scripts in order produces `output/bronx_buildings.json` — a file containing every Bronx building that has open Class C (immediately hazardous) HPD violations, grouped by building with violation counts and geographic coordinates. This file is the data source for the Week 9 SvelteKit project.
+Running the four scripts in order produces `output/bronx_buildings.json` — a file containing every Bronx building that has open Class C (immediately hazardous) HPD violations, grouped by building with violation counts and geographic coordinates. This file is the data source for the Week 9 SvelteKit project.
+
+The scripts are split into two download scripts and two processing scripts so that you can re-run the analysis without re-downloading the raw data.
 
 ## Prerequisites
 
@@ -21,14 +23,22 @@ Run the scripts from the `scripts/` directory, in order:
 ```bash
 cd scripts
 
-# Step 1 — download and filter the HPD violations dataset
-python fetch_violations.py
+# Step 1 — paginated download of open Bronx Class C violations → output/violations_raw.csv
+python 01_download_violations.py
 
-# Step 2 — download PLUTO and merge latitude / longitude
-python merge_pluto.py
+# Step 2 — paginated download of PLUTO (bbl, latitude, longitude) → output/pluto_raw.csv
+python 02_download_pluto.py
+
+# Step 3 — group violations by building → output/bronx_c_violations.csv
+python 03_filter_violations.py
+
+# Step 4 — merge PLUTO coordinates and serialize to JSON → output/bronx_buildings.json
+python 04_merge_pluto.py
 ```
 
-Both scripts write their output to the `scripts/output/` directory.
+Steps 1 and 2 only need to be run once. You can re-run steps 3 and 4 as many times as you like without downloading the raw data again.
+
+All scripts write their output to the `scripts/output/` directory.
 
 ## Data sources
 

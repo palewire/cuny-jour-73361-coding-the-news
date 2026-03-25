@@ -1,16 +1,14 @@
 """
-Download the NYC PLUTO database and merge the latitude and longitude of each
-building into the grouped violations data produced by fetch_violations.py.
+Merge the grouped violations data from 03_filter_violations.py with the PLUTO
+latitude/longitude data from 02_download_pluto.py, then serialize the result
+to the JSON schema used by the Week 9 SvelteKit app.
 
 The two datasets are joined on the BBL (Borough-Block-Lot) identifier, which
 is a unique 10-digit code that NYC uses to identify every tax lot.
 
-Output: output/bronx_buildings.json  (ready to drop into the week-9 Svelte project)
-
-Sources:
-  Violations:  output/bronx_c_violations.csv  (from fetch_violations.py)
-  PLUTO:       NYC Open Data – Primary Land Use Tax Lot Output (MapPLUTO)
-               https://data.cityofnewyork.us/City-Government/Primary-Land-Use-Tax-Lot-Output-PLUTO-/64uk-42ks
+Inputs:  output/bronx_c_violations.csv
+         output/pluto_raw.csv
+Output:  output/bronx_buildings.json  (ready to drop into the week-9 Svelte project)
 """
 
 # Import the pandas library for reading and manipulating data
@@ -26,13 +24,13 @@ from ast import literal_eval
 from pathlib import Path
 
 # ------------------------------------------------------------------
-# Step 1 – Load the violations data produced by fetch_violations.py
+# Step 1 – Load the violations data produced by 03_filter_violations.py
 # ------------------------------------------------------------------
 
 # Print a status message so the user knows which step is running
 print("Loading grouped violations data …")
 
-# Read the CSV file that fetch_violations.py wrote into a DataFrame
+# Read the CSV file that 03_filter_violations.py wrote into a DataFrame
 violations = pd.read_csv("output/bronx_c_violations.csv")
 
 # Convert the BBL column to a plain string so it matches the format in PLUTO
@@ -42,28 +40,23 @@ violations["bbl"] = violations["bbl"].astype(str).str.strip()
 print(f"  {len(violations):,} buildings loaded from output/bronx_c_violations.csv")
 
 # ------------------------------------------------------------------
-# Step 2 – Download the PLUTO dataset and keep only the columns we need
+# Step 2 – Load the PLUTO data produced by 02_download_pluto.py
 # ------------------------------------------------------------------
 
-# Print a status message so the user knows a download is about to start
-print("Downloading PLUTO from NYC Open Data …")
+# Print a status message so the user knows which step is running
+print("Loading PLUTO data …")
 
-# Set the Socrata API endpoint for the MapPLUTO dataset
-pluto_url = "https://data.cityofnewyork.us/resource/64uk-42ks.csv"
-
-# Request only the three columns we need; a $limit of 900,000 covers the full NYC tax-lot file
-pluto = pd.read_csv(
-    f"{pluto_url}?$select=bbl,latitude,longitude&$limit=900000"
-)
-
-# Print how many PLUTO records arrived so we can confirm the download is complete
-print(f"  {len(pluto):,} PLUTO records downloaded.")
+# Read the CSV file that 02_download_pluto.py wrote into a DataFrame
+pluto = pd.read_csv("output/pluto_raw.csv")
 
 # Convert the PLUTO BBL column to a plain string so it matches the violations BBL format
 pluto["bbl"] = pluto["bbl"].astype(str).str.strip()
 
 # Drop any duplicate BBL rows in PLUTO so the merge stays one-to-one
 pluto = pluto.drop_duplicates(subset="bbl")
+
+# Print how many PLUTO records are available
+print(f"  {len(pluto):,} PLUTO records loaded from output/pluto_raw.csv")
 
 # ------------------------------------------------------------------
 # Step 3 – Merge latitude and longitude onto the violations data
