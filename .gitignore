@@ -148,3 +148,6 @@ build/
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Generated data files from data preparation scripts
+scripts/output/
