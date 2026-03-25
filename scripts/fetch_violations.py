@@ -1,7 +1,11 @@
 """
-Download the full NYC HPD Housing Maintenance Code Violations dataset,
-filter it to the Bronx and Class C (immediately hazardous) violations,
-and group the results by building with a total violation count.
+Download open Class C housing violations for the Bronx from the NYC HPD
+Housing Maintenance Code Violations dataset, and group the results by
+building with a total violation count.
+
+Filtering is done server-side via Socrata SoQL query parameters so only the
+rows we need are transferred.  The matching rows are fetched in pages of
+50,000 so no single request risks timing out.
 
 Output: output/bronx_c_violations.csv
 
@@ -15,44 +19,53 @@ import pandas as pd
 # Import the pathlib library to create output directories
 from pathlib import Path
 
-# Print a status message so the user knows the script has started
-print("Downloading the full HPD violations dataset from NYC Open Data …")
-
 # Set the base URL for the NYC Open Data Socrata API endpoint for HPD violations
 url = "https://data.cityofnewyork.us/resource/wvxf-dwi5.csv"
 
-# Set a row limit high enough to retrieve the entire dataset (currently ~6 million rows)
-limit = 6_000_000
+# Set the number of rows to request per page; 50,000 is a safe size for the Socrata API
+page_size = 50_000
 
-# Download the full dataset into a DataFrame; the $limit parameter overrides Socrata's 1,000-row default
-df = pd.read_csv(f"{url}?$limit={limit}")
+# Build the SoQL WHERE clause to pre-filter on the server:
+#   boroid=2      → Bronx only
+#   class='C'     → immediately hazardous violations only
+#   currentstatus='Open' → only violations that have not yet been resolved
+where = "boroid=2 AND class='C' AND currentstatus='Open'"
 
-# Print the shape of the raw download so the user can confirm how many rows arrived
-print(f"Downloaded {len(df):,} rows and {len(df.columns)} columns.")
+# Print a status message so the user knows the download is about to begin
+print("Downloading open Bronx Class C violations from NYC Open Data (paginating) …")
 
-# Print the column names so the user can inspect the raw data structure
-print("Columns:", df.columns.tolist())
+# Collect each page of results in this list; we will concatenate them afterwards
+pages = []
 
-# Filter the dataset to rows where the borough is the Bronx (boroid == 2)
-bronx = df[df["boroid"] == 2]
+# Start the offset counter at zero; it increases by page_size after each successful page
+offset = 0
 
-# Print how many rows remain after the borough filter
-print(f"Bronx rows: {len(bronx):,}")
+# Keep fetching pages until a page comes back with fewer rows than page_size (signals last page)
+while True:
+    # Build the full URL for this page using SoQL $where, $limit, and $offset parameters
+    page_url = f"{url}?$where={where}&$limit={page_size}&$offset={offset}"
 
-# Filter to Class C violations only (the most severe, immediately hazardous category)
-class_c = bronx[bronx["class"] == "C"]
+    # Download this page of results into a DataFrame
+    page = pd.read_csv(page_url)
 
-# Print how many rows remain after the class filter
-print(f"Bronx Class C rows: {len(class_c):,}")
+    # Add this page to the collection
+    pages.append(page)
 
-# Filter to violations whose current status is "Open" so we only count active problems
-open_violations = class_c[class_c["currentstatus"] == "Open"]
+    # Report progress so the user can see the download moving forward
+    print(f"  Fetched {offset + len(page):,} rows so far …")
 
-# Print how many open violations remain
-print(f"Open Bronx Class C rows: {len(open_violations):,}")
+    # If the page has fewer rows than the page size, we have reached the last page
+    if len(page) < page_size:
+        break
 
-# Make a working copy to avoid a pandas SettingWithCopyWarning when adding columns
-violations = open_violations.copy()
+    # Advance the offset by one full page to request the next batch
+    offset += page_size
+
+# Stack all pages into a single DataFrame
+violations = pd.concat(pages, ignore_index=True)
+
+# Print the final row count so the user can confirm the full dataset arrived
+print(f"Downloaded {len(violations):,} open Bronx Class C violations.")
 
 # Build a full street address by combining the house number and street name columns
 violations["address"] = violations["housenumber"].str.strip() + " " + violations["streetname"].str.strip()
