@@ -264,7 +264,7 @@ The header now reads like a real news project.
 
 ## Part 4: Building the list
 
-Now let's display the buildings on the page. Rather than looping over every building, you will start by focusing on the top 20 by open violation count
+Now let's display the buildings on the page. Rather than looping over every building, you will start by focusing on the top 20 by open violation count.
 
 Once again, we have a pre-made component for this pattern. The [`RankingCard`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-rankingcard--docs) and the parent [`RankingList`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-rankinglist--docs) components are designed to show ranked lists of items. Like our `DatabaseHeader`, they are documented in Storybook with live previews.
 
@@ -423,63 +423,209 @@ Save again and the list should now sit comfortably within the page layout.
   maxWidth="960px"
 />
 
-## Part 5: Search and filters
+## Part 5: Adding search
 
-A list of hundreds of buildings isn't very useful without a way to narrow it down. Let's add a search box and a filter dropdown.
+A ranking of the top 20 buildings is clear and newsy, but you can offer your readers more.
 
-We'll use the same reactive tools you learned in [Week 4](/docs/coding-the-news/scripts/week-4/): `$state` for tracking what the user has typed or selected, `$derived` for automatically recalculating the filtered list, and `bind:value` for connecting inputs to state variables.
+Your dataset has the full list of every building with at least five open lead paint violations in the Bronx, so why not let readers search to find addresses they're interested in? That's what separates a database explorer from a static news story.
 
-### Adding a search input
+Our Storybook component library includes a [`SearchInput`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-searchinput--docs) component, which is already styled and ready to configure.
 
-Start by adding a `$state` variable for the search term and a `$derived` variable for the filtered results. Replace the `sorted` variable and swap in our template components:
+<Screenshot
+  src="/screenshots/week-9/searchinput-storybook.png"
+  alt="The Storybook documentation page for the SearchInput component, showing a live preview of the search field with its props table below"
+  chromeTitle="SearchInput - Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-searchinput--docs"
+  maxWidth="960px"
+/>
 
-```svelte {emphasize-lines="4-5,7-14"}
+All you need to do is link it up with the reactive tools you learned in [Week 4](/docs/coding-the-news/scripts/week-4/): [`$state`](https://svelte.dev/docs/svelte/$state) for tracking what the user has typed, and [`$derived`](https://svelte.dev/docs/svelte/$derived) for automatically recalculating the filtered list based on the search term.
+
+Start by importing `SearchInput` and adding two new variables to your script block. Replace `top20` with a `search` state variable and a `filtered` derived variable:
+
+```svelte {emphasize-lines="5,9-16"}
 <script>
-  import buildings from '$lib/data/bronx_buildings.json';
-  import { base } from '$app/paths';
-  import Card from '$lib/components/Card.svelte';
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import RankingList from '$lib/components/RankingList.svelte';
+  import RankingCard from '$lib/components/RankingCard.svelte';
   import SearchInput from '$lib/components/SearchInput.svelte';
+
+  let { data } = $props();
 
   let search = $state('');
 
   let filtered = $derived(
-    buildings
+    data.violations
       .filter(b => b.address.toLowerCase().includes(search.toLowerCase()))
-      .sort((a, b) => b.violationCount - a.violationCount)
+      .sort((a, b) => a.rank - b.rank)
+      .slice(0, 20)
   );
 </script>
 ```
 
-The `$derived` expression does two things. First, it filters the buildings array to only include those whose address contains the search term. The [`.toLowerCase()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase) calls on both sides make the search case-insensitive, so typing "grand" will match "GRAND CONCOURSE." Second, it sorts the results by violation count, just as before.
+The `$derived` expression does two things. First, it filters the buildings array to only include those whose address contains the search term. The [`.toLowerCase()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase) calls on both sides make the search case-insensitive, so typing "grand" will match "GRAND CONCOURSE." Second, it sorts the remaining results by rank, just as before, and then slices down to the top 20 matches.
 
-Whenever `search` changes — because the user typed something — Svelte automatically re-runs the `$derived` expression and updates everything on the page that depends on it.
+Whenever `search` changes — because the user typed something — Svelte will automatically re-run the `$derived` expression and update everything on the page that depends on it.
 
-Now add a `SearchInput` above the `{#each}` loop. Our template's `SearchInput` component is a styled text field that wires up `bind:value` exactly like a raw `<input>` would:
+To put the pieces into action, nest the `SearchInput` inside `DatabaseHeader` so it appears directly below the headline. Like other parent components, the header allows for `children` for exactly this purpose.
 
-```svelte
-<SearchInput bind:value={search} placeholder="Search by address..." />
+The `SearchInput` has a `bind:value` prop that creates a two-way connection between the input field and the `search` variable. Whenever the user types, `search` updates, which triggers the `$derived` filter, which updates `filtered`, which re-renders both the count in the header and the cards in the list.
 
-<p>{filtered.length} buildings</p>
+```svelte {emphasize-lines="1-8,11,12"}
+<DatabaseHeader
+  headline="Tainted Home Tracker"
+  description="The Bronx buildings with the most lead paint violations"
+  byline="NYCity News Service"
+  date="March 2026"
+>
+  <SearchInput bind:value={search} placeholder="Search by address..." />
+</DatabaseHeader>
 
-{#each filtered as building}
-  <Card href="{base}/building/{building.id}">
-    <h3>{building.address}</h3>
-    <p>{building.zip} · {building.violationCount} lead paint violations</p>
-  </Card>
-{/each}
+<div class="container">
+  <RankingList title={search ? `Showing top ${filtered.length} results` : 'Top 20 buildings by open violations'}>
+    {#each filtered as building (building.id)}
+      <RankingCard
+        rank={building.rank}
+        title={building.address}
+        value={building.violationCount}
+      />
+    {/each}
+  </RankingList>
+</div>
 ```
+
+Note that the variable you loop over in the `{#each}` block also needs to change from `top20` to `filtered` so it reflects the search results.
+
+A final flourish can be seen in the `RankingList` title, which now changes based on whether the user has typed a search term. If they have, it shows how many results are being displayed. If not, it defaults to "Top 20 buildings by open violations."
 
 Save and try it. Type an address into the search box and watch the list narrow in real time.
 
 <Screenshot
-  src="/screenshots/week-9/search-working.png"
-  alt="The building list with a search input at the top. The user has typed 'grand' and the list shows only buildings on Grand Concourse."
+  src="/screenshots/week-9/search-too-wide.png"
+  alt="The database header with a search input stretching the full width of the header area, wider than the ranking list below it"
   chromeTitle="Bronx Lead Paint Violations"
-  chromeUrl="http://localhost:5173"
+  chromeUrl="http://localhost:5174"
   maxWidth="960px"
 />
 
-## Part 6: Detail pages
+It works, but the search box stretches to fill the full width of the header. Like you did with the `RankingList`, constrain it by wrapping it in a `<div>` with a max-width.
+
+Update the `<style>` block to add a rule:
+
+```css {emphasize-lines="7-9"}
+<style>
+  .container {
+    max-width: var(--max-width-wide);
+    margin: 0 auto;
+  }
+
+  .search-wrapper {
+    max-width: 600px;
+  }
+</style>
+```
+
+Then wrap the `SearchInput` inside the `DatabaseHeader`.
+
+```svelte {emphasize-lines="7-9"}
+<DatabaseHeader
+  headline="Tainted Home Tracker"
+  description="The Bronx buildings with the most lead paint violations"
+  byline="NYCity News Service"
+  date="March 2026"
+>
+  <div class="search-wrapper">
+    <SearchInput bind:value={search} placeholder="Search by address..." />
+  </div>
+</DatabaseHeader>
+```
+
+That should do it.
+
+<Screenshot
+  src="/screenshots/week-9/search-fixed-width.png"
+  alt="The database header with the search input now constrained to a narrower width, matching the text content above it"
+  chromeTitle="Bronx Lead Paint Violations"
+  chromeUrl="http://localhost:5174"
+  maxWidth="960px"
+/>
+
+## Part 6: Adding a methodology
+
+If we're going to make big claims, we should explain how we can justify them. We owe our readers transparency, if we expect them to believe us. A simple way to do that is to include a methodology box on the page that describes where the data came from, how it was processed, and any caveats or limitations.
+
+Our Storybook library includes a component specifically for this. It's called a [`MethodologyBox`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-methodologybox--docs).
+
+<Screenshot
+  src="/screenshots/week-9/methodologybox-storybook.png"
+  alt="The Storybook documentation page for the MethodologyBox component, showing a live preview of the collapsible 'How we reported this story' box with the props table below"
+  chromeTitle="MethodologyBox - Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-methodologybox--docs"
+  maxWidth="960px"
+/>
+
+As with the other compontents, you start by adding `MethodologyBox` to your imports in `+page.svelte`.
+
+```svelte {emphasize-lines="6"}
+<script>
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import RankingList from '$lib/components/RankingList.svelte';
+  import RankingCard from '$lib/components/RankingCard.svelte';
+  import SearchInput from '$lib/components/SearchInput.svelte';
+  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
+  // ... rest of your script
+</script>
+```
+
+Add a `MethodologyBox` with your write-up about the data in the same container as the `RankingList`. You can use any mix of paragraphs, lists, and links inside the box.
+
+```svelte {emphasize-lines="23-32"}
+<DatabaseHeader
+  headline="Tainted Home Tracker"
+  description="The Bronx buildings with the most lead paint violations"
+  byline="NYCity News Service"
+  date="March 2026"
+>
+  <div class="search-wrapper">
+    <SearchInput bind:value={search} placeholder="Search by address..." />
+  </div>
+</DatabaseHeader>
+
+<div class="container">
+  <RankingList title={search ? `Showing top ${filtered.length} results` : 'Top 20 buildings by open violations'}>
+    {#each filtered as building (building.id)}
+      <RankingCard
+        rank={building.rank}
+        title={building.address}
+        value={building.violationCount}
+      />
+    {/each}
+  </RankingList>
+
+  <MethodologyBox>
+    <p>
+      The data on this page comes from the Department of Housing Preservation and Development
+      <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">via New York City's open data portal</a>.
+    </p>
+    <p>
+      The citations published by the city were filtered to include only lead paint violations that city inspectors listed as unresolved. The data was filtered to only citations linked to addresses in the Bronx and then aggregated by address. Only addresses with five or more open violations were included in the ranking. The data is current as of March 2026.
+    </p>
+    <p>The code that executed the analysis is available as open source on GitHub at <a href="https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations" target="_blank">github.com/palewire/nyc-hpd-bronx-lead-paint-violations</a>.</p>
+  </MethodologyBox>
+</div>
+```
+
+Save and check the bottom of your page.
+
+<Screenshot
+  src="/screenshots/week-9/methodology-on-page.png"
+  alt="The bottom of the page showing the last few ranked buildings and the methodology box below with a blue left border, explaining the data source and methodology"
+  chromeTitle="Bronx Lead Paint Violations"
+  chromeUrl="http://localhost:5174"
+  maxWidth="960px"
+/>
+
+## Part 7: Detail pages
 
 So far, everything lives on a single page. But a good database explorer lets you click into individual records and see their full story. That's what we'll build now.
 
@@ -527,151 +673,131 @@ Now create the page that will display the building's details. Create `src/routes
 ```svelte
 <script>
   import { base } from '$app/paths';
-  import buildings from '$lib/data/bronx_buildings.json';
-  import HeroTopper from '$lib/components/HeroTopper.svelte';
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import Dashboard from '$lib/components/Dashboard.svelte';
+  import BigNumber from '$lib/components/BigNumber.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
+
   let { data } = $props();
   let building = data.building;
-
-  let oneYearAgo = new Date();
-  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-  let recentCount = building.violations.filter(v => new Date(v.date) >= oneYearAgo).length;
-
-  let rank = [...buildings]
-    .sort((a, b) => b.violationCount - a.violationCount)
-    .findIndex(b => b.id === building.id) + 1;
 </script>
 
-<a href="{base}/">← Back to all buildings</a>
-
-<HeroTopper
+<DatabaseHeader
   headline={building.address}
-  deck="{building.violationCount} open lead paint violations · ZIP {building.zip}"
+  description="{building.violationCount} open lead paint violations · ZIP {building.zip}"
   byline="NYC HPD Data"
   date={building.latestDate}
 />
 
-<div class="stats">
-  <div class="stat-box">
-    <span class="stat-number">{building.violationCount}</span>
-    <span class="stat-label">Total open violations</span>
-  </div>
-  <div class="stat-box">
-    <span class="stat-number">{recentCount}</span>
-    <span class="stat-label">Issued in the last year</span>
-  </div>
-  <div class="stat-box">
-    <span class="stat-number">#{rank}</span>
-    <span class="stat-label">Rank in the Bronx</span>
-  </div>
+<div class="container">
+  <Dashboard>
+    <BigNumber number={building.violationCount} label="Open violations" />
+    <BigNumber number="#{building.rank}" label="Rank in the Bronx" />
+  </Dashboard>
+
+  <h2>Violations</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Date issued</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each building.violations as violation}
+        <tr>
+          <td>{violation.description}</td>
+          <td>{violation.date}</td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+
+  <MethodologyBox>
+    <p>
+      Violation records come from the
+      <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
+      via NYC Open Data. Only open lead paint violations are shown.
+      For more information about this building, visit
+      <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
+    </p>
+  </MethodologyBox>
 </div>
 
-<h2>Violations</h2>
+<style>
+  .container {
+    max-width: var(--max-width-wide);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+  }
 
-<table>
-  <thead>
-    <tr>
-      <th>Description</th>
-      <th>Date issued</th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each building.violations as violation}
-      <tr>
-        <td>{violation.description}</td>
-        <td>{violation.date}</td>
-      </tr>
-    {/each}
-  </tbody>
-</table>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
 
-<MethodologyBox>
-  <p>
-    Violation records come from the
-    <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
-    via NYC Open Data. Only open lead paint violations are shown.
-    For more information about this building, visit
-    <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
-  </p>
-</MethodologyBox>
+  th, td {
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  th {
+    font-weight: bold;
+    background: var(--color-light-gray);
+  }
+</style>
 ```
 
-The key line is the first one in the script block: `let { data } = $props()`. When a page has a `+page.js` load function, SvelteKit passes whatever it returns as a `data` prop. So `data.building` is the building object we found in the load function.
+The key line is `let { data } = $props()`. When a page has a `+page.js` load function, SvelteKit passes whatever it returns as a `data` prop. So `data.building` is the building object we found in the load function.
 
-The three stat boxes above the table give readers immediate context before they dig into the violation records. `recentCount` filters the violations array to only those issued within the last twelve months, using JavaScript's built-in `Date` object. `rank` imports the full buildings array, sorts it by violation count, and uses [`.findIndex()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex) to locate this building's position — `+ 1` turns the zero-based index into a human-readable rank.
+The [`DatabaseHeader`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-databaseheader--docs) at the top reuses the same component from the list page, this time showing the building's address and violation summary. The [`Dashboard`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-dashboard--docs) and [`BigNumber`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-bignumber--docs) components display key stats in bold, colored boxes — no custom CSS needed.
 
-The violations themselves are now in a `<table>` rather than individual cards. A table is the right tool here: the data is structured, each row has the same two fields, and readers will want to scan down the list. Cards work well for heterogeneous content on list pages; a table is better when every record has the same shape.
-
-Add the styles at the bottom:
-
-```css
-.stats {
-  display: flex;
-  gap: 1.5rem;
-  margin: 2rem 0;
-  flex-wrap: wrap;
-}
-
-.stat-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.5rem;
-  background: var(--color-light-gray);
-  border-radius: var(--radius-md);
-  flex: 1;
-  min-width: 120px;
-}
-
-.stat-number {
-  font-size: 3rem;
-  font-weight: bold;
-  line-height: 1;
-  color: var(--color-dark);
-}
-
-.stat-label {
-  font-size: var(--font-size-sm);
-  color: var(--color-medium-gray);
-  margin-top: 0.5rem;
-  text-align: center;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-}
-
-th, td {
-  text-align: left;
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--color-border);
-}
-
-th {
-  font-weight: bold;
-  background: var(--color-light-gray);
-}
-```
-
-Save the file.
+The violations themselves are in a `<table>`. A table is the right tool here: the data is structured, each row has the same two fields, and readers will want to scan down the list.
 
 ### Linking to detail pages
 
-Because the `Card` component on the list page already renders each entry as a link, the list is wired up automatically. The `href` we passed in Part 4 — `{base}/building/{building.id}` — points directly to the dynamic route we just created. Save and click on any card to test it.
+Before we can test the detail pages, we need to wire up the list. Go back to `src/routes/+page.svelte` and add an `href` prop to each `RankingCard`. First, import `base`:
+
+```svelte {emphasize-lines="3"}
+<script>
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import { base } from '$app/paths';
+  import RankingList from '$lib/components/RankingList.svelte';
+  // ... rest of your imports
+</script>
+```
+
+`base` is a SvelteKit helper that holds the URL prefix for your site on GitHub Pages. Your project will live at a URL like `yourusername.github.io/bronx-lead-paint/` — not at the root of a domain — so any links between your pages need to include that prefix to work correctly.
+
+Then add the `href` to each `RankingCard`:
+
+```svelte {emphasize-lines="5"}
+{#each filtered as building (building.id)}
+  <RankingCard
+    rank={building.rank}
+    title={building.address}
+    href="{base}/building/{building.id}"
+    value={building.violationCount}
+  />
+{/each}
+```
+
+Save and click on any card to test it.
 
 <Screenshot
   src="/screenshots/week-9/detail-page.png"
-  alt="A detail page for a specific Bronx building showing three big-number stat boxes (total violations, violations in the last year, and Bronx rank), followed by a table listing each violation description and date"
+  alt="A detail page for a specific Bronx building showing a DatabaseHeader with the address and violation count, Dashboard BigNumber boxes for total violations and Bronx rank, and a table listing each violation description and date"
   chromeTitle="1520 GRAND CONCOURSE"
   chromeUrl="http://localhost:5173/building/34291"
   maxWidth="960px"
 />
 
-Click the "Back to all buildings" link at the top to return to the list. Your search and filter state will reset — that's expected for a static site. Each page load starts fresh.
+Click the "Back to all buildings" link at the top to return to the list. Your search state will reset — that's expected for a static site. Each page load starts fresh.
 
-## Part 7: Adding a locator map
+## Part 8: Adding a locator map
 
 Each building in our dataset has latitude and longitude coordinates. Let's use them to add a small map to the detail page that shows where the building is located.
 
@@ -679,19 +805,21 @@ Our template includes a `LocatorMap` component that embeds an [OpenStreetMap](ht
 
 Open `src/routes/building/[id]/+page.svelte` and add the import:
 
-```svelte {emphasize-lines="4"}
+```svelte {emphasize-lines="5"}
 <script>
   import { base } from '$app/paths';
-  import buildings from '$lib/data/bronx_buildings.json';
-  import HeroTopper from '$lib/components/HeroTopper.svelte';
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import Dashboard from '$lib/components/Dashboard.svelte';
+  import BigNumber from '$lib/components/BigNumber.svelte';
   import LocatorMap from '$lib/components/LocatorMap.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
+
   let { data } = $props();
   let building = data.building;
 </script>
 ```
 
-Place the component after the `HeroTopper` and before the violations list. `LocatorMap` accepts two props — `lat` and `lng` — and renders an OpenStreetMap embed centered on those coordinates with a marker at the exact spot:
+Place the component after the `Dashboard` and before the violations table. `LocatorMap` accepts two props — `lat` and `lng` — and renders an OpenStreetMap embed centered on those coordinates with a marker at the exact spot:
 
 ```svelte
 <LocatorMap lat={building.lat} lng={building.lng} />
@@ -709,105 +837,6 @@ Save and visit a building's detail page. You should see a small interactive map 
 
 In a couple of weeks, we'll learn how to build full interactive maps from scratch using a library called MapLibre. For now, this simple embed is enough to orient the reader.
 
-## Part 8: Editorial polish
-
-The data is loaded, the search works, and the detail pages are in place. But right now the page is just a database. It needs a frame — a bold editorial header and a source credit at the bottom — to make it a piece of journalism.
-
-ProPublica, The Marshall Project, and other leading newsrooms rarely start a database explorer with a plain `<h1>`. They lead with a designed topper: large type, a contextual summary, a byline, and often a looping illustration that sets the tone before the data appears. Our template includes a `HeroTopper` component that brings this pattern within reach.
-
-### Get a Lottie animation
-
-`HeroTopper` uses [Lottie](https://lottiefiles.com/) — a file format for lightweight vector animations — to display a looping illustration alongside your headline.
-
-Go to [lottiefiles.com](https://lottiefiles.com/) and create a free account. Search for an animation that fits your story. For a lead paint project, something like a building, a child, or a paint brush animation works well. When you find one you like, click "Download" and choose "Lottie JSON." Save the file as `animation.json` in your project's `static/` folder.
-
-### Install lottie-web
-
-`HeroTopper` renders the animation using [lottie-web](https://www.npmjs.com/package/lottie-web), the standard library for playing Lottie files in a browser. Install it in your project:
-
-```bash
-npm install lottie-web
-```
-
-### Add the hero topper
-
-Open `src/routes/+page.svelte` and add the import:
-
-```svelte {emphasize-lines="2"}
-<script>
-  import HeroTopper from '$lib/components/HeroTopper.svelte';
-  import buildings from '$lib/data/bronx_buildings.json';
-  import { base } from '$app/paths';
-  import SearchInput from '$lib/components/SearchInput.svelte';
-  import Dropdown from '$lib/components/Dropdown.svelte';
-  import Card from '$lib/components/Card.svelte';
-  // ... rest of your script
-</script>
-```
-
-Replace the `<h1>` at the top of the template with the component:
-
-```svelte
-<HeroTopper
-  headline="Bronx Buildings with Open Lead Paint Violations"
-  deck="Using HPD inspection records to surface unresolved lead paint hazards in New York's most violation-prone borough"
-  byline="Your Name"
-  date="March 2026"
-  lottieSrc="/animation.json"
-/>
-```
-
-The `deck` prop is a one- or two-sentence summary — think of it as the lede you'd write for a story. `byline` and `date` appear in smaller type below the deck. `lottieSrc` is the path to the JSON file you placed in `static/`.
-
-<Screenshot
-  src="/screenshots/week-9/hero-topper.png"
-  alt="The database explorer with a bold full-width hero header. On the left: a large headline in white type on a dark background, a summary paragraph, and a byline. On the right: a looping Lottie animation of a building."
-  chromeTitle="Bronx Buildings with Open Lead Paint Violations"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-### Add a methodology box
-
-Readers trust data journalism more when they can see exactly where the numbers came from. The template includes a `MethodologyBox` component for just this purpose — a structured, consistently styled block that explains the data's origin, how it was processed, and any caveats a reader should know.
-
-Add the import:
-
-```svelte {emphasize-lines="2"}
-<script>
-  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
-  import HeroTopper from '$lib/components/HeroTopper.svelte';
-  // ... rest of your imports
-</script>
-```
-
-At the bottom of the page, after the `{#each}` loop, drop in the component with your source information as children:
-
-```svelte
-<MethodologyBox>
-  <p>
-    Data comes from the <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
-    via NYC Open Data. This page shows open lead paint violations for buildings in the Bronx.
-    Records were filtered to lead paint violations under Section 27-2056 HMC and aggregated
-    at the building level as of March 2026.
-  </p>
-  <p>
-    For more information about a specific building's violations, visit
-    <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
-  </p>
-</MethodologyBox>
-```
-
-The component renders an "About the data" box with a bordered left accent and a collapsed/expandable toggle so it does not visually compete with the data itself. You can put any mix of paragraphs, lists, and links between its tags — it accepts open-ended children.
-
-<Screenshot
-  src="/screenshots/week-9/final-page.png"
-  alt="The finished database explorer showing the bold hero header at the top, the search and filter controls, the list of building cards, and a methodology box at the bottom"
-  chromeTitle="Bronx Buildings with Open Lead Paint Violations"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
 Save, commit, and push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds, then check your live site.
 
 Take a moment to browse through the data. Click into the buildings at the top of the list and read the violation descriptions. What patterns do you notice? Which neighborhoods have the highest concentrations? That instinct — the impulse to look at the records and ask questions — is what separates a database explorer from just a spreadsheet.
@@ -822,7 +851,7 @@ Your project must have:
 
 * A searchable or filterable list page with at least two controls (search input, dropdown, toggle — your choice)
 * Detail pages for individual records or groups of records
-* A `HeroTopper` with a Lottie animation, a headline, a deck, and a byline
+* A `DatabaseHeader` with a headline, description, byline, and date
 * A `MethodologyBox` at the bottom explaining the data source and how it was processed
 
 Some datasets that could work well:
