@@ -1,14 +1,14 @@
 ---
 title: "Multimedia Slideshow"
-summary: "How to build a photo-driven story page that weaves together images and text"
+summary: "How to build a full-screen, mobile-first photo essay with scroll snap"
 date: "Apr. 13, 2026"
 week: 10
 locked: true
 ---
 
 <script>
-  import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
+  import Aside from '$lib/components/Aside.svelte';
 </script>
 
 Last week we built a database explorer — a tool for readers to dig through records and find their own story. This week we're flipping the script. Instead of letting the reader drive, we're going to tell the story ourselves, using photographs.
@@ -45,9 +45,9 @@ Think about how you browse photos on your phone. Not on a website. On Instagram.
   maxWidth="400px"
 />
 
-This week we're going to steal that design pattern for journalism. Each of Parks's photographs will fill the entire screen. Captions overlay the bottom of the image. Scrolling snaps from one photo to the next with a satisfying click. On a phone, it will feel like swiping through a reel. On a desktop, it will still work — just with the scroll wheel instead of a thumb.
+This week we're going to steal that design pattern for journalism. Each of Parks's photographs will fill the entire screen. Captions overlay the bottom of the image. Scrolling snaps from one photo to the next. On a phone, it will feel like swiping through a reel. On a desktop, it will still work — just with the scroll wheel instead of a thumb.
 
-The key CSS feature that makes this possible is called [scroll snap](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_scroll_snap). It's a set of properties that tell the browser to "snap" the scroll position to specific points on the page, rather than letting the user stop at any arbitrary position. No JavaScript required.
+The key CSS feature that makes this possible is called [scroll snap](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_scroll_snap). It's a set of properties that tell the browser to lock the scroll position to specific points on the page, rather than letting the user stop at any arbitrary position. No JavaScript required for the core behavior.
 
 Let's build it.
 
@@ -65,16 +65,14 @@ Then:
 npm run dev
 ```
 
-## Part 2: Setting up the photos
+## Part 2: Setting up the data
 
 I've prepared a set of Gordon Parks photographs for today's class. Download the zip file from the link in the class chat. Inside you'll find two things:
 
-1. A folder of JPEG images — 15 photographs I've curated from the Library of Congress
+1. A folder of JPEG images — 15 photographs curated from the Library of Congress
 2. A file called `photos.json` with metadata for each image
 
-Unzip the folder and copy the images into `static/photos/` in your project. You'll need to create the `photos` folder inside `static/` first.
-
-Then copy `photos.json` to `src/lib/data/photos.json`. Create the `data` folder inside `src/lib/` if it doesn't exist from last week.
+Unzip the folder and copy the images into `static/photos/` in your project. You'll need to create the `photos` folder inside `static/` first. Then copy `photos.json` to `src/lib/data/photos.json`.
 
 Your project structure should now look like this:
 
@@ -83,7 +81,6 @@ static/
   photos/
     parks-harlem-01.jpg
     parks-harlem-02.jpg
-    parks-harlem-03.jpg
     ...
 src/
   lib/
@@ -91,108 +88,153 @@ src/
       photos.json
 ```
 
-Open `photos.json` and take a look:
+Open `photos.json` and take a look. Each record has an `id`, the `filename` that matches the image in `static/photos/`, a `title` from the original Library of Congress caption card, a `caption` providing editorial context, a `credit` line, and a `type` field that we'll use shortly.
 
 ```json
 [
   {
     "id": 1,
+    "type": "photo",
     "filename": "parks-harlem-01.jpg",
     "title": "A Harlem newsboy",
     "date": "1943",
-    "caption": "A young newsboy on the streets of Harlem. Gordon Parks photographed the children of the neighborhood with a warmth that conveyed their individuality and dignity.",
+    "caption": "A young newsboy on the streets of Harlem. Parks photographed the children of the neighborhood with a warmth that conveyed their individuality and dignity.",
     "credit": "Gordon Parks / FSA–OWI / Library of Congress"
   },
   {
     "id": 2,
+    "type": "text",
+    "headline": "The Streets",
+    "body": "Parks moved through Harlem with his camera at eye level, turning the lens on the people he met — not as subjects of poverty, but as neighbors, workers, and individuals with full lives of their own."
+  },
+  {
+    "id": 3,
+    "type": "photo",
     "filename": "parks-harlem-02.jpg",
-    "title": "A woman and her dog in the Harlem section",
+    "title": "Woman and her dog",
     "date": "1943",
-    "caption": "Parks documented the residents of Harlem as they went about their daily lives, often capturing quiet moments of connection.",
+    "caption": "Parks documented residents as they went about their daily lives, often capturing quiet moments of connection between people and their surroundings.",
     "credit": "Gordon Parks / FSA–OWI / Library of Congress"
   }
 ]
 ```
 
-Each photo has an `id`, the `filename` that matches the image in `static/photos/`, a `title` from the original Library of Congress caption card, a `caption` I've written to provide context, and a `credit` line.
+Notice the `type` field. Some entries are `"photo"` slides with an image. Others are `"text"` slides — full-screen cards with a headline and body copy that break the sequence into chapters. We'll handle both types as we build.
 
-## Part 3: The first slide
+### Loading the data the SvelteKit way
 
-Let's start by getting a single photo to fill the entire screen. Clear out the default content in `src/routes/+page.svelte` and replace it with:
+Following the same pattern from [Week 9](/docs/coding-the-news/scripts/week-9/), create `src/routes/+page.js` and load the JSON through a load function:
+
+```js
+import photos from '$lib/data/photos.json';
+
+export function load() {
+  return {
+    photos,
+  };
+}
+```
+
+Then open `src/routes/+page.svelte`, clear the boilerplate, and receive the data:
 
 ```svelte
 <script>
-  import photos from '$lib/data/photos.json';
+  let { data } = $props();
+
+  console.log(`Loaded ${data.photos.length} slides`);
+  console.log("First slide:", data.photos[0]);
+</script>
+```
+
+Save, reload, and check your browser console. You should see the count and the first record.
+
+<Screenshot
+  src="/screenshots/week-10/console-log.png"
+  alt="Browser developer console showing the number of slides loaded and the first photo object expanded to show its fields"
+  chromeTitle="Parks Harlem 1943"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+## Part 3: The first slide
+
+Let's start by getting a single photo to fill the entire screen. Update `+page.svelte`:
+
+```svelte
+<script>
+  let { data } = $props();
 </script>
 
 <div class="gallery">
   <div class="slide">
     <img
-      src="/photos/{photos[0].filename}"
-      alt={photos[0].title}
+      src="/photos/{data.photos[0].filename}"
+      alt={data.photos[0].title}
     />
   </div>
 </div>
 ```
 
-Save and check your browser. You'll see the image, but it's just sitting on the page at its natural size, surrounded by the template's default padding and margins.
+Save and check your browser. You'll see the image, but it's sitting on the page at its natural size, surrounded by the template's default padding and margins.
 
-We need to break out of the template's layout and take over the entire viewport. Add a style block at the bottom of the file:
+We need to break out of the template's layout entirely. Add a style block at the bottom of the file:
 
-```css
-:global(body) {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
+```svelte
+<style>
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
 
-.gallery {
-  height: 100dvh;
-  overflow-y: scroll;
-}
+  .gallery {
+    height: 100dvh;
+    overflow-y: scroll;
+  }
 
-.slide {
-  height: 100dvh;
-  position: relative;
-  background: black;
-}
+  .slide {
+    height: 100dvh;
+    position: relative;
+    background: black;
+  }
 
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
 ```
 
-There are several important things happening here. Let's walk through them.
+Several important things are happening here.
 
-The [`:global(body)`](https://svelte.dev/docs/svelte/global-styles) rule overrides the default body styles from our template. The `:global()` wrapper tells Svelte to apply this style globally rather than scoping it to this component. We're removing all margins and padding and setting `overflow: hidden` so only our gallery scrolls, not the page itself.
+The [`:global(body)`](https://svelte.dev/docs/svelte/global-styles) rule overrides the template's default body styles. The `:global()` wrapper tells Svelte to apply this style to the whole page rather than scoping it to this component only. We remove all margins and padding and set `overflow: hidden` so only our gallery scrolls, not the page itself.
 
-The `.gallery` container takes up the full height of the viewport using [`100dvh`](https://developer.mozilla.org/en-US/docs/Web/CSS/length#dynamic_viewport_units). The `dvh` unit stands for "dynamic viewport height." Unlike the older `vh` unit, it accounts for browser toolbars that appear and disappear on mobile phones. When you scroll down on your phone and the address bar hides itself, `100dvh` expands to fill the newly available space. This is essential for a full-screen mobile experience.
+The `.gallery` container takes up the full height of the viewport using [`100dvh`](https://developer.mozilla.org/en-US/docs/Web/CSS/length#dynamic_viewport_units). The `dvh` unit stands for "dynamic viewport height." Unlike the older `vh` unit, it accounts for the browser toolbars that appear and disappear on mobile phones. When you scroll down on your phone and the address bar hides itself, `100dvh` expands to fill the newly available space. This is essential for a full-screen mobile experience.
 
 Each `.slide` also fills exactly `100dvh`, so one slide equals one screen.
 
-The `img` tag is set to fill its parent with `width: 100%` and `height: 100%`. But what about photos that aren't the same shape as the screen? That's where [`object-fit: cover`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) comes in. It tells the browser to scale the image up until it completely fills the container, cropping whatever doesn't fit rather than squishing or stretching. The result is a full-bleed photo with no letterboxing or empty space.
+The `img` is set to fill its parent completely. But what about photos that aren't the same shape as the screen? That's where [`object-fit: cover`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) comes in. It scales the image up until it fills the container, cropping whatever doesn't fit rather than squishing or stretching. The result is a full-bleed photo with no letterboxing or empty space.
 
-Save and check your browser. The first photo should now fill the entire screen, edge to edge, with the excess cropped away.
+Save and check your browser. The first photo should fill the entire screen, edge to edge.
 
 <Screenshot
   src="/screenshots/week-10/first-slide-fullscreen.png"
-  alt="A single Gordon Parks photograph filling the entire browser viewport with no margins, padding, or chrome visible"
+  alt="A single Gordon Parks photograph filling the entire browser viewport with no margins, padding, or template chrome visible"
   chromeTitle="Parks Harlem 1943"
   chromeUrl="http://localhost:5173"
   maxWidth="400px"
 />
 
-Try resizing your browser window. The image adapts smoothly to any shape — tall, wide, square. That's the power of `object-fit: cover`.
+Try resizing your browser window. The image adapts smoothly to any shape — tall, wide, square. That's `object-fit: cover` at work.
 
 ## Part 4: All the slides, with scroll snap
 
-Now let's show all the photos. Replace the single slide with a loop:
+Now let's show all the photos. We only want to render the photo-type slides for now. Replace the single slide with a filtered loop:
 
 ```svelte
 <div class="gallery">
-  {#each photos as photo}
+  {#each data.photos.filter(p => p.type === 'photo') as photo}
     <div class="slide">
       <img
         src="/photos/{photo.filename}"
@@ -203,52 +245,56 @@ Now let's show all the photos. Replace the single slide with a loop:
 </div>
 ```
 
-Save and scroll through the page. You'll see all 15 photos, each filling the screen. But the scrolling is free — you can stop anywhere, halfway between two photos, which looks bad.
+Save and scroll. You'll see all the photo slides stacked, each filling the screen. But the scrolling is free — you can stop halfway between two photos, which looks bad.
 
 This is where scroll snap comes in. Add two CSS properties:
 
-```css
-.gallery {
-  height: 100dvh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-}
+```svelte
+<style>
+  /* ... existing styles ... */
 
-.slide {
-  height: 100dvh;
-  position: relative;
-  background: black;
-  scroll-snap-align: start;
-}
+  .gallery {
+    height: 100dvh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+  }
+
+  .slide {
+    height: 100dvh;
+    position: relative;
+    background: black;
+    scroll-snap-align: start;
+  }
+</style>
 ```
 
 Two new lines, and the whole experience transforms.
 
-[`scroll-snap-type: y mandatory`](https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-snap-type) on the gallery container tells the browser: "When the user stops scrolling on the vertical axis, snap to the nearest snap point. And make it mandatory — always snap, no exceptions."
+[`scroll-snap-type: y mandatory`](https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-snap-type) on the gallery tells the browser: "When scrolling stops on the vertical axis, snap to the nearest snap point. Always. No exceptions."
 
 [`scroll-snap-align: start`](https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-snap-align) on each slide says: "My snap point is my top edge." So when snapping happens, the top of a slide aligns with the top of the viewport.
 
-Save and try scrolling now. Each swipe or scroll click locks precisely to the next photo. On a phone, this will feel like swiping through Instagram.
+Save and scroll again. Each swipe or scroll click locks precisely to the next photo. On a phone, this will feel like swiping through a story.
 
 <Screenshot
   src="/screenshots/week-10/scroll-snap-working.png"
-  alt="Two side-by-side screenshots showing the gallery mid-scroll and then snapped cleanly to a photo, demonstrating the scroll-snap behavior"
+  alt="Two side-by-side screenshots showing the gallery mid-scroll and then snapped cleanly to a photo"
   chromeTitle="Parks Harlem 1943"
   chromeUrl="http://localhost:5173"
   maxWidth="600px"
 />
 
-This is one of those moments where a very small amount of CSS creates a dramatic change in the user experience. Two properties, zero JavaScript, and the whole page feels like a native app.
+This is one of those moments where a very small amount of CSS creates a dramatic change. Two properties, zero JavaScript, and the page feels like a native app.
 
 ## Part 5: Caption overlays
 
-The photos fill the screen, but the reader has no context. Let's overlay captions on each image, the way Reels and Stories put text at the bottom of the frame.
+The photos fill the screen but the reader has no context. Let's overlay captions on each image, the way Reels and Stories put text at the bottom of the frame.
 
 Update the slide markup:
 
 ```svelte
 <div class="gallery">
-  {#each photos as photo}
+  {#each data.photos.filter(p => p.type === 'photo') as photo}
     <div class="slide">
       <img
         src="/photos/{photo.filename}"
@@ -264,48 +310,50 @@ Update the slide markup:
 </div>
 ```
 
-Now add styles for the caption overlay:
+Add styles for the caption:
 
-```css
-.caption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 2rem 1.5rem;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0.4) 70%,
-    transparent 100%
-  );
-  color: white;
-}
+```svelte
+<style>
+  /* ... existing styles ... */
 
-.caption h2 {
-  margin: 0 0 0.5rem;
-  font-size: 1.25rem;
-  line-height: 1.3;
-}
+  .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.4) 70%,
+      transparent 100%
+    );
+    color: white;
+  }
 
-.caption p {
-  margin: 0 0 0.5rem;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  opacity: 0.9;
-}
+  .caption h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
 
-.caption .credit {
-  font-size: 0.75rem;
-  opacity: 0.6;
-}
+  .caption p {
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+
+  .caption .credit {
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+</style>
 ```
 
-The key trick here is [`position: absolute`](https://developer.mozilla.org/en-US/docs/Web/CSS/position) on the caption combined with `position: relative` on the slide (which we already set). This pulls the caption out of the normal document flow and positions it relative to the slide container. Setting `bottom: 0` pins it to the bottom edge.
+The key trick is [`position: absolute`](https://developer.mozilla.org/en-US/docs/Web/CSS/position) on the caption combined with `position: relative` on the slide. This pulls the caption out of the normal document flow and pins it relative to the slide container. `bottom: 0` anchors it to the bottom edge.
 
-The [`linear-gradient`](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient) background creates a fade from near-black at the bottom to transparent at the top. This ensures the white text is readable regardless of what's in the photo behind it. It's the same technique used by Instagram, YouTube, and every streaming service's thumbnail overlays.
-
-Save and scroll through. Each photo now has its title, caption, and credit floating over the bottom of the image.
+The [`linear-gradient`](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient) background creates a fade from near-black at the bottom to transparent at the top. This ensures the white text is readable regardless of what's in the photo behind it. It's the same technique used by Instagram, YouTube, and every streaming service that overlays text on images.
 
 <Screenshot
   src="/screenshots/week-10/captions-overlay.png"
@@ -317,7 +365,7 @@ Save and scroll through. Each photo now has its title, caption, and credit float
 
 ## Part 6: Extracting a PhotoSlide component
 
-Our markup and styles are growing. Let's extract the slide into its own component to keep things clean.
+Our markup and styles are getting long. Let's extract the slide into its own component to keep things clean — the same principle we practiced in [Week 3](/docs/coding-the-news/scripts/week-3/).
 
 Create `src/lib/components/PhotoSlide.svelte`:
 
@@ -387,16 +435,17 @@ Create `src/lib/components/PhotoSlide.svelte`:
 </style>
 ```
 
-Now simplify `+page.svelte`:
+Now simplify `+page.svelte`. The page file controls the gallery container and the global overrides; each slide owns its own layout and styles.
 
 ```svelte
 <script>
-  import photos from '$lib/data/photos.json';
   import PhotoSlide from '$lib/components/PhotoSlide.svelte';
+
+  let { data } = $props();
 </script>
 
 <div class="gallery">
-  {#each photos as photo}
+  {#each data.photos.filter(p => p.type === 'photo') as photo}
     <PhotoSlide {photo} />
   {/each}
 </div>
@@ -416,15 +465,13 @@ Now simplify `+page.svelte`:
 </style>
 ```
 
-Much cleaner. The page file controls the gallery container and the global overrides. Each slide owns its own layout and styles. Save and verify it all still works.
+Save and verify it all still works.
 
 ## Part 7: A title slide
 
-Right now, the gallery opens straight into the first photo. That's fine for a Reel, but for a journalism project we want to give the reader a headline and a brief introduction before the photos begin.
+Right now the gallery opens straight into the first photo. For a journalism project we want to give the reader a headline and introduction before the photos begin — but styled as part of the experience, not as a traditional article header.
 
-We'll build this as a special first slide — same full-screen, same snap behavior, but with text instead of a photograph.
-
-Add a new component at `src/lib/components/TitleSlide.svelte`:
+Create `src/lib/components/TitleSlide.svelte`:
 
 ```svelte
 <script>
@@ -443,7 +490,6 @@ Add a new component at `src/lib/components/TitleSlide.svelte`:
 <style>
   .slide {
     height: 100dvh;
-    position: relative;
     background: black;
     scroll-snap-align: start;
     display: flex;
@@ -485,66 +531,165 @@ Add a new component at `src/lib/components/TitleSlide.svelte`:
 </style>
 ```
 
-Import it in `+page.svelte` and place it before the photo loop:
+Import it and place it before the photo loop in `+page.svelte`:
 
 ```svelte
 <script>
-  import photos from '$lib/data/photos.json';
   import TitleSlide from '$lib/components/TitleSlide.svelte';
   import PhotoSlide from '$lib/components/PhotoSlide.svelte';
+
+  let { data } = $props();
 </script>
 
 <div class="gallery">
   <TitleSlide
     headline="Harlem, 1943"
-    intro="In the spring of 1943, Gordon Parks photographed daily life in Harlem for the federal government. His camera found dignity in the everyday — newsboys, neighbors, children, and the streets they shared. These images, now in the public domain, are a window into a neighborhood and a moment in time."
+    intro="In the spring of 1943, Gordon Parks photographed daily life in Harlem for the federal government. His camera found dignity in the everyday — newsboys, neighbors, children, and the streets they shared."
     byline="Photographs by Gordon Parks · Farm Security Administration–Office of War Information"
   />
 
-  {#each photos as photo}
+  {#each data.photos.filter(p => p.type === 'photo') as photo}
     <PhotoSlide {photo} />
   {/each}
 </div>
 ```
 
-Save and check. The gallery now opens on a black screen with the headline and introduction, centered on the page. Scroll down to enter the photographs.
+Save and check. The gallery now opens on a black screen with the headline centered in the viewport. Scroll down to enter the photographs.
 
 <Screenshot
   src="/screenshots/week-10/title-slide.png"
-  alt="A black screen with white centered text reading 'Harlem, 1943' as a headline, followed by an introductory paragraph, a byline, and 'Scroll to begin' with a down arrow"
+  alt="A black screen with white centered text reading 'Harlem, 1943' as a large headline, followed by an intro paragraph, a byline, and a subtle 'Scroll to begin' prompt"
   chromeTitle="Parks Harlem 1943"
   chromeUrl="http://localhost:5173"
   maxWidth="400px"
 />
 
-## Part 8: A slide counter
+## Part 8: Interstitial text slides
 
-As readers scroll through, it helps to know where they are. Let's add a small counter in the corner — something like "3 / 15" — that updates as they move through the gallery.
+Right now the gallery moves straight through all the photos in sequence. But the story has chapters — Parks documented newsboys, then street scenes, then families, then community spaces. We can use the `"text"` entries in our data to add context cards between the photographs, breaking the sequence into sections the way a book uses chapter titles.
 
-This is a perfect use of `$state`. We need to track which slide is currently visible and update a number on screen.
+Create `src/lib/components/TextSlide.svelte`:
 
-We'll use a browser feature called [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to detect which slide is on screen. Don't worry about memorizing how it works — it's the kind of thing you look up when you need it. The important thing is what it does: it watches a set of elements and tells you when they enter or leave the viewport.
+```svelte
+<script>
+  let { slide } = $props();
+</script>
+
+<div class="slide">
+  <div class="content">
+    <h2>{slide.headline}</h2>
+    <p>{slide.body}</p>
+  </div>
+</div>
+
+<style>
+  .slide {
+    height: 100dvh;
+    background: black;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content {
+    max-width: 560px;
+    padding: 2rem;
+    color: white;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  p {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    opacity: 0.8;
+    margin: 0;
+  }
+</style>
+```
+
+Now update `+page.svelte` to loop over all slides — not just photos — and use an `{#if}` block to render the right component for each type. This is the same conditional rendering pattern you learned in [Week 3](/docs/coding-the-news/scripts/week-3/#part-3-creating-a-parent-component), now applied to a real editorial problem.
+
+```svelte
+<script>
+  import TitleSlide from '$lib/components/TitleSlide.svelte';
+  import PhotoSlide from '$lib/components/PhotoSlide.svelte';
+  import TextSlide from '$lib/components/TextSlide.svelte';
+
+  let { data } = $props();
+</script>
+
+<div class="gallery">
+  <TitleSlide
+    headline="Harlem, 1943"
+    intro="In the spring of 1943, Gordon Parks photographed daily life in Harlem for the federal government. His camera found dignity in the everyday — newsboys, neighbors, children, and the streets they shared."
+    byline="Photographs by Gordon Parks · Farm Security Administration–Office of War Information"
+  />
+
+  {#each data.photos as slide}
+    {#if slide.type === 'photo'}
+      <PhotoSlide photo={slide} />
+    {:else if slide.type === 'text'}
+      <TextSlide {slide} />
+    {/if}
+  {/each}
+</div>
+```
+
+Save and scroll through. The text cards appear between the photographs exactly where they sit in `photos.json`. You can reorder the story by editing the JSON file — no code changes needed.
+
+<Screenshot
+  src="/screenshots/week-10/text-slide.png"
+  alt="A black screen with centered white text showing a chapter heading in uppercase and a paragraph of editorial context beneath it"
+  chromeTitle="Parks Harlem 1943"
+  chromeUrl="http://localhost:5173"
+  maxWidth="400px"
+/>
+
+This is a meaningful editorial pattern. The `type` field in the data lets a reporter or editor control the narrative structure without touching any Svelte code. A non-technical collaborator could open `photos.json`, reorder slides, change captions, and reshape the story entirely.
+
+## Part 9: A slide counter
+
+As readers scroll through, it helps to know where they are. Let's add a small counter in the corner — something like "5 / 15" — that updates as they move through the gallery.
+
+We'll use a browser feature called [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to detect which slide is currently on screen. Don't worry about memorizing every detail of the API — it's the kind of thing you look up when you need it. The important thing to understand is what it does: it watches a set of elements and fires a callback whenever they enter or leave the viewport.
+
+### Introducing `onMount`
+
+To use IntersectionObserver, we need a reference to the actual HTML elements in the page. But here's the catch: when a Svelte component's script block first runs, the HTML hasn't been created yet. The elements don't exist in the browser at that point.
+
+That's what [`onMount`](https://svelte.dev/docs/svelte/lifecycle-hooks#onMount) is for. It's a Svelte function that runs your code *after* the page has loaded and all the HTML elements are present in the browser. Anything that needs to interact with real DOM elements — like setting up an observer, initializing a map, or measuring element sizes — belongs in `onMount`.
 
 Update the script block in `+page.svelte`:
 
 ```svelte
 <script>
   import { onMount } from 'svelte';
-  import photos from '$lib/data/photos.json';
   import TitleSlide from '$lib/components/TitleSlide.svelte';
   import PhotoSlide from '$lib/components/PhotoSlide.svelte';
+  import TextSlide from '$lib/components/TextSlide.svelte';
 
-  let currentSlide = $state(0);
+  let { data } = $props();
+
+  let currentIndex = $state(0);
   let galleryEl;
 
   onMount(() => {
-    const slides = galleryEl.querySelectorAll('[data-slide-index]');
+    const slides = galleryEl.querySelectorAll('[data-index]');
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            currentSlide = parseInt(entry.target.dataset.slideIndex);
+            currentIndex = parseInt(entry.target.dataset.index);
           }
         });
       },
@@ -558,85 +703,99 @@ Update the script block in `+page.svelte`:
 
     return () => observer.disconnect();
   });
+
+  let photoCount = $derived(data.photos.filter(p => p.type === 'photo').length);
+  let photoIndex = $derived(
+    data.photos
+      .slice(0, currentIndex)
+      .filter(p => p.type === 'photo')
+      .length
+  );
 </script>
 ```
 
-There's a lot happening here, so let's break it down.
+Let's walk through this carefully.
 
-`currentSlide` is a `$state` variable that starts at `0` and tracks which photo is on screen.
+`currentIndex` is a `$state` variable tracking which slide is currently visible, counting from zero across all slide types.
 
-`galleryEl` is a variable that will hold a reference to the gallery container. We need it so we can tell the observer which element is the scroll container.
+`galleryEl` will hold a reference to the gallery container HTML element — we'll wire that up in the markup using `bind:this`.
 
-[`onMount`](https://svelte.dev/docs/svelte/lifecycle-hooks#onMount) is a Svelte function that runs code after the page has loaded and all the HTML elements exist. We need this because we can't observe elements that haven't been created yet.
+Inside `onMount`, we find all elements with a `data-index` attribute (we'll add those next), then create an `IntersectionObserver` that fires whenever a slide is at least 50% visible (`threshold: 0.5`). When that happens, we update `currentIndex` to match.
 
-Inside `onMount`, we find all elements with a `data-slide-index` attribute (we'll add those in a moment), create an `IntersectionObserver` that fires whenever a slide is at least 50% visible (`threshold: 0.5`), and update `currentSlide` to that slide's index.
+The `return () => observer.disconnect()` at the end is cleanup code. When Svelte destroys the component, it calls this function to stop observing, which prevents memory leaks.
 
-The `return () => observer.disconnect()` at the end is cleanup — it tells Svelte to stop observing when the component is destroyed, which prevents memory leaks.
+The two `$derived` variables at the bottom calculate what to show in the counter. `photoCount` is the total number of photo slides. `photoIndex` counts how many photo slides appear before the current position in the sequence — so text and title slides don't inflate the count.
 
-Now update the markup to wire everything together:
+Now update the markup to wire everything together. Note the three changes: `bind:this` on the gallery, `data-index` on each slide wrapper, and the counter element outside the gallery:
 
 ```svelte
 <div class="gallery" bind:this={galleryEl}>
   <TitleSlide
     headline="Harlem, 1943"
-    intro="In the spring of 1943, Gordon Parks photographed daily life in Harlem for the federal government. His camera found dignity in the everyday — newsboys, neighbors, children, and the streets they shared. These images, now in the public domain, are a window into a neighborhood and a moment in time."
+    intro="In the spring of 1943, Gordon Parks photographed daily life in Harlem for the federal government. His camera found dignity in the everyday — newsboys, neighbors, children, and the streets they shared."
     byline="Photographs by Gordon Parks · Farm Security Administration–Office of War Information"
   />
 
-  {#each photos as photo, i}
-    <div data-slide-index={i + 1}>
-      <PhotoSlide {photo} />
+  {#each data.photos as slide, i}
+    <div data-index={i + 1}>
+      {#if slide.type === 'photo'}
+        <PhotoSlide photo={slide} />
+      {:else if slide.type === 'text'}
+        <TextSlide {slide} />
+      {/if}
     </div>
   {/each}
 </div>
 
-{#if currentSlide > 0}
+{#if photoIndex > 0}
   <div class="counter">
-    {currentSlide} / {photos.length}
+    {photoIndex} / {photoCount}
   </div>
 {/if}
 ```
 
-Three changes to notice.
+[`bind:this={galleryEl}`](https://svelte.dev/docs/svelte/bind#bind:this) gives us a live reference to the gallery's HTML element, which we pass to IntersectionObserver as its scroll container.
 
-First, `bind:this={galleryEl}` on the gallery div gives us a reference to the actual HTML element, which we pass to the `IntersectionObserver` as its `root`.
+The `{#each}` now includes `, i` after `slide` to get the index of each item in the loop. Each slide is wrapped in a `<div data-index={i + 1}>` so the observer knows which position it's watching.
 
-Second, the `{#each}` now includes `, i` after `photo`. That second variable gives us the index of each item in the loop, starting at 0. We wrap each `PhotoSlide` in a div with `data-slide-index={i + 1}` so the first photo is slide 1, the second is slide 2, and so on.
-
-Third, the counter itself only appears when `currentSlide > 0` — it's hidden on the title slide and shows once you've scrolled into the photos.
+The counter only appears when `photoIndex > 0` — it stays hidden on the title slide and the first text card, appearing only once the reader has scrolled into the photos.
 
 Add styles for the counter:
 
-```css
-.counter {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-  z-index: 10;
-}
+```svelte
+<style>
+  /* ... existing styles ... */
+
+  .counter {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    z-index: 10;
+  }
+</style>
 ```
 
-The counter is `position: fixed` so it stays in the top-right corner as you scroll. The [`font-variant-numeric: tabular-nums`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric) property makes digits fixed-width, so the counter doesn't jump around when numbers change from "1" to "10."
+The counter is `position: fixed` so it stays in the top-right corner as you scroll. [`font-variant-numeric: tabular-nums`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric) makes digits fixed-width so the counter doesn't shift when the number changes.
 
-Save and scroll through. The counter should appear after the title slide and update with each snap.
+Save and scroll through. The counter appears after the title slide and updates with each snap.
 
 <Screenshot
   src="/screenshots/week-10/counter-working.png"
-  alt="A Gordon Parks photograph filling the screen with a small pill-shaped counter in the top right corner reading '5 / 15'"
+  alt="A Gordon Parks photograph filling the screen with a small pill-shaped counter in the top-right corner reading '5 / 13'"
   chromeTitle="Parks Harlem 1943"
   chromeUrl="http://localhost:5173"
   maxWidth="400px"
 />
 
-## Part 9: A credits slide
+## Part 10: A credits slide
 
-Just as we opened with a title, let's close with a credits slide that tells the reader more about where these photographs came from.
+Just as we opened with a title, let's close with a credits slide that tells the reader more about where these photographs came from. This is the equivalent of the `MethodologyBox` we used in Week 9, but presented as part of the visual experience rather than appended below it.
 
 Create `src/lib/components/CreditsSlide.svelte`:
 
@@ -654,7 +813,6 @@ Create `src/lib/components/CreditsSlide.svelte`:
 <style>
   .slide {
     height: 100dvh;
-    position: relative;
     background: black;
     scroll-snap-align: start;
     display: flex;
@@ -691,11 +849,11 @@ Create `src/lib/components/CreditsSlide.svelte`:
 </style>
 ```
 
-This component uses the `children` pattern from [Week 3](/docs/coding-the-news/scripts/week-3/#part-3-creating-a-parent-component) so we can write free-form HTML inside the component tags. The `:global()` selectors inside the scoped styles target elements that are passed in as children.
+This uses the `children` prop pattern from [Week 3](/docs/coding-the-news/scripts/week-3/) so we can write free-form HTML inside the component tags. The `:global()` selectors inside the scoped styles reach into the passed-in children to style them.
 
-Import it and add it at the end of the gallery in `+page.svelte`:
+Import it in `+page.svelte` and add it after the `{#each}` loop, before the closing `</div>`:
 
-```js
+```svelte
 import CreditsSlide from '$lib/components/CreditsSlide.svelte';
 ```
 
@@ -705,78 +863,71 @@ import CreditsSlide from '$lib/components/CreditsSlide.svelte';
     <p>
       Gordon Parks (1912–2006) was a self-taught photographer, filmmaker,
       writer, and composer. In 1942, he became the first Black photographer
-      hired by the Farm Security Administration. His work for the FSA and
-      its successor, the Office of War Information, is held by the Library
-      of Congress and is in the public domain.
+      hired by the Farm Security Administration. His Harlem photographs are
+      held by the Library of Congress and are in the public domain.
     </p>
     <p>
-      The photographs in this essay were taken in Harlem, New York, in
-      the spring and summer of 1943. High-resolution scans of the original
-      negatives are available for free download from the
+      High-resolution scans of the original negatives are available for
+      free download from the
       <a href="https://www.loc.gov/pictures/search/?q=gordon+parks+harlem" target="_blank">
         Library of Congress Prints &amp; Photographs Division</a>.
     </p>
   </CreditsSlide>
-</div>
 ```
-
-Place this right before the closing `</div>` of the gallery, after the `{#each}` block.
 
 Save and scroll to the end. After the last photograph, you'll land on a clean black screen with the story behind the images.
 
 <Screenshot
   src="/screenshots/week-10/credits-slide.png"
-  alt="A black screen with white text showing 'About These Photographs' as a heading followed by paragraphs about Gordon Parks and a link to the Library of Congress"
+  alt="A black screen with left-aligned white text showing 'About These Photographs' as a heading followed by paragraphs about Gordon Parks and a link to the Library of Congress"
   chromeTitle="Parks Harlem 1943"
   chromeUrl="http://localhost:5173"
   maxWidth="400px"
 />
 
-## Part 10: Testing on your phone
+## Part 11: Testing on your phone
 
-We've been building this on a desktop browser, but the whole point of this design is mobile. Let's see how it actually feels on a phone.
+We've been building on a desktop browser, but the whole point of this design is mobile. Let's see how it actually feels on a phone.
 
 SvelteKit's development server is already running on your computer. Your phone can access it if both devices are on the same WiFi network.
 
-Find your computer's local IP address. On Mac, open System Settings, click Network, and look for your IP address — it will be something like `192.168.1.42`. On Windows, open a command prompt and type `ipconfig`.
+Find your computer's local IP address. On Mac, open System Settings, click Network, and look for your IP — it will be something like `192.168.1.42`. On Windows, open a command prompt and type `ipconfig`.
 
-On your phone's browser, navigate to `http://192.168.1.42:5173` (replacing the IP with your own).
+On your phone's browser, navigate to `http://192.168.1.42:5173`, replacing the IP with your own.
 
 <Screenshot
   src="/screenshots/week-10/phone-preview.png"
-  alt="A hand holding a smartphone displaying the Gordon Parks photo gallery with a full-screen portrait and caption overlay"
+  alt="A hand holding a smartphone displaying the Gordon Parks photo gallery with a full-screen portrait photograph and caption overlay at the bottom"
   chromeTitle="Phone Preview"
   chromeUrl="http://192.168.1.42:5173"
   maxWidth="400px"
 />
 
-Swipe up. Each photo should snap into place, filling the screen edge to edge. The captions should be readable against the gradient. The counter should tick upward in the corner.
+Swipe up through the gallery. Each slide should snap into place. The captions should be readable against the gradient. The counter should tick upward.
 
-This is the experience we designed for. On a phone, it doesn't feel like a website. It feels like a story.
+This is the experience we designed for. On a phone it doesn't feel like a website. It feels like a story.
 
-If anything looks wrong — text getting cut off, images not covering the screen, the address bar causing layout jumps — this is where the `dvh` unit we chose earlier pays off. It adapts to the dynamic viewport height as the mobile browser chrome appears and disappears.
+If anything looks off — text getting cut off, the address bar causing layout jumps — this is where the `dvh` unit pays off. It adapts to the dynamic viewport height as the browser chrome appears and disappears.
 
 Take a few minutes to swipe through on your phone and note what works and what you'd change. We'll discuss as a class.
 
-## Part 11: Polish
+## Part 12: Polish
 
-Let's make a few refinements. These are small touches that add up to a more professional experience.
+A few small refinements that add up to a more professional experience.
 
 ### Smoother scrolling on iOS
 
-Add this to the `.gallery` styles:
-
 ```css
 .gallery {
   -webkit-overflow-scrolling: touch;
 }
 ```
 
-This enables momentum scrolling on iOS, making the swipe feel more fluid and natural.
+This enables momentum scrolling on iOS, making swipes feel more fluid.
 
 ### Hiding the scrollbar
 
-On desktop, a scrollbar is visible on the right edge of the gallery. We can hide it while keeping scroll functionality:
+On desktop a scrollbar is visible on the right edge of the gallery. We can hide it while keeping scroll functionality:
 
 ```css
 .gallery {
@@ -788,54 +939,56 @@ On desktop, a scrollbar is visible on the right edge of the gallery. We can hide
 }
 ```
 
-The `scrollbar-width: none` property works in Firefox, and `::-webkit-scrollbar` handles Chrome and Safari. The gallery still scrolls — the scrollbar just isn't visible.
+`scrollbar-width: none` works in Firefox. `::-webkit-scrollbar` handles Chrome and Safari.
 
 ### Preventing overscroll bounce
 
-Add this to prevent the rubbery "bounce" effect at the top and bottom of the gallery on mobile:
-
 ```css
 .gallery {
   overscroll-behavior: none;
 }
 ```
 
+This prevents the rubbery bounce effect at the top and bottom of the gallery on mobile.
+
 ### The complete gallery styles
 
-With all the polish applied, here are the final gallery styles in `+page.svelte`:
+With all the polish applied, the final `.gallery` styles in `+page.svelte` look like this:
 
-```css
-:global(body) {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
+```svelte
+<style>
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
 
-.gallery {
-  height: 100dvh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  overscroll-behavior: none;
-}
+  .gallery {
+    height: 100dvh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    overscroll-behavior: none;
+  }
 
-.gallery::-webkit-scrollbar {
-  display: none;
-}
+  .gallery::-webkit-scrollbar {
+    display: none;
+  }
 
-.counter {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-  z-index: 10;
-}
+  .counter {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    z-index: 10;
+  }
+</style>
 ```
 
 Save, commit, and push to GitHub. Once the deploy succeeds, open your live site on your phone and swipe through the complete story.
@@ -844,18 +997,19 @@ Save, commit, and push to GitHub. Once the deploy succeeds, open your live site 
 
 ### Task 1: Build your own photo story
 
-Find a collection of public domain photographs from a digital archive and build your own full-screen, mobile-first photo gallery. Some good sources:
+Find a collection of public domain photographs from a digital archive and build your own full-screen, mobile-first photo gallery. Good sources include:
 
 * [Library of Congress](https://www.loc.gov/free-to-use/) — Free to Use and Reuse sets
 * [NYPL Digital Collections](https://digitalcollections.nypl.org/) — filter for public domain
-* [Smithsonian Open Access](https://www.si.edu/openaccess) — millions of images
+* [Smithsonian Open Access](https://www.si.edu/openaccess) — millions of images, all CC0
 * [Wikimedia Commons](https://commons.wikimedia.org/) — search by topic and license
 * [National Archives](https://www.archives.gov/research/catalog) — US government photographs
 
 Your project must have:
 
-* A title slide with headline and introduction
+* A title slide with a headline and introduction
 * At least 8 photographs in a scroll-snap gallery with caption overlays
+* At least two interstitial text slides that provide editorial context
 * A credits slide with source information and proper attribution
 * A design that works on mobile — test it on your phone before submitting
 
