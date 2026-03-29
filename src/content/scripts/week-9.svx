@@ -160,7 +160,111 @@ Save the file, reload the page and open your browser's developer console. You sh
   maxWidth="960px"
 />
 
-## Part 3: Building the list
+## Part 3: Adding a database header
+
+You've got a blank canvas. Now it's time to start designing your site.
+
+Like most newsroom developers, you don't have to start from scratch. As we discussed in [Week 3](/docs/coding-the-news/scripts/week-3/), most teams maintain a library of pre-made, ready-to-serve components that they can pull into projects.
+
+They are often collected and documented in a playbook shared among developers. One common tool for building and browsing these component libraries is called [Storybook](https://storybook.js.org/). Itlets you see every component in isolation, experiment with its props, and copy the usage pattern directly into your project.
+
+<Screenshot
+  src="/screenshots/week-9/storybook-js.png"
+  alt="The Storybook homepage showing a list of components in the sidebar and a preview of the DatabaseHeader component with controls for its props"
+  chromeTitle="DatabaseHeader – Storybook"
+  chromeUrl="https://storybook.js.org/"
+  maxWidth="960px"
+/>
+
+Our class has just such a site, packaged alongside our components in the [static-site template](https://github.com/palewire/cuny-jour-static-site-template). You can view it at [palewire.github.io/cuny-jour-static-site-template/storybook/](https://palewire.github.io/cuny-jour-static-site-template/storybook/).
+
+<Screenshot
+  src="/screenshots/week-9/storybook-homepage.png"
+  alt="The component library Storybook for the CUNY static site template, showing all available components in the left sidebar"
+  chromeTitle="Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/"
+  maxWidth="960px"
+/>
+
+The [`DatabaseHeader`](https://github.com/palewire/cuny-jour-static-site-template/blob/main/src/lib/components/DatabaseHeader.svelte) component is the first piece you want to use today. It renders a full-width hero banner designed for database pages, with props for a headline, a description, a byline, and a date.
+
+<Screenshot
+  src="/screenshots/week-9/storybook-database-header.png"
+  alt="Storybook documentation page for the DatabaseHeader component, showing a live preview of the header with its available props listed in a controls table below"
+  chromeTitle="DatabaseHeader – Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-databaseheader--docs"
+  maxWidth="960px"
+/>
+
+It's intended to mimic the design pattern used by ProPublica and many other news sites to frame their database projects, which often lack compelling photography, with a bold top.
+
+### Import the component
+
+Open `src/routes/+page.svelte`. Your script block currently logs the data to the console. Add an import for `DatabaseHeader` at the top:
+
+```svelte {emphasize-lines="2"}
+<script>
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+
+  let { data } = $props();
+
+  console.log(`Loaded ${data.violations.length} buildings`);
+  console.log("First record:", data.violations[0]);
+</script>
+```
+
+### Start with a headline
+
+Add the component below the closing `</script>` tag, beginning with just the headline and description.
+
+```svelte {emphasize-lines="10-13"}
+<script>
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+
+  let { data } = $props();
+
+  console.log(`Loaded ${data.violations.length} buildings`);
+  console.log("First record:", data.violations[0]);
+</script>
+
+<DatabaseHeader
+  headline="Tainted Home Tracker"
+  description="The Bronx buildings with the most lead paint violations"
+/>
+```
+
+Save and look at your browser. A pale banner appears across the top of the page with the headline and deck set in large type. That's the component's default style, just like we saw on the Storybook page.
+
+<Screenshot
+  src="/screenshots/week-9/database-header-headline.png"
+  alt="The index page with a DatabaseHeader showing the headline 'Tainted Home Tracker' and deck in large type on a light gray background"
+  chromeTitle="Bronx Lead Paint Violations"
+  chromeUrl="http://localhost:5174"
+  maxWidth="960px"
+/>
+
+Now credit the work with a `byline` and `date`.
+
+```svelte {emphasize-lines="4-5"}
+<DatabaseHeader
+  headline="Tainted Home Tracker"
+  description="The Bronx buildings with the most lead paint violations"
+  byline="NYCity News Service"
+  date="March 2026"
+/>
+```
+
+The header now reads like a real news project.
+
+<Screenshot
+  src="/screenshots/week-9/database-header-byline.png"
+  alt="The index page showing the completed DatabaseHeader with headline, description, byline, and date all rendered in a light gray banner"
+  chromeTitle="Bronx Lead Paint Violations"
+  chromeUrl="http://localhost:5174"
+  maxWidth="960px"
+/>
+
+## Part 4: Building the list
 
 Now let's display the buildings on the page. We'll use the `{#each}` loop you learned in a previous class to iterate through the array and render a card for each building.
 
@@ -206,7 +310,7 @@ Now replace everything below your headline with an `{#each}` loop that renders a
   maxWidth="960px"
 />
 
-## Part 4: Search and filters
+## Part 5: Search and filters
 
 A list of hundreds of buildings isn't very useful without a way to narrow it down. Let's add a search box and a filter dropdown.
 
@@ -343,7 +447,7 @@ Save and check your browser. You should now be able to search by address, filter
 
 Try selecting a zip code and then typing in the search box. The filters compose — they both apply at the same time. This is the same reactive pattern you used in Week 4, now applied to a real dataset with real consequences.
 
-## Part 5: Detail pages
+## Part 6: Detail pages
 
 So far, everything lives on a single page. But a good database explorer lets you click into individual records and see their full story. That's what we'll build now.
 
@@ -523,7 +627,7 @@ Save the file.
 
 ### Linking to detail pages
 
-Because the `Card` component on the list page already renders each entry as a link, the list is wired up automatically. The `href` we passed in Part 3 — `{base}/building/{building.id}` — points directly to the dynamic route we just created. Save and click on any card to test it.
+Because the `Card` component on the list page already renders each entry as a link, the list is wired up automatically. The `href` we passed in Part 4 — `{base}/building/{building.id}` — points directly to the dynamic route we just created. Save and click on any card to test it.
 
 <Screenshot
   src="/screenshots/week-9/detail-page.png"
@@ -535,7 +639,7 @@ Because the `Card` component on the list page already renders each entry as a li
 
 Click the "Back to all buildings" link at the top to return to the list. Your search and filter state will reset — that's expected for a static site. Each page load starts fresh.
 
-## Part 6: Adding a locator map
+## Part 7: Adding a locator map
 
 Each building in our dataset has latitude and longitude coordinates. Let's use them to add a small map to the detail page that shows where the building is located.
 
@@ -573,7 +677,7 @@ Save and visit a building's detail page. You should see a small interactive map 
 
 In a couple of weeks, we'll learn how to build full interactive maps from scratch using a library called MapLibre. For now, this simple embed is enough to orient the reader.
 
-## Part 7: Editorial polish
+## Part 8: Editorial polish
 
 The data is loaded, the search works, and the detail pages are in place. But right now the page is just a database. It needs a frame — a bold editorial header and a source credit at the bottom — to make it a piece of journalism.
 
