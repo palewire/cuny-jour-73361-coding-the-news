@@ -12,7 +12,7 @@ locked: false
 
 In [Week 5](/docs/coding-the-news/scripts/week-5/), you saw how ProPublica's ["Dollars for Docs"](https://projects.propublica.org/docdollars/) project drew worldwide attention by turning a massive, obscure dataset of pharmaceutical company payments to doctors into a searchable, browsable website.
 
-Examples of projects like this are everywhere. Other examples include the Washington Post's [police shootings database](https://www.washingtonpost.com/graphics/investigations/police-shootings-database/), USA Today's [NCAA salaries tracker](https://sportsdata.usatoday.com/ncaa/salaries/football/coach) and the college rankings published by [U.S. News and World Report](https://www.usnews.com/best-colleges).
+Examples of projects like this are everywhere. These include the Washington Post's [police shootings database](https://www.washingtonpost.com/graphics/investigations/police-shootings-database/), USA Today's [NCAA salaries tracker](https://sportsdata.usatoday.com/ncaa/salaries/football/coach) and the college rankings published by [U.S. News and World Report](https://www.usnews.com/best-colleges).
 
 What these tools have in common is a simple pattern: a list page where you can search and filter, and a detail page where you can drill into an individual record. That's what you're going to build today.
 
@@ -30,7 +30,7 @@ We'll be working with citations from the [New York City Department of Housing Pr
   maxWidth="960px"
 />
 
-There are already ways to search and explore this dataset. HPD's [tool](https://hpdonline.nyc.gov/hpdonline/provide-information) let's you look up individual buildings.
+There are already ways to search and explore this dataset. HPD's [tool](https://hpdonline.nyc.gov/hpdonline/provide-information) lets you look up individual buildings.
 
 <Screenshot
   src="/screenshots/week-9/hpd-online.png"
@@ -40,7 +40,7 @@ There are already ways to search and explore this dataset. HPD's [tool](https://
   maxWidth="960px"
 />
 
-[JustFix](https://www.justfix.org/en/) is a non-profit that provides tenent organizers and legal aides with [a tool](https://whoownswhat.justfix.org/en/) to build cases against negligent landlords by merging HPD data with other sources.
+[JustFix](https://www.justfix.org/en/) is a non-profit that provides tenant organizers and legal aides with [a tool](https://whoownswhat.justfix.org/en/) to build cases against negligent landlords by merging HPD data with other sources.
 
 <Screenshot
   src="/screenshots/week-9/justfix.png"
@@ -58,7 +58,7 @@ To zoom in even closer, you'll focus on just one borough — the Bronx — which
 
 Then you'll do something that government sites rarely do: Tally up the total number of open lead paint violations at each building and highlight the most frequent offenders.
 
-[In a separate repository](https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations), I've downloaded the full dataset, done the necessary filters and rolled up the violations at the building level. I've also merged with the city's [PLUTO](https://www.nyc.gov/content/planning/pages/resources/datasets/mappluto-pluto-change) mapping database to get the latitude and longitude coordinates for each building.
+[In a separate repository](https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations), I've downloaded the full dataset, applied the necessary filters and rolled up the violations at the building level. I've also merged with the city's [PLUTO](https://www.nyc.gov/content/planning/pages/resources/datasets/mappluto-pluto-change) mapping database to get the latitude and longitude coordinates for each building.
 
 <Screenshot
   src="/screenshots/week-9/github-repo.png"
@@ -78,96 +78,87 @@ The final output is a JSON file with one record per building, including the addr
   maxWidth="960px"
 />
 
-The put in the position that's common for newsroom developers. Your colleagues have done the work to get the data into a usable format. Your job is to pick it up and and build a site that makes it engaging and accessible.
-
-### Set up your project
-
-By now, this part should feel like muscle memory.
-
-Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>. Click "Use this template" and create a new repository called `bronx-lead-paint`. Make sure "Public" is selected, then click "Create repository."
-
-Clone the repository to your computer and open it in Visual Studio Code. Open a terminal and run:
-
-```bash
-npm install
-```
-
-Then start the development server:
-
-```bash
-npm run dev
-```
-
-Visit [localhost:5173](http://localhost:5173) to make sure it's working. You should see the familiar template page.
+This puts you in the position that's common for newsroom developers. Your colleagues have done the work to get the data into a usable format. Your job is to pick it up and build a site that makes it engaging and accessible.
 
 ## Part 2: Loading the data
 
-I'm going to give you a file called `bronx-lead-paint.json`. Download it from the link I've posted in the class chat and save it in your project at `src/lib/data/bronx-lead-paint.json`.
-
-You'll need to create the `data` folder inside `src/lib/` first. Right-click on `src/lib/` in the Explorer sidebar and select "New Folder." Name it `data`. Then move or save the JSON file there.
+Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>. Click "Use this template" and create a new repository called `bronx-lead-paint`. Make sure "Public" is selected, then click "Create repository."
 
 <Screenshot
-  src="/screenshots/week-7/vscode-data-folder.png"
-  alt="VS Code Explorer showing the src/lib/data/ folder with bronx-lead-paint.json inside it"
-  showChrome={false}
-  maxWidth="960px"
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
 />
 
-Before we do anything with this data, let's look at it. Open `bronx-lead-paint.json` in VS Code and scroll through it. You'll see an array of objects, each representing a building. Here's what one looks like:
+Clone it onto your computer, open it in Visual Studio Code, and run `npm install` in the terminal. Start the development server with `npm run dev` and open your browser to [localhost:5173](http://localhost:5173).
+
+Download the data file I've created called [bronx_buildings.json](https://raw.githubusercontent.com/palewire/nyc-hpd-bronx-lead-paint-violations/refs/heads/main/output/bronx_buildings.json) and save it in your project. You should place it at `src/lib/data/bronx_buildings.json`.
+
+You'll see an array of objects, each representing a building. Here's what one looks like:
 
 ```json
-{
-  "id": "34291",
-  "address": "1520 GRAND CONCOURSE",
-  "zip": "10457",
-  "violationCount": 12,
-  "latestDate": "2026-02-14",
-  "lat": 40.8441,
-  "lng": -73.9106,
-  "violations": [
-    {
-      "description": "SECTION 27-2056 HMC: ABATE THE LEAD-BASED PAINT HAZARD CONSISTING OF PEELING PAINT SURFACES IN THE ENTIRE APARTMENT, 2ND STORY, APT 2B",
-      "date": "2026-02-14"
-    },
-    {
-      "description": "SECTION 27-2056.6 HMC: CORRECT HAZARDOUS CONDITION CONSISTING OF DETERIORATED LEAD-BASED PAINT SURFACES, WINDOW SILLS AND FRAMES, 3RD STORY, APT 3A",
-      "date": "2026-01-22"
-    }
-  ]
+  {
+    "id": "930402",
+    "address": "3438 FISH AVENUE",
+    "zip": "10469",
+    "violationCount": 2,
+    "latestDate": "2021-01-22",
+    "lat": 40.8772,
+    "lng": -73.8501,
+    "violations": [
+      {
+        "violationId": "14004381",
+        "orderNumber": "617",
+        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PAINT THAT TESTED POSITIVE FOR LEAD CONTENT AND THAT IS PEELING OR ON A DETERIORATED SUBSURFACE - USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2) WEST WALL, 1st WINDOW FRAME FROM SOUTH AT WEST WALL IN THE BATHROOM LOCATED AT APT 2B, 2nd STORY, 1st APARTMENT FROM WEST AT NORTH",
+        "date": "2021-01-22",
+        "currentStatus": "NOV SENT OUT"
+      },
+      {
+        "violationId": "14004383",
+        "orderNumber": "617",
+        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PAINT THAT TESTED POSITIVE FOR LEAD CONTENT AND THAT IS PEELING OR ON A DETERIORATED SUBSURFACE - USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2) 1st DOOR FROM EAST AT SOUTH WALL, 1st DOOR FRAME FROM EAST AT SOUTH WALL IN THE FOYER LOCATED AT APT 2B, 2nd STORY, 1st APARTMENT FROM WEST AT NORTH",
+        "date": "2021-01-22",
+        "currentStatus": "NOV SENT OUT"
+      }
+    ]
+  },
+```
+
+Now load the data into your page. Following the pattern we first covered in [Week 5](/docs/coding-the-news/scripts/week-5/), open `src/routes/+page.js` and load our JSON file into the page's properties.
+
+```js {emphasize-lines="1,7"}
+import violations from '$lib/data/bronx_buildings.json';
+
+export function load() {
+  return {
+    showHeader: true,
+    showFooter: true,
+    violations,
+  };
 }
 ```
 
-Each building has a handful of top-level fields — `id`, `address`, `zip`, `violationCount`, `latestDate`, `lat`, and `lng` — plus a `violations` array containing the individual lead paint violation records with their descriptions and dates.
-
-The descriptions follow HPD's formal statutory language, but they make the hazard concrete: peeling paint surfaces, deteriorated window sills, a child in the apartment. These are the conditions that make lead poisoning a risk for young tenants.
-
-Now let's load the data into our page. Open `src/routes/+page.svelte`. Clear out the existing template content so we're starting from a clean slate. Replace everything with:
+That will make it available in `src/routes/+page.svelte` in the `$props()` object. Open up the boilerplate page, clear it out and start over with this clean slate, which does nothing more than load the data and log it to the console:
 
 ```svelte
 <script>
-  import buildings from '$lib/data/bronx-lead-paint.json';
+  let { data } = $props();
 
-  console.log(buildings.length, 'buildings loaded');
-  console.log(buildings[0]);
+  console.log(`Loaded ${data.violations.length} buildings`);
+  console.log("First record:", data.violations[0]);
 </script>
-
-<h1>Bronx Lead Paint Violations</h1>
-<p>{buildings.length} buildings with open lead paint violations</p>
 ```
 
-Save the file, then open your browser's developer console (right-click anywhere on the page, select "Inspect," and click the "Console" tab). You should see the number of buildings and the first record logged out.
+Save the file, reload the page and open your browser's developer console. You should see the number of buildings and the first record logged out.
 
 <Screenshot
-  src="/screenshots/week-7/console-log.png"
+  src="/screenshots/week-9/console-log.png"
   alt="Browser developer console showing the number of buildings loaded and the first record object expanded to show its fields"
   chromeTitle="Bronx Lead Paint Violations"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
-
-The `import` statement at the top is how SvelteKit loads a JSON file. The `$lib` path points to your `src/lib/` folder, so the full path resolves to the file you just saved. Once imported, `buildings` is a regular JavaScript array that you can loop through, filter, sort, and display.
-
-Remove the `console.log` lines once you've confirmed the data is loading. They were just for testing.
 
 ## Part 3: Building the list
 
