@@ -58,7 +58,7 @@ To zoom in even closer, you'll focus on just one borough — the Bronx — which
 
 Then you'll do something that government sites rarely do: Tally up the total number of open lead paint violations at each building and highlight the most frequent offenders.
 
-[In a separate repository](https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations), I've downloaded the full dataset, applied the necessary filters and rolled up the violations at the building level. I've also merged with the city's [PLUTO](https://www.nyc.gov/content/planning/pages/resources/datasets/mappluto-pluto-change) mapping database to get the latitude and longitude coordinates for each building.
+[In a separate repository](https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations), I've downloaded the full dataset, applied the necessary filters and rolled up the violations at the building level. I limited the results to buildings with five or more open violations and then merged them with the city's [PLUTO](https://www.nyc.gov/content/planning/pages/resources/datasets/mappluto-pluto-change) mapping database to get the latitude and longitude coordinates for each.
 
 <Screenshot
   src="/screenshots/week-9/github-repo.png"
