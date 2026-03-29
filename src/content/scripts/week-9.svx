@@ -858,7 +858,7 @@ Save and visit a building's detail page. You should see the map appear next to t
   maxWidth="960px"
 />
 
-In a couple of weeks, we'll learn how to build full interactive maps from scratch using a library called [MapLibre](https://maplibre.org/). For now, this locator map is enough to orient the reader.
+In a couple of weeks, we'll learn how to build full interactive maps from scratch using a library called [MapLibre](https://maplibre.org/). For now, this locator map is enough.
 
 Save and commit. Before you push to GitHub, remember to visit your repository's settings to active GitHub Pages. Then push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds and check your live site.
 
