@@ -8,6 +8,7 @@ locked: false
 
 <script>
   import Screenshot from '$lib/components/Screenshot.svelte';
+  import { Theater } from 'lucide-svelte';
   import { passive } from 'svelte/legacy';
 </script>
 
@@ -696,8 +697,8 @@ Now create the page that will display the building's details. Open `src/routes/b
   <table>
     <thead>
       <tr>
-        <th>Description</th>
         <th>Date issued</th>
+        <th>Description</th>
       </tr>
     </thead>
     <tbody>
@@ -857,34 +858,25 @@ Save and visit a building's detail page. You should see the map appear next to t
   maxWidth="960px"
 />
 
-In a couple of weeks, we'll learn how to build full interactive maps from scratch using a library called MapLibre. For now, this locator map is enough to orient the reader.
+In a couple of weeks, we'll learn how to build full interactive maps from scratch using a library called [MapLibre](https://maplibre.org/). For now, this locator map is enough to orient the reader.
 
-Save, commit, and push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds, then check your live site.
+Save and commit. Before you push to GitHub, remember to visit your repository's settings to active GitHub Pages. Then push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds and check your live site.
 
-Congratulations. As simple as it is, you've built a real database explorer. You can search, filter, and click through to details. You've learned almost all of the fundamentals that data journalists use to build these projects.
+Congratulations. As simple as it is, you've built a real database explorer. You've learned almost all of the fundamentals that data journalists use to build these projects.
 
 ## Homework
 
 ### Task 1: Build your own database explorer
 
-Find a dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/) or another public data source with enough detail per record to support a searchable list page and detail pages. Build a database explorer for it.
+Find a dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/) and build a database explorer for it.
 
 Your project must have:
 
-* A searchable or filterable list page with at least two controls (search input, dropdown, toggle — your choice)
+* A searchable or filterable list page
 * Detail pages for individual records or groups of records
 * A `DatabaseHeader` with a headline, description, byline, and date
 * A `MethodologyBox` at the bottom explaining the data source and how it was processed
-
-Some datasets that could work well:
-
-* FDNY inspections by building
-* NYC school quality reports and ratings
-* Licensed food vendors
-* Dog licensing records
-* NYPD arrest records by precinct
-
-But you are not limited to NYC. If you find a compelling public dataset from another source, go for it. The point is to find data that has a story in it and build a tool that lets readers find it.
+* Add at least one other component or feature not found in this tutorial
 
 Deploy it to GitHub Pages and send me the link.
 
@@ -894,5 +886,5 @@ Be ready to share your database explorer with the class and explain how you buil
 
 * Show the dataset you chose and explain why it's interesting
 * Walk through your search and filter logic
-* Show a detail page and explain how the route works
+* Show a detail page
 * Discuss what editorial choices you made — what did you include, what did you leave out, and why
