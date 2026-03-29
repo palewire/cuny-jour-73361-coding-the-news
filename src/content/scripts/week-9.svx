@@ -264,47 +264,162 @@ The header now reads like a real news project.
 
 ## Part 4: Building the list
 
-Now let's display the buildings on the page. We'll use the `{#each}` loop you learned in a previous class to iterate through the array and render a card for each building.
+Now let's display the buildings on the page. Rather than looping over every building, you will start by focusing on the top 20 by open violation count
 
-This is where working like a real newsroom developer starts to pay off. Our template already includes a `Card` component — a styled wrapper that turns any content into a clickable linked card. Rather than writing card markup from scratch, we can reach for it directly.
+Once again, we have a pre-made component for this pattern. The [`RankingCard`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-rankingcard--docs) and the parent [`RankingList`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-rankinglist--docs) components are designed to show ranked lists of items. Like our `DatabaseHeader`, they are documented in Storybook with live previews.
 
-Update your script block to import `Card` and a helper called `base`:
+<Screenshot
+  src="/screenshots/week-9/ranking-list-storybook.png"
+  alt="The Storybook documentation page for the RankingList component, showing a live preview of a ranked list with three items and the props table below"
+  chromeTitle="RankingList - Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-rankinglist--docs"
+  maxWidth="960px"
+/>
+
+That will work great in this case. Start by importing them into your script block in `+page.svelte`.
 
 ```svelte {emphasize-lines="3-4"}
 <script>
-  import buildings from '$lib/data/bronx_buildings.json';
-  import { base } from '$app/paths';
-  import Card from '$lib/components/Card.svelte';
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import RankingList from '$lib/components/RankingList.svelte';
+  import RankingCard from '$lib/components/RankingCard.svelte';
 
-  let sorted = [...buildings].sort((a, b) => b.violationCount - a.violationCount);
+  let { data } = $props();
+
+  console.log(`Loaded ${data.violations.length} buildings`);
+  console.log("First record:", data.violations[0]);
 </script>
+
+<DatabaseHeader
+  headline="Tainted Home Tracker"
+  description="The Bronx buildings with the most lead paint violations"
+  byline="NYCity News Service"
+  date="March 2026"
+/>
 ```
 
-The [`.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) method takes a comparison function. This one says: "compare two buildings by subtracting `a`'s count from `b`'s count." When the result is positive, `b` comes first. That gives us descending order — the worst buildings at the top.
+Your goal is to publish a ranking. So you need to sort the buildings by violation count and trim down to the buildings with the most violations. Replace the console logs with this code, which creates a new variable called `top20`.
 
-`base` is a SvelteKit helper that holds the URL prefix for your site on GitHub Pages. Your project will live at a URL like `yourusername.github.io/bronx-lead-paint/` — not at the root of a domain — so any links between your pages need to include that prefix to work correctly.
+```svelte {emphasize-lines="8-10"}
+<script>
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import RankingList from '$lib/components/RankingList.svelte';
+  import RankingCard from '$lib/components/RankingCard.svelte';
 
-Now replace everything below your headline with an `{#each}` loop that renders a `Card` for each building:
+  let { data } = $props();
 
-```svelte
-<h1>Bronx Lead Paint Violations</h1>
-<p>{sorted.length} buildings with open lead paint violations</p>
+  let top20 = data.violations
+    .sort((a, b) => a.rank - b.rank)
+    .slice(0, 20);
+</script>
 
-{#each sorted as building}
-  <Card href="{base}/building/{building.id}">
-    <h3>{building.address}</h3>
-    <p>{building.zip} · {building.violationCount} lead paint violations</p>
-  </Card>
-{/each}
+<DatabaseHeader
+  headline="Tainted Home Tracker"
+  description="The Bronx buildings with the most lead paint violations"
+  byline="NYCity News Service"
+  date="March 2026"
+/>
 ```
 
-`Card` wraps whatever you put inside it in a styled, clickable link. The `href` prop sets where it links. The content between the opening and closing tags — the address, zip code, and count — is entirely up to you. Save and check your browser — you should see a sorted, linked list of building cards.
+
+Each record in the JSON already has a `rank` field, so we can use that. The [`.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) method arranges them in ascending order. Then [`.slice(0, 20)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) trims the array down to the top 20. This a textbook example of JavaScript's rudimentary data manipulation tools at work.
+
+Now replace everything below your headline with a `RankingList` wrapping an `{#each}` loop that renders a `RankingCard` for each building, just as we've done in your past projects with raw HTML elements.
+
+```svelte {emphasize-lines="20-28"}
+<script>
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import RankingList from '$lib/components/RankingList.svelte';
+  import RankingCard from '$lib/components/RankingCard.svelte';
+
+  let { data } = $props();
+
+  let top20 = data.violations
+    .sort((a, b) => a.rank - b.rank)
+    .slice(0, 20);
+</script>
+
+<DatabaseHeader
+  headline="Tainted Home Tracker"
+  description="The Bronx buildings with the most lead paint violations"
+  byline="NYCity News Service"
+  date="March 2026"
+/>
+
+<RankingList title="Top 20 buildings by open violations">
+  {#each top20 as building (building.id)}
+    <RankingCard
+      rank={building.rank}
+      title={building.address}
+      value={building.violationCount}
+    />
+  {/each}
+</RankingList>
+```
+
+Save and check your browser. You should see a ranked list, but it stretches edge to edge across the full width of the page.
 
 <Screenshot
-  src="/screenshots/week-9/building-cards.png"
-  alt="A styled list of building cards showing addresses, zip codes, and lead paint violation counts, sorted with the highest counts first, each card linking to a detail page"
+  src="/screenshots/week-9/ranking-list-full-width.png"
+  alt="The ranking list stretching edge to edge across the full width of the browser window, with no margin on either side"
   chromeTitle="Bronx Lead Paint Violations"
-  chromeUrl="http://localhost:5173"
+  chromeUrl="http://localhost:5174"
+  maxWidth="960px"
+/>
+
+That's because, like many components, `RankingList` doesn't impose a maximum width on itself. We need to wrap it in a container that matches the width of the `DatabaseHeader` above it.
+
+Add a `<div>` around the `RankingList` and a `<style>` block at the bottom of `+page.svelte` to constrain it:
+
+```svelte {emphasize-lines="20,30,32-37"}
+<script>
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import RankingList from '$lib/components/RankingList.svelte';
+  import RankingCard from '$lib/components/RankingCard.svelte';
+
+  let { data } = $props();
+
+  let top20 = data.violations
+    .sort((a, b) => a.rank - b.rank)
+    .slice(0, 20);
+</script>
+
+<DatabaseHeader
+  headline="Tainted Home Tracker"
+  description="The Bronx buildings with the most lead paint violations"
+  byline="NYCity News Service"
+  date="March 2026"
+/>
+
+<div class="container">
+  <RankingList title="Top 20 buildings by open violations">
+    {#each top20 as building (building.id)}
+      <RankingCard
+        rank={building.rank}
+        title={building.address}
+        value={building.violationCount}
+      />
+    {/each}
+  </RankingList>
+</div>
+
+<style>
+  .container {
+    max-width: var(--max-width-wide);
+    margin: 0 auto;
+  }
+</style>
+```
+
+The `--max-width-wide` variable is defined in the template's global stylesheet at `1200px`. Using it here keeps the list consistent with other wide elements like the `DatabaseHeader`. The `margin: 0 auto` centers the container on the page.
+
+Save again and the list should now sit comfortably within the page layout.
+
+<Screenshot
+  src="/screenshots/week-9/ranking-list-fixed-width.png"
+  alt="The ranking list now constrained to a comfortable width and centered on the page, matching the DatabaseHeader above it"
+  chromeTitle="Bronx Lead Paint Violations"
+  chromeUrl="http://localhost:5174"
   maxWidth="960px"
 />
 
@@ -363,87 +478,6 @@ Save and try it. Type an address into the search box and watch the list narrow i
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
-
-### Adding a zip code filter
-
-Now let's add a dropdown that filters by zip code. First, we need a list of all the unique zip codes in the dataset. We can build it with a JavaScript technique that extracts one value from every record and removes duplicates. Add `Dropdown` to your imports and build the zips list:
-
-```svelte {emphasize-lines="6,8"}
-<script>
-  import buildings from '$lib/data/bronx_buildings.json';
-  import { base } from '$app/paths';
-  import Card from '$lib/components/Card.svelte';
-  import SearchInput from '$lib/components/SearchInput.svelte';
-  import Dropdown from '$lib/components/Dropdown.svelte';
-
-  let zips = [...new Set(buildings.map(b => b.zip))].sort();
-  let search = $state('');
-  let zipFilter = $state('all');
-
-  let filtered = $derived(
-    buildings
-      .filter(b => {
-        let matchesSearch = b.address.toLowerCase().includes(search.toLowerCase());
-        let matchesZip = zipFilter === 'all' || b.zip === zipFilter;
-        return matchesSearch && matchesZip;
-      })
-      .sort((a, b) => b.violationCount - a.violationCount)
-  );
-</script>
-```
-
-That `zips` line does a lot in a small space, so let's unpack it. Reading from the inside out:
-
-- `buildings.map(b => b.zip)` creates a new array containing just the zip code from every building. If there are 500 buildings, this produces an array of 500 zip codes, many of them duplicates.
-- `new Set(...)` converts that array into a [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set), which is a special JavaScript data structure that automatically removes duplicates.
-- `[...` `]` spreads the Set back into a regular array, so we can call `.sort()` on it.
-- `.sort()` puts the zip codes in order.
-
-The result is a clean list of unique zip codes like `["10451", "10452", "10453", ...]` that we can use to populate a dropdown menu.
-
-We also added a `zipFilter` state variable with a default value of `'all'`, and updated the `$derived` filter to check both conditions. A building must match the search text **and** the zip code filter to appear in the results.
-
-Now swap in the template's `Dropdown` component next to `SearchInput`. `Dropdown` accepts a `bind:value` binding and an `options` array — each option is an object with a `value` and a `label`:
-
-```svelte
-<div class="controls">
-  <SearchInput bind:value={search} placeholder="Search by address..." />
-
-  <Dropdown
-    bind:value={zipFilter}
-    options={[
-      { value: 'all', label: 'All zip codes' },
-      ...zips.map(z => ({ value: z, label: z }))
-    ]}
-  />
-</div>
-
-<p>{filtered.length} buildings</p>
-```
-
-The `options` array starts with the "All zip codes" catch-all, then spreads in the dynamic list using the spread operator (`...`). We're building the options array right in the template — no extra variable needed.
-
-Add a `<style>` block at the bottom of `+page.svelte` to lay the controls out side by side:
-
-```css
-.controls {
-  display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-```
-
-Save and check your browser. You should now be able to search by address, filter by zip code, or combine both. The count above the list updates automatically as you change the filters.
-
-<Screenshot
-  src="/screenshots/week-9/filters-working.png"
-  alt="The building list with both a SearchInput and a Dropdown. A zip code is selected and the count shows a smaller number of filtered results."
-  chromeTitle="Bronx Lead Paint Violations"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-Try selecting a zip code and then typing in the search box. The filters compose — they both apply at the same time. This is the same reactive pattern you used in Week 4, now applied to a real dataset with real consequences.
 
 ## Part 6: Detail pages
 
