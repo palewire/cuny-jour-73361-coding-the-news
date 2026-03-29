@@ -8,6 +8,7 @@ locked: false
 
 <script>
   import Screenshot from '$lib/components/Screenshot.svelte';
+  import { passive } from 'svelte/legacy';
 </script>
 
 In [Week 5](/docs/coding-the-news/scripts/week-5/), you saw how ProPublica's ["Dollars for Docs"](https://projects.propublica.org/docdollars/) project drew worldwide attention by turning a massive, obscure dataset of pharmaceutical company payments to doctors into a searchable, browsable website.
@@ -16,7 +17,7 @@ Examples of projects like this are everywhere. These include the Washington Post
 
 What these tools have in common is a simple pattern: a list page where you can search and filter, and a detail page where you can drill into an individual record. That's what you're going to build today.
 
-### Part 1: Introducing our dataset
+## Part 1: Introducing our dataset
 
 We'll be working with citations from the [New York City Department of Housing Preservation and Development](https://www.nyc.gov/site/hpd/index.page), known as HPD. When an inspector finds a hazard, the agency issues a notice and the building owner is expected to address the problem.
 
@@ -625,27 +626,34 @@ Save and check the bottom of your page.
   maxWidth="960px"
 />
 
-## Part 7: Detail pages
+## Part 7: Creating dynamic detail pages
 
-So far, everything lives on a single page. But a good database explorer lets you click into individual records and see their full story. That's what we'll build now.
+So far, everything lives on a single page. But a good database explorer lets you click into individual records and see their full story.
 
 In SvelteKit, every page on your site is a file inside the `src/routes/` folder. Up until now, we've only used `src/routes/+page.svelte`, which is the homepage. But SvelteKit can create pages at any URL by adding folders and files inside `src/routes/`.
 
-We want a separate page for every building, at a URL like `/building/34291`, where the number is the building's ID. To do this, we'll use a SvelteKit feature called [dynamic routes](https://kit.svelte.dev/docs/routing#page).
+We want a separate page for every building, at a URL like `/building/34291/`, where the number is the building's ID. To do this, we'll use a SvelteKit feature called [dynamic routes](https://svelte.dev/docs/kit/routing), where the id for each record is called a "parameter."
 
-### Creating the route
+### Creating the parameterized route
 
-Create a new folder structure inside `src/routes/`:
+Create a new folder in `src/routes/` with the name of the parameter in square brackets, like `src/routes/building/[id]`. If you're on your terminal you could type:
 
+```bash
+mkdir -p 'src/routes/building/[id]/'
 ```
-src/routes/building/[id]/
+
+The square brackets around `[id]` are the key. They tell SvelteKit that this part of the URL is a variable, or parameter. When someone visits `/building/34291`, SvelteKit will load this route and set `id` property to `"34291"`.
+
+Inside that folder, create two files. The first is `+page.js`. As with the homepage, this file will contain a `load` function that tells SvelteKit how to get the data for this page. The second is `+page.svelte`, which will be the template for rendering the page. It's the same structure as our root page, just in a subfolder.
+
+Again, if you're on your terminal, you could create the files with the following.
+
+```bash
+touch 'src/routes/building/[id]/+page.js'
+touch 'src/routes/building/[id]/+page.svelte'
 ```
 
-The square brackets around `[id]` are the key. They tell SvelteKit that this part of the URL is a variable — it could be any value. When someone visits `/building/34291`, SvelteKit will load this route and set `id` to `"34291"`.
-
-Inside that folder, create two files. The first is `+page.js`. This is a new type of file we haven't used before. It's called a [load function](https://kit.svelte.dev/docs/load), and its job is to prepare data before the page renders.
-
-Create `src/routes/building/[id]/+page.js`:
+Inside `src/routes/building/[id]/+page.js`, paste the following code.
 
 ```js
 import buildings from '$lib/data/bronx_buildings.json';
@@ -662,41 +670,29 @@ export function entries() {
 
 There are two functions here. Let's take them one at a time.
 
-The `load` function receives a `params` object containing the dynamic parts of the URL. Since our folder is called `[id]`, `params.id` will contain whatever value appears in the URL. We use JavaScript's [`.find()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find) method to locate the matching building in our dataset, and return it as an object.
+The `load` function receives a `params` object containing the dynamic parts of the URL. Since our folder is called `[id]`, `params.id` will contain whatever value appears in the URL. We use JavaScript's [`.find()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find) method to locate the matching building in our dataset, and return it as an object. That's the data properties that will be passed to the page component when it renders.
 
-The `entries` function serves a different purpose. Because our site is a static site — all the pages are built ahead of time, not generated on-the-fly — SvelteKit needs to know every possible page that could exist. The `entries` function provides that list. It maps over all the buildings and returns an array of objects, each containing an `id` value. When you build the site, SvelteKit will loop through these and generate a separate HTML page for each one.
+The [`entries`](https://svelte.dev/docs/kit/page-options#entries) function serves a different purpose. SvelteKit needs to know every possible page that could exist. The `entries` function provides that list. It maps over all the buildings and returns an array of objects, each containing an `id` value. When you build the site, SvelteKit will loop through these and generate a separate HTML page for each one.
 
 ### Creating the detail page
 
-Now create the page that will display the building's details. Create `src/routes/building/[id]/+page.svelte`:
+Now create the page that will display the building's details. Open `src/routes/building/[id]/+page.svelte` and toss this in.
 
 ```svelte
 <script>
-  import { base } from '$app/paths';
   import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
-  import Dashboard from '$lib/components/Dashboard.svelte';
-  import BigNumber from '$lib/components/BigNumber.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
 
   let { data } = $props();
-  let building = data.building;
+  let building = $derived(data.building);
 </script>
 
 <DatabaseHeader
   headline={building.address}
-  description="{building.violationCount} open lead paint violations · ZIP {building.zip}"
-  byline="NYC HPD Data"
-  date={building.latestDate}
+  description={`${building.violationCount} open lead paint violations`}
 />
 
 <div class="container">
-  <Dashboard>
-    <BigNumber number={building.violationCount} label="Open violations" />
-    <BigNumber number="#{building.rank}" label="Rank in the Bronx" />
-  </Dashboard>
-
-  <h2>Violations</h2>
-
   <table>
     <thead>
       <tr>
@@ -705,7 +701,7 @@ Now create the page that will display the building's details. Create `src/routes
       </tr>
     </thead>
     <tbody>
-      {#each building.violations as violation}
+      {#each building.violations as violation (violation.violationId)}
         <tr>
           <td>{violation.description}</td>
           <td>{violation.date}</td>
@@ -716,12 +712,13 @@ Now create the page that will display the building's details. Create `src/routes
 
   <MethodologyBox>
     <p>
-      Violation records come from the
-      <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">NYC Department of Housing Preservation and Development</a>
-      via NYC Open Data. Only open lead paint violations are shown.
-      For more information about this building, visit
-      <a href="https://hpdonline.nyc.gov/hpdonline/provide-information" target="_blank">HPD Online</a>.
+      The data on this page comes from the Department of Housing Preservation and Development
+      <a href="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5" target="_blank">via New York City's open data portal</a>.
     </p>
+    <p>
+      The citations published by the city were filtered to include only lead paint violations that city inspectors listed as unresolved. The data was filtered to only citations linked to addresses in the Bronx and then aggregated by address. Only addresses with five or more open violations were included in the ranking. The data is current as of March 2026.
+    </p>
+    <p>The code that executed the analysis is available as open source on GitHub at <a href="https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations" target="_blank">github.com/palewire/nyc-hpd-bronx-lead-paint-violations</a>.</p>
   </MethodologyBox>
 </div>
 
@@ -742,6 +739,7 @@ Now create the page that will display the building's details. Create `src/routes
     text-align: left;
     padding: 0.75rem;
     border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
   }
 
   th {
@@ -753,26 +751,28 @@ Now create the page that will display the building's details. Create `src/routes
 
 The key line is `let { data } = $props()`. When a page has a `+page.js` load function, SvelteKit passes whatever it returns as a `data` prop. So `data.building` is the building object we found in the load function.
 
-The [`DatabaseHeader`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-databaseheader--docs) at the top reuses the same component from the list page, this time showing the building's address and violation summary. The [`Dashboard`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-dashboard--docs) and [`BigNumber`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-bignumber--docs) components display key stats in bold, colored boxes — no custom CSS needed.
+We then pull out the building data using `$derived` to ensure that Svelte resolves it reactively. That allows us to use the building's properties in our template. This is a quirk of dynamic pages.
 
-The violations themselves are in a `<table>`. A table is the right tool here: the data is structured, each row has the same two fields, and readers will want to scan down the list.
+The [`DatabaseHeader`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-databaseheader--docs) at the top reuses the same component from the list page, this time showing the building's address and violation summary.
+
+The violations themselves are in a `<table>`, cobbled together outside of our core components library.
 
 ### Linking to detail pages
 
-Before we can test the detail pages, we need to wire up the list. Go back to `src/routes/+page.svelte` and add an `href` prop to each `RankingCard`. First, import `base`:
+Before we can see the detail pages, we need to wire up the list to link down to them. Go back to `src/routes/+page.svelte` and add an `href` prop to each `RankingCard`. First, import `base`:
 
-```svelte {emphasize-lines="3"}
+```svelte {emphasize-lines="2"}
 <script>
-  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
   import { base } from '$app/paths';
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
   import RankingList from '$lib/components/RankingList.svelte';
   // ... rest of your imports
 </script>
 ```
 
-`base` is a SvelteKit helper that holds the URL prefix for your site on GitHub Pages. Your project will live at a URL like `yourusername.github.io/bronx-lead-paint/` — not at the root of a domain — so any links between your pages need to include that prefix to work correctly.
+The `base` variable is a SvelteKit helper that holds the URL prefix for your site on GitHub Pages. Your project will live at a URL like `yourusername.github.io/bronx-lead-paint/` — not at the root of a domain — so any links between your pages need to include that prefix to work correctly.
 
-Then add the `href` to each `RankingCard`:
+Then add the `href` attribute to each `RankingCard`:
 
 ```svelte {emphasize-lines="5"}
 {#each filtered as building (building.id)}
@@ -789,57 +789,79 @@ Save and click on any card to test it.
 
 <Screenshot
   src="/screenshots/week-9/detail-page.png"
-  alt="A detail page for a specific Bronx building showing a DatabaseHeader with the address and violation count, Dashboard BigNumber boxes for total violations and Bronx rank, and a table listing each violation description and date"
-  chromeTitle="1520 GRAND CONCOURSE"
-  chromeUrl="http://localhost:5173/building/34291"
+  alt="A detail page for 2201 Davidson Avenue showing a DatabaseHeader with the address and violation count, followed by a table listing each violation description and date"
+  chromeTitle="2201 Davidson Avenue"
+  chromeUrl="http://localhost:5174/building/60491"
   maxWidth="960px"
 />
-
-Click the "Back to all buildings" link at the top to return to the list. Your search state will reset — that's expected for a static site. Each page load starts fresh.
 
 ## Part 8: Adding a locator map
 
-Each building in our dataset has latitude and longitude coordinates. Let's use them to add a small map to the detail page that shows where the building is located.
+Each building in your dataset has latitude and longitude coordinates. Let's use them to add a small map to the detail page that shows where the building is located.
 
-Our template includes a `LocatorMap` component that embeds an [OpenStreetMap](https://www.openstreetmap.org/) view centered on any set of coordinates. It uses an iframe — a way to embed one web page inside another — and constructs the URL automatically from the coordinates you pass in. No extra packages required.
-
-Open `src/routes/building/[id]/+page.svelte` and add the import:
-
-```svelte {emphasize-lines="5"}
-<script>
-  import { base } from '$app/paths';
-  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
-  import Dashboard from '$lib/components/Dashboard.svelte';
-  import BigNumber from '$lib/components/BigNumber.svelte';
-  import LocatorMap from '$lib/components/LocatorMap.svelte';
-  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
-
-  let { data } = $props();
-  let building = data.building;
-</script>
-```
-
-Place the component after the `Dashboard` and before the violations table. `LocatorMap` accepts two props — `lat` and `lng` — and renders an OpenStreetMap embed centered on those coordinates with a marker at the exact spot:
-
-```svelte
-<LocatorMap lat={building.lat} lng={building.lng} />
-```
-
-Save and visit a building's detail page. You should see a small interactive map showing the building's location in the Bronx.
+The template includes a [`LocatorMap`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-locatormap--docs) component that centers on any set of coordinates.
 
 <Screenshot
-  src="/screenshots/week-9/locator-map.png"
-  alt="The detail page now includes a small embedded OpenStreetMap showing a red marker at the building's location, with the surrounding Bronx streets visible"
-  chromeTitle="1520 GRAND CONCOURSE"
-  chromeUrl="http://localhost:5173/building/34291"
+  src="/screenshots/week-9/locatormap-component.png"
+  alt="The LocatorMap component in Storybook, showing a square map centered on Midtown Manhattan with a caption and credit line"
+  chromeTitle="LocatorMap - Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-locatormap--docs"
   maxWidth="960px"
 />
 
-In a couple of weeks, we'll learn how to build full interactive maps from scratch using a library called MapLibre. For now, this simple embed is enough to orient the reader.
+We're going to place this map inside the `DatabaseHeader` on the detail page, so it appears as a graphic in the right column alongside the building's name and violation count.
+
+Open `src/routes/building/[id]/+page.svelte` and add the import:
+
+```svelte {emphasize-lines="4"}
+<script>
+  import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import MethodologyBox from '$lib/components/MethodologyBox.svelte';
+  import LocatorMap from '$lib/components/LocatorMap.svelte';
+
+  let { data } = $props();
+  let building = $derived(data.building);
+</script>
+```
+
+Now we need to pass the `LocatorMap` into `DatabaseHeader`. Earlier, when we nested `SearchInput` inside `DatabaseHeader`, we placed it between the opening and closing tags. That worked because `DatabaseHeader` has a `children` slot. Anything placed between the tags goes there automatically.
+
+But `DatabaseHeader` also has a second slot called `graphic`, which renders content in a right-hand column. To target a specific named slot like this, Svelte uses a [`{#snippet}`](https://svelte.dev/docs/svelte/snippet) tag.
+
+```svelte {emphasize-lines="3-5"}
+<DatabaseHeader
+  headline={building.address}
+  description={`${building.violationCount} open lead paint violations`}
+>
+  {#snippet graphic()}
+    <LocatorMap
+      longitude={building.lng}
+      latitude={building.lat}
+      zoom={13}
+      dot={true}
+      width={250}
+    />
+  {/snippet}
+</DatabaseHeader>
+```
+
+The `{#snippet graphic()}` block tells Svelte: "Don't put this in the default children slot. Pass it to the slot named `graphic` instead." The `DatabaseHeader` then renders it in a right column on desktop screens and stacks it below the headline on mobile.
+
+Save and visit a building's detail page. You should see the map appear next to the building name, with a red dot marking the location.
+
+<Screenshot
+  src="/screenshots/week-9/locator-map.png"
+  alt="The detail page for 20 West 190th Street showing the DatabaseHeader with the building address and violation count on the left, and a LocatorMap with a red dot on the right"
+  chromeTitle="20 WEST 190 STREET"
+  chromeUrl="http://localhost:5174/building/121299"
+  maxWidth="960px"
+/>
+
+In a couple of weeks, we'll learn how to build full interactive maps from scratch using a library called MapLibre. For now, this locator map is enough to orient the reader.
 
 Save, commit, and push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds, then check your live site.
 
-Take a moment to browse through the data. Click into the buildings at the top of the list and read the violation descriptions. What patterns do you notice? Which neighborhoods have the highest concentrations? That instinct — the impulse to look at the records and ask questions — is what separates a database explorer from just a spreadsheet.
+Congratulations. As simple as it is, you've built a real database explorer. You can search, filter, and click through to details. You've learned almost all of the fundamentals that data journalists use to build these projects.
 
 ## Homework
 
