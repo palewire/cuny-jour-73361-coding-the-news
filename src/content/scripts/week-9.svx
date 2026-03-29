@@ -16,23 +16,69 @@ Examples of projects like this are everywhere. Other examples include the Washin
 
 What these tools have in common is a simple pattern: a list page where you can search and filter, and a detail page where you can drill into an individual record. That's what you're going to build today.
 
-### Our dataset
+### Part 1: Introducing our dataset
 
-We'll be working with lead paint violation data from the New York City Department of Housing Preservation and Development, known as HPD. Under New York City law, landlords must address lead paint hazards in any apartment where a child under six lives. When an HPD inspector finds a lead paint hazard and the landlord fails to correct it, the agency issues a lead paint violation — one of the most serious housing code violations a building owner can receive.
+We'll be working with citations from the [New York City Department of Housing Preservation and Development](https://www.nyc.gov/site/hpd/index.page), known as HPD. When an inspector finds a hazard, the agency issues a notice and the building owner is expected to address the problem.
 
-Our dataset covers the Bronx, the borough with the highest concentration of open lead paint violations in the city.
+[The dataset on NYC Open Data](https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5/about_data) contains millions of individual violation records going back years, covering a wide range of hazards, from rodent infestations to broken elevators.
 
 <Screenshot
-  src="/screenshots/week-7/hpd-open-data.png"
+  src="/screenshots/week-9/hpd-open-data.png"
   alt="The HPD Housing Maintenance Code Violations dataset on the NYC Open Data portal, showing a table of violation records"
   chromeTitle="Housing Maintenance Code Violations"
   chromeUrl="https://data.cityofnewyork.us/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5"
   maxWidth="960px"
 />
 
-The raw dataset on NYC Open Data contains millions of individual violation records going back to 2010. That's far too much data for a static site to handle. So I've prepared a smaller file for class that filters to open lead paint violations and rolls them up at the building level. Instead of one row per violation, it's one row per building, with a count of how many open lead paint violations each building has and the individual violation records nested inside.
+There are already ways to search and explore this dataset. HPD's [tool](https://hpdonline.nyc.gov/hpdonline/provide-information) let's you look up individual buildings.
 
-The editorial question we're answering: **Which Bronx buildings have the most unresolved lead paint violations right now?**
+<Screenshot
+  src="/screenshots/week-9/hpd-online.png"
+  alt="HPD Online search interface showing a 'Find Building Information' hero with tabs for Address, BIN, Registration No., and Borough/Block/Lot"
+  chromeTitle="HPD Online"
+  chromeUrl="https://hpdonline.nyc.gov/hpdonline/"
+  maxWidth="960px"
+/>
+
+[JustFix](https://www.justfix.org/en/) is a non-profit that provides tenent organizers and legal aides with [a tool](https://whoownswhat.justfix.org/en/) to build cases against negligent landlords by merging HPD data with other sources.
+
+<Screenshot
+  src="/screenshots/week-9/justfix.png"
+  alt="JustFix's Who Owns What search interface for finding other buildings a landlord might own in NYC"
+  chromeTitle="Who Owns What"
+  chromeUrl="https://whoownswhat.justfix.org/en/"
+  maxWidth="960px"
+/>
+
+You'll try to provide a service these sites don't.
+
+You'll narrow your focus to a single hazard, lead paint. It's a hazard that is particularly dangerous for children and worthy of greater focus.
+
+To zoom in even closer, you'll focus on just one borough — the Bronx — which has the highest concentration of housing violations in the city.
+
+Then you'll do something that government sites rarely do: Tally up the total number of open lead paint violations at each building and highlight the most frequent offenders.
+
+[In a separate repository](https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations), I've downloaded the full dataset, done the necessary filters and rolled up the violations at the building level. I've also merged with the city's [PLUTO](https://www.nyc.gov/content/planning/pages/resources/datasets/mappluto-pluto-change) mapping database to get the latitude and longitude coordinates for each building.
+
+<Screenshot
+  src="/screenshots/week-9/github-repo.png"
+  alt="GitHub repository for nyc-hpd-bronx-lead-paint-violations showing the project file structure and README"
+  chromeTitle="palewire/nyc-hpd-bronx-lead-paint-violations"
+  chromeUrl="https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations"
+  maxWidth="960px"
+/>
+
+The final output is a JSON file with one record per building, including the address, ZIP Code, violation count, coordinates, plus a nested list of all the individual violations.
+
+<Screenshot
+  src="/screenshots/week-9/bronx-json.png"
+  alt="Raw JSON output showing building records with address, ZIP code, violation count, coordinates, and nested individual violation details"
+  chromeTitle="bronx_buildings.json"
+  chromeUrl="https://raw.githubusercontent.com/palewire/nyc-hpd-bronx-lead-paint-violations/refs/heads/main/output/bronx_buildings.json"
+  maxWidth="960px"
+/>
+
+The put in the position that's common for newsroom developers. Your colleagues have done the work to get the data into a usable format. Your job is to pick it up and and build a site that makes it engaging and accessible.
 
 ### Set up your project
 
