@@ -123,7 +123,8 @@ You'll see an array of objects, each representing a building. Here's what one lo
         "date": "2021-01-22",
         "currentStatus": "NOV SENT OUT"
       }
-    ]
+    ],
+    "rank": 500
   },
 ```
 
@@ -566,7 +567,7 @@ Our Storybook library includes a component specifically for this. It's called a 
   maxWidth="960px"
 />
 
-As with the other compontents, you start by adding `MethodologyBox` to your imports in `+page.svelte`.
+As with the other components, you start by adding `MethodologyBox` to your imports in `+page.svelte`.
 
 ```svelte {emphasize-lines="6"}
 <script>
@@ -704,8 +705,8 @@ Now create the page that will display the building's details. Open `src/routes/b
     <tbody>
       {#each building.violations as violation (violation.violationId)}
         <tr>
-          <td>{violation.description}</td>
           <td>{violation.date}</td>
+          <td>{violation.description}</td>
         </tr>
       {/each}
     </tbody>
