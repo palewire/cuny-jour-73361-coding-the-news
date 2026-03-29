@@ -3,32 +3,18 @@ title: "Database Explorer"
 summary: "How to build a searchable directory with detail pages for individual records"
 date: "March 30, 2026"
 week: 9
-locked: true
+locked: false
 ---
 
 <script>
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
-Welcome to Module 2. Over the next four weeks, we're going to take the fundamentals you've been building and put them to work on real projects. Each week, we'll build something together in class, and then for homework you'll build your own version from scratch.
+In [Week 5](/docs/coding-the-news/scripts/week-5/), you saw how ProPublica's ["Dollars for Docs"](https://projects.propublica.org/docdollars/) project drew worldwide attention by turning a massive, obscure dataset of pharmaceutical company payments to doctors into a searchable, browsable website.
 
-We're starting with one of the most common and useful things news developers build: a database explorer. That's a searchable, filterable page that lets readers dig through records on their own. Newsrooms use them to put public data directly in the hands of their audience.
+Examples of projects like this are everywhere. Other examples include the Washington Post's [police shootings database](https://www.washingtonpost.com/graphics/investigations/police-shootings-database/), USA Today's [NCAA salaries tracker](https://sportsdata.usatoday.com/ncaa/salaries/football/coach) and the college rankings published by [U.S. News and World Report](https://www.usnews.com/best-colleges).
 
-## Part 1: What is a database explorer?
-
-You've probably used a database explorer without thinking about it. They're everywhere in journalism.
-
-ProPublica's [Nonprofit Explorer](https://projects.propublica.org/nonprofits/) lets you search the tax filings of every nonprofit in America. The Marshall Project's [The Next to Die](https://www.themarshallproject.org/next-to-die) tracks upcoming executions. WNYC built [a tool](https://projects.wnyc.org/rent-stabilized/) that lets you check whether your building is rent-stabilized. The New York Times publishes [a database of police misconduct records](https://www.nytimes.com/interactive/2023/10/20/us/nypd-misconduct-discipline-records.html).
-
-<Screenshot
-  src="/screenshots/week-7/propublica-nonprofits.png"
-  alt="ProPublica's Nonprofit Explorer showing a search interface with a text input and results listing nonprofit organizations"
-  chromeTitle="Nonprofit Explorer"
-  chromeUrl="https://projects.propublica.org/nonprofits/"
-  maxWidth="960px"
-/>
-
-What these tools have in common is a simple pattern: a list page where you can search and filter, and a detail page where you can drill into an individual record. That's what we're going to build today.
+What these tools have in common is a simple pattern: a list page where you can search and filter, and a detail page where you can drill into an individual record. That's what you're going to build today.
 
 ### Our dataset
 
