@@ -166,12 +166,12 @@ You've got a blank canvas. Now it's time to start designing your site.
 
 Like most newsroom developers, you don't have to start from scratch. As we discussed in [Week 3](/docs/coding-the-news/scripts/week-3/), most teams maintain a library of pre-made, ready-to-serve components that they can pull into projects.
 
-They are often collected and documented in a playbook shared among developers. One common tool for building and browsing these component libraries is called [Storybook](https://storybook.js.org/). Itlets you see every component in isolation, experiment with its props, and copy the usage pattern directly into your project.
+They are often collected and documented in a playbook shared among developers. One common tool for building and browsing these component libraries is called [Storybook](https://storybook.js.org/). It lets you see every component in isolation, experiment with its props, and copy the usage pattern directly into your project.
 
 <Screenshot
   src="/screenshots/week-9/storybook-js.png"
-  alt="The Storybook homepage showing a list of components in the sidebar and a preview of the DatabaseHeader component with controls for its props"
-  chromeTitle="DatabaseHeader – Storybook"
+  alt="The Storybook homepage showing its hero section with logos of supported frameworks like React, Vue, and Angular"
+  chromeTitle="Storybook"
   chromeUrl="https://storybook.js.org/"
   maxWidth="960px"
 />
@@ -212,8 +212,6 @@ Open `src/routes/+page.svelte`. Your script block currently logs the data to the
   console.log("First record:", data.violations[0]);
 </script>
 ```
-
-### Start with a headline
 
 Add the component below the closing `</script>` tag, beginning with just the headline and description.
 
@@ -274,7 +272,7 @@ Update your script block to import `Card` and a helper called `base`:
 
 ```svelte {emphasize-lines="3-4"}
 <script>
-  import buildings from '$lib/data/bronx-lead-paint.json';
+  import buildings from '$lib/data/bronx_buildings.json';
   import { base } from '$app/paths';
   import Card from '$lib/components/Card.svelte';
 
@@ -322,7 +320,7 @@ Start by adding a `$state` variable for the search term and a `$derived` variabl
 
 ```svelte {emphasize-lines="4-5,7-14"}
 <script>
-  import buildings from '$lib/data/bronx-lead-paint.json';
+  import buildings from '$lib/data/bronx_buildings.json';
   import { base } from '$app/paths';
   import Card from '$lib/components/Card.svelte';
   import SearchInput from '$lib/components/SearchInput.svelte';
@@ -372,7 +370,7 @@ Now let's add a dropdown that filters by zip code. First, we need a list of all 
 
 ```svelte {emphasize-lines="6,8"}
 <script>
-  import buildings from '$lib/data/bronx-lead-paint.json';
+  import buildings from '$lib/data/bronx_buildings.json';
   import { base } from '$app/paths';
   import Card from '$lib/components/Card.svelte';
   import SearchInput from '$lib/components/SearchInput.svelte';
@@ -470,7 +468,7 @@ Inside that folder, create two files. The first is `+page.js`. This is a new typ
 Create `src/routes/building/[id]/+page.js`:
 
 ```js
-import buildings from '$lib/data/bronx-lead-paint.json';
+import buildings from '$lib/data/bronx_buildings.json';
 
 export function load({ params }) {
   const building = buildings.find(b => b.id === params.id);
@@ -495,7 +493,7 @@ Now create the page that will display the building's details. Create `src/routes
 ```svelte
 <script>
   import { base } from '$app/paths';
-  import buildings from '$lib/data/bronx-lead-paint.json';
+  import buildings from '$lib/data/bronx_buildings.json';
   import HeroTopper from '$lib/components/HeroTopper.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
   let { data } = $props();
@@ -650,7 +648,7 @@ Open `src/routes/building/[id]/+page.svelte` and add the import:
 ```svelte {emphasize-lines="4"}
 <script>
   import { base } from '$app/paths';
-  import buildings from '$lib/data/bronx-lead-paint.json';
+  import buildings from '$lib/data/bronx_buildings.json';
   import HeroTopper from '$lib/components/HeroTopper.svelte';
   import LocatorMap from '$lib/components/LocatorMap.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
@@ -704,7 +702,7 @@ Open `src/routes/+page.svelte` and add the import:
 ```svelte {emphasize-lines="2"}
 <script>
   import HeroTopper from '$lib/components/HeroTopper.svelte';
-  import buildings from '$lib/data/bronx-lead-paint.json';
+  import buildings from '$lib/data/bronx_buildings.json';
   import { base } from '$app/paths';
   import SearchInput from '$lib/components/SearchInput.svelte';
   import Dropdown from '$lib/components/Dropdown.svelte';
