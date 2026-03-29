@@ -344,7 +344,7 @@ Your goal is to publish a ranking. So you need to sort the buildings by violatio
 ```
 
 
-Each record in the JSON already has a `rank` field, so we can use that. The [`.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) method arranges them in ascending order. Then [`.slice(0, 20)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) trims the array down to the top 20. This a textbook example of JavaScript's rudimentary data manipulation tools at work.
+Each record in the JSON already has a `rank` field, so we can use that. The [`.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) method arranges them in ascending order. Then [`.slice(0, 20)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) trims the array down to the top 20. This is a textbook example of JavaScript's rudimentary data manipulation tools at work.
 
 Now replace everything below your headline with a `RankingList` wrapping an `{#each}` loop that renders a `RankingCard` for each building, just as we've done in your past projects with raw HTML elements.
 
@@ -878,7 +878,7 @@ Save and visit a building's detail page. You should see the map appear next to t
 
 In a couple of weeks, we'll learn how to build full interactive maps from scratch using a library called [MapLibre](https://maplibre.org/). For now, this locator map is enough.
 
-Save and commit. Before you push to GitHub, remember to visit your repository's settings to active GitHub Pages. Then push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds and check your live site.
+Save and commit. Before you push to GitHub, remember to visit your repository's settings to activate GitHub Pages. Then push to GitHub. Watch the "Actions" tab to make sure the deploy succeeds and check your live site.
 
 Congratulations. As simple as it is, you've built a real database explorer. You've learned almost all of the fundamentals that data journalists use to build these projects.
 
