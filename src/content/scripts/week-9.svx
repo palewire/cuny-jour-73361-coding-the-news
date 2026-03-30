@@ -886,7 +886,7 @@ Congratulations. As simple as it is, you've built a real database explorer. You'
 
 ### Task 1: Build your own database explorer
 
-Find a dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/) and build a database explorer for it.
+Pick a dataset. It can be from another class, your previous work or downloaded from the [NYC Open Data portal](https://opendata.cityofnewyork.us/). Build a database explorer for it.
 
 Your project must have:
 
