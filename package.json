@@ -41,7 +41,7 @@
     "js-yaml": "^4.1.1",
     "lucide-svelte": "^1.0.1",
     "playwright": "^1.57.0",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.1",
     "rehype-slug": "^6.0.0",
     "shiki": "^4.0.2"
   },
