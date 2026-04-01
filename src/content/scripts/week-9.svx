@@ -661,7 +661,7 @@ Save and check the bottom of your page.
   maxWidth="960px"
 />
 
-## Part 7: Creating dynamic detail pages
+## Part 7: Creating detail pages
 
 So far, everything lives on a single page. But a good database explorer lets you click into individual records and see their full story.
 
@@ -669,7 +669,7 @@ In SvelteKit, every page on your site is a file inside the `src/routes/` folder.
 
 We want a separate page for every building, at a URL like `/building/34291/`, where the number is the building's ID. To do this, we'll use a SvelteKit feature called [dynamic routes](https://svelte.dev/docs/kit/routing), where the id for each record is called a "parameter."
 
-### Creating the parameterized route
+### Creating the dynamic route
 
 Create a new folder in `src/routes/` with the name of the parameter in square brackets, like `src/routes/building/[id]`. If you're on your terminal you could type:
 
