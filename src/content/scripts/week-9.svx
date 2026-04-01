@@ -110,37 +110,42 @@ You'll see an array of objects, each representing a building. Here's what one lo
       {
         "violationId": "16510086",
         "orderNumber": "617",
-        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PAINT THAT TESTED POSITIVE FOR LEAD CONTENT AND THAT IS PEELING OR ON A DETERIORATED SUBSURFACE - USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2) SOUTH WALL, EAST WALL, 1st WINDOW FRAME FROM NORTH AT EAST WALL IN THE BATHROOM LOCATED AT APT 19, 5th STORY, 1st APARTMENT FROM EAST AT SOUTH",
+        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PAINT THAT TESTED POSITIVE FOR LEAD CONTENT AND THAT IS PEELING OR ON A DETERIORATED SUBSURFACE - USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2)",
         "date": "2023-12-06",
-        "currentStatus": "FIRST NO ACCESS TO RE- INSPECT VIOLATION"
+        "currentStatus": "FIRST NO ACCESS TO RE- INSPECT VIOLATION",
+        "specificDescription": "South wall, east wall, 1st window frame from north at east wall in the bathroom located at apt 19, 5th story, 1st apartment from east at south"
       },
       {
         "violationId": "16271082",
         "orderNumber": "616",
-        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PRESUMED LEAD PAINT THAT IS PEELING OR ON A DETERIORATED SUBSURFACE USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2) CEILING IN THE KITCHEN LOCATED AT APT 16, 4th STORY, 1st APARTMENT FROM SOUTH AT WEST",
+        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PRESUMED LEAD PAINT THAT IS PEELING OR ON A DETERIORATED SUBSURFACE USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2)",
         "date": "2023-09-25",
-        "currentStatus": "FIRST NO ACCESS TO RE- INSPECT VIOLATION"
+        "currentStatus": "FIRST NO ACCESS TO RE- INSPECT VIOLATION",
+        "specificDescription": "Ceiling in the kitchen located at apt 16, 4th story, 1st apartment from south at west"
       },
       {
         "violationId": "16271084",
         "orderNumber": "616",
-        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PRESUMED LEAD PAINT THAT IS PEELING OR ON A DETERIORATED SUBSURFACE USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2) NORTH WALL IN THE 3rd ROOM FROM NORTH LOCATED AT APT 16, 4th STORY, 1st APARTMENT FROM SOUTH AT WEST",
+        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PRESUMED LEAD PAINT THAT IS PEELING OR ON A DETERIORATED SUBSURFACE USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2)",
         "date": "2023-09-25",
-        "currentStatus": "FIRST NO ACCESS TO RE- INSPECT VIOLATION"
+        "currentStatus": "FIRST NO ACCESS TO RE- INSPECT VIOLATION",
+        "specificDescription": "North wall in the 3rd room from north located at apt 16, 4th story, 1st apartment from south at west"
       },
       {
         "violationId": "16271083",
         "orderNumber": "616",
-        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PRESUMED LEAD PAINT THAT IS PEELING OR ON A DETERIORATED SUBSURFACE USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2) CEILING, EAST WALL IN THE FOYER LOCATED AT APT 16, 4th STORY, 1st APARTMENT FROM SOUTH AT WEST",
+        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PRESUMED LEAD PAINT THAT IS PEELING OR ON A DETERIORATED SUBSURFACE USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2)",
         "date": "2023-09-25",
-        "currentStatus": "FIRST NO ACCESS TO RE- INSPECT VIOLATION"
+        "currentStatus": "FIRST NO ACCESS TO RE- INSPECT VIOLATION",
+        "specificDescription": "Ceiling, east wall in the foyer located at apt 16, 4th story, 1st apartment from south at west"
       },
       {
         "violationId": "15674301",
         "orderNumber": "616",
-        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PRESUMED LEAD PAINT THAT IS PEELING OR ON A DETERIORATED SUBSURFACE USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2) CEILING IN THE BATHROOM LOCATED AT APT 15, 4th STORY, 2nd APARTMENT FROM EAST AT SOUTH",
+        "description": "\u00a7 27-2056.6 ADM CODE - CORRECT THE LEAD-BASED PAINT HAZARD - PRESUMED LEAD PAINT THAT IS PEELING OR ON A DETERIORATED SUBSURFACE USING WORK PRACTICES SET FORTH IN 28 RCNY \u00a711-06(B)(2)",
         "date": "2022-12-31",
-        "currentStatus": "DEFECT LETTER ISSUED"
+        "currentStatus": "DEFECT LETTER ISSUED",
+        "specificDescription": "Ceiling in the bathroom located at apt 15, 4th story, 2nd apartment from east at south"
       }
     ],
     "rank": 1377
@@ -237,7 +242,7 @@ Open `src/routes/+page.svelte`. Your script block currently logs the data to the
 
 Add the component below the closing `</script>` tag, beginning with just the headline and description.
 
-```svelte {emphasize-lines="10-13"}
+```svelte {emphasize-lines="10-14"}
 <script>
   import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
 
@@ -248,6 +253,7 @@ Add the component below the closing `</script>` tag, beginning with just the hea
 </script>
 
 <DatabaseHeader
+  kicker="Data Explorer"
   headline="Tainted Home Tracker"
   description="The Bronx buildings with the most lead paint violations"
 />
@@ -265,8 +271,9 @@ Save and look at your browser. A pale banner appears across the top of the page 
 
 Now credit the work with a `byline` and `date`.
 
-```svelte {emphasize-lines="4-5"}
+```svelte {emphasize-lines="5-6"}
 <DatabaseHeader
+  kicker="Data Explorer"
   headline="Tainted Home Tracker"
   description="The Bronx buildings with the most lead paint violations"
   byline="NYCity News Service"
@@ -313,6 +320,7 @@ That will work great in this case. Start by importing them into your script bloc
 </script>
 
 <DatabaseHeader
+  kicker="Data Explorer"
   headline="Tainted Home Tracker"
   description="The Bronx buildings with the most lead paint violations"
   byline="NYCity News Service"
@@ -336,6 +344,7 @@ Your goal is to publish a ranking. So you need to sort the buildings by violatio
 </script>
 
 <DatabaseHeader
+  kicker="Data Explorer"
   headline="Tainted Home Tracker"
   description="The Bronx buildings with the most lead paint violations"
   byline="NYCity News Service"
@@ -348,7 +357,7 @@ Each record in the JSON already has a `rank` field, so we can use that. The [`.s
 
 Now replace everything below your headline with a `RankingList` wrapping an `{#each}` loop that renders a `RankingCard` for each building, just as we've done in your past projects with raw HTML elements.
 
-```svelte {emphasize-lines="20-28"}
+```svelte {emphasize-lines="21-29"}
 <script>
   import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
   import RankingList from '$lib/components/RankingList.svelte';
@@ -362,6 +371,7 @@ Now replace everything below your headline with a `RankingList` wrapping an `{#e
 </script>
 
 <DatabaseHeader
+  kicker="Data Explorer"
   headline="Tainted Home Tracker"
   description="The Bronx buildings with the most lead paint violations"
   byline="NYCity News Service"
@@ -393,7 +403,7 @@ That's because, like many components, `RankingList` doesn't impose a maximum wid
 
 Add a `<div>` around the `RankingList` and a `<style>` block at the bottom of `+page.svelte` to constrain it:
 
-```svelte {emphasize-lines="20,30,32-37"}
+```svelte {emphasize-lines="21,31,33-38"}
 <script>
   import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
   import RankingList from '$lib/components/RankingList.svelte';
@@ -407,6 +417,7 @@ Add a `<div>` around the `RankingList` and a `<style>` block at the bottom of `+
 </script>
 
 <DatabaseHeader
+  kicker="Data Explorer"
   headline="Tainted Home Tracker"
   description="The Bronx buildings with the most lead paint violations"
   byline="NYCity News Service"
@@ -493,8 +504,9 @@ To put the pieces into action, nest the `SearchInput` inside `DatabaseHeader` so
 
 The `SearchInput` has a `bind:value` prop that creates a two-way connection between the input field and the `search` variable. Whenever the user types, `search` updates, which triggers the `$derived` filter, which updates `filtered`, which re-renders both the count in the header and the cards in the list.
 
-```svelte {emphasize-lines="1-8,11,12"}
+```svelte {emphasize-lines="1-9,12,13"}
 <DatabaseHeader
+  kicker="Data Explorer"
   headline="Tainted Home Tracker"
   description="The Bronx buildings with the most lead paint violations"
   byline="NYCity News Service"
@@ -549,8 +561,9 @@ Update the `<style>` block to add a rule:
 
 Then wrap the `SearchInput` inside the `DatabaseHeader`.
 
-```svelte {emphasize-lines="7-9"}
+```svelte {emphasize-lines="8-10"}
 <DatabaseHeader
+  kicker="Data Explorer"
   headline="Tainted Home Tracker"
   description="The Bronx buildings with the most lead paint violations"
   byline="NYCity News Service"
@@ -601,8 +614,9 @@ As with the other components, you start by adding `MethodologyBox` to your impor
 
 Add a `MethodologyBox` with your write-up about the data in the same container as the `RankingList`. You can use any mix of paragraphs, lists, and links inside the box.
 
-```svelte {emphasize-lines="23-32"}
+```svelte {emphasize-lines="24-33"}
 <DatabaseHeader
+  kicker="Data Explorer"
   headline="Tainted Home Tracker"
   description="The Bronx buildings with the most lead paint violations"
   byline="NYCity News Service"
@@ -701,35 +715,48 @@ Now create the page that will display the building's details. Open `src/routes/b
 
 ```svelte
 <script>
+  import { base } from '$app/paths';
   import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import Dashboard from '$lib/components/Dashboard.svelte';
+  import BigNumber from '$lib/components/BigNumber.svelte';
+  import Card from '$lib/components/Card.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
 
   let { data } = $props();
   let building = data.building;
+
+  function formatDate(dateStr) {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
 </script>
 
 <DatabaseHeader
+  kicker="Tainted Home Tracker"
   headline={building.address}
-  description={`${building.violationCount} open lead paint violations`}
-/>
+>
+  <Dashboard>
+    <BigNumber number={`#${building.rank}`} label="Rank" />
+    <BigNumber number={building.violationCount} label="Open violations" />
+  </Dashboard>
+  <a class="back" href="{base}/">
+     ← Back to ranking
+  </a>
+</DatabaseHeader>
 
 <div class="container">
-  <table>
-    <thead>
-      <tr>
-        <th>Date issued</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each building.violations as violation (violation.violationId)}
-        <tr>
-          <td>{violation.date}</td>
-          <td>{violation.description}</td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+  <div class="card-grid">
+    {#each building.violations as violation (violation.violationId)}
+      <Card>
+        <p class="card-date">{formatDate(violation.date)}</p>
+        <p>{violation.specificDescription || 'No description available'}</p>
+      </Card>
+    {/each}
+  </div>
 
   <MethodologyBox>
     <p>
@@ -740,32 +767,63 @@ Now create the page that will display the building's details. Open `src/routes/b
       The citations published by the city were filtered to include only lead paint violations that city inspectors listed as unresolved. The data was filtered to only citations linked to addresses in the Bronx and then aggregated by address. Only addresses with five or more open violations were included in the ranking. The data is current as of March 2026.
     </p>
     <p>The code that executed the analysis is available as open source on GitHub at <a href="https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations" target="_blank">github.com/palewire/nyc-hpd-bronx-lead-paint-violations</a>.</p>
+
+    <p>The map tiles are provided by OpenFreeMap and OpenStreetMap contributors.</p>
   </MethodologyBox>
 </div>
 
-<style>
+<style type="scss">
   .container {
     max-width: var(--max-width-wide);
     margin: 0 auto;
     padding: 0 var(--spacing-md);
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
+  :global(.row) {
+    margin-top: var(--spacing-sm) !important;
+    margin-bottom: var(--spacing-sm) !important;
+    justify-content: flex-start !important;
   }
 
-  th, td {
-    text-align: left;
-    padding: 0.75rem;
-    border-bottom: 1px solid var(--color-border);
-    vertical-align: top;
+  @media (max-width: 767px) {
+    :global(.row) {
+      flex-direction: column;
+    }
   }
 
-  th {
-    font-weight: bold;
-    background: var(--color-light-gray);
+  :global(.row .big-number .number) {
+    font-size: 2.25rem;
+  }
+
+  :global(.row .big-number .label) {
+    font-size: var(--font-size-sm);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+    margin: var(--spacing-lg) 0;
+  }
+
+  :global(p.card-date) {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: var(--spacing-xs) !important;
+  }
+
+  a.back {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    color: var(--color-text);
+    text-decoration: none;
+    text-transform: uppercase;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 </style>
 ```
@@ -832,9 +890,13 @@ We're going to place this map inside the `DatabaseHeader` on the detail page, so
 
 Open `src/routes/building/[id]/+page.svelte` and add the import:
 
-```svelte {emphasize-lines="4"}
+```svelte {emphasize-lines="8"}
 <script>
+  import { base } from '$app/paths';
   import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
+  import Dashboard from '$lib/components/Dashboard.svelte';
+  import BigNumber from '$lib/components/BigNumber.svelte';
+  import Card from '$lib/components/Card.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
   import LocatorMap from '$lib/components/LocatorMap.svelte';
 
@@ -847,10 +909,10 @@ Now we need to pass the `LocatorMap` into `DatabaseHeader`. Earlier, when we nes
 
 But `DatabaseHeader` also has a second slot called `graphic`, which renders content in a right-hand column. To target a specific named slot like this, Svelte uses a [`{#snippet}`](https://svelte.dev/docs/svelte/snippet) tag.
 
-```svelte {emphasize-lines="3-5"}
+```svelte {emphasize-lines="5-14"}
 <DatabaseHeader
+  kicker="Tainted Home Tracker"
   headline={building.address}
-  description={`${building.violationCount} open lead paint violations`}
 >
   {#snippet graphic()}
     <LocatorMap
@@ -858,9 +920,18 @@ But `DatabaseHeader` also has a second slot called `graphic`, which renders cont
       latitude={building.lat}
       zoom={13}
       dot={true}
-      width={250}
+      width={200}
+      credit=" "
     />
   {/snippet}
+
+  <Dashboard>
+    <BigNumber number={`#${building.rank}`} label="Rank" />
+    <BigNumber number={building.violationCount} label="Open violations" />
+  </Dashboard>
+  <a class="back" href="{base}/">
+     ← Back to ranking
+  </a>
 </DatabaseHeader>
 ```
 
