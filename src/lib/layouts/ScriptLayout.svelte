@@ -8,6 +8,7 @@
   import ScriptHero from '$lib/components/ScriptHero.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
   import ContentNavigation from '$lib/components/ContentNavigation.svelte';
+  import SwipeNavigator from '$lib/components/SwipeNavigator.svelte';
   import Meta from '$lib/components/Meta.svelte';
 
   let {
@@ -66,28 +67,35 @@
   </div>
 </section>
 
-<section class="section script">
-  <div class="container">
-    <div class="content-body script-body">
-      {@render children()}
-      <ContentNavigation
-        previous={previousScript
-          ? {
-              href: `${base}/scripts/${previousScript.slug}`,
-              title: `Week ${previousScript.week}: ${previousScript.title}`,
-            }
-          : null}
-        next={nextScript
-          ? {
-              href: `${base}/scripts/${nextScript.slug}`,
-              title: `Week ${nextScript.week}: ${nextScript.title}`,
-            }
-          : null}
-        ariaLabel="Script navigation"
-      />
+<SwipeNavigator
+  previousHref={previousScript
+    ? `${base}/scripts/${previousScript.slug}`
+    : null}
+  nextHref={nextScript ? `${base}/scripts/${nextScript.slug}` : null}
+>
+  <section class="section script">
+    <div class="container">
+      <div class="content-body script-body">
+        {@render children()}
+        <ContentNavigation
+          previous={previousScript
+            ? {
+                href: `${base}/scripts/${previousScript.slug}`,
+                title: `Week ${previousScript.week}: ${previousScript.title}`,
+              }
+            : null}
+          next={nextScript
+            ? {
+                href: `${base}/scripts/${nextScript.slug}`,
+                title: `Week ${nextScript.week}: ${nextScript.title}`,
+              }
+            : null}
+          ariaLabel="Script navigation"
+        />
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+</SwipeNavigator>
 
 <style>
   .section.toc {
