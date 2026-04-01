@@ -262,27 +262,6 @@
     order: 2;
   }
 
-  .social {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    flex: 1;
-    gap: 24px;
-    margin-bottom: 30px;
-    order: 1;
-  }
-
-  .social a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-white);
-  }
-
-  .social a:hover {
-    color: var(--color-orange-on-dark);
-  }
-
   /* Desktop Responsive - 960px+ */
   @media (min-width: 960px) {
     .footer-top {
@@ -351,12 +330,6 @@
     .copyright {
       font-size: 16px;
       order: 1;
-    }
-
-    .social {
-      justify-content: flex-end;
-      margin-bottom: 0;
-      order: 2;
     }
   }
 </style>
