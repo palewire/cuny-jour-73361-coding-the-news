@@ -61,7 +61,7 @@ Today you're going to arrange a selection of these photographs into a story. But
 
 ### Set up your project
 
-Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+As in past weeks, open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
 <Screenshot
   src="/screenshots/week-2/template-repo-homepage.png"
@@ -70,37 +70,37 @@ Open your browser and navigate to our template repository at <a href="https://gi
   chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
 />
 
-Click "Use this template" and create a new repository called `parks-harlem-1943`. Clone it, open it in VS Code, and run:
+Click "Use this template" and create a new repository called `parks-harlem-gallery`. Clone it. Open it in Visual Studio Code.
+
+Install the dependencies.
 
 ```bash
 npm install
 ```
 
-Then:
+Start the test server.
 
 ```bash
 npm run dev
 ```
 
-The photographs are already in the repo. When you cloned it, a set of Gordon Parks images curated from the Library of Congress came with it — you'll find them at `static/photos/`:
+To get us started, I've seeded the template with the photographs you'll use, downloading them from the [Library of Congress's](https://www.loc.gov/collections/fsa-owi-black-and-white-negatives/) digital collection.
 
-```
+You'll find them at `static/photos/`. The file structure should look like this:
+
+```bash
 static/
-  photos/
-    parks-harlem-01.jpg
-    parks-harlem-02.jpg
-    parks-harlem-03.jpg
-    parks-harlem-04.jpg
-    gordon-parks-portrait.jpg
+├── photos/
+│   ├── gordon-parks-portrait.jpg
+│   ├── parks-harlem-01.jpg
+│   ├── parks-harlem-02.jpg
+│   ├── parks-harlem-03.jpg
+│   ├── parks-harlem-04.jpg
 ```
-
-We'll build the data file that describes them a little later, once we have something on screen to see.
 
 ## Part 2: The component library
 
-Let's take a look at the tools we'll use before we start building.
-
-Just like last week, we're going to lean on the pre-built components in the [class template's Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/). Open it now and look at what's available for this project.
+Just like last week, you're going to lean on the pre-built components in the [class template's Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/). Open it now and look at what's available for this project. You'll see the starter kit in the "composition" for a Multimedia Gallery.
 
 <Screenshot
   src="/screenshots/week-10/storybook-slideshow-components.png"
@@ -110,7 +110,7 @@ Just like last week, we're going to lean on the pre-built components in the [cla
   maxWidth="960px"
 />
 
-You'll see five components grouped under "Slideshow":
+The demonstration there is created by combining a set of five components into a unified design. Each component has a specific role to play.
 
 | Component | Description |
 |-----------|-------------|
@@ -120,11 +120,11 @@ You'll see five components grouped under "Slideshow":
 | [`TextSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-textslide--docs) | A full-screen text card for chapter breaks |
 | [`CreditsSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-creditsslide--docs) | The closing card for attribution and methodology |
 
-Click through each one in Storybook. Use the controls panel to experiment with the props. This is exactly how you'd explore a component library at a real newsroom — understand what each piece does before you start assembling.
+Click through each one in Storybook. Use the controls panel to experiment with the properties. This is exactly how you'd explore a component library at a real newsroom.
 
 ### Getting something on screen
 
-Now open `src/routes/+page.svelte`, clear the boilerplate, and put the first two components to work. No data yet — just wire up `SlideGallery` and `TitleSlide` directly with the headline and intro we want:
+Now open `src/routes/+page.svelte` and clear the boilerplate. Then toss in the `SlideGallery` and `TitleSlide` imports from Storybook, which will serve as the start of our story.
 
 ```svelte
 <script>
@@ -135,23 +135,41 @@ Now open `src/routes/+page.svelte`, clear the boilerplate, and put the first two
 <SlideGallery>
   <TitleSlide
     headline="Harlem, 1943"
-    intro="In the spring of 1943, Gordon Parks walked Harlem's streets with a government camera and a personal mission: to show what official photographers had long ignored."
-    byline="Photographs by Gordon Parks · Farm Security Administration–Office of War Information"
+    intro="How the street photography of Gordon Parks captured the spirit of black New York"
   />
 </SlideGallery>
 ```
 
-Save and check your browser. The full-screen title card should already be there — masthead at the top, headline centered, "Tap to begin →" at the bottom.
+Save and check your browser. The full-screen title card should already be there, with out gallery layout taking over the page.
 
 <Screenshot
   src="/screenshots/week-10/title-slide.png"
   alt="A black screen showing the NYCity News Service masthead at top, the headline 'Harlem, 1943' centered, and a 'Tap to begin' prompt at the bottom"
-  chromeTitle="Parks Harlem 1943"
+  chromeTitle="Harlem, 1943"
   chromeUrl="http://localhost:5173"
-  maxWidth="400px"
 />
 
-That's the whole shell of the story. One component, four props, done. Now we need to fill it with photographs.
+There's only one problem. While our gallery is looking good, it's sandwiched between the default header and footer. To break out of the standard page layout, we need to follow the pattern of previous weeks and dectivate the standard stuff in `src/routes/+page.js`.
+
+```javascript {emphasize-lines="6,8"}
+// Page settings
+// These values are passed to the layout to control what appears on the page.
+export function load() {
+  return {
+    // Set to false to hide the NYCity News Service header
+    showHeader: false,
+    // Set to false to hide the site footer
+    showFooter: false,
+  };
+}
+```
+
+<Screenshot
+  src="/screenshots/week-10/title-slide-fixed.png"
+  alt="A black screen showing the NYCity News Service masthead at top, the headline 'Harlem, 1943' centered, and a 'Tap to begin' prompt at the bottom"
+  chromeTitle="Harlem, 1943"
+  chromeUrl="http://localhost:5173"
+/>
 
 ## Part 3: The beginning
 
