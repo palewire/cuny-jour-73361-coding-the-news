@@ -128,8 +128,8 @@ Now open `src/routes/+page.svelte` and clear the boilerplate. Then toss in the `
 
 ```svelte
 <script>
-  import SlideGallery from '$lib/components/SlideGallery.svelte';
-  import TitleSlide from '$lib/components/TitleSlide.svelte';
+  import SlideGallery from '$lib/components/MultimediaGallery/SlideGallery.svelte';
+  import TitleSlide from '$lib/components/MultimediaGallery/TitleSlide.svelte';
 </script>
 
 <SlideGallery>
@@ -177,6 +177,8 @@ Every story needs a hook. Let's add the opening photographs — the images that 
 
 For us, that's the newsboys. Parks kept returning to them. There's something in his attention to these kids — their dignity, their presence on the street — that sets the tone for the whole essay.
 
+Rather than hard-coding every slide into the Svelte template, we're going to store the slide data in an external JSON file that you hand-craft. Each entry in the file will describe one slide — its type, its image, its caption. The template will loop through the file and render the right component for each entry. That way, all your editorial decisions — which photos to include, what order they go in, what the captions say — live in the data, not the code.
+
 Create `src/lib/data/photos.json` and start with just these two entries:
 
 ```json
@@ -204,13 +206,15 @@ Create `src/lib/data/photos.json` and start with just these two entries:
 
 You'll fill this file out gradually throughout the class — starting with the opening, then the middle, then the end. The story will take shape in the same order you'd think about it editorially.
 
-Now create `src/routes/+page.js` to load it, following the same pattern from [Week 9](/docs/coding-the-news/scripts/week-9/):
+Now update `src/routes/+page.js` to import the data file and pass it to the page, following the same pattern from [Week 9](/docs/coding-the-news/scripts/week-9/). Keep the header and footer settings from earlier:
 
 ```js
 import photos from '$lib/data/photos.json';
 
 export function load() {
   return {
+    showHeader: false,
+    showFooter: false,
     photos,
   };
 }
@@ -220,9 +224,9 @@ Then update `+page.svelte` to receive the data, import `PhotoSlide`, and loop th
 
 ```svelte
 <script>
-  import SlideGallery from '$lib/components/SlideGallery.svelte';
-  import TitleSlide from '$lib/components/TitleSlide.svelte';
-  import PhotoSlide from '$lib/components/PhotoSlide.svelte';
+  import SlideGallery from '$lib/components/MultimediaGallery/SlideGallery.svelte';
+  import TitleSlide from '$lib/components/MultimediaGallery/TitleSlide.svelte';
+  import PhotoSlide from '$lib/components/MultimediaGallery/PhotoSlide.svelte';
 
   let { data } = $props();
 </script>
@@ -309,10 +313,10 @@ Now update `+page.svelte` to handle the new `"text"` type by adding a `TextSlide
 
 ```svelte
 <script>
-  import SlideGallery from '$lib/components/SlideGallery.svelte';
-  import TitleSlide from '$lib/components/TitleSlide.svelte';
-  import PhotoSlide from '$lib/components/PhotoSlide.svelte';
-  import TextSlide from '$lib/components/TextSlide.svelte';
+  import SlideGallery from '$lib/components/MultimediaGallery/SlideGallery.svelte';
+  import TitleSlide from '$lib/components/MultimediaGallery/TitleSlide.svelte';
+  import PhotoSlide from '$lib/components/MultimediaGallery/PhotoSlide.svelte';
+  import TextSlide from '$lib/components/MultimediaGallery/TextSlide.svelte';
 
   let { data } = $props();
 </script>
@@ -370,11 +374,11 @@ Now add the `CreditsSlide` to close the whole thing out. It uses the `children` 
 
 ```svelte
 <script>
-  import SlideGallery from '$lib/components/SlideGallery.svelte';
-  import TitleSlide from '$lib/components/TitleSlide.svelte';
-  import PhotoSlide from '$lib/components/PhotoSlide.svelte';
-  import TextSlide from '$lib/components/TextSlide.svelte';
-  import CreditsSlide from '$lib/components/CreditsSlide.svelte';
+  import SlideGallery from '$lib/components/MultimediaGallery/SlideGallery.svelte';
+  import TitleSlide from '$lib/components/MultimediaGallery/TitleSlide.svelte';
+  import PhotoSlide from '$lib/components/MultimediaGallery/PhotoSlide.svelte';
+  import TextSlide from '$lib/components/MultimediaGallery/TextSlide.svelte';
+  import CreditsSlide from '$lib/components/MultimediaGallery/CreditsSlide.svelte';
 
   let { data } = $props();
 </script>
