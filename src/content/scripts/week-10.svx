@@ -46,7 +46,7 @@ Today you will see how professionals build these stories, and then you'll build 
   chromeUrl="https://www.gordonparksfoundation.org"
 />
 
-[In 1943](https://www.gordonparksfoundation.org/gordon-parks/photography-archive/harlem-1943-1944?view=slider#5) Parks started photographing daily life in Harlem for a New Deal government program that hired artists to document American life. His intimate and humanizing photographs of New York's most famous Black neighborhood challenged the stereotypes that dominated portrayals of Harlem and are recognized as some of the most notable images of the era.
+[In 1943](https://www.gordonparksfoundation.org/gordon-parks/photography-archive/harlem-1943-1944?view=slider#5) Parks started photographing daily life in Harlem for a New Deal government program that hired artists to document American life. His intimate and humanizing photographs of New York's most famous black neighborhood challenged the stereotypes that dominated portrayals of Harlem and are recognized as some of the most notable images of the era.
 
 <Screenshot
   src="/screenshots/week-10/loc-fsa-collection.png"
