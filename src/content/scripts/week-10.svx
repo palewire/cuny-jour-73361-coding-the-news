@@ -46,7 +46,7 @@ Today you will see how professionals build these stories, and then you'll build 
   chromeUrl="https://www.gordonparksfoundation.org"
 />
 
-In 1943 Parks started photographing daily life in Harlem for a New Deal government program that hired artists to document American life. His intimate and humanizing photographs of New York's most famous Black neighborhood challenged the stereotypes that dominated portrayals of Harlem and are recognized as some of the most notable images of the era.
+[In 1943](https://www.gordonparksfoundation.org/gordon-parks/photography-archive/harlem-1943-1944?view=slider#5) Parks started photographing daily life in Harlem for a New Deal government program that hired artists to document American life. His intimate and humanizing photographs of New York's most famous Black neighborhood challenged the stereotypes that dominated portrayals of Harlem and are recognized as some of the most notable images of the era.
 
 <Screenshot
   src="/screenshots/week-10/loc-fsa-collection.png"
@@ -57,7 +57,7 @@ In 1943 Parks started photographing daily life in Harlem for a New Deal governme
 
 Because that work was produced for the federal government, they're also part of the public domain and free for anyone to reuse.
 
-Today you're going arrange a selection of these photographs into a story. But you're not going to make a traditional article with text and images stacked in a column. Instead, you're going to make a full-screen, mobile-first photo essay that looks and feels like the forms that dominate social media.
+Today you're going to arrange a selection of these photographs into a story. But you're not going to make a traditional article with text and images stacked in a column. Instead, you're going to make a full-screen, mobile-first photo essay that looks and feels like the forms that dominate social media.
 
 ### Set up your project
 
