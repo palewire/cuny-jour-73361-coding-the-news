@@ -98,7 +98,7 @@ static/
 │   ├── parks-harlem-04.jpg
 ```
 
-## Part 2: The component library
+## Part 2: Getting a gallery started
 
 Just like last week, you're going to lean on the pre-built components in the [class template's Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/). Open it now and look at what's available for this project. You'll see the starter kit in the "composition" for a Multimedia Gallery.
 
@@ -121,8 +121,6 @@ The demonstration there is created by combining a set of five components into a 
 | [`CreditsSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-creditsslide--docs) | The closing card for attribution and methodology |
 
 Click through each one in Storybook. Use the controls panel to experiment with the properties. This is exactly how you'd explore a component library at a real newsroom.
-
-### Getting something on screen
 
 Now open `src/routes/+page.svelte` and clear the boilerplate. Then toss in the `SlideGallery` and `TitleSlide` imports from Storybook, which will serve as the start of our story.
 
@@ -171,7 +169,7 @@ export function load() {
   chromeUrl="http://localhost:5173"
 />
 
-## Part 3: The beginning
+## Part 3: Starting at the beginning
 
 Every story needs a hook. Let's add the opening photographs — the images that made us want to tell this story in the first place.
 
@@ -234,8 +232,7 @@ Then update `+page.svelte` to receive the data, import `PhotoSlide`, and loop th
 <SlideGallery>
   <TitleSlide
     headline="Harlem, 1943"
-    intro="In the spring of 1943, Gordon Parks walked Harlem's streets with a government camera and a personal mission: to show what official photographers had long ignored."
-    byline="Photographs by Gordon Parks · Farm Security Administration–Office of War Information"
+    intro="How the street photography of Gordon Parks captured the spirit of black New York"
   />
 
   {#each data.photos as slide}
@@ -324,8 +321,7 @@ Now update `+page.svelte` to handle the new `"text"` type by adding a `TextSlide
 <SlideGallery>
   <TitleSlide
     headline="Harlem, 1943"
-    intro="In the spring of 1943, Gordon Parks walked Harlem's streets with a government camera and a personal mission: to show what official photographers had long ignored."
-    byline="Photographs by Gordon Parks · Farm Security Administration–Office of War Information"
+    intro="How the street photography of Gordon Parks captured the spirit of black New York"
   />
 
   {#each data.photos as slide}
@@ -386,8 +382,7 @@ Now add the `CreditsSlide` to close the whole thing out. It uses the `children` 
 <SlideGallery>
   <TitleSlide
     headline="Harlem, 1943"
-    intro="In the spring of 1943, Gordon Parks walked Harlem's streets with a government camera and a personal mission: to show what official photographers had long ignored."
-    byline="Photographs by Gordon Parks · Farm Security Administration–Office of War Information"
+    intro="How the street photography of Gordon Parks captured the spirit of black New York"
   />
 
   {#each data.photos as slide}
