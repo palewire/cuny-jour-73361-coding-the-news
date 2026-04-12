@@ -140,7 +140,7 @@ Now open `src/routes/+page.svelte` and clear the boilerplate. Then toss in the `
 </SlideGallery>
 ```
 
-Save and check your browser. The full-screen title card should already be there, with out gallery layout taking over the page.
+Save and check your browser. The full-screen title card should already be there, with your gallery layout taking over the page.
 
 <Screenshot
   src="/screenshots/week-10/title-slide.png"
@@ -149,7 +149,7 @@ Save and check your browser. The full-screen title card should already be there,
   chromeUrl="http://localhost:5173"
 />
 
-There's only one problem. While our gallery is looking good, it's sandwiched between the default header and footer. To break out of the standard page layout, we need to follow the pattern of previous weeks and dectivate the standard stuff in `src/routes/+page.js`.
+There's only one problem. While our gallery is looking good, it's sandwiched between the default header and footer. To break out of the standard page layout, we need to follow the pattern of previous weeks and deactivate the standard stuff in `src/routes/+page.js`.
 
 ```javascript {emphasize-lines="6,8"}
 // Page settings
