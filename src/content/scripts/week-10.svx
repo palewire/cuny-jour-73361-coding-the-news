@@ -8,6 +8,7 @@ locked: true
 
 <script>
   import Screenshot from '$lib/components/Screenshot.svelte';
+  import { Save } from 'lucide-svelte';
 </script>
 
 From the square crop to the selfie and now the vertical video, social media sites like Instagram, Snapchat and Tiktok have had a huge influence on how the world consumes photographs and video.
@@ -169,15 +170,13 @@ export function load() {
   chromeUrl="http://localhost:5173"
 />
 
-## Part 3: Starting at the beginning
+## Part 3: Looping through the story
 
-Every story needs a hook. Let's add the opening photographs — the images that made us want to tell this story in the first place.
+Rather than hardcoding every slide into the Svelte template, a common technique in newsrooms is to separate the content from code by storing each slide's information in a data file.
 
-For us, that's the newsboys. Parks kept returning to them. There's something in his attention to these kids — their dignity, their presence on the street — that sets the tone for the whole essay.
+The Svelte code can then loops through the file and renders the right component for each entry, just like it looped through database records in previous lessons.
 
-Rather than hard-coding every slide into the Svelte template, we're going to store the slide data in an external JSON file that you hand-craft. Each entry in the file will describe one slide — its type, its image, its caption. The template will loop through the file and render the right component for each entry. That way, all your editorial decisions — which photos to include, what order they go in, what the captions say — live in the data, not the code.
-
-Create `src/lib/data/photos.json` and start with just these two entries:
+Create `src/lib/data/story.json` and start with these two entries. They will serve as the first and second slides in our story.
 
 ```json
 [
@@ -185,42 +184,38 @@ Create `src/lib/data/photos.json` and start with just these two entries:
     "id": 1,
     "type": "photo",
     "filename": "parks-harlem-01.jpg",
-    "title": "Harlem newsboy",
-    "date": "April 1943",
-    "caption": "A young newsboy on the streets of Harlem. Parks photographed the children of the neighborhood with a warmth that conveyed their individuality and dignity.",
-    "credit": "Gordon Parks / FSA–OWI / Library of Congress"
+    "title": "The newsboys",
+    "caption": "A frequent subject were the neighborhood's newsboys: children who hawked papers on the street corners.",
+    "credit": "Gordon Parks / Library of Congress"
   },
   {
     "id": 2,
     "type": "photo",
     "filename": "parks-harlem-02.jpg",
-    "title": "A Harlem newsboy",
-    "date": "May 1943",
-    "caption": "Parks spent weeks on Harlem's streets, returning again and again to the same corners, the same faces.",
-    "credit": "Gordon Parks / FSA–OWI / Library of Congress"
+    "title": "Standing tall",
+    "caption": "Parks returned to them again and again, often capturing their portraits from below, tilting his camera upward to lend the boys a proud stature.",
+    "credit": "Gordon Parks / Library of Congress"
   }
 ]
 ```
 
-You'll fill this file out gradually throughout the class — starting with the opening, then the middle, then the end. The story will take shape in the same order you'd think about it editorially.
-
 Now update `src/routes/+page.js` to import the data file and pass it to the page, following the same pattern from [Week 9](/docs/coding-the-news/scripts/week-9/). Keep the header and footer settings from earlier:
 
-```js
-import photos from '$lib/data/photos.json';
+```js {emphasize-lines="1,7"}
+import story from '$lib/data/story.json';
 
 export function load() {
   return {
     showHeader: false,
     showFooter: false,
-    photos,
+    story,
   };
 }
 ```
 
-Then update `+page.svelte` to receive the data, import `PhotoSlide`, and loop through the entries:
+Then update `+page.svelte` to receive the data, import `PhotoSlide` and loop through the entries, passing each record from the JSON file to the component.
 
-```svelte
+```svelte {emphasize-lines="4,15-17"}
 <script>
   import SlideGallery from '$lib/components/MultimediaGallery/SlideGallery.svelte';
   import TitleSlide from '$lib/components/MultimediaGallery/TitleSlide.svelte';
@@ -235,80 +230,65 @@ Then update `+page.svelte` to receive the data, import `PhotoSlide`, and loop th
     intro="How the street photography of Gordon Parks captured the spirit of black New York"
   />
 
-  {#each data.photos as slide}
-    {#if slide.type === 'photo'}
-      <PhotoSlide photo={slide} />
-    {/if}
+  {#each data.story as slide (slide.id)}
+    <PhotoSlide photo={slide} />
   {/each}
 </SlideGallery>
 ```
 
-Save and tap through. The title card opens the gallery, followed by the two newsboy photographs.
+Save and check your browser. The two photos from the JSON file should now be part of the gallery, appearing after the title card.
 
-Three slides, a clear opening. That's your lede.
+<Screenshot
+  src="/screenshots/week-10/first-photo.png"
+  alt="The photo gallery showing a full-screen Gordon Parks photograph of a Harlem newsboy with a caption overlay at the bottom"
+  chromeTitle="Harlem, 1943"
+  chromeUrl="http://localhost:5173"
+/>
 
-## Part 4: The middle
+That's a nice start to our gallery, but it lacks what any story needs: A clear beginning. Our slides are tossing the reader in without any orientation. Who is Gordon Parks? Why was he in Harlem?
 
-A gallery of photographs without context is just a slideshow. What turns it into a story is what you put between the images — the words that explain what the reader is looking at and why it matters.
+We should establish that first by inserting a text slide before the photos that gives the reader some context before we zero in on the newsboys.
 
-Open `photos.json` and add the middle of the story: two text cards that give readers the context they need, with more photographs between and after them.
+Replace you `story.json` file with this updated version, which adds a new `"text"` entry at the beginning of the story and a more general street scene as the second slide.
 
 ```json
 [
   {
     "id": 1,
-    "type": "photo",
-    "filename": "parks-harlem-01.jpg",
-    "title": "Harlem newsboy",
-    "date": "April 1943",
-    "caption": "A young newsboy on the streets of Harlem. Parks photographed the children of the neighborhood with a warmth that conveyed their individuality and dignity.",
-    "credit": "Gordon Parks / FSA–OWI / Library of Congress"
+    "type": "text",
+    "headline": "The Assignment",
+    "body": "In 1943, the photographer Gordon Parks was assigned to document life in Harlem — New York's most famous black neighborhood — by a federal government program that employed artists during the Great Depression.",
   },
   {
     "id": 2,
     "type": "photo",
-    "filename": "parks-harlem-02.jpg",
-    "title": "A Harlem newsboy",
-    "date": "May 1943",
-    "caption": "Parks spent weeks on Harlem's streets, returning again and again to the same corners, the same faces.",
-    "credit": "Gordon Parks / FSA–OWI / Library of Congress"
-  },
-  {
+    "filename": "parks-harlem-03.jpg",
+    "title": "Shooting the streetscape",
+    "caption": "He spent weeks photographing residents from all walks of life. His shot his subjects as found them: Sitting on stoops, leaning against fences, hanging out windows.",
+    "credit": "Gordon Parks / Library of Congress"
+ },
+ {
     "id": 3,
-    "type": "text",
-    "headline": "THE ASSIGNMENT",
-    "body": "Parks was the first Black photographer hired by the Farm Security Administration. Sent to Harlem, he found a neighborhood the federal government had mostly documented as a problem. He saw something else entirely."
+    "type": "photo",
+    "filename": "parks-harlem-01.jpg",
+    "title": "The newsboys",
+    "caption": "A frequent subject were the neighborhood's newsboys: children who hawked papers on the street corners.",
+    "credit": "Gordon Parks / Library of Congress"
   },
   {
     "id": 4,
     "type": "photo",
-    "filename": "parks-harlem-03.jpg",
-    "title": "Three boys in the Harlem area",
-    "date": "May–June 1943",
-    "caption": "Parks found his subjects in doorways, on stoops, at the edge of the frame — wherever the light fell and the moment was right.",
-    "credit": "Gordon Parks / FSA–OWI / Library of Congress"
-  },
-  {
-    "id": 5,
-    "type": "text",
-    "headline": "THE KIDS",
-    "body": "Parks lingered on the children of Harlem — newsboys, corner kids working the same streets their parents did. He photographed them not as symbols of poverty but as individuals with faces worth remembering."
-  },
-  {
-    "id": 6,
-    "type": "photo",
-    "filename": "parks-harlem-04.jpg",
-    "title": "A Harlem newsboy",
-    "date": "May 1943",
-    "caption": "The newsboys of Harlem worked before and after school, hawking papers on corners throughout the neighborhood.",
-    "credit": "Gordon Parks / FSA–OWI / Library of Congress"
+    "filename": "parks-harlem-02.jpg",
+    "title": "Standing tall",
+    "caption": "He returned to them again and again, often capturing their portraits from below, tilting his camera upward to lend the boys a proud stature.",
+    "credit": "Gordon Parks / Library of Congress"
   }
 ]
 ```
 
-Now update `+page.svelte` to handle the new `"text"` type by adding a `TextSlide` import and an `{:else if}` branch:
+Now update `+page.svelte` to handle the new `"text"` type by adding a `TextSlide` import and an `{:else if}` branch.
 
-```svelte
+```svelte {emphasize-lines="5, 16-22"}
 <script>
   import SlideGallery from '$lib/components/MultimediaGallery/SlideGallery.svelte';
   import TitleSlide from '$lib/components/MultimediaGallery/TitleSlide.svelte';
@@ -324,7 +304,7 @@ Now update `+page.svelte` to handle the new `"text"` type by adding a `TextSlide
     intro="How the street photography of Gordon Parks captured the spirit of black New York"
   />
 
-  {#each data.photos as slide}
+  {#each data.story as slide (slide.id)}
     {#if slide.type === 'photo'}
       <PhotoSlide photo={slide} />
     {:else if slide.type === 'text'}
@@ -334,41 +314,83 @@ Now update `+page.svelte` to handle the new `"text"` type by adding a `TextSlide
 </SlideGallery>
 ```
 
-Save and tap through. The text cards break the sequence into chapters, giving readers a moment to breathe and orient before the next set of images.
+This type of "casing," which renders different components based on a `type` field in the data, is a common pattern in news applications. It allows you to mix photos, text, videos, embeds, graphics in a single feed.
+
+Save and tap through. The text card should now appear with a different layout than the photos.
 
 <Screenshot
   src="/screenshots/week-10/text-slide.png"
   alt="A full-screen black card with centered white text showing 'THE ASSIGNMENT' as a chapter heading and a paragraph of context beneath it"
   chromeTitle="Parks Harlem 1943"
   chromeUrl="http://localhost:5173"
-  maxWidth="400px"
 />
 
-Notice that the Svelte code didn't change much — just one new import and one new `{:else if}` branch. All the editorial decisions about sequence, pacing, and what text appears where live in `photos.json`. If you want to reorder slides, add another chapter break, or change the caption on a photograph, you edit the data file. The code stays the same.
+## Part 5: Finishing the story
 
-## Part 5: The end
+Every story needs a conclusion. We'll end ours by capturing the Harlem project's legacy and sharing a photo of Parks himself.
 
-Every story needs a conclusion. Ours closes with two things: a portrait of the photographer himself — a reminder of who made these images and what became of him — and a credits slide that tells readers where to find the original work.
-
-Open `photos.json` one more time and add the final two entries:
+Open `photos.json` one more time and add the final three entries.
 
 ```json
+[
   {
-    "id": 7,
+    "id": 1,
+    "type": "text",
+    "headline": "The Assignment",
+    "body": "In 1943, the photographer Gordon Parks was assigned to document life in Harlem — New York's most famous black neighborhood — by a federal government program that employed artists during the Great Depression.",
+  },
+  {
+    "id": 2,
+    "type": "photo",
+    "filename": "parks-harlem-03.jpg",
+    "title": "Shooting the streetscape",
+    "caption": "He spent weeks photographing residents from all walks of life. His shot his subjects as found them: Sitting on stoops, leaning against fences, hanging out windows.",
+    "credit": "Gordon Parks / Library of Congress"
+ },
+ {
+    "id": 3,
+    "type": "photo",
+    "filename": "parks-harlem-01.jpg",
+    "title": "The newsboys",
+    "caption": "A frequent subject were the neighborhood's newsboys: children who hawked papers on the street corners.",
+    "credit": "Gordon Parks / Library of Congress"
+  },
+  {
+    "id": 4,
+    "type": "photo",
+    "filename": "parks-harlem-02.jpg",
+    "title": "Standing tall",
+    "caption": "He returned to them again and again, often capturing their portraits from below, tilting his camera upward to lend the boys a proud stature.",
+    "credit": "Gordon Parks / Library of Congress"
+  },
+  {
+    "id": 5,
+    "type": "photo",
+    "filename": "parks-harlem-04.jpg",
+    "title": "Shining a light",
+    "caption": "The photos were not widely published at the time, but they helped Parks establish the humane approach to African-American subjects that became his signature.",
+    "credit": "Gordon Parks / Library of Congress"
+  },
+  {
+    "id": 6,
     "type": "photo",
     "filename": "gordon-parks-portrait.jpg",
-    "title": "Gordon Parks, 1912–2006",
-    "date": "",
-    "caption": "Parks went on to become one of the most celebrated photographers of the twentieth century — shooting for Life, covering the civil rights movement, and directing Hollywood films. In 2014, MoMA acquired prints from this Harlem series for its permanent collection.",
-    "credit": "[Credit per Wikimedia Commons license]"
+    "caption": "In the years that followed, Parks went on to shoot for Vogue, Life and many other mainstream publications, before becoming a Hollywood director and creating movies like \"Shaft.\"",
+    "credit": "Rowland Scherman / National Archives"
+  },
+  {
+    "id": 7,
+    "type": "text",
+    "body": "After Parks died in 2006, a portfolio of his work, including the Harlem portraits, was enshrined at Manhattan's Museum of Modern Art.",
   }
+]
 ```
 
-The portrait is just another `"photo"` entry. No special handling needed — the loop renders it exactly like any other image. But its position at the end, its subject, and its caption give the story a different kind of weight than the street photographs. That's an editorial choice, not a technical one.
+All that's missing now is the closing card, where we can credit ourselves and share any additional information about the story's sources and methods.
 
-Now add the `CreditsSlide` to close the whole thing out. It uses the `children` pattern from [Week 3](/docs/coding-the-news/scripts/week-3/#part-3-creating-a-parent-component), so you write the content between its opening and closing tags:
+That's what the special `CreditsSlide` comes in. Like the `MethodologyBox` we used in earlier lessons, it follows the pattern of a parent component that expects "children" to be passed in as content.
 
-```svelte
+```svelte {emphasize-lines="6, 25-33"}
 <script>
   import SlideGallery from '$lib/components/MultimediaGallery/SlideGallery.svelte';
   import TitleSlide from '$lib/components/MultimediaGallery/TitleSlide.svelte';
@@ -385,7 +407,7 @@ Now add the `CreditsSlide` to close the whole thing out. It uses the `children` 
     intro="How the street photography of Gordon Parks captured the spirit of black New York"
   />
 
-  {#each data.photos as slide}
+  {#each data.story as slide (slide.id)}
     {#if slide.type === 'photo'}
       <PhotoSlide photo={slide} />
     {:else if slide.type === 'text'}
@@ -396,10 +418,10 @@ Now add the `CreditsSlide` to close the whole thing out. It uses the `children` 
   <CreditsSlide>
     <h2>About These Photographs</h2>
     <p>
-      The Harlem negatives are held by the Library of Congress and are free to
-      download and reuse. High-resolution scans are available at the
+      The Harlem negatives are held by the Library of Congress and are free for anyone to
+      download and reuse. High-resolution scans are available in the
       <a href="https://www.loc.gov/pictures/search/?q=gordon+parks+harlem&co=fsa" target="_blank">
-        Library of Congress Prints &amp; Photographs Division</a>.
+        Prints &amp; Photographs Division</a>'s digital collection.
     </p>
   </CreditsSlide>
 </SlideGallery>
@@ -408,18 +430,17 @@ Now add the `CreditsSlide` to close the whole thing out. It uses the `children` 
 Save and tap all the way through. You now have a complete story with a beginning, a middle, and an end.
 
 <Screenshot
-  src="/screenshots/week-10/credits-slide.png"
+  src="/screenshots/week-10/credit-slide.png"
   alt="A black screen with left-aligned white text showing 'About These Photographs' as a heading followed by a paragraph and a link to the Library of Congress"
   chromeTitle="Parks Harlem 1943"
   chromeUrl="http://localhost:5173"
-  maxWidth="400px"
 />
 
 ## Part 6: Testing on your phone
 
-We've been building on a desktop browser, but the whole point of this design is mobile. Let's see how it actually feels on a phone.
+We've been building on a desktop browser, but the whole point of this design is prioritize mobile users.
 
-SvelteKit's development server is already running on your computer. Your phone can access it if both devices are on the same WiFi network.
+Here's a trick: Your phone can access your development server if both devices are on the same WiFi network.
 
 Find your computer's local IP address. On Mac, open System Settings, click Network, and look for your IP — it will be something like `192.168.1.42`. On Windows, open a command prompt and type `ipconfig`.
 
