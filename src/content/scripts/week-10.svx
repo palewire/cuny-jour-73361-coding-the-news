@@ -10,7 +10,7 @@ locked: true
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
-From the square crop to the selfie and now the vertical video, social media sites like Instagram, Snapchat and Tiktok have had a huge influence on how the world consume photographs and video.
+From the square crop to the selfie and now the vertical video, social media sites like Instagram, Snapchat and Tiktok have had a huge influence on how the world consumes photographs and video.
 
 They've done more than change the way we make images. They've changed the way we use them to tell stories.
 
@@ -18,9 +18,9 @@ One straightforward example is the photo essay. While photo galleries are far fr
 
 The photo essays we see on social media are designed for phones, with one image filling the screen at a time, and navigation that encourages tapping through. They're not just a collection of images — they're a sequence. When they're well done, they're also a story.
 
-News organization have taken a page from social media's playbook and designed story formats that emulate social media designs.
+News organizations have taken a page from social media's playbook and designed story formats that emulate social media designs.
 
-One example is ["Forty Hours Later, a Shot at a Vaccine,"]https://www.nytimes.com/interactive/2021/02/03/multimedia/virus-vaccine-kentucky.html a 2021 photo essay from The New York Times that documented the early COVID vaccine rollout in Kentucky.
+One example is ["Forty Hours Later, a Shot at a Vaccine,"](https://www.nytimes.com/interactive/2021/02/03/multimedia/virus-vaccine-kentucky.html) a 2021 photo essay from The New York Times that documented the early COVID vaccine rollout in Kentucky.
 
 <Screenshot
   src="/screenshots/week-10/nyt-kentucky-vaccine.png"
@@ -31,7 +31,7 @@ One example is ["Forty Hours Later, a Shot at a Vaccine,"]https://www.nytimes.co
 
 It's just one example of how news websites and apps are experimenting with new formats that borrow from social media.
 
-When done well, what distinguish these stories from amateur creators is the craft and care that goes into them. Unlike the "photo dumps" of social media, professional galleries arrange high-quality images in a deliberate sequence.
+When done well, what distinguishes these stories from amateur creators is the craft and care that goes into them. Unlike the "photo dumps" of social media, professional galleries arrange high-quality images in a deliberate sequence.
 
 Today you will see how professionals build these stories, and then you'll build your own. Our demonstration case will be a set of photographs taken by a famous photojournalist whose work has entered the public domain.
 
