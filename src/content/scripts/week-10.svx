@@ -10,45 +10,67 @@ locked: true
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
-Last week we built a database explorer — a tool for readers to dig through records and find their own story. This week we're flipping the script. Instead of letting the reader drive, we're going to tell the story ourselves, using photographs.
+From the square crop to the selfie and now the vertical video, social media sites like Instagram, Snapchat and Tiktok have had a huge influence on how the world consume photographs and video.
 
-We're going to build a photo essay about Harlem in 1943, as seen through the camera of Gordon Parks. And we're going to design it for the way people actually consume visual stories today: on their phones, one image at a time, tapping through.
+They've done more than change the way we make images. They've changed the way we use them to tell stories.
 
-## Part 1: Gordon Parks and the idea
+One straightforward example is the photo essay. While photo galleries are far from new — Life magazine was publishing them in the 1930s — the format has evolved online.
 
-[Gordon Parks](https://en.wikipedia.org/wiki/Gordon_Parks) (1912–2006) was the first Black photographer hired by the Farm Security Administration, the federal agency that documented American life during the Great Depression and World War II. He called his camera "a weapon against poverty and racism."
+The photo essays we see on social media are designed for phones, with one image filling the screen at a time, and navigation that encourages tapping through. They're not just a collection of images — they're a sequence. When they're well done, they're also a story.
 
-In the spring and summer of 1943, Parks photographed daily life in Harlem for the Office of War Information. He shot portraits of residents, newsboys, street scenes, children, families, and the social fabric of the neighborhood. The images are intimate, dignified, and alive.
+News organization have taken a page from social media's playbook and designed story formats that emulate social media designs.
 
-<Screenshot
-  src="/screenshots/week-10/parks-harlem-overview.png"
-  alt="A grid of Gordon Parks photographs from the Library of Congress showing Harlem street scenes and portraits from 1943"
-  chromeTitle="Library of Congress"
-  chromeUrl="https://www.loc.gov/pictures/search/?q=gordon+parks+harlem&st=grid"
-  maxWidth="960px"
-/>
-
-Because the work was produced for the federal government, every image is in the public domain. The Library of Congress holds the original negatives and offers high-resolution scans, free to download, free to publish, free to use for any purpose.
-
-We're going to curate a selection of these photographs and build them into a visual story. But we're not going to make a traditional web page with text paragraphs and images stacked in a column. We're going to make something that feels native to a phone.
-
-### Designing for mobile first
-
-The New York Times has been publishing photo essays in this format for years. Their [coverage of the early COVID vaccine rollout in Kentucky](https://www.nytimes.com/interactive/2021/02/03/multimedia/virus-vaccine-kentucky.html) is a good example of the same pattern we'll build today: a title card, full-screen photographs with caption overlays, text cards for context, and tap navigation that advances the story one slide at a time.
+One example is ["Forty Hours Later, a Shot at a Vaccine,"]https://www.nytimes.com/interactive/2021/02/03/multimedia/virus-vaccine-kentucky.html a 2021 photo essay from The New York Times that documented the early COVID vaccine rollout in Kentucky.
 
 <Screenshot
   src="/screenshots/week-10/nyt-kentucky-vaccine.png"
   alt="The New York Times photo essay on the COVID vaccine rollout in Kentucky, showing a full-screen photograph with a caption overlay at the bottom and dot navigation indicators"
   chromeTitle="Vaccine in Kentucky"
   chromeUrl="https://www.nytimes.com/interactive/2021/02/03/multimedia/virus-vaccine-kentucky.html"
-  maxWidth="400px"
 />
 
-You've also seen this format on Instagram Stories and Snapchat. The difference is that we're going to build our own version, on our own domain, with our own components — not locked inside a platform, not subject to their algorithmic feed, available on the open web like any other news story.
+It's just one example of how news websites and apps are experimenting with new formats that borrow from social media.
+
+When done well, what distinguish these stories from amateur creators is the craft and care that goes into them. Unlike the "photo dumps" of social media, professional galleries arrange high-quality images in a deliberate sequence.
+
+Today you will see how professionals build these stories, and then you'll build your own. Our demonstration case will be a set of photographs taken by a famous photojournalist whose work has entered the public domain.
+
+## Part 1: Introducing Gordon Parks
+
+[Gordon Parks](https://en.wikipedia.org/wiki/Gordon_Parks) (1912–2006) was the first Black photographer hired by the Farm Security Administration, the federal agency that documented American life during the Great Depression and World War II. He called his camera "a weapon against poverty and racism."
+
+<Screenshot
+  src="/screenshots/week-10/gordon-parks-foundation.png"
+  alt="The Gordon Parks Foundation website showing a black-and-white portrait of Gordon Parks and information about his life and legacy"
+  chromeTitle="The Gordon Parks Foundation"
+  chromeUrl="https://www.gordonparksfoundation.org"
+/>
+
+In the spring and summer of 1943, Parks photographed daily life in Harlem for the Office of War Information. He shot portraits of residents, newsboys, street scenes, children, families, and the social fabric of the neighborhood. The images are intimate, dignified, and alive.
+
+<Screenshot
+  src="/screenshots/week-10/loc-fsa-collection.png"
+  alt="The Library of Congress FSA/OWI Black-and-White Negatives collection page showing featured photographs by Gordon Parks, Dorothea Lange, Walker Evans, and other photographers"
+  chromeTitle="Library of Congress"
+  chromeUrl="https://www.loc.gov/collections/fsa-owi-black-and-white-negatives/"
+/>
+
+Because the work was produced for the federal government, every image is in the public domain. The Library of Congress holds the original negatives and offers high-resolution scans, free to download, free to publish, free to use for any purpose.
+
+We're going to curate a selection of these photographs and build them into a visual story. But we're not going to make a traditional web page with text paragraphs and images stacked in a column. We're going to make something that feels native to a phone.
 
 ### Set up your project
 
-Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>. Click "Use this template" and create a new repository called `parks-harlem-1943`. Clone it, open it in VS Code, and run:
+Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+
+<Screenshot
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
+
+Click "Use this template" and create a new repository called `parks-harlem-1943`. Clone it, open it in VS Code, and run:
 
 ```bash
 npm install
@@ -60,9 +82,7 @@ Then:
 npm run dev
 ```
 
-## Part 2: Setting up the data
-
-The photographs are already waiting for you. When you cloned the repo, a set of Gordon Parks images curated from the Library of Congress came with it — you'll find them at `static/photos/`:
+The photographs are already in the repo. When you cloned it, a set of Gordon Parks images curated from the Library of Congress came with it — you'll find them at `static/photos/`:
 
 ```
 static/
@@ -72,44 +92,19 @@ static/
     parks-harlem-03.jpg
     parks-harlem-04.jpg
     gordon-parks-portrait.jpg
-src/
-  lib/
-    data/
 ```
 
-What's missing is the data file that describes them. Create an empty file at `src/lib/data/photos.json`. You'll fill it in gradually throughout the class — starting with just the opening, then the middle, then the end. That way you'll see the story take shape in the same order you'd think about it editorially.
+We'll build the data file that describes them a little later, once we have something on screen to see.
 
-### Loading the data
+## Part 2: The component library
 
-Following the same pattern from [Week 9](/docs/coding-the-news/scripts/week-9/), create `src/routes/+page.js`:
-
-```js
-import photos from '$lib/data/photos.json';
-
-export function load() {
-  return {
-    photos,
-  };
-}
-```
-
-Then open `src/routes/+page.svelte`, clear the boilerplate, and receive the data:
-
-```svelte
-<script>
-  let { data } = $props();
-</script>
-```
-
-## Part 3: The component library
-
-Before we fill in any data, let's take a look at the tools we'll use to display it.
+Let's take a look at the tools we'll use before we start building.
 
 Just like last week, we're going to lean on the pre-built components in the [class template's Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/). Open it now and look at what's available for this project.
 
 <Screenshot
   src="/screenshots/week-10/storybook-slideshow-components.png"
-  alt="The Storybook sidebar showing the slideshow component group with SlideGallery, TitleSlide, PhotoSlide, TextSlide, and CreditsSlide listed"
+  alt="The Storybook showing the slideshow components"
   chromeTitle="Storybook"
   chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/"
   maxWidth="960px"
@@ -117,19 +112,54 @@ Just like last week, we're going to lean on the pre-built components in the [cla
 
 You'll see five components grouped under "Slideshow":
 
-- [`SlideGallery`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-slidegallery--docs) — the container that manages navigation, dots, and the horizontal slide track
-- [`TitleSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-titleslide--docs) — the opening card with headline, intro, and byline
-- [`PhotoSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-photoslide--docs) — a full-screen image with a caption overlay
-- [`TextSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-textslide--docs) — a full-screen text card for chapter breaks
-- [`CreditsSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-creditsslide--docs) — the closing card for attribution and methodology
+| Component | Description |
+|-----------|-------------|
+| [`SlideGallery`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-slidegallery--docs) | The container that manages navigation, dots, and the horizontal slide track |
+| [`TitleSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-titleslide--docs) | The opening card with headline, intro, and byline |
+| [`PhotoSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-photoslide--docs) | A full-screen image with a caption overlay |
+| [`TextSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-textslide--docs) | A full-screen text card for chapter breaks |
+| [`CreditsSlide`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-creditsslide--docs) | The closing card for attribution and methodology |
 
 Click through each one in Storybook. Use the controls panel to experiment with the props. This is exactly how you'd explore a component library at a real newsroom — understand what each piece does before you start assembling.
 
-## Part 4: The beginning
+### Getting something on screen
 
-Every story needs a hook. Open `photos.json` and start with the photographs that will pull readers in — the images that made you want to tell this story in the first place.
+Now open `src/routes/+page.svelte`, clear the boilerplate, and put the first two components to work. No data yet — just wire up `SlideGallery` and `TitleSlide` directly with the headline and intro we want:
+
+```svelte
+<script>
+  import SlideGallery from '$lib/components/SlideGallery.svelte';
+  import TitleSlide from '$lib/components/TitleSlide.svelte';
+</script>
+
+<SlideGallery>
+  <TitleSlide
+    headline="Harlem, 1943"
+    intro="In the spring of 1943, Gordon Parks walked Harlem's streets with a government camera and a personal mission: to show what official photographers had long ignored."
+    byline="Photographs by Gordon Parks · Farm Security Administration–Office of War Information"
+  />
+</SlideGallery>
+```
+
+Save and check your browser. The full-screen title card should already be there — masthead at the top, headline centered, "Tap to begin →" at the bottom.
+
+<Screenshot
+  src="/screenshots/week-10/title-slide.png"
+  alt="A black screen showing the NYCity News Service masthead at top, the headline 'Harlem, 1943' centered, and a 'Tap to begin' prompt at the bottom"
+  chromeTitle="Parks Harlem 1943"
+  chromeUrl="http://localhost:5173"
+  maxWidth="400px"
+/>
+
+That's the whole shell of the story. One component, four props, done. Now we need to fill it with photographs.
+
+## Part 3: The beginning
+
+Every story needs a hook. Let's add the opening photographs — the images that made us want to tell this story in the first place.
 
 For us, that's the newsboys. Parks kept returning to them. There's something in his attention to these kids — their dignity, their presence on the street — that sets the tone for the whole essay.
+
+Create `src/lib/data/photos.json` and start with just these two entries:
 
 ```json
 [
@@ -154,7 +184,21 @@ For us, that's the newsboys. Parks kept returning to them. There's something in 
 ]
 ```
 
-Now let's get this on screen. Import `SlideGallery` and `PhotoSlide`, add the `TitleSlide` to open the story, and loop through the data:
+You'll fill this file out gradually throughout the class — starting with the opening, then the middle, then the end. The story will take shape in the same order you'd think about it editorially.
+
+Now create `src/routes/+page.js` to load it, following the same pattern from [Week 9](/docs/coding-the-news/scripts/week-9/):
+
+```js
+import photos from '$lib/data/photos.json';
+
+export function load() {
+  return {
+    photos,
+  };
+}
+```
+
+Then update `+page.svelte` to receive the data, import `PhotoSlide`, and loop through the entries:
 
 ```svelte
 <script>
@@ -180,19 +224,11 @@ Now let's get this on screen. Import `SlideGallery` and `PhotoSlide`, add the `T
 </SlideGallery>
 ```
 
-Save and check your browser. The title card should open the gallery, followed by the two newsboy photos. Tap through them.
-
-<Screenshot
-  src="/screenshots/week-10/title-slide.png"
-  alt="A black screen showing the NYCity News Service masthead at top, the headline 'Harlem, 1943' centered, and a 'Tap to begin' prompt at the bottom"
-  chromeTitle="Parks Harlem 1943"
-  chromeUrl="http://localhost:5173"
-  maxWidth="400px"
-/>
+Save and tap through. The title card opens the gallery, followed by the two newsboy photographs.
 
 Three slides, a clear opening. That's your lede.
 
-## Part 5: The middle
+## Part 4: The middle
 
 A gallery of photographs without context is just a slideshow. What turns it into a story is what you put between the images — the words that explain what the reader is looking at and why it matters.
 
@@ -292,7 +328,7 @@ Save and tap through. The text cards break the sequence into chapters, giving re
 
 Notice that the Svelte code didn't change much — just one new import and one new `{:else if}` branch. All the editorial decisions about sequence, pacing, and what text appears where live in `photos.json`. If you want to reorder slides, add another chapter break, or change the caption on a photograph, you edit the data file. The code stays the same.
 
-## Part 6: The end
+## Part 5: The end
 
 Every story needs a conclusion. Ours closes with two things: a portrait of the photographer himself — a reminder of who made these images and what became of him — and a credits slide that tells readers where to find the original work.
 
@@ -362,7 +398,7 @@ Save and tap all the way through. You now have a complete story with a beginning
   maxWidth="400px"
 />
 
-## Part 7: Testing on your phone
+## Part 6: Testing on your phone
 
 We've been building on a desktop browser, but the whole point of this design is mobile. Let's see how it actually feels on a phone.
 
@@ -394,11 +430,13 @@ Save, commit, and push to GitHub. Before you push, remember to visit your reposi
 
 Find a collection of public domain photographs from a digital archive and build your own full-screen photo essay. Good sources:
 
-* [Library of Congress](https://www.loc.gov/free-to-use/) — Free to Use and Reuse sets
-* [NYPL Digital Collections](https://digitalcollections.nypl.org/) — filter for public domain
-* [Smithsonian Open Access](https://www.si.edu/openaccess) — millions of images, all CC0
-* [Wikimedia Commons](https://commons.wikimedia.org/) — search by topic and license
-* [National Archives](https://www.archives.gov/research/catalog) — US government photographs
+| Source | Description |
+|--------|-------------|
+| [Library of Congress](https://www.loc.gov/free-to-use/) | The nation's oldest federal cultural institution, with millions of photographs in the public domain |
+| [NYPL Digital Collections](https://digitalcollections.nypl.org/) | New York Public Library's archive of maps, prints, photographs, and manuscripts |
+| [Smithsonian Open Access](https://www.si.edu/openaccess) | The world's largest museum and research complex, with millions of CC0 images |
+| [Wikimedia Commons](https://commons.wikimedia.org/) | A community-curated media repository with freely licensed and public domain files |
+| [National Archives](https://www.archives.gov/research/catalog) | The US government's official repository of federal records and photographs |
 
 Your project must have:
 
