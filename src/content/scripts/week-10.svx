@@ -37,7 +37,7 @@ Today you will see how professionals build these stories, and then you'll build 
 
 ## Part 1: Introducing Gordon Parks
 
-[Gordon Parks](https://en.wikipedia.org/wiki/Gordon_Parks) (1912–2006) was the first Black photographer hired by the Farm Security Administration, the federal agency that documented American life during the Great Depression and World War II. He called his camera "a weapon against poverty and racism."
+[Gordon Parks](https://en.wikipedia.org/wiki/Gordon_Parks) was one of the most celebrated photojournalists of the twentieth century. Born in Kansas in 1912 as the last of 15 children, he rose from poverty to become a photographer for Vogue and Life, covering the civil rights movement, celebrity, fashion and the everyday lives of people across America. He went on to become a filmmaker, directing the iconic blaxploitation film "Shaft."
 
 <Screenshot
   src="/screenshots/week-10/gordon-parks-foundation.png"
@@ -46,7 +46,7 @@ Today you will see how professionals build these stories, and then you'll build 
   chromeUrl="https://www.gordonparksfoundation.org"
 />
 
-In the spring and summer of 1943, Parks photographed daily life in Harlem for the Office of War Information. He shot portraits of residents, newsboys, street scenes, children, families, and the social fabric of the neighborhood. The images are intimate, dignified, and alive.
+In 1943 Parks started photographing daily life in Harlem for a New Deal government program that hired artists to document American life. His intimate and humanizing photographs of New York's most famous Black neighborhood challenged the stereotypes that dominated portrayals of Harlem and are recognized as some of the most notable images of the era.
 
 <Screenshot
   src="/screenshots/week-10/loc-fsa-collection.png"
@@ -55,9 +55,9 @@ In the spring and summer of 1943, Parks photographed daily life in Harlem for th
   chromeUrl="https://www.loc.gov/collections/fsa-owi-black-and-white-negatives/"
 />
 
-Because the work was produced for the federal government, every image is in the public domain. The Library of Congress holds the original negatives and offers high-resolution scans, free to download, free to publish, free to use for any purpose.
+Because that work was produced for the federal government, they're also part of the public domain and free for anyone to reuse.
 
-We're going to curate a selection of these photographs and build them into a visual story. But we're not going to make a traditional web page with text paragraphs and images stacked in a column. We're going to make something that feels native to a phone.
+Today you're going arrange a selection of these photographs into a story. But you're not going to make a traditional article with text and images stacked in a column. Instead, you're going to make a full-screen, mobile-first photo essay that looks and feels like the forms that dominate social media.
 
 ### Set up your project
 
