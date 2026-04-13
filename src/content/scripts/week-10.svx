@@ -324,7 +324,7 @@ Save and tap through. The text card should now appear with a different layout th
   chromeUrl="http://localhost:5173"
 />
 
-## Part 4: Finishing the story
+## Part 4: Finishing the job
 
 Every story needs a conclusion. We'll end ours by capturing the Harlem project's legacy and sharing a photo of Parks himself.
 
