@@ -11,7 +11,7 @@ locked: true
   import { Save } from 'lucide-svelte';
 </script>
 
-From the square crop to the selfie and now the vertical video, social media sites like Instagram, Snapchat and Tiktok have had a huge influence on how the world consumes photographs and video.
+From the square crop to the selfie and now the vertical video, social media sites like Instagram, Snapchat and TikTok have had a huge influence on how the world consumes photographs and video.
 
 They've done more than change the way we make images. They've changed the way we use them to tell stories.
 
@@ -174,7 +174,7 @@ export function load() {
 
 Rather than hardcoding every slide into the Svelte template, a common technique in newsrooms is to separate the content from code by storing each slide's information in a data file.
 
-The Svelte code can then loops through the file and renders the right component for each entry, just like it looped through database records in previous lessons.
+The Svelte code can then loop through the file and render the right component for each entry, just like it looped through database records in previous lessons.
 
 Create `src/lib/data/story.json` and start with these two entries. They will serve as the first and second slides in our story.
 
@@ -249,7 +249,7 @@ That's a nice start to our gallery, but it lacks what any story needs: A clear b
 
 We should establish that first by inserting a text slide before the photos that gives the reader some context before we zero in on the newsboys.
 
-Replace you `story.json` file with this updated version, which adds a new `"text"` entry at the beginning of the story and a more general street scene as the second slide.
+Replace your `story.json` file with this updated version, which adds a new `"text"` entry at the beginning of the story and a more general street scene as the second slide.
 
 ```json
 [
@@ -257,7 +257,7 @@ Replace you `story.json` file with this updated version, which adds a new `"text
     "id": 1,
     "type": "text",
     "headline": "The Assignment",
-    "body": "In 1943, the photographer Gordon Parks was assigned to document life in Harlem — New York's most famous black neighborhood — by a federal government program that employed artists during the Great Depression.",
+    "body": "In 1943, the photographer Gordon Parks was assigned to document life in Harlem — New York's most famous black neighborhood — by a federal government program that employed artists during the Great Depression."
   },
   {
     "id": 2,
@@ -325,11 +325,11 @@ Save and tap through. The text card should now appear with a different layout th
   chromeUrl="http://localhost:5173"
 />
 
-## Part 5: Finishing the story
+## Part 4: Finishing the story
 
 Every story needs a conclusion. We'll end ours by capturing the Harlem project's legacy and sharing a photo of Parks himself.
 
-Open `photos.json` one more time and add the final three entries.
+Open `story.json` one more time and add the final three entries.
 
 ```json
 [
@@ -337,7 +337,7 @@ Open `photos.json` one more time and add the final three entries.
     "id": 1,
     "type": "text",
     "headline": "The Assignment",
-    "body": "In 1943, the photographer Gordon Parks was assigned to document life in Harlem — New York's most famous black neighborhood — by a federal government program that employed artists during the Great Depression.",
+    "body": "In 1943, the photographer Gordon Parks was assigned to document life in Harlem — New York's most famous black neighborhood — by a federal government program that employed artists during the Great Depression."
   },
   {
     "id": 2,
@@ -381,14 +381,14 @@ Open `photos.json` one more time and add the final three entries.
   {
     "id": 7,
     "type": "text",
-    "body": "After Parks died in 2006, a portfolio of his work, including the Harlem portraits, was enshrined at Manhattan's Museum of Modern Art.",
+    "body": "After Parks died in 2006, a portfolio of his work, including the Harlem portraits, was enshrined at Manhattan's Museum of Modern Art."
   }
 ]
 ```
 
 All that's missing now is the closing card, where we can credit ourselves and share any additional information about the story's sources and methods.
 
-That's what the special `CreditsSlide` comes in. Like the `MethodologyBox` we used in earlier lessons, it follows the pattern of a parent component that expects "children" to be passed in as content.
+That's where the special `CreditsSlide` comes in. Like the `MethodologyBox` we used in earlier lessons, it follows the pattern of a parent component that expects "children" to be passed in as content.
 
 ```svelte {emphasize-lines="6, 25-33"}
 <script>
@@ -436,7 +436,7 @@ Save and tap all the way through. You now have a complete story with a beginning
   chromeUrl="http://localhost:5173"
 />
 
-## Part 6: Testing on your phone
+## Part 5: Testing on your phone
 
 We've been building on a desktop browser, but the whole point of this design is to prioritize mobile users. Let's see how it actually looks on a phone screen.
 
