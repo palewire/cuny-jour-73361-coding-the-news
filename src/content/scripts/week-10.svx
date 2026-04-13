@@ -438,29 +438,24 @@ Save and tap all the way through. You now have a complete story with a beginning
 
 ## Part 6: Testing on your phone
 
-We've been building on a desktop browser, but the whole point of this design is prioritize mobile users.
+We've been building on a desktop browser, but the whole point of this design is to prioritize mobile users. Let's see how it actually looks on a phone screen.
 
-Here's a trick: Your phone can access your development server if both devices are on the same WiFi network.
+You don't need to pull out your phone to test this. Every major browser has a built-in tool that simulates a mobile device right on your desktop.
 
-Find your computer's local IP address. On Mac, open System Settings, click Network, and look for your IP — it will be something like `192.168.1.42`. On Windows, open a command prompt and type `ipconfig`.
+Open the developer tools in your browser. Then click the device toggle button in the top panel — it looks like a phone and tablet overlapping.
 
-On your phone's browser, navigate to `http://192.168.1.42:5173`, replacing the IP with your own.
+The browser will reframe your page inside a simulated phone screen. Use the dropdown at the top to pick a specific device or set a custom width. The page will re-render at that size, giving you a realistic preview of the mobile experience.
 
 <Screenshot
-  src="/screenshots/week-10/phone-preview.png"
-  alt="A hand holding a smartphone displaying the Gordon Parks photo gallery with a full-screen portrait photograph and caption overlay at the bottom"
-  chromeTitle="Phone Preview"
-  chromeUrl="http://192.168.1.42:5173"
-  maxWidth="400px"
+  src="/screenshots/week-10/devtools.png"
+  alt="Chrome DevTools device toolbar showing the photo gallery rendered in a simulated mobile phone viewport"
+  chromeTitle="Harlem, 1943"
+  chromeUrl="http://localhost:5173"
 />
 
-Tap through the gallery. Each slide should snap into place. The dots at the bottom should track your position. The captions should be readable against the gradient.
+Tap through the gallery in this view. Each slide should snap into place in the different mobile layout.
 
-This is the experience we designed for. On a phone it doesn't feel like a website. It feels like a story.
-
-Take a few minutes to tap through on your phone and note what works and what you'd change. We'll discuss as a class.
-
-Save, commit, and push to GitHub. Before you push, remember to visit your repository's settings to activate GitHub Pages. Watch the Actions tab to confirm the deploy succeeds, then open your live site on your phone.
+Save, commit, and push to GitHub. Before you push, remember to visit your repository's settings to activate GitHub Pages. Watch the Actions tab to confirm the deploy succeeds, then open your live site on your phone and test it on the real thing.
 
 ## Homework
 
@@ -472,19 +467,18 @@ Find a collection of public domain photographs from a digital archive and build 
 |--------|-------------|
 | [Library of Congress](https://www.loc.gov/free-to-use/) | The nation's oldest federal cultural institution, with millions of photographs in the public domain |
 | [NYPL Digital Collections](https://digitalcollections.nypl.org/) | New York Public Library's archive of maps, prints, photographs, and manuscripts |
-| [Smithsonian Open Access](https://www.si.edu/openaccess) | The world's largest museum and research complex, with millions of CC0 images |
+| [Smithsonian Open Access](https://www.si.edu/openaccess) | The world's largest museum and research complex, with millions of free images |
 | [Wikimedia Commons](https://commons.wikimedia.org/) | A community-curated media repository with freely licensed and public domain files |
 | [National Archives](https://www.archives.gov/research/catalog) | The US government's official repository of federal records and photographs |
 
 Your project must have:
 
+* A clear narrative arc that guides the reader through the story
 * A `TitleSlide` with a headline and introduction
-* At least 8 `PhotoSlide` entries with caption overlays
+* At least 4 `PhotoSlide` entries with caption overlays
 * At least two `TextSlide` entries that provide editorial context
 * A `CreditsSlide` with source information and proper attribution
-* A design that works on mobile — test it on your phone before submitting
-
-Think about the arc before you start building. What's your lede? What context does the reader need in the middle? How does it end?
+* One small twist on the design, like a color change or new feature
 
 Deploy it to GitHub Pages and send me the link.
 
@@ -492,7 +486,6 @@ Deploy it to GitHub Pages and send me the link.
 
 Be ready to share your photo story with the class. You should be prepared to:
 
-* Show the story on your phone or in a narrow browser window
+* Show the story in a narrow browser window
 * Explain your editorial choices — which photos you selected, how you sequenced them, and what story you're telling
-* Walk through how the `type` field in your JSON drives the structure of the page
-* Discuss how you found and verified the public domain status of your images
+* Discuss how you found your source and verified that you had the rights to republish it
