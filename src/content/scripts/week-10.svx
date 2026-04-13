@@ -8,7 +8,6 @@ locked: false
 
 <script>
   import Screenshot from '$lib/components/Screenshot.svelte';
-  import { Save } from 'lucide-svelte';
 </script>
 
 From the square crop to the selfie and now the vertical video, social media sites like Instagram, Snapchat and TikTok have had a huge influence on how the world consumes photographs and video.
@@ -264,7 +263,7 @@ Replace your `story.json` file with this updated version, which adds a new `"tex
     "type": "photo",
     "filename": "parks-harlem-03.jpg",
     "title": "Shooting the streetscape",
-    "caption": "He spent weeks photographing residents from all walks of life. His shot his subjects as found them: Sitting on stoops, leaning against fences, hanging out windows.",
+    "caption": "He spent weeks photographing residents from all walks of life. He shot his subjects as found them: Sitting on stoops, leaning against fences, hanging out windows.",
     "credit": "Gordon Parks / Library of Congress"
  },
  {
@@ -381,7 +380,7 @@ Open `story.json` one more time and add the final three entries.
   {
     "id": 7,
     "type": "text",
-    "body": "After Parks died in 2006, a portfolio of his work, including the Harlem portraits, was enshrined at Manhattan's Museum of Modern Art."
+    "body": "After Parks died in 2006, some of the Harlem portraits were enshrined with his other work at Manhattan's Museum of Modern Art."
   }
 ]
 ```
