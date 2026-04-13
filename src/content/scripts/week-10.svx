@@ -472,19 +472,19 @@ Find a collection of public domain photographs from a digital archive and build 
 
 Your project must have:
 
-* A clear narrative arc that guides the reader through the story
 * A `TitleSlide` with a headline and introduction
 * At least 4 `PhotoSlide` entries with caption overlays
 * At least two `TextSlide` entries that provide editorial context
 * A `CreditsSlide` with source information and proper attribution
+* A clear narrative arc with a beginning, middle and end
 * One small twist on the design, like a color change or new feature
 
 Deploy it to GitHub Pages and send me the link.
 
 ### Task 2: Prepare to present
 
-Be ready to share your photo story with the class. You should be prepared to:
+You should be prepared to:
 
 * Show the story in a narrow browser window
-* Explain your editorial choices — which photos you selected, how you sequenced them, and what story you're telling
-* Discuss how you found your source and verified that you had the rights to republish it
+* Explain your editorial choices
+* Discuss how you found your source and verified that you had the rights to republish the photos
