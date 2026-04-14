@@ -374,7 +374,7 @@ Open `story.json` one more time and add the final three entries.
     "id": 6,
     "type": "photo",
     "filename": "gordon-parks-portrait.jpg",
-    "caption": "In the years that followed, Parks went on to shoot for Vogue, Life and many other mainstream publications, before becoming a Hollywood director and creating movies like \"Shaft.\"",
+    "caption": "In the years that followed, Parks went on to shoot for Vogue, Life and many other mainstream publications, before becoming a Hollywood director and creating movies like \\"Shaft.\\"",
     "credit": "Rowland Scherman / National Archives"
   },
   {
