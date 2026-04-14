@@ -214,7 +214,7 @@ export function load() {
 
 Then update `+page.svelte` to receive the data, import `PhotoSlide` and loop through the entries, passing each record from the JSON file to the component.
 
-```svelte {emphasize-lines="4,15-17"}
+```svelte {emphasize-lines="4,6,15-17"}
 <script>
   import SlideGallery from '$lib/components/MultimediaGallery/SlideGallery.svelte';
   import TitleSlide from '$lib/components/MultimediaGallery/TitleSlide.svelte';
