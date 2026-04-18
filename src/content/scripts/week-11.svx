@@ -1,6 +1,6 @@
 ---
 title: "Interactive Map"
-summary: "How Robert Moses shaped New York with one particular tree"
+summary: "Two stories hidden in NYC's street tree census"
 date: "Apr. 20, 2026"
 week: 11
 locked: true
@@ -25,77 +25,49 @@ They built an interactive map to show what they found.
 
 The map shades every census block in the five boroughs by how many shooting incidents the NYPD recorded there since 2020. The pattern it reveals — gun violence concentrating on a small number of blocks, mostly surrounding NYCHA developments — became the spine of a companion investigation.
 
-One thing to notice in the Gothamist map is what it does *not* show. There are no individual dots. Every incident is aggregated to its census block, so the reader sees the pattern without being pointed at a specific address. That was a choice. Individual points would have been more dramatic, but they would also have stigmatized specific doorsteps and sidewalks where real people live. The editors traded some visual punch for more responsible journalism.
+One thing to notice in the Gothamist map is what it does *not* show. There are no individual dots. Every incident is aggregated to its census block, so the reader sees the pattern without being pointed at a specific address. That was a choice. Individual points would have been more dramatic, but they would also have stigmatized specific doorsteps and sidewalks where real people live. The editors traded visual punch for more responsible journalism.
 
-Today you are going to build an interactive map with the same techniques Gothamist used — a base map, filtered points, popups, a choropleth view — but about a different New York City story. One that has nothing to do with gun violence and everything to do with what you walk past every day on the way to class.
+Notice, too, that the choice of aggregation is not only an ethical decision but also a technical one. Plotting every shooting as an individual dot on a web map is harder than it sounds when the dataset is large; aggregating to a polygon is often simpler, smaller, and faster.
 
-## Part 1: The most common tree in New York
+Today you are going to build an interactive map that does both. You'll start with individual points — a small, delightful dataset. Then you'll swap over to an aggregated view — a much larger dataset summarized by neighborhood. One page, two maps, two techniques. You'll see when each one is the right tool.
 
-Take a walk down almost any street in Manhattan and look up. Chances are, the canopy above you belongs to a [London planetree](https://en.wikipedia.org/wiki/Platanus_%C3%97_acerifolia).
+Our subject is not gun violence. It's trees.
+
+## Part 1: New York's street tree census
+
+In 2015, NYC Parks ran its third decadal street tree census — a citizen science effort called [TreesCount!](https://www.nycgovparks.org/trees/treescount). Over 2,200 volunteers walked every block in the five boroughs with tablets, identifying every street tree they found and recording its species, trunk diameter, health, and exact location. They found 666,134 trees of 132 different species.
 
 <Screenshot
-  src="/screenshots/week-11/london-plane-central-park.jpg"
-  alt="A row of mature London planetrees with distinctive mottled, peeling bark lining a path in Central Park"
-  chromeTitle=""
-  chromeUrl=""
-  caption="A London planetree in Central Park. Its patchwork bark is the giveaway."
-  maxWidth="720px"
+  src="/screenshots/week-11/treescount-homepage.png"
+  alt="The NYC Parks TreesCount! 2015 homepage showing data visualizations about New York's street trees"
+  chromeTitle="TreesCount! 2015"
+  chromeUrl="https://www.nycgovparks.org/trees/treescount"
+  maxWidth="960px"
 />
 
-The London planetree is a hybrid between the American sycamore and the Oriental plane tree. It is tough, tolerant of pollution and compacted soil, and indifferent to heavy pruning. It can survive in conditions that would kill most other large shade trees.
+That dataset is a goldmine of potential journalism. Today we're going to pull two stories out of it.
 
-One man loved it above all others.
+The first story is **the Yoshino cherry**. In 1912 the Japanese government gifted several thousand ornamental cherry trees to the United States. The famous ones went to Washington, D.C., where they still ring the Tidal Basin. A smaller batch came to New York, where they were planted along Central Park's Reservoir and Riverside Park's Cherry Walk. Their descendants still line those paths, joined by newer plantings across all five boroughs. Every spring the Central Park Conservancy tracks their bloom day by day, and the city pauses for a week of pink.
 
-Robert Moses, the unelected power broker who ran New York's Department of Parks and Recreation from 1934 to 1960, made the London planetree his signature tree. He planted them along his parkways. He planted them in his parks. He planted them on street after street of every borough he rebuilt. The leaf in the NYC Parks department's green-and-white logo — the one on every trash can and park sign in the city — is widely believed to be a London planetree leaf. When Moses started an agency newsletter he called it *The Sycamore*, another name for the same tree.
+The second story is **the London planetree**. That's the tree Robert Moses, the unelected power broker who ran NYC Parks from 1934 to 1960, planted everywhere he built. Along his parkways. In his parks. Up and down street after street. Moses's favorite tree is still the most common street tree in New York — about one in ten of every street tree you pass is a London planetree, a direct artifact of one man's taste imposed on the city seventy years ago. The leaf in the NYC Parks logo is widely believed to depict one.
 
-The legacy of Moses is usually told through his bridges, his expressways, and the neighborhoods his bulldozers erased. It can also be told through his trees. Today New York has something like 660,000 street trees, and roughly one in ten of them is a London planetree. That means that whenever you see one, you are often looking at a direct artifact of one man's taste imposed on the city a lifetime ago.
+Two very different trees, two very different stories. And we are going to put them both on the same page.
 
-<Aside title="A tree planted for the wrong reasons?">
+### The pedagogical shape of today
 
-<p>
-    In March 2024, Slate published
-    <a href="https://slate.com/technology/2024/03/london-planetrees-new-york-parks-nonnative-species-bad-why.html" target="_blank">an argument</a>
-    that London planetrees shouldn't be New York's most common street tree. The case:
-    a non-native hybrid planted in monoculture suppresses local biodiversity. Birds
-    and insects that evolved alongside native oaks and maples get much less out of
-    Moses's chosen tree. The reporter called the London planetree "a triumph of
-    engineering and a failure of imagination."
-</p>
+The cherry story uses a small, simple dataset — a few thousand individual trees. We can plot every one of them as a dot on the map without the computer breaking a sweat.
 
-<p>
-    More recently, arborists have noticed London planetrees shedding unusual amounts
-    of bark during heat waves, raising questions about whether the tree that survived
-    the Industrial Revolution is finally being overwhelmed by the climate crisis.
-</p>
+The planetree story is different. There are something like 70,000 London planetrees in the census, and plotting each one as an individual dot would produce a file too large to ship cheaply to a reader's browser. For data at that scale we need to summarize — to aggregate each neighborhood's planetrees into a single count, and shade the map accordingly.
 
-</Aside>
+This is a real tradeoff every news graphics desk makes. Point maps are expressive and personal — readers can find their own block, their own tree. Aggregated maps are efficient and reveal patterns — readers see the shape of the whole city. Neither is better. They answer different questions.
 
-That's the story behind our data.
-
-In 2015, NYC Parks ran its third decadal street tree census — a citizen science effort called [TreesCount!](https://www.nycgovparks.org/trees/treescount) — and mapped every single street tree in the city. Species, trunk diameter, health status, exact location. Over 2,200 volunteers walked every block in New York with tablets, and they found 666,134 trees.
-
-We are going to pull the London planetrees out of that census — roughly 70,000 of them — and build an interactive map that lets readers find every Moses tree in their neighborhood, inspect its health, and see how Moses's planting pattern still shapes the canopy of the five boroughs today.
-
-### Mapping responsibly
-
-Before we write a line of code, a brief note on ethics.
-
-The Gothamist team aggregated their data to census blocks because pinpointing individual shootings would have done harm. Our data has no such sensitivity — trees are not people, and nothing about this project can hurt a human being. But the same instinct applies in a gentler form. When we build a map, we are making choices about what the reader sees, what they miss, and where their attention goes. Plotting individual points tells one story. Aggregating to neighborhoods tells another. Both are true; neither is complete.
-
-We'll build both views today, and you'll see for yourself how the same data can produce wildly different impressions.
+Today you're going to build both, on the same page, so you can feel the difference.
 
 ### Set up your project
 
 Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
-<Screenshot
-  src="/screenshots/week-2/template-repo-homepage.png"
-  alt="GitHub template repository page showing the Use this template button"
-  chromeTitle="cuny-jour-static-site-template"
-  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
-/>
-
-Click "Use this template" and create a new repository called `moses-trees`. Clone it, open it in Visual Studio Code, and install the dependencies you know so well:
+Click "Use this template" and create a new repository called `nyc-trees`. Clone it, open it in Visual Studio Code, and install the dependencies you know so well:
 
 ```bash
 npm install
@@ -109,7 +81,7 @@ npm install maplibre-gl
 
 This is the first time we've added a dependency beyond what the template ships with. Before, `npm install` was pulling down whatever the template's `package.json` declared. Now we are asking npm to add something new to that list. If you open `package.json` you should see `maplibre-gl` there now. When a classmate clones your repository later and runs `npm install`, they'll get MapLibre automatically.
 
-Now grab the data. I've posted two files in the class chat: `london-planetrees.geojson` and `community-districts.geojson`. Download them and drop both into your project's `static/` folder.
+Now grab the data. I've posted two files in the class chat: `yoshino-cherries.geojson` and `planetrees-by-nta.geojson`. Download them and drop both into your project's `static/` folder.
 
 Start the development server:
 
@@ -121,7 +93,7 @@ And open [localhost:5173](http://localhost:5173) in your browser.
 
 ## Part 2: Your first map
 
-The class template already ships with the two components we need to build our map: `Map` and `MapLayer`. You'll find them in `src/lib/components/`. Open `Map.svelte` and read the comment block at the top. It explains what the component does and how to use it.
+The class template already ships with the components we need: `Map`, `MapLayer`, and `Geocoder`. You'll find them in `src/lib/components/`. Open `Map.svelte` and read the comment block at the top. It explains what the component does and how to use it.
 
 <Screenshot
   src="/screenshots/week-11/vscode-map-component.png"
@@ -141,14 +113,14 @@ Open `src/routes/+page.svelte` and replace the contents with:
   import Map from '$lib/components/Map.svelte';
 </script>
 
-<h1>Moses trees</h1>
+<h1>The trees of New York</h1>
 
 <Map
   longitude={-73.968}
   latitude={40.785}
   zoom={12}
   theme="positron"
-  caption="A quiet map of Manhattan, waiting for data."
+  caption="Central Park and a chunk of Manhattan, waiting for trees."
   credit="OpenFreeMap / OpenStreetMap contributors"
 />
 ```
@@ -157,8 +129,8 @@ Save the file and check your browser. You should see a clean pale-gray map of Ma
 
 <Screenshot
   src="/screenshots/week-11/bare-map.png"
-  alt="A pale-gray map of Manhattan with no data overlaid, sitting below an H1 reading 'Moses trees'"
-  chromeTitle="Moses trees"
+  alt="A pale-gray map of Manhattan with no data overlaid, sitting below an H1 reading 'The trees of New York'"
+  chromeTitle="The trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -175,7 +147,7 @@ The template includes a third component called `Geocoder`. It's a search box tha
 
 Let's wire it up.
 
-In `+page.svelte`, add the import and two reactive state variables for the coordinates and zoom:
+In `+page.svelte`, add the import and three reactive state variables for the coordinates and zoom:
 
 ```svelte {emphasize-lines="3,6-8"}
 <script>
@@ -192,7 +164,7 @@ In `+page.svelte`, add the import and two reactive state variables for the coord
 Now replace the hard-coded numbers in the `<Map>` tag with the state variables, and add a `<Geocoder>` above the map with a callback that updates them.
 
 ```svelte {emphasize-lines="3-10,14-16"}
-<h1>Moses trees</h1>
+<h1>The trees of New York</h1>
 
 <Geocoder
   label="Find your neighborhood"
@@ -209,7 +181,7 @@ Now replace the hard-coded numbers in the `<Map>` tag with the state variables, 
   {latitude}
   {zoom}
   theme="positron"
-  caption="A quiet map of Manhattan, waiting for data."
+  caption="Central Park and a chunk of Manhattan, waiting for trees."
 />
 ```
 
@@ -220,7 +192,7 @@ Save and try it. Type your home address into the search box, pick a result from 
 <Screenshot
   src="/screenshots/week-11/geocoder-in-action.png"
   alt="The page showing a search box with the query 'Newmark Graduate School of Journalism', a dropdown of matching results, and a map that has flown to Midtown Manhattan"
-  chromeTitle="Moses trees"
+  chromeTitle="The trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -239,9 +211,9 @@ Create a new file at `src/routes/+page.js`:
 
 ```js
 export async function load({ fetch }) {
-  const trees = await fetch('/london-planetrees.geojson').then((r) => r.json());
-  const districts = await fetch('/community-districts.geojson').then((r) => r.json());
-  return { trees, districts };
+  const cherries = await fetch('/yoshino-cherries.geojson').then((r) => r.json());
+  const planetrees = await fetch('/planetrees-by-nta.geojson').then((r) => r.json());
+  return { cherries, planetrees };
 }
 ```
 
@@ -255,8 +227,8 @@ Now update the `<script>` block in `+page.svelte` to receive the loaded data:
   import Geocoder from '$lib/components/Geocoder.svelte';
 
   let { data } = $props();
-  const trees = data.trees;
-  const districts = data.districts;
+  const cherries = data.cherries;
+  const planetrees = data.planetrees;
 
   let longitude = $state(-73.968);
   let latitude = $state(40.785);
@@ -267,24 +239,24 @@ Now update the `<script>` block in `+page.svelte` to receive the loaded data:
 Before we plot anything, let's confirm the data is really there. Add a `console.log` at the top of the script block:
 
 ```js
-console.log('trees:', trees.features.length, 'records');
-console.log('districts:', districts.features.length, 'polygons');
+console.log('cherries:', cherries.features.length, 'points');
+console.log('planetrees:', planetrees.features.length, 'NTAs');
 ```
 
 Save, open your browser's developer console (Cmd+Option+J on Mac, Ctrl+Shift+J on Windows), and refresh. You should see something like:
 
 ```
-trees: 71248 records
-districts: 71 polygons
+cherries: 2843 points
+planetrees: 195 NTAs
 ```
 
-(Your exact number of trees may vary slightly — the census is a snapshot.)
+(Your exact numbers may vary slightly — the census is a snapshot, and NTA boundaries were redrawn in 2020.)
 
-Seventy thousand trees. That's what we're about to put on the map.
+Take a moment to look at the shape of those two numbers. A few thousand points on one side. Fewer than two hundred polygons on the other. Both describe the same city, but they describe it in completely different ways. The cherries file holds individual trees; the planetrees file holds neighborhoods, each with counts already baked in. That shape difference is going to drive how we render each one.
 
-## Part 5: Plotting the trees
+## Part 5: Cherry blossoms on the map
 
-Here's where the course's last few weeks pay off. You've seen `Map` as a component that can accept children. You've seen components that accept data props. You're about to compose the two.
+Time to plant some trees. Let's put the Yoshino cherries on the map as individual points.
 
 The template's `MapLayer` component takes a GeoJSON collection and a MapLibre paint object and renders the data on the parent map. Place it as a child of `<Map>`:
 
@@ -296,69 +268,37 @@ The template's `MapLayer` component takes a GeoJSON collection and a MapLibre pa
 
 <!-- Geocoder -->
 
-<Map {longitude} {latitude} {zoom} theme="positron" caption="Every London planetree in New York City, according to the 2015 Street Tree Census.">
+<Map {longitude} {latitude} {zoom} theme="positron" caption="Every Yoshino cherry mapped in the 2015 Street Tree Census.">
   <MapLayer
-    id="planetrees"
+    id="cherries"
     type="circle"
-    data={trees}
+    data={cherries}
     paint={{
-      'circle-color': '#2d6a4f',
-      'circle-radius': 3,
-      'circle-opacity': 0.6
+      'circle-color': '#e08daa',
+      'circle-radius': 4,
+      'circle-stroke-color': '#8a2d52',
+      'circle-stroke-width': 0.5,
+      'circle-opacity': 0.85
     }}
   />
 </Map>
 ```
 
-Save. Your map should now be covered in green dots.
+Save. Your map should now be studded with pink dots.
 
 <Screenshot
-  src="/screenshots/week-11/first-dots.png"
-  alt="A pale-gray map of Manhattan covered in small green dots representing London planetrees, densest along Riverside Drive, the Avenue of the Americas, and Central Park West"
-  chromeTitle="Moses trees"
+  src="/screenshots/week-11/cherry-dots.png"
+  alt="A pale-gray map of Manhattan with small pink dots marking Yoshino cherry trees, densest along the east side of the Central Park Reservoir, Riverside Park's Cherry Walk, and scattered through the Upper East Side and Washington Heights"
+  chromeTitle="The trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-Zoom out to see the whole city. The dots stretch from the tip of Staten Island to the top of the Bronx. You can see Moses's planting corridors — dense lines along parkways, thick clusters around the parks he built. This is the story of New York's midcentury green infrastructure, rendered in a single dataset.
+Zoom out and find the shape of the city's cherry plantings. You'll see the thick necklace around Central Park's Reservoir. You'll see Cherry Walk tracing the Hudson shore up Riverside Park. You'll find a dense pocket in Flushing Meadows–Corona Park out in Queens. Zoom into your own neighborhood to see how many Yoshinos you walk past without noticing.
 
-But there's a problem. When you zoom out, the individual dots collapse into one inky blur. When you zoom in, they look tiny. A good map should work at every zoom level.
+The 1912 trees that came from Japan were the first of their kind to be planted at this scale anywhere in America. A century and a bit later, the descendants on your screen still bloom the same week every spring — though arborists say "the same week" has been drifting earlier as the climate warms.
 
-### Zoom-dependent styling
-
-MapLibre lets you tie paint properties to the current zoom level using [interpolate expressions](https://maplibre.org/maplibre-style-spec/expressions/#interpolate). They look odd at first, but the idea is simple: at zoom 10, use this value; at zoom 15, use that value; smoothly blend in between.
-
-Update your `MapLayer`:
-
-```svelte {emphasize-lines="6-17"}
-<MapLayer
-  id="planetrees"
-  type="circle"
-  data={trees}
-  paint={{
-    'circle-color': '#2d6a4f',
-    'circle-radius': [
-      'interpolate', ['linear'], ['zoom'],
-      10, 1.5,
-      14, 4,
-      18, 8
-    ],
-    'circle-opacity': [
-      'interpolate', ['linear'], ['zoom'],
-      10, 0.4,
-      14, 0.8
-    ]
-  }}
-/>
-```
-
-Reading the first expression out loud: *interpolate linearly by the current zoom level. At zoom 10, use radius 1.5. At zoom 14, use 4. At zoom 18, use 8.* MapLibre smooths between the stops automatically.
-
-Save and zoom around. At city-wide scale, the dots are small and translucent — perfect for seeing the density pattern. At neighborhood scale, they grow bold enough to click. This is also a performance trick: MapLibre's GPU renders small, translucent circles very cheaply, so 70,000 of them don't bog down the map.
-
-Take a minute and really explore the map. Find your street. Find your school. Find the block where your favorite bodega sits. If you grew up in New York, find your childhood home.
-
-Notice, too, what the map is *not* showing. It's not showing the oaks, the maples, the honeylocusts, or the 160-odd other species the census caught. Just Moses's tree. The negative space — the streets without a green dot on them — is as much a part of this story as the dense ribbons of dots along the old parkways.
+This is exactly the kind of dataset a point map was built for. Every record is a discrete, locatable thing. The count is small enough that MapLibre can render all of them at once without strain. The reader can navigate to a specific tree and have a specific experience with it. You couldn't ask for a better subject to teach the point-map form.
 
 ## Part 6: Adding popups
 
@@ -368,30 +308,23 @@ Readers always want to click things. Let's reward that instinct.
 
 Add a `popup` function to your `MapLayer`:
 
-```svelte {emphasize-lines="19-27"}
+```svelte {emphasize-lines="10-18"}
 <MapLayer
-  id="planetrees"
+  id="cherries"
   type="circle"
-  data={trees}
+  data={cherries}
   paint={{
-    'circle-color': '#2d6a4f',
-    'circle-radius': [
-      'interpolate', ['linear'], ['zoom'],
-      10, 1.5,
-      14, 4,
-      18, 8
-    ],
-    'circle-opacity': [
-      'interpolate', ['linear'], ['zoom'],
-      10, 0.4,
-      14, 0.8
-    ]
+    'circle-color': '#e08daa',
+    'circle-radius': 4,
+    'circle-stroke-color': '#8a2d52',
+    'circle-stroke-width': 0.5,
+    'circle-opacity': 0.85
   }}
   popup={(feature) => {
     const p = feature.properties;
     return `
-      <strong>${p.address || 'London planetree'}</strong><br>
-      Status: ${p.status || 'Unknown'}<br>
+      <strong>${p.address || 'Yoshino cherry'}</strong><br>
+      ${p.nta_name || ''}<br>
       Health: ${p.health || 'Not recorded'}<br>
       Trunk: ${p.tree_dbh ? p.tree_dbh + ' inches across' : 'Unknown'}
     `;
@@ -399,12 +332,12 @@ Add a `popup` function to your `MapLayer`:
 />
 ```
 
-Save. Zoom in on the map, then click one of the green dots. A popup should appear with the tree's address, status, health, and trunk diameter.
+Save. Click one of the pink dots. A popup should appear with the tree's address, neighborhood, health, and trunk diameter.
 
 <Screenshot
-  src="/screenshots/week-11/popup.png"
-  alt="A zoomed-in map view showing a cluster of green dots with a popup open over one, listing the tree's address, status as Alive, health as Good, and trunk diameter of 24 inches"
-  chromeTitle="Moses trees"
+  src="/screenshots/week-11/cherry-popup.png"
+  alt="A zoomed-in map showing a cluster of pink dots around Central Park's Reservoir, with a popup over one listing the tree's address on 5th Avenue, the NTA as 'Upper East Side-Carnegie Hill', health as 'Good', and a trunk diameter of 18 inches"
+  chromeTitle="The trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -417,320 +350,264 @@ It returns ordinary HTML as a string. That's why we use backtick [template liter
 
 And it gracefully handles missing data. Some trees in the census lack an address, some lack a health rating, some are stumps without a trunk diameter. The `||` fallbacks mean the popup never displays literal `undefined`. This kind of defensive formatting separates professional work from a prototype.
 
-## Part 7: Filtering the map
+That's all the point-map form has to teach us. A few thousand trees, one MapLayer, one popup template. Clean and direct. Now let's see what happens when the dataset gets bigger.
 
-Seventy thousand is too many to absorb at once. A good interactive map gives the reader tools to slice the data and find the story inside it.
+## Part 7: When the dataset is too big
 
-Our tree records have two fields that make great filters: `health` (a rating from Good to Poor, or nothing for dead or stump trees) and `tree_dbh` (trunk diameter in inches, which is a proxy for age).
+The Yoshino cherries were easy: a few thousand points, under a megabyte, no trouble at all for MapLibre to render.
 
-Let's add controls for both.
+The London planetree is a different animal. There are around 70,000 of them in the 2015 census. If we tried to plot every one as an individual dot:
 
-### The health filter
+- The file that ships to each reader's browser would be roughly 8 to 10 megabytes. On classroom Wi-Fi that's a two-second wait; on a fading cell connection at the back of a bus, it's a spinner the reader gives up on.
+- The browser would need to draw 70,000 shapes at once, which is doable but starts to stutter on older devices.
+- Most of those dots would overlap with their neighbors anyway, so the visual payoff would be a blobby green haze — not the thing a reader can click or parse.
 
-In `+page.svelte`, add a state variable for the selected health rating:
+When a dataset is too big to ship as individual points, you have a few options. You could sample — show only every tenth tree. You could cluster — let MapLibre group nearby trees into expandable dots. Or you could **aggregate**: summarize the data into a smaller unit of geography before it ever leaves your machine.
 
-```svelte {emphasize-lines="5"}
-let longitude = $state(-73.968);
-let latitude = $state(40.785);
-let zoom = $state(12);
+Gothamist aggregated their shootings data to census blocks. We're going to aggregate our planetree data to a different administrative unit: the **Neighborhood Tabulation Area**, or NTA. NYC's Department of City Planning created NTAs to approximate the neighborhoods most New Yorkers recognize — "Park Slope-Gowanus," "Astoria-Ditmars-Steinway," "Washington Heights North" — by grouping census tracts into medium-sized statistical geographies. There are 195 of them, compared to 666,000 trees. The compression ratio is immense.
 
-let healthFilter = $state('all');
-```
+The `planetrees-by-nta.geojson` file I posted in the class chat is the result of that aggregation. Every one of the 195 NTA polygons arrives with a London planetree count already baked into its properties — along with richer context we'll get to in a moment.
 
-Now create a `$derived` filtered version of the trees. It will be recalculated every time a filter changes, and passed to `MapLayer` instead of the raw data.
+Pop open your browser console again and inspect one of the NTA features:
 
 ```js
-let filteredTrees = $derived.by(() => {
-  const features = trees.features.filter((f) => {
-    if (healthFilter !== 'all' && f.properties.health !== healthFilter) return false;
-    return true;
-  });
-  return { type: 'FeatureCollection', features };
-});
+console.log(planetrees.features[0].properties);
 ```
 
-Note the `$derived.by(() => {...})` form. When you need a derived value that comes from a multi-step computation rather than a one-line expression, wrap the function body in `$derived.by`. The plain `$derived(expression)` form only works for a single expression.
+You should see a property bag that looks roughly like this:
 
-Swap the data prop on `MapLayer` to use the filtered set. Change the one line on your existing `<MapLayer>`:
-
-```svelte
-  data={trees}
+```js
+{
+  ntacode: "BK09",
+  ntaname: "Brooklyn Heights-Cobble Hill",
+  boroname: "Brooklyn",
+  total_all_species: 5431,
+  top_species: [
+    { name: "honeylocust", count: 892 },
+    { name: "London planetree", count: 734 },
+    { name: "pin oak", count: 612 },
+    { name: "Callery pear", count: 498 },
+    { name: "littleleaf linden", count: 389 }
+  ],
+  count_total: 734,
+  count_good: 521,
+  count_fair: 176,
+  count_poor: 37,
+  count_small: 42,
+  count_medium: 312,
+  count_large: 380,
+  rank: 2
+}
 ```
 
-To read:
+Pause and absorb what's in there. Each NTA carries not just a single London planetree count but a whole dossier: how many total street trees it has of all species, the five most common species in rank order, and several pre-computed slices of its planetree population by health and by trunk size. The `rank` field is especially interesting — it's where the London planetree sits in the species leaderboard of this NTA. A `1` means Moses's tree wins here. A `2` or `3` means something else is in front.
+
+This is what it looks like to pre-compute your story. A raw 70,000-tree dataset got squeezed into 195 feature-rich polygons before it ever touched the wire.
+
+## Part 8: Painting a choropleth
+
+Now let's get that data on the map.
+
+A [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map) shades each region of a map by a numeric value. We're going to shade each NTA by its London planetree count.
+
+In `+page.svelte`, add a second `MapLayer` inside your `<Map>` block, right next to the cherry layer. Use MapLibre's [`interpolate`](https://maplibre.org/maplibre-style-spec/expressions/#interpolate) expression to translate the `count_total` property into a color gradient:
 
 ```svelte
-  data={filteredTrees}
+<MapLayer
+  id="nta-fill"
+  type="fill"
+  data={planetrees}
+  paint={{
+    'fill-color': [
+      'interpolate', ['linear'], ['get', 'count_total'],
+      0, '#f0f7f4',
+      250, '#95d5b2',
+      1000, '#40916c',
+      3000, '#1b4332'
+    ],
+    'fill-opacity': 0.7
+  }}
+/>
+<MapLayer
+  id="nta-outline"
+  type="line"
+  data={planetrees}
+  paint={{
+    'line-color': '#1b4332',
+    'line-width': 0.5
+  }}
+/>
 ```
 
-Leave every other prop on `MapLayer` alone.
+Reading the fill-color expression out loud: *interpolate linearly by the `count_total` property of each polygon. At 0 trees, use nearly-white. At 250 trees, a light green. At 1000, a medium green. At 3000 or more, a deep forest green.* MapLibre smooths between the stops automatically.
 
-And add a dropdown above the map:
+Save. The city fills with varying shades of green, and you'll also see the pink cherry dots sitting on top. Two layers, composed on one map.
+
+<Screenshot
+  src="/screenshots/week-11/choropleth-and-cherries.png"
+  alt="A map of NYC with community neighborhoods shaded from pale green to dark forest green by London planetree count, with pink cherry dots visible on top, clustered around Central Park"
+  chromeTitle="The trees of New York"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+You're now looking at Moses's New York. The darkest polygons are the NTAs where his tree is thickest on the ground — along the Upper East Side, through brownstone Brooklyn, ribboning out into Queens along the old parkways. The lightest polygons are the places his planting campaign never fully reached: the outermost edges of the city, the industrial corners, some of the newer developments.
+
+Let's make those polygons clickable. Add a `popup` to the fill layer that tells the reader what they're looking at:
+
+```svelte {emphasize-lines="11-24"}
+<MapLayer
+  id="nta-fill"
+  type="fill"
+  data={planetrees}
+  paint={{
+    'fill-color': [
+      'interpolate', ['linear'], ['get', 'count_total'],
+      0, '#f0f7f4', 250, '#95d5b2',
+      1000, '#40916c', 3000, '#1b4332'
+    ],
+    'fill-opacity': 0.7
+  }}
+  popup={(feature) => {
+    const p = feature.properties;
+    const rankLine = p.rank === 1
+      ? `<strong>#1 species in this neighborhood</strong>`
+      : `London planetree ranks #${p.rank} — top species is ${p.top_species[0].name} (${p.top_species[0].count.toLocaleString()})`;
+    return `
+      <strong>${p.ntaname}</strong><br>
+      ${p.count_total.toLocaleString()} London planetrees<br>
+      ${rankLine}<br>
+      <em>${p.count_good.toLocaleString()} Good · ${p.count_fair.toLocaleString()} Fair · ${p.count_poor.toLocaleString()} Poor</em>
+    `;
+  }}
+/>
+```
+
+Save and click around. Each NTA now tells you three things: how many London planetrees it holds, where that tree ranks among all species growing there, and how those planetrees are faring healthwise.
+
+<Screenshot
+  src="/screenshots/week-11/nta-popup.png"
+  alt="A popup over a Brooklyn NTA reading 'Bedford-Stuyvesant (West): 1,847 London planetrees, London planetree ranks #2 — top species is honeylocust (2,104), and a health breakdown of 1,312 Good · 421 Fair · 114 Poor'"
+  chromeTitle="The trees of New York"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+That `rank` field is where the story gets interesting. Flick around the map and find the NTAs where Moses's tree is *not* #1. Some of the outer-borough neighborhoods — parts of Staten Island, corners of Eastern Queens — show honeylocust or pin oak as the champion instead, with the planetree trailing at #3 or #4. You are looking at the limits of one man's reach.
+
+## Part 9: Switching what the choropleth reveals
+
+Our choropleth colors every NTA by its total London planetree count. But the data file has other slices baked in — `count_good`, `count_fair`, `count_poor`, plus three buckets by trunk size. Each slice tells a different story.
+
+Let's let the reader switch between them.
+
+Add a state variable for the active slice and a dropdown that sets it:
 
 ```svelte
+<script>
+  // ...existing imports and state...
+  let colorBy = $state('count_total');
+</script>
+
+<!-- Somewhere above the map: -->
 <label class="filter">
-  Health:
-  <select bind:value={healthFilter}>
-    <option value="all">All</option>
-    <option value="Good">Good</option>
-    <option value="Fair">Fair</option>
-    <option value="Poor">Poor</option>
+  Color neighborhoods by:
+  <select bind:value={colorBy}>
+    <option value="count_total">Total London planetrees</option>
+    <option value="count_good">Good-health only</option>
+    <option value="count_fair">Fair-health only</option>
+    <option value="count_poor">Poor-health only</option>
+    <option value="count_large">Large trunks (30″+)</option>
+    <option value="count_medium">Medium trunks (10–29″)</option>
+    <option value="count_small">Small trunks (under 10″)</option>
   </select>
 </label>
 ```
 
-Save and try it. Pick "Poor" from the dropdown and watch the map collapse to a sparse scattering of sick trees. Pick "Good" and it fills back in.
+Now derive a `paint` object that references the selected property:
 
-<Screenshot
-  src="/screenshots/week-11/health-filter.png"
-  alt="The map showing only London planetrees rated as Poor health, with far fewer dots visible, concentrated in parts of Queens and the Bronx"
-  chromeTitle="Moses trees"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-This is the same reactive pattern you've used all semester — `$state` tracks the input, `$derived.by` recomputes, the UI updates. The only new part is that instead of filtering a list of HTML cards, we're filtering a layer on a map.
-
-### The diameter filter
-
-Trunk diameter is a rough proxy for age. A London planetree with a trunk over 30 inches across was very likely planted during Moses's tenure, seventy or eighty years ago. A trunk under 10 inches is a younger tree, planted by a later administration. Slicing on diameter lets the reader separate the old guard from the new growth.
-
-Add a second state variable and a slider that controls the minimum diameter:
-
-```svelte {emphasize-lines="2,12-17"}
-let healthFilter = $state('all');
-let minDiameter = $state(0);
-```
-
-Extend the filter to respect it:
-
-```js {emphasize-lines="4"}
-let filteredTrees = $derived.by(() => {
-  const features = trees.features.filter((f) => {
-    if (healthFilter !== 'all' && f.properties.health !== healthFilter) return false;
-    if (f.properties.tree_dbh < minDiameter) return false;
-    return true;
-  });
-  return { type: 'FeatureCollection', features };
+```js
+let fillPaint = $derived({
+  'fill-color': [
+    'interpolate', ['linear'], ['get', colorBy],
+    0, '#f0f7f4',
+    50, '#95d5b2',
+    250, '#40916c',
+    1000, '#1b4332'
+  ],
+  'fill-opacity': 0.7
 });
 ```
 
-Add the slider control to the markup:
+And pass that derived paint object to the fill layer instead of the inline version:
 
-```svelte
-<label class="filter">
-  Minimum trunk size: {minDiameter} inches
-  <input type="range" bind:value={minDiameter} min="0" max="60" step="1">
-</label>
+```svelte {emphasize-lines="4"}
+<MapLayer
+  id="nta-fill"
+  type="fill"
+  paint={fillPaint}
+  data={planetrees}
+  popup={/* same as before */}
+/>
 ```
 
-Save and drag the slider to 30. Most of the dots disappear. What remains is the living ghost of Moses's mid-century planting campaign — the trees he personally ordered into the ground, still shading the streets they were planted on.
+Save and try the dropdown. Switch to "Poor-health only" and watch the map re-color around the neighborhoods carrying the highest count of struggling planetrees — which, in theory, could correlate with heat, soil compaction, or neglect. Switch to "Large trunks" and you'll see the NTAs where Moses's original mid-century plantings still dominate, versus places where the canopy has been turned over.
 
 <Screenshot
-  src="/screenshots/week-11/big-trees-only.png"
-  alt="The map showing only London planetrees with trunk diameters of 30 inches or more, revealing Moses's original planting corridors along the parkways and the edges of his parks"
-  chromeTitle="Moses trees"
+  src="/screenshots/week-11/color-by-large.png"
+  alt="The map re-colored to show only London planetrees with trunk diameters of 30 inches or more, revealing Moses's mid-century planting corridors concentrated along Riverside Drive, Ocean Parkway, and the grand boulevards of the Bronx"
+  chromeTitle="The trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-That's a good map. That's journalism.
+Take a moment to notice what just happened. We changed **one reactive variable** — `colorBy` — and the map re-colored itself across 195 polygons. No imperative redraw calls, no manual event listeners. Svelte saw that the `paint` prop of the `MapLayer` depended on `colorBy`, and `MapLayer` saw that its own paint had changed, and MapLibre saw that the layer's style had changed. Every piece of the stack held up its end of the reactive contract.
 
-## Part 8: Showing the count
+Worth noting what you *cannot* do with this approach, because the tradeoff matters editorially. The choropleth can only show slices that were pre-computed into the data file. We could not, at runtime, ask "shade by poor-health planetrees that are also large-trunked." We'd have to go back to the Python that produced this file, add a `count_poor_large` property, regenerate, and redeploy. For many graphics projects, that's fine — the fixed menu is the whole story. For others you'd keep the raw data and aggregate in the browser. Always worth knowing which side of that line you're on before you start.
 
-Let the reader see how many trees they're looking at. Add a derived count:
+## Part 10: Editorial framing and sources
 
-```js
-let count = $derived(filteredTrees.features.length);
-```
+Two maps on one page, and nothing yet explains what the reader is looking at or where any of it came from. Let's fix that.
 
-And print it above the map:
+Replace the bare `<h1>` with a proper framing, and add a source credit at the bottom:
 
 ```svelte
-<p class="count">
-  {count.toLocaleString()} of {trees.features.length.toLocaleString()} London planetrees match your filters
-</p>
-```
-
-The [`toLocaleString()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString) method adds the commas — `71248` becomes `71,248`. A small detail that separates a working page from a polished one.
-
-Toggle your filters and watch the number update instantly.
-
-## Part 9: Editorial framing
-
-The map works, but it doesn't yet *say* anything. Every good piece of interactive journalism tells the reader what they're looking at and why it matters. Let's add a proper framing.
-
-Replace the bare `<h1>Moses trees</h1>` with a fuller header:
-
-```svelte
-<h1>Moses trees</h1>
+<h1>The trees of New York</h1>
 
 <p class="dek">
-  Robert Moses planted the London planetree along every parkway and
-  in every park he built. Seven decades later, his favorite tree is
-  still the most common street tree in New York. Search your
-  neighborhood and see how many Moses left you.
+  In 1912, Japan gifted New York several thousand ornamental cherry trees.
+  In 1934, Robert Moses took over the Parks department and began planting
+  his favorite tree, the London planetree, along every parkway he built.
+  More than a century later, both men's preferences still shape the canopy
+  of the five boroughs. Find yours on the map.
 </p>
-```
 
-And at the bottom, add a source credit and methodology note:
+<!-- Geocoder, filters, and map go here -->
 
-```svelte
 <footer class="source">
   <p>
     Source: NYC Parks
     <a href="https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh" target="_blank">2015 Street Tree Census</a>,
-    via NYC Open Data. Address geocoding by
+    via NYC Open Data.
+    Neighborhood boundaries from the
+    <a href="https://data.cityofnewyork.us/City-Government/2010-Neighborhood-Tabulation-Areas-NTAs-/cpf4-rkhq" target="_blank">2010 NTA dataset</a>.
+    Address geocoding by
     <a href="https://nominatim.openstreetmap.org/" target="_blank">Nominatim</a>.
     Basemap tiles by <a href="https://openfreemap.org/" target="_blank">OpenFreeMap</a>.
   </p>
   <p>
     The 2015 census is the most recent complete inventory of New York's
-    street trees. Some trees have been removed or replaced since,
-    and new ones have been planted. This map is a snapshot of what
-    volunteers mapped a decade ago, not a live registry.
+    street trees. Some have been removed or replaced since, and new trees
+    have been planted. This map is a snapshot of what volunteers recorded
+    a decade ago, not a live registry. Species counts per neighborhood
+    were pre-computed from the raw census; filters showing different
+    slices rely on those pre-computed values, not on ad-hoc queries
+    against the full dataset.
   </p>
 </footer>
 ```
 
-That second paragraph is the data caveat. It tells the reader the limitations of what they're looking at. This kind of honesty is what separates data journalism from data decoration. Never publish a map without it.
-
-## Part 10: A choropleth view
-
-The dot map is powerful, but it is only one way to read this data. A reader looking at 70,000 individual points might miss the broader geography — which *neighborhoods* carry the most Moses trees? Which districts have been short-changed?
-
-A [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map) answers that question directly. It divides the city into regions — in our case, the 59 community districts — and shades each region by a count or rate. It is the same technique Gothamist used at the start of the lesson. Only the subject and the granularity differ.
-
-### Aggregating the data
-
-Our community district GeoJSON has the polygons but no tree counts. We need to compute them in JavaScript, respecting whatever filters the reader has active.
-
-Add another `$derived.by` that copies the districts GeoJSON and attaches a count to each district:
-
-```js
-let districtData = $derived.by(() => {
-  // Count filtered trees per community district.
-  const counts = {};
-  for (const feature of filteredTrees.features) {
-    const cb = feature.properties.cb_num;
-    if (!cb) continue;
-    counts[cb] = (counts[cb] || 0) + 1;
-  }
-
-  // Deep-copy the district polygons and attach the counts.
-  const enriched = JSON.parse(JSON.stringify(districts));
-  for (const feature of enriched.features) {
-    const cb = feature.properties.boro_cd;
-    feature.properties.count = counts[cb] || 0;
-  }
-  return enriched;
-});
-```
-
-Two things are worth a pause here. The `JSON.parse(JSON.stringify(...))` is a quick-and-dirty way to deep-copy a JavaScript object. It's not fast, but for 59 district polygons it's plenty fast enough, and it means our mutations don't corrupt the original `districts` data. And the join key on the tree side (`cb_num`) matches the join key on the district side (`boro_cd`) — both are formatted as a three-digit BoroCD like `101` for Manhattan Community District 1, `303` for Brooklyn Community District 3, and so on. If you ever see zero counts everywhere, that's your signal that the keys don't match and you need to console-log both sides to see what shape they actually take.
-
-### Adding a second MapLayer
-
-Because the prefab `Map` can accept any number of children, we can simply add a second `MapLayer` underneath the first. But we want them to be toggleable, not both visible at once. Add a state variable for the view mode:
-
-```js
-let viewMode = $state('dots');
-```
-
-Add a toggle control above the map:
-
-```svelte
-<div class="view-toggle">
-  <button
-    class:active={viewMode === 'dots'}
-    onclick={() => viewMode = 'dots'}
-  >Individual trees</button>
-  <button
-    class:active={viewMode === 'choropleth'}
-    onclick={() => viewMode = 'choropleth'}
-  >By community district</button>
-</div>
-```
-
-And swap the `MapLayer` with an `{#if}` block:
-
-```svelte
-<Map {longitude} {latitude} {zoom} theme="positron">
-  {#if viewMode === 'dots'}
-    <MapLayer
-      id="planetrees"
-      type="circle"
-      data={filteredTrees}
-      paint={{
-        'circle-color': '#2d6a4f',
-        'circle-radius': [
-          'interpolate', ['linear'], ['zoom'],
-          10, 1.5, 14, 4, 18, 8
-        ],
-        'circle-opacity': [
-          'interpolate', ['linear'], ['zoom'],
-          10, 0.4, 14, 0.8
-        ]
-      }}
-      popup={(feature) => {
-        const p = feature.properties;
-        return `
-          <strong>${p.address || 'London planetree'}</strong><br>
-          Status: ${p.status || 'Unknown'}<br>
-          Health: ${p.health || 'Not recorded'}<br>
-          Trunk: ${p.tree_dbh ? p.tree_dbh + ' inches across' : 'Unknown'}
-        `;
-      }}
-    />
-  {:else}
-    <MapLayer
-      id="districts-fill"
-      type="fill"
-      data={districtData}
-      paint={{
-        'fill-color': [
-          'interpolate', ['linear'], ['get', 'count'],
-          0, '#f0f7f4',
-          500, '#95d5b2',
-          2000, '#40916c',
-          5000, '#1b4332'
-        ],
-        'fill-opacity': 0.8
-      }}
-      popup={(feature) => {
-        const p = feature.properties;
-        return `
-          <strong>Community District ${p.boro_cd}</strong><br>
-          ${p.count.toLocaleString()} London planetrees
-        `;
-      }}
-    />
-    <MapLayer
-      id="districts-outline"
-      type="line"
-      data={districtData}
-      paint={{
-        'line-color': '#1b4332',
-        'line-width': 0.5
-      }}
-    />
-  {/if}
-</Map>
-```
-
-Save and click the "By community district" toggle. The individual dots disappear and the city fills with shaded polygons. The darker a district, the more Moses trees it holds. Click any district and a popup shows its exact count.
-
-<Screenshot
-  src="/screenshots/week-11/choropleth.png"
-  alt="A choropleth map of NYC's 59 community districts shaded in green, with darker shades concentrated in the Upper East Side, Upper West Side, and Park Slope, indicating the highest concentrations of London planetrees"
-  chromeTitle="Moses trees"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-Flip back and forth between the two views. Each tells a different story. The dots show you Moses's exact corridors — you can read the shape of his old parkways from the map. The choropleth shows you the bigger picture — which districts got the canopy, and which got left behind. Neither view is more true than the other. Offering both lets the reader choose the lens that answers their question.
-
-The filters still work. Drag the diameter slider while viewing the choropleth and watch the counts shift — the districts that retain the most original Moses trees are not always the same as the districts with the most London planetrees overall.
+That second paragraph is the methodology note. It tells the reader two important things: how old the underlying census is, and what the pre-aggregation approach gives up. The first caveat is journalism ethics — you're being honest about the vintage of your data. The second is a technical caveat that earns you trust with technically literate readers, who now know exactly how to critique or extend your analysis. Never publish a data-driven map without both kinds of honesty.
 
 ## Part 11: Going further with AI
 
@@ -738,37 +615,36 @@ What we built today is a foundation. There is a lot more you could do with it, a
 
 Try asking Copilot to:
 
-- Color the dots by health status: green for Good, yellow for Fair, red for Poor.
-- Add a second filter for borough, as a dropdown.
-- Add a color legend to the choropleth explaining what the shades mean.
-- Add a third view mode that clusters dots into groups that expand when you zoom in.
-- Replace the dropdown and slider with a single search that lets readers type a cross-street, snap the map to it, and list the five nearest Moses trees below.
+- Color the cherry dots differently based on their health rating.
+- Add a third map view: cluster the cherry points into expandable groups so you can see their citywide density without 2,000 individual dots.
+- Replace the dropdown with a ranked list of NTAs by whatever the current slice is — so the reader can jump straight to "top 10 neighborhoods for large-trunk planetrees."
+- Add a sparkline to the NTA popup showing how that neighborhood's London planetree rank has changed across the 1995, 2005, and 2015 censuses.
+- Make the two layers toggleable with a checkbox, so readers can show just the cherries, just the choropleth, or both.
 
 MapLibre is a big library and its documentation is dense. This is exactly the kind of situation where a coding assistant shines. You describe the editorial intent; it translates that into the right API calls. Just remember to test each change and read the resulting code — if your assistant reaches for a pattern you don't understand, ask it to explain before you commit.
 
 ## Homework
 
-### Task 1: Build your own interactive map
+### Task 1: Build your own two-view map
 
-Find a dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/) or another public source that includes latitude and longitude. Build an interactive map for it.
+Find a point dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/) or another public source that includes latitude and longitude. Build a page with two map views of it: a point map for the raw records, and an aggregated view for a broader pattern.
 
 Your project must have:
 
-- A `Map` component with real data plotted from your chosen dataset
-- At least one `MapLayer` with a `popup` template
-- At least one filter or interactive control that uses `$state` and `$derived.by`
-- A `Geocoder` to let readers navigate to their own neighborhood
+- A `Map` component with data plotted from your chosen dataset
+- A `Geocoder` for navigation
+- At least one point-data `MapLayer` with a `popup` template
+- At least one aggregated `MapLayer` (you may pre-aggregate in Python, or aggregate in the browser using `$derived.by`)
+- An interactive control (dropdown, checkbox, or slider) that changes what the map shows
 - An editorial frame: a headline, an introductory paragraph, and a source credit with a methodology caveat
 
 Some datasets that could work well:
 
-- NYC Film Permits (the industry's footprint on your block)
-- Community Gardens (where the city grows food)
-- FDNY Response Times (emergency service equity)
-- 311 Noise Complaints (what New York complains about)
-- Street Trees, a different species (honeylocust? callery pear?)
-- Restaurant Inspections (letter grades by neighborhood)
-- Motor Vehicle Crashes (Vision Zero)
+- NYC Film Permits (aggregate by neighborhood)
+- Motor Vehicle Crashes (points for individual incidents, choropleth for totals)
+- 311 Noise Complaints from the past month (points for specific complaints, choropleth for volume)
+- Restaurant Inspections (points for individual restaurants, choropleth for grade distribution)
+- A different tree species from the same census (Callery pear has an invasive-tree angle; ginkgo has the stinky-female-tree angle)
 
 Deploy to GitHub Pages and send me the link.
 
@@ -777,12 +653,12 @@ Deploy to GitHub Pages and send me the link.
 Be ready to walk the class through your map and explain:
 
 - The dataset you chose and what story the geography tells
-- How you connected Svelte's reactive state to MapLibre through the `MapLayer` component
-- At least one editorial choice you made about what to show and what to leave out — and why
+- Why you chose to aggregate what you aggregated, and what the tradeoffs were
+- At least one editorial decision you made about what to show and what to leave out — and why
 - Anything you got from an AI assistant that you had to modify or rewrite yourself
 
 ### Task 3: Look at it on your phone
 
-Before you present, open your live site on your phone. Does the map fill the screen? Do the filter controls stack cleanly? Can you tap a dot with your thumb?
+Before you present, open your live site on your phone. Does the map fill the screen? Do the controls stack cleanly? Can you tap a polygon with your thumb?
 
 Most readers of most interactive news maps will encounter them on a phone. A map that only works on a laptop is a map that fails most of its readers. Fix anything that isn't working before next class.
