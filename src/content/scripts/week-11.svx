@@ -11,27 +11,36 @@ locked: true
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
-In the summer of 2024, reporters at Gothamist pulled the NYPD's public database of shooting incidents and noticed something striking. The same blocks turned up again and again, year after year.
+In the summer of 2024, reporters at Gothamist published ["NYPD data shows most shootings occur on the same blocks, year after year"](https://gothamist.com/news/hot-spots-nypd-data-shows-most-shootings-occur-on-the-same-blocks-year-after-year), a data-driven investigation into gun violence in New York City.
 
-They built an interactive map to show what they found.
+The analysis, by reporters Brittany Kriegstein and Jaclyn Jeffrey-Wilensky, showed that shooting incidents were not, as some might assume, a widespread problem.
+
+<Screenshot
+  src="/screenshots/week-11/gothamist-story.png"
+  alt="Gothamist's 'Hot spots: NYPD data shows most shootings occur on the same blocks, year after year' story page"
+  chromeTitle="Hot spots: NYPD data shows most shootings occur on the same blocks, year after year"
+  chromeUrl="https://gothamist.com/news/hot-spots-nypd-data-shows-most-shootings-occur-on-the-same-blocks-year-after-year"
+  maxWidth="960px"
+/>
+
+Instead, by downloading and mapping the data published to [the city's open data portal](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8/data_preview), they found that gunfire was concentrated in a small number of areas, with nine blocks accounting for a massive share of shootings.
+
+"Just 4% of New York City’s 120,000 blocks account for nearly all of the city’s shootings," the story reported. "Life even two or three blocks away from these nine hot spots can be dramatically different, with less violence, fewer crimes and residents who say they feel relatively safe."
+
+Alongside the story, Gothamist published [an interactive map](https://gothamist.com/news/new-york-city-gun-violence-map) that allowed readers to see their findings and explore the data for themselves. It shaded in every Census block in the five boroughs by how many shooting incidents the NYPD recorded there over the previous four years.
 
 <Screenshot
   src="/screenshots/week-11/gothamist-gun-violence.png"
   alt="Gothamist's 'Map: Where New York City's shootings happen' showing a map of the five boroughs shaded by census block, with the darkest blocks concentrated in parts of the Bronx, Brooklyn, and Harlem"
   chromeTitle="Map: Where New York City's shootings happen"
   chromeUrl="https://gothamist.com/news/new-york-city-gun-violence-map"
-  maxWidth="960px"
 />
 
-The map shades every census block in the five boroughs by how many shooting incidents the NYPD recorded there since 2020. The pattern it reveals — gun violence concentrating on a small number of blocks, mostly surrounding NYCHA developments — became the spine of a companion investigation.
+Their work follows a common model for data journalism: Mapping a dataset to reveal patterns and steer reporting, then publishing an interactive version to let readers to places themselves in the story, regardless of where they live.
 
-One thing to notice in the Gothamist map is what it does *not* show. There are no individual dots. Every incident is aggregated to its census block, so the reader sees the pattern without being pointed at a specific address. That was a choice. Individual points would have been more dramatic, but they would also have stigmatized specific doorsteps and sidewalks where real people live. The editors traded visual punch for more responsible journalism.
+Today you are going to learn how to do just that. We'll cover how to plot points, shade areas and invite users to interact with the data.
 
-Notice, too, that the choice of aggregation is not only an ethical decision but also a technical one. Plotting every shooting as an individual dot on a web map is harder than it sounds when the dataset is large; aggregating to a polygon is often simpler, smaller, and faster.
-
-Today you are going to build an interactive map that does both. You'll start with individual points — a small, delightful dataset. Then you'll swap over to an aggregated view — a much larger dataset summarized by neighborhood. One page, two maps, two techniques. You'll see when each one is the right tool.
-
-Our subject is not gun violence. It's trees.
+Like Gothamist, our source will be the New York City data portal. But instead of crime, we'll be mapping the city's massive population of trees.
 
 ## Part 1: Two lists of trees
 
@@ -81,7 +90,7 @@ npm install maplibre-gl
 
 This is the first time we've added a dependency beyond what the template ships with. Before, `npm install` was pulling down whatever the template's `package.json` declared. Now we are asking npm to add something new to that list. If you open `package.json` you should see `maplibre-gl` there now. When a classmate clones your repository later and runs `npm install`, they'll get MapLibre automatically.
 
-Now grab the data. I've posted two files in the class chat: `great-trees.geojson` and `planetrees-by-nta.geojson`. Download them and drop both into your project's `static/` folder.
+Now grab the data. I've posted two files in the class chat: `great-trees.json` and `planetrees-by-nta.json`. Create a `src/lib/data/` folder in your project and drop both files in there. GeoJSON is valid JSON, so we're saving them with a `.json` extension to let Vite import them directly.
 
 Start the development server:
 
@@ -207,28 +216,15 @@ So far our map is empty. Let's change that. We'll start with the smaller of our 
 
 ### Load the data
 
-This is the first data-loaded page we've built this week, and we're going to use a pattern that is now familiar to you: the [`+page.js`](https://svelte.dev/docs/kit/routing#page-page-js) load function we introduced in [week five](/docs/coding-the-news/scripts/week-5). That file runs before the page renders, fetches whatever data the page needs, and hands it to `+page.svelte` as a prop. Every dataset-driven page we've built since has followed this shape, and this one is no different.
+Because the data file lives inside your project, you can import it directly. Vite will bake it into the build as a plain JavaScript object — no network request, no loading state, no `+page.js`. The data is just *there* when the page renders.
 
-Create a new file at `src/routes/+page.js`:
+Update the `<script>` block in `+page.svelte` to import the file:
 
-```js
-export async function load({ fetch }) {
-  const greatTrees = await fetch('/great-trees.geojson').then((r) => r.json());
-  return { greatTrees };
-}
-```
-
-The `fetch` function passed in by SvelteKit is a smarter version of the browser's built-in `fetch` — it works at build time as well as at runtime, so your static site gets the data baked in.
-
-Now update the `<script>` block in `+page.svelte` to receive the loaded data:
-
-```svelte {emphasize-lines="5-6"}
+```svelte {emphasize-lines="4"}
 <script>
   import Map from '$lib/components/Map.svelte';
   import Geocoder from '$lib/components/Geocoder.svelte';
-
-  let { data } = $props();
-  const greatTrees = data.greatTrees;
+  import greatTrees from '$lib/data/great-trees.json';
 
   let longitude = $state(-73.968);
   let latitude = $state(40.785);
@@ -367,22 +363,11 @@ The `planetrees-by-nta.geojson` file I posted in the class chat is the result of
 
 ### Load the second file
 
-Update your `+page.js` to fetch the NTA file alongside the Great Trees:
+Add a second import in `+page.svelte` alongside the Great Trees:
 
-```js {emphasize-lines="3,4"}
-export async function load({ fetch }) {
-  const greatTrees = await fetch('/great-trees.geojson').then((r) => r.json());
-  const planetrees = await fetch('/planetrees-by-nta.geojson').then((r) => r.json());
-  return { greatTrees, planetrees };
-}
-```
-
-And pull it out of the `data` prop in `+page.svelte`:
-
-```svelte {emphasize-lines="3"}
-let { data } = $props();
-const greatTrees = data.greatTrees;
-const planetrees = data.planetrees;
+```svelte {emphasize-lines="2"}
+import greatTrees from '$lib/data/great-trees.json';
+import planetrees from '$lib/data/planetrees-by-nta.json';
 ```
 
 Pop open your browser console and inspect one of the NTA features:
@@ -425,7 +410,7 @@ Now you can see the contrast between our two data files. Roughly a hundred and t
 
 ### Swap the layer
 
-Remove the Great Tree `MapLayer` from inside your `<Map>` block. Don't worry — it's not gone forever. We'll talk about how to bring it back at the end of class.
+Remove the Great Tree `MapLayer` from inside your `<Map>` block, and delete the matching `import greatTrees` line at the top of the script. Don't worry — it's not gone forever. We'll talk about how to bring it back at the end of class.
 
 In its place, add two new `MapLayer`s: one that fills each NTA with a color based on its London planetree count, and one that draws the outlines between them.
 
@@ -537,7 +522,7 @@ Add a state variable for the active slice and a dropdown that sets it:
 </script>
 
 <!-- Somewhere above the map: -->
-<label class="filter">
+<label>
   Color neighborhoods by:
   <select bind:value={colorBy}>
     <option value="count_total">Total London planetrees</option>
@@ -601,7 +586,7 @@ Replace the bare `<h1>` with a proper framing, and add a source credit at the bo
 ```svelte
 <h1>The trees of New York</h1>
 
-<p class="dek">
+<p>
   In 1985, NYC Parks asked New Yorkers to nominate the trees in their
   neighborhoods that mattered. The agency returned to the list in
   October 2024 and named 120 of them — the Great Trees of New York.
@@ -614,7 +599,7 @@ Replace the bare `<h1>` with a proper framing, and add a source credit at the bo
 
 <!-- Geocoder, filters, and map go here -->
 
-<footer class="source">
+<footer>
   <p>
     Sources: NYC Parks'
     <a href="https://www.nycgovparks.org/facilities/great-trees" target="_blank">Great Trees of New York City</a>
@@ -638,22 +623,6 @@ Replace the bare `<h1>` with a proper framing, and add a source credit at the bo
   </p>
 </footer>
 ```
-
-That second paragraph is the methodology note. It tells the reader two important things: how old the underlying census is, and what the pre-aggregation approach gives up. The first caveat is journalism ethics — you're being honest about the vintage of your data. The second is a technical caveat that earns you trust with technically literate readers, who now know exactly how to critique or extend your analysis. Never publish a data-driven map without both kinds of honesty.
-
-## Part 7: Going further with AI
-
-What we built today is a foundation. There is a lot more you could do with it, and this is a good moment to put your AI assistant to work.
-
-Try asking Copilot to:
-
-- Color the Great Tree dots differently by borough, so readers can see the geographic distribution at a glance.
-- Add a "Random Great Tree" button that flies the map to a randomly chosen one and opens its popup, so readers can discover trees they'd otherwise miss.
-- Replace the dropdown with a ranked list of NTAs by whatever the current slice is — so the reader can jump straight to "top 10 neighborhoods for large-trunk planetrees."
-- Add a sparkline to the NTA popup showing how that neighborhood's London planetree rank has changed across the 1995, 2005, and 2015 censuses.
-- Bring the amber Great Tree dots back on top of the choropleth, and add a checkbox that lets the reader toggle them on or off. The Great Trees layer is still in your git history — you removed it from the page in Part 5, but the `MapLayer` code is one scroll back in your source control.
-
-MapLibre is a big library and its documentation is dense. This is exactly the kind of situation where a coding assistant shines. You describe the editorial intent; it translates that into the right API calls. Just remember to test each change and read the resulting code — if your assistant reaches for a pattern you don't understand, ask it to explain before you commit.
 
 ## Homework
 
