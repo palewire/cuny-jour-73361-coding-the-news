@@ -9,6 +9,7 @@ locked: true
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
+  import { get } from 'node:http';
 </script>
 
 In the summer of 2024, reporters at Gothamist published ["NYPD data shows most shootings occur on the same blocks, year after year"](https://gothamist.com/news/hot-spots-nypd-data-shows-most-shootings-occur-on-the-same-blocks-year-after-year), a data-driven investigation into gun violence in New York City.
@@ -144,15 +145,7 @@ Play with it a little. Drag the map around. Zoom in and out with the scroll whee
 
 ## Part 2: Putting points on the map
 
-Our map has geography, but no story. Let's give it one.
-
-### The Great Trees of New York City
-
-In 1985, NYC Parks put out a call for nominations: send us the trees in your neighborhood that matter. Volunteers and arborists from every borough wrote in with their candidates — trees of unusual size, rare species, strange form, or deep historical association. The department chose 120 of them and called them **the Great Trees of New York City**.
-
-Nearly forty years later, Parks ran the search again and updated the list: 59 of the original trees were still standing, and the committee added 61 new ones from 270 public nominations. The full roster today is 120 named, story-rich trees across the five boroughs. It includes the Camperdown elm south of the Prospect Park Boathouse, a tree Marianne Moore wrote a poem to help save in the 1960s. It includes the two American beeches at Maple Grove Cemetery in Queens that shade the grave of Jacob Riis's wife. And it includes an American sycamore behind the Conference House at the southern tip of Staten Island, the colonial-era building where British envoys met with John Adams and Ben Franklin in 1776. Each one is a small piece of New York history, kept alive because someone noticed.
-
-Every tree has its own entry on the [NYC Parks website](https://www.nycgovparks.org/facilities/great-trees) — species, location, description, and often a photograph.
+In 1985, the New York City Parks Department began an ambitious new venture. They called it the Great Tree Search, where the agency called on the public to nominate "trees of unusual size, species, form or historical association." Volunteers from all five boroughs wrote in with trees of unusual size, rare species, strange form, or deep historical association.
 
 <Screenshot
   src="/screenshots/week-11/nyc-parks-great-trees.png"
@@ -162,151 +155,178 @@ Every tree has its own entry on the [NYC Parks website](https://www.nycgovparks.
   maxWidth="960px"
 />
 
-I scraped those entries into a single GeoJSON file and hosted it for you. You can find it at:
+Forty years later, an update roster listed 199 noteworthy trees, each a small piece of New York history.
 
-```
-https://palewi.re/data/nyc-trees/great-trees.geojson
-```
+I scraped those entries from the city website and converted them the format prefered by MapLibre: GeoJSON.
 
-Open it in a new browser tab if you want to see the raw data.
+[GeoJSON](https://geojson.org/) is a standard format for encoding geographic data. It looks like regular JSON, but with a specific structure: a `FeatureCollection` containing `Feature` objects, each with `properties` and `geometry` that describe what the thing is and where it sits on the map.
 
-### A quick word on GeoJSON
-
-[GeoJSON](https://geojson.org/) is a standard format for encoding geographic data. It looks like regular JSON, but with a specific structure: a `FeatureCollection` containing `Feature` objects, each with a `properties` bag (the data about the thing) and a `geometry` (where the thing is). Here's a simplified version of one tree:
+Here's one example from the file:
 
 ```json
 {
   "type": "Feature",
-  "properties": {
-    "id": 12,
-    "species": "Camperdown elm",
-    "description": "South of the Prospect Park Boathouse"
-  },
   "geometry": {
     "type": "Point",
-    "coordinates": [-73.9697, 40.6648]
+    "coordinates": [-73.9843, 40.7342]
+  },
+  "properties": {
+    "id": 34,
+    "species": "English elm",
+    "description": "Western gate of Stuyvesant Square Park",
+    "image": "https://www.nycgovparks.org/images/facilities/uploads/small/54dd2a39155b4.jpg"
   }
 }
 ```
 
-Two things to notice. First, the coordinates are `[longitude, latitude]` — the opposite of how most people write them. Swapping them is one of the most common mistakes new mappers make. Second, the `properties` bag can carry whatever metadata you want, which is going to come in handy when we build our popup.
+Notice the coordinates are `[longitude, latitude]` with the x-axis position first. This is the standard for GeoJSON, but it's the opposite of how some other mapping programs store geographic data. Be sure you get that order right when you build your own GeoJSON files.
 
-### Load the data
+We'll fetch the file using the same [`+page.js`](https://svelte.dev/docs/kit/routing#page-page-js) load function pattern you've used in previous weeks.
 
-We'll fetch the file using the same [`+page.js`](https://svelte.dev/docs/kit/routing#page-page-js) load function pattern you've used in previous weeks. Create `src/routes/+page.js`:
+First download the file I've prepared from [this link](https://gist.githubusercontent.com/palewire/ecb68c32c9172ba76d9a07e701de0cbd/raw/ccf6c6fdd801b4dd04119a3d33d87e9145d21f24/nyc-great-trees.geojson) and place it in `src/data/great-trees.json` in your project.
+
+Create `src/routes/+page.js`:
 
 ```js
-export async function load({ fetch }) {
-  const response = await fetch('https://palewi.re/data/nyc-trees/great-trees.geojson');
-  const greatTrees = await response.json();
-  return { greatTrees };
+import greatTrees from '$lib/data/great-trees.json';
+
+export function load() {
+  return {
+    showHeader: true,
+    showFooter: true,
+    greatTrees,
+  };
 }
 ```
 
-SvelteKit will run this before rendering, pass the result into `+page.svelte` through the `data` prop, and bake the fetched file into your static build so the reader never has to wait on the network at page load.
+Now, as in past weeks, we can add a `$props` line to our script in `+page.svelte` to receive the data.
 
 Update the `<script>` block in `+page.svelte` to receive it:
 
-```svelte {emphasize-lines="4-5"}
+```svelte {emphasize-lines="5-7"}
 <script>
-  import Map from '$lib/components/Map.svelte';
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/maps/Map.svelte';
 
   let { data } = $props();
   const greatTrees = data.greatTrees;
+  console.log(greatTrees);
 </script>
 ```
 
-Drop in a `console.log` to confirm the data arrived:
+Refresh the page and open the browser's developer console. You should see the full GeoJSON object logged there, with a `features` array containing 119 entries.
 
-```js
-console.log('great trees:', greatTrees.features.length, 'features');
-```
+### Adding a layer
 
-Refresh the page and open the browser's developer console (Cmd+Option+J on Mac, Ctrl+Shift+J on Windows). You should see:
+The template's `MapLayer` component takes a GeoJSON collection and a MapLibre paint object and renders the data on the parent map. You want to import it and drop it as a child of `<Map>`, which tells MapLibre to render it as a layer on top of the basemap.
 
-```
-great trees: 119 features
-```
+Here's a fully functioning example with some simple styles and a new top to the page.
 
-NYC Parks lists 120 Great Trees on their site; the scraper that pulled our file missed one. Scraping almost always leaks a record or two, and it's worth knowing about your own data's gaps before a reader finds them for you.
-
-### Plot the points
-
-The template's `MapLayer` component takes a GeoJSON collection and a MapLibre paint object and renders the data on the parent map. Import it and drop it as a child of `<Map>`:
-
-```svelte {emphasize-lines="3,13-24"}
+```svelte
 <script>
-  import Map from '$lib/components/Map.svelte';
-  import MapLayer from '$lib/components/MapLayer.svelte';
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/maps/Map.svelte';
+  import MapLayer from '$lib/components/maps/MapLayer.svelte';
 
   let { data } = $props();
   const greatTrees = data.greatTrees;
+  console.log(greatTrees);
 </script>
 
-<h1>The trees of New York</h1>
-
-<Map
-  longitude={-74.006}
-  latitude={40.7128}
-  zoom={11}
-  theme="positron"
-  caption="The Great Trees of New York City, named by NYC Parks for their historical, botanical, and cultural significance."
->
-  <MapLayer
-    id="great-trees"
-    type="circle"
-    data={greatTrees}
-    paint={{
-      'circle-color': '#d4a017',
-      'circle-radius': 5,
-      'circle-stroke-color': '#3a2818',
-      'circle-stroke-width': 1,
-      'circle-opacity': 0.9
-    }}
+<div class="container">
+  <ArticleHeader
+    headline="The GreatTrees of New York"
+    byline="NYCity News Service"
+    pubDate="2026-04-20"
   />
-</Map>
+
+  <p>
+    In 1985, the New York City Parks Department began an ambitious new venture.
+    They called it the Great Tree Search.
+  </p>
+
+  <p>
+    The agency called on the public to nominate "trees of unusual size, species,
+    form or historical association." Volunteers from all five boroughs wrote in
+    with trees of unusual size, rare species, strange form, or deep historical
+    association. Explore them here and see if you can find any near you.
+  </p>
+
+  <Map
+    longitude={-74.0}
+    latitude={40.7}
+    zoom={9.5}
+    height={600}
+    theme="positron"
+    credit="OpenFreeMap / OpenStreetMap contributors"
+  >
+    <MapLayer
+      id="great-trees"
+      type="circle"
+      data={greatTrees}
+      paint={{
+        'circle-color': '#0033a1',
+        'circle-radius': 5,
+        'circle-stroke-color': '#1a1a1a',
+        'circle-stroke-width': 1,
+        'circle-opacity': 0.9,
+      }}
+    />
+  </Map>
+</div>
 ```
 
-Save. Your map should now be studded with amber dots.
+Save. Your map should now be studded with blue dots.
 
 <Screenshot
   src="/screenshots/week-11/great-tree-dots.png"
-  alt="A pale-gray map of the five boroughs studded with amber dots, clustered in parks and cemeteries but scattered everywhere from Van Cortlandt Park in the Bronx down through Central Park and Prospect Park to Tottenville on Staten Island"
+  alt="A pale-gray map of the five boroughs studded with blue dots"
   chromeTitle="The trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-Zoom out and look at how the dots distribute across the city. The big parks each hold a handful — Central Park, Prospect Park, Van Cortlandt, Forest Park. But many are not in parks at all. You'll find dots in church graveyards, inside historic cemeteries, in the courtyards of old houses, and on stretches of regular sidewalk where a neighborhood rallied to keep one giant tree alive through decades of street work.
+The `type` property in `MapLayer` tells MapLibre how to draw the data. Since our GeoJSON features are points, we use the `circle` type, which draws a simple circle at each point's coordinates. If our data had lines or polygons, we would use the `line` or `fill` types instead.
 
-### Add a popup
+The `data` property is where you pass the GeoJSON collection. MapLibre reads the coordinates and properties of each feature and draws them on the map.
 
-Readers always want to click things. Let's reward that instinct.
+They're styled by the `paint` object you passed to `MapLayer`. MapLibre has a huge catalog of styling options for every type of layer. The ones we used here are:
 
-`MapLayer` accepts a `popup` prop: a function that takes a clicked feature and returns an HTML string. MapLayer handles the rest — positioning the popup, wiring the click handler, changing the cursor on hover.
+| Property | Description |
+|----------|-------------|
+| `circle-color` | The fill color of each point. |
+| `circle-radius` | The size of each point, in pixels. |
+| `circle-stroke-color` | The color of the outline around each point. |
+| `circle-stroke-width` | The width of the outline, in pixels. |
+| `circle-opacity` | The opacity of the whole point, from 0 to 1. |
+
+You can experiment with other paint properties in the [MapLibre Style Specification](https://maplibre.org/maplibre-style-spec/layers/#layer-properties) to customize the look of your points. Try tweaking the color, size and opacity to see how it changes the map.
+
+### Adding a popup
+
+The dots are nice, but they don't tell you anything about the trees. In practice, most maps like offer a way to click on a feature and get more information about it.
+
+Luck for you, our `MapLayer` component accepts a `popup` property that will handle all the code for you. All you need to do is provide a function that takes a feature and returns the HTML you want to show in the popup.
 
 Add a simple `popup` to your `MapLayer`:
 
 ```svelte {emphasize-lines="12-18"}
-<MapLayer
-  id="great-trees"
-  type="circle"
-  data={greatTrees}
-  paint={{
-    'circle-color': '#d4a017',
-    'circle-radius': 5,
-    'circle-stroke-color': '#3a2818',
-    'circle-stroke-width': 1,
-    'circle-opacity': 0.9
-  }}
-  popup={(feature) => {
-    const p = feature.properties;
-    return `
-      <strong>${p.species || 'Great Tree'}</strong><br>
-      ${p.description}
-    `;
-  }}
-/>
+  <MapLayer
+    id="great-trees"
+    type="circle"
+    data={greatTrees}
+    paint={{
+      'circle-color': '#0033a1',
+      'circle-radius': 5,
+      'circle-stroke-color': '#1a1a1a',
+      'circle-stroke-width': 1,
+      'circle-opacity': 0.9,
+    }}
+    popup={(feature) => {
+      const p = feature.properties;
+      return `<strong>${p.species || 'Great Tree'}</strong><br>${p.description}`;
+    }}
+  />
 ```
 
 The `popup` prop is a *function*, not a string. MapLayer calls it every time a tree is clicked and passes it the full feature, so you can build whatever HTML the data deserves. We're keeping it simple for now: the species on top, the location underneath.
