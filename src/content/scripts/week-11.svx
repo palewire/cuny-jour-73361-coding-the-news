@@ -691,4 +691,4 @@ Be ready to walk the class through your map and explain:
 
 - The dataset you chose and why
 - At least one editorial decision you made about what to show and what to leave out
-- Something you added to the map that we didn't cover in class, and how you built it
+- Something you added to the map that we didn't cover in class, how you built it and why it's a good fit for you page
