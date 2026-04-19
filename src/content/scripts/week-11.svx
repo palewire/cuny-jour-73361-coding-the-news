@@ -680,8 +680,8 @@ Your project must have:
 
 - A `Map` component with data plotted from your chosen dataset
 - A `Geocoder` for navigation
-- A headline, introductory paragraph, and a source credit that present the map as a journalistic product, not just a demo.
-- At least one feature we didn't cover in class, like a custom popup, a data filter or a more complex paint style.
+- A headline, introductory paragraph, and a source credit or methodology box that presents the map as a journalistic product
+- At least one feature we didn't cover in class, like a custom popup, a data filter or a more complex paint style
 
 Deploy to GitHub Pages and send me the link.
 
