@@ -377,9 +377,9 @@ In `+page.svelte`, import the component and add reactive state variables for the
 
   let { data } = $props();
   const greatTrees = data.greatTrees;
-  let longitude = $state(-74.006);
-  let latitude = $state(40.7128);
-  let zoom = $state(11);
+  let longitude = $state(-74.0);
+  let latitude = $state(40.7);
+  let zoom = $state(9.5);
 </script>
 ```
 
