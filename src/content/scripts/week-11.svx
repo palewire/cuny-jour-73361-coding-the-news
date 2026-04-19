@@ -13,7 +13,7 @@ locked: true
 
 In the summer of 2024, reporters at Gothamist published ["NYPD data shows most shootings occur on the same blocks, year after year"](https://gothamist.com/news/hot-spots-nypd-data-shows-most-shootings-occur-on-the-same-blocks-year-after-year), a data-driven investigation into gun violence in New York City.
 
-The analysis, by reporters Brittany Kriegstein and Jaclyn Jeffrey-Wilensky, showed that shooting incidents were not, as some might assume, a widespread problem.
+The analysis, by reporters Brittany Kriegstein and Jaclyn Jeffrey-Wilensky, showed that shooting incidents were not, as some might assume, a widespread problem that reached every corner of the city.
 
 <Screenshot
   src="/screenshots/week-11/gothamist-story.png"
@@ -23,11 +23,11 @@ The analysis, by reporters Brittany Kriegstein and Jaclyn Jeffrey-Wilensky, show
   maxWidth="960px"
 />
 
-Instead, by downloading and mapping the data published to [the city's open data portal](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8/data_preview), they found that gunfire was concentrated in a small number of areas, with nine blocks accounting for a massive share of shootings.
+Instead, by downloading and mapping the data published to [the city's open data portal](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8/data_preview), they found that gunfire was concentrated in a small number of areas, with nine areas accounting for a massive share of shootings.
 
-"Just 4% of New York City’s 120,000 blocks account for nearly all of the city’s shootings," the story reported. "Life even two or three blocks away from these nine hot spots can be dramatically different, with less violence, fewer crimes and residents who say they feel relatively safe."
+"Just 4% of New York City’s 120,000 blocks account for nearly all of the city's shootings," the story reported. "Life even two or three blocks away from these nine hot spots can be dramatically different, with less violence, fewer crimes and residents who say they feel relatively safe."
 
-Alongside the story, Gothamist published [an interactive map](https://gothamist.com/news/new-york-city-gun-violence-map) that allowed readers to see their findings and explore the data for themselves. It shaded in every Census block in the five boroughs by how many shooting incidents the NYPD recorded there over the previous four years.
+Alongside the story, Gothamist published [an interactive map](https://gothamist.com/news/new-york-city-gun-violence-map) that allowed readers to see their findings and explore the data for themselves. It shaded every Census block in the five boroughs by how many shooting incidents the NYPD recorded there over the previous four years.
 
 <Screenshot
   src="/screenshots/week-11/gothamist-gun-violence.png"
@@ -36,7 +36,7 @@ Alongside the story, Gothamist published [an interactive map](https://gothamist.
   chromeUrl="https://gothamist.com/news/new-york-city-gun-violence-map"
 />
 
-Their work follows a common model for data journalism: Mapping a dataset to reveal patterns and steer reporting, then publishing an interactive version to let readers to places themselves in the story, regardless of where they live.
+Their work follows a common model for data journalism: Mapping a dataset to reveal patterns and steer reporting, then publishing an interactive version to let readers place themselves in the story, regardless of where they live.
 
 Today you are going to learn how to do just that. We'll cover how to plot points, shade areas and invite users to interact with the data.
 
