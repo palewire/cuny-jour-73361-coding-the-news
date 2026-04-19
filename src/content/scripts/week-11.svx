@@ -154,9 +154,9 @@ In 1985, the New York City Parks Department began an ambitious new venture. They
   maxWidth="960px"
 />
 
-Forty years later, an update roster listed 119 noteworthy trees, each a small piece of New York history.
+Forty years later, an updated roster listed 119 noteworthy trees, each a small piece of New York history.
 
-I scraped those entries from the city website and converted them the format prefered by MapLibre: GeoJSON.
+I scraped those entries from the city website and converted them to the format preferred by MapLibre: GeoJSON.
 
 [GeoJSON](https://geojson.org/) is a standard format for encoding geographic data. It looks like regular JSON, but with a specific structure: a `FeatureCollection` containing `Feature` objects, each with `properties` and `geometry` that describe what the thing is and where it sits on the map.
 
@@ -303,7 +303,7 @@ You can experiment with other paint properties in the [MapLibre Style Specificat
 
 ### Adding a popup
 
-The dots are nice, but they don't tell you anything about the trees. In practice, most maps like offer a way to click on a feature and get more information about it.
+The dots are nice, but they don't tell you anything about the trees. In practice, most maps offer a way to click on a feature and get more information about it.
 
 Our `MapLayer` component accepts a `popup` property that will handle all the code for you. All you need to do is provide a function that takes a feature and returns the HTML you want to show in the popup.
 
@@ -334,7 +334,7 @@ Save. Click one of the blue dots. A popup should appear.
 
 <Screenshot
   src="/screenshots/week-11/great-tree-popup.png"
-  alt="A zoomed-in map showing an amber dot over Prospect Park with a popup reading 'Camperdown elm' above a line about its location south of the Boathouse"
+  alt="A zoomed-in map showing a blue dot over Prospect Park with a popup reading 'Camperdown elm' above a line about its location south of the Boathouse"
   chromeTitle="The Great Trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
@@ -361,7 +361,7 @@ The template's [`Geocoder`](https://palewire.github.io/cuny-jour-static-site-tem
 
 When a user picks a result, `Geocoder` fires an `onresult` callback with its coordinates. All you have to do is hand those coordinates to our `Map`.
 
-You can can do that in `+page.svelte`, import the component and add reactive state variables for the coordinates and zoom:
+You can do that in `+page.svelte`. Import the component and add reactive state variables for the coordinates and zoom:
 
 ```svelte {emphasize-lines="5,9-11"}
 <script>
