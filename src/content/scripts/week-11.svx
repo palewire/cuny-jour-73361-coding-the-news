@@ -3,7 +3,7 @@ title: "Interactive Map"
 summary: "How to invite readers to explore geographic data"
 date: "Apr. 20, 2026"
 week: 11
-locked: true
+locked: false
 ---
 
 <script>
@@ -182,7 +182,7 @@ Notice the coordinates are `[longitude, latitude]` with the x-axis position firs
 
 We'll fetch the file using the same [`+page.js`](https://svelte.dev/docs/kit/routing#page-page-js) load function pattern you've used in previous weeks.
 
-First download the file I've prepared from [this link](https://gist.githubusercontent.com/palewire/ecb68c32c9172ba76d9a07e701de0cbd/raw/ccf6c6fdd801b4dd04119a3d33d87e9145d21f24/nyc-great-trees.geojson) and place it in `lib/data/great-trees.json` in your project.
+First download the file I've prepared from [this link](https://gist.githubusercontent.com/palewire/ecb68c32c9172ba76d9a07e701de0cbd/raw/f763671fed463d095f7ef2dc897c3895aac64076/nyc-great-trees.json) and place it in `lib/data/great-trees.json` in your project.
 
 Create `src/routes/+page.js`:
 
@@ -424,193 +424,251 @@ This is the reactive pattern you know from previous lessons, now connected to a 
 
 ## Part 4: Using data to style polygons
 
-In 2015, NYC Parks ran its third decadal street tree census — a citizen science effort called [TreesCount!](https://www.nycgovparks.org/trees/treescount). Over 2,200 volunteers walked every block in the five boroughs with tablets, identifying every street tree they found and recording its species, trunk diameter, health, and exact location. They found 666,134 trees of 132 different species.
+Every ten years, the Parks Department leads a citizen science effort called [TreesCount](https://www.nycgovparks.org/trees/treescount). Thousands of volunteers canvass the city's street trees, recording their species, trunk diameter, health, and exact location. In the 2015 survey, they found more than 600,000 trees and 133 different species.
+
+The full data set is, like so much else, available for download on [the city's open data portal](https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data).
 
 <Screenshot
-  src="/screenshots/week-11/treescount-homepage.png"
-  alt="The NYC Parks TreesCount! 2015 homepage showing data visualizations about New York's street trees"
-  chromeTitle="TreesCount! 2015"
-  chromeUrl="https://www.nycgovparks.org/trees/treescount"
+  src="/screenshots/week-11/treescount-portal.png"
+  alt="The NYC Open Data portal page for the 2015 Street Tree Census, showing a preview of the data and a download button"
+  chromeTitle="2015 Street Tree Census - Tree Data"
+  chromeUrl="https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data"
+/>
+
+One tree dominates that census: the London plane. It was the tree favored by Robert Moses, the unelected "power broker" who controlled city parks for decades in the mid 20th century. He made sure the hearty hybrid was planted everywhere in New York, where it can be found in every borough and on nearly every block.
+
+According to the 2015 census, there are more than 87,000 London plane trees on New York's streets, 12% of the city's population of street trees.
+
+<Screenshot
+  src="/screenshots/week-11/london-plane.png"
+  alt="A London plane tree, the hybrid species Robert Moses planted throughout New York City"
+  chromeTitle="London plane tree | Central Park Conservancy"
+  chromeUrl="https://www.centralparknyc.org/plants/london-plane"
+/>
+
+That's far too many points to put on a single map, but we can still tell a story by aggregating the data to a higher level, just as the Gothamist reporters did with shootings and Census blocks.
+
+In this case, we'll aggregate the trees to the level of Neighborhood Tabulation Areas devised by city planners to group together similar neighborhoods for analysis. There are more than 100 NTAs, covering every inch of the city. It's a lot of data, but not so much that it will overwhelm the average web browser.
+
+<Screenshot
+  src="/screenshots/week-11/nta-maps.png"
+  alt="The NYC Department of City Planning page describing Neighborhood Tabulation Areas"
+  chromeTitle="Neighborhood Tabulation Areas"
+  chromeUrl="https://www.nyc.gov/content/planning/pages/resources/datasets/neighborhood-tabulation"
   maxWidth="960px"
 />
 
-One tree dominates that census: **the London planetree**. It's the tree Robert Moses, the unelected power broker who ran NYC Parks from 1934 to 1960, planted everywhere he built. Along his parkways. In his parks. Up and down street after street. Moses's favorite tree is still the most common street tree in New York — about one in ten of every street tree you pass is a London planetree, a direct artifact of one man's taste imposed on the city seventy years ago. The leaf in the NYC Parks logo is widely believed to depict one.
+Before class, I prepared a file that cross referenced the tree census with the NTA boundaries, so that each NTA polygon carries a pre-computed count of how many London plane trees live inside it.
 
-The Great Trees were easy: a tiny handful of points, nowhere near a megabyte, no trouble at all for MapLibre to render.
+Download the file I've prepared from [this link](https://gist.githubusercontent.com/palewire/31ef926bbe15739d9559eff2562322d3/raw/1388989728ce1fe0f202ae6b6d61b9c446117ba5/planetrees-by-nta.json) and save it as `lib/data/planetrees-by-nta.json` in your project, alongside the Great Trees file.
 
-The London planetree is a different animal. There are around 70,000 of them in the 2015 census. If we tried to plot every one as an individual dot:
+Each feature in this file is a polygon representing an NTA, with properties that describe the tree population living inside it. Here's an example:
 
-- The file that ships to each reader's browser would be roughly 8 to 10 megabytes. On classroom Wi-Fi that's a two-second wait; on a fading cell connection at the back of a bus, it's a spinner the reader gives up on.
-- The browser would need to draw 70,000 shapes at once, which is doable but starts to stutter on older devices.
-- Most of those dots would overlap with their neighbors anyway, so the visual payoff would be a blobby green haze — not the thing a reader can click or parse.
-
-When a dataset is too big to ship as individual points, you have a few options. You could sample — show only every tenth tree. You could cluster — let MapLibre group nearby trees into expandable dots. Or you could **aggregate**: summarize the data into a smaller unit of geography before it ever leaves your machine.
-
-Gothamist aggregated their shootings data to census blocks. We're going to aggregate our planetree data to a different administrative unit: the **Neighborhood Tabulation Area**, or NTA. NYC's Department of City Planning created NTAs to approximate the neighborhoods most New Yorkers recognize — "Park Slope-Gowanus," "Astoria-Ditmars-Steinway," "Washington Heights North" — by grouping census tracts into medium-sized statistical geographies. There are 195 of them, compared to 666,000 trees. The compression ratio is immense.
-
-I've hosted the result of that aggregation at:
-
+```json
+{
+  "ntacode": "BK44",
+  "ntaname": "Madison",
+  "boroname": "Brooklyn",
+  "total_all": 3437,
+  "no_1_species": "London planetree",
+  "top_species": [
+    {
+      "name": "London planetree",
+      "count": 825
+    },
+    {
+      "name": "Norway maple",
+      "count": 293
+    },
+    {
+      "name": "pin oak",
+      "count": 264
+    },
+    {
+      "name": "Japanese zelkova",
+      "count": 171
+    },
+    {
+      "name": "honeylocust",
+      "count": 169
+    }
+  ],
+  "total_planetree": 825,
+  "rank_planetree": 1
+}
 ```
-https://palewi.re/data/nyc-trees/planetrees-by-nta.geojson
-```
 
-Every one of the 195 NTA polygons arrives with a London planetree count already baked into its properties — along with richer context we'll get to in a moment.
+Once you have the file saved, you should update `+page.js` to import it in `+page.svelte`, just like you did for the great trees.
 
-### Load the second file
+```js
+import greatTrees from '$lib/data/great-trees.json';
+import planetrees from '$lib/data/planetrees-by-nta.json';
 
-Fetch it alongside the Great Trees in `src/routes/+page.js`:
-
-```js {emphasize-lines="3,4"}
-export async function load({ fetch }) {
-  const greatTrees = await fetch('https://palewi.re/data/nyc-trees/great-trees.geojson').then((r) => r.json());
-  const planetrees = await fetch('https://palewi.re/data/nyc-trees/planetrees-by-nta.geojson').then((r) => r.json());
-  return { greatTrees, planetrees };
+export function load() {
+  return {
+    showHeader: true,
+    showFooter: true,
+    greatTrees,
+    planetrees,
+  };
 }
 ```
 
 And pull it out of the `data` prop in `+page.svelte`:
 
-```svelte {emphasize-lines="2"}
-const greatTrees = data.greatTrees;
-const planetrees = data.planetrees;
+```svelte {emphasize-lines="9"}
+<script>
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/maps/Map.svelte';
+  import MapLayer from '$lib/components/maps/MapLayer.svelte';
+  import Geocoder from '$lib/components/maps/Geocoder.svelte';
+
+  let { data } = $props();
+  const greatTrees = data.greatTrees;
+  const planetrees = data.planetrees;
+
+  let longitude = $state(-74.0);
+  let latitude = $state(40.7);
+  let zoom = $state(9.5);
+</script>
 ```
 
-Pop open your browser console and inspect one of the NTA features:
+We're going to replace our points with a [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map), which is a technical term for a visualization that shades each region of a map by a numeric value. In this case, we're going to shade each NTA by its `total_planetree`, which contains the count of London plane trees living inside it. The darker the blue, the more plane trees.
 
-```js
-console.log(planetrees.features[0].properties);
-```
-
-You should see a property bag that looks roughly like this:
-
-```js
-{
-  ntacode: "BK09",
-  ntaname: "Brooklyn Heights-Cobble Hill",
-  boroname: "Brooklyn",
-  total_all_species: 5431,
-  top_species: [
-    { name: "honeylocust", count: 892 },
-    { name: "London planetree", count: 734 },
-    { name: "pin oak", count: 612 },
-    { name: "Callery pear", count: 498 },
-    { name: "littleleaf linden", count: 389 }
-  ],
-  count_total: 734,
-  count_good: 521,
-  count_fair: 176,
-  count_poor: 37,
-  count_small: 42,
-  count_medium: 312,
-  count_large: 380,
-  rank: 2
-}
-```
-
-Pause and absorb what's in there. Each NTA carries not just a single London planetree count but a whole dossier: how many total street trees it has of all species, the five most common species in rank order, and several pre-computed slices of its planetree population by health and by trunk size. The `rank` field is especially interesting — it's where the London planetree sits in the species leaderboard of this NTA. A `1` means Moses's tree wins here. A `2` or `3` means something else is in front.
-
-This is what it looks like to pre-compute your story. A raw 70,000-tree dataset got squeezed into 195 feature-rich polygons before it ever touched the wire.
-
-Now you can see the contrast between our two data files. Roughly a hundred and twenty points on one side. Fewer than two hundred polygons on the other. Both describe the same city, but in completely different ways. That shape difference is what drives the swap we're about to make.
-
-### Swap the layer
-
-Remove the Great Tree `MapLayer` from inside your `<Map>` block, and delete the matching `import greatTrees` line at the top of the script. Don't worry — it's not gone forever. We'll talk about how to bring it back at the end of class.
-
-In its place, add two new `MapLayer`s: one that fills each NTA with a color based on its London planetree count, and one that draws the outlines between them.
-
-A [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map) shades each region of a map by a numeric value. We're going to shade each NTA by its `count_total` — the number of London planetrees living inside it.
+Remove the Great Tree `MapLayer` from inside your `<Map>` block. In its place, add two new `MapLayer`s: one that fills each NTA with a color based on its London plane tree count, and one that draws the outlines between them.
 
 ```svelte
-<MapLayer
-  id="nta-fill"
-  type="fill"
-  data={planetrees}
-  paint={{
-    'fill-color': [
-      'interpolate', ['linear'], ['get', 'count_total'],
-      0, '#f0f7f4',
-      250, '#95d5b2',
-      1000, '#40916c',
-      3000, '#1b4332'
-    ],
-    'fill-opacity': 0.7
-  }}
-/>
-<MapLayer
-  id="nta-outline"
-  type="line"
-  data={planetrees}
-  paint={{
-    'line-color': '#1b4332',
-    'line-width': 0.5
-  }}
-/>
+  <Map {longitude} {latitude} {zoom} theme="positron">
+    <MapLayer
+      id="nta-fill"
+      type="fill"
+      data={planetrees}
+      paint={{
+        'fill-color': [
+          'step',
+          ['get', 'total_planetree'],
+          '#eef2f9',
+          147,
+          '#c2cfe6',
+          269,
+          '#8098cc',
+          434,
+          '#3366b3',
+          697,
+          '#0033a1',
+        ],
+        'fill-opacity': 0.7,
+      }}
+    />
+    <MapLayer
+      id="nta-outline"
+      type="line"
+      data={planetrees}
+      paint={{
+        'line-color': '#0033a1',
+        'line-width': 0.5,
+      }}
+    />
+  </Map>
 ```
 
-Reading the fill-color expression out loud: *interpolate linearly by the `count_total` property of each polygon. At 0 trees, use nearly-white. At 250 trees, a light green. At 1000, a medium green. At 3000 or more, a deep forest green.* MapLibre smooths between the stops automatically.
+In this example, the `paint` input gets considerably more complex. The `fill-color` property is now an array that tells MapLibre to step through a series of color breaks based on the value of `total_planetree` for each NTA.
 
-Also update the `Map`'s caption, since what it's showing has completely changed:
+The first color, `#eef2f9`, is for NTAs with 0 to 146 plane trees. The second color, `#c2cfe6`, is for NTAs with 147 to 268 plane trees, and so on up to the darkest shade, `#0033a1`, which is for NTAs with 697 or more plane trees. This is meant to break them, roughly, into quintiles, with each color representing about 20% of the NTAs.
 
-```svelte
-<Map {longitude} {latitude} {zoom} theme="positron" caption="Every one of NYC's 70,000-plus London planetrees from the 2015 street tree census, aggregated to the neighborhood.">
-```
-
-Save. The amber dots are gone, and the city now fills with varying shades of green.
+Save. The blue dots are gone, and the city now fills with varying shades of green.
 
 <Screenshot
   src="/screenshots/week-11/choropleth.png"
-  alt="A map of NYC with neighborhoods shaded from pale green to dark forest green by London planetree count. The darkest polygons concentrate along the Upper East Side, through brownstone Brooklyn, and out along the old parkways of Queens"
-  chromeTitle="The trees of New York"
+  alt="A map of NYC with neighborhoods shaded from light to dark blue by London plane tree count."
+  chromeTitle="The Plane trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-You're now looking at Moses's New York. The darkest polygons are the NTAs where his tree is thickest on the ground — along the Upper East Side, through brownstone Brooklyn, ribboning out into Queens along the old parkways. The lightest polygons are the places his planting campaign never fully reached: the outermost edges of the city, the industrial corners, some of the newer developments.
+You're now looking at Moses's New York. The darkest polygons are the NTAs where his tree is thickest on the ground.
 
-### Add a popup
+### Adding a popup
 
-Let's make those polygons clickable. Add a `popup` to the fill layer that tells the reader what they're looking at:
+Finally, let's make those polygons clickable. Add a `popup` to the fill layer that tells the reader what they're looking at:
 
-```svelte {emphasize-lines="11-24"}
+```svelte
 <MapLayer
   id="nta-fill"
   type="fill"
   data={planetrees}
   paint={{
     'fill-color': [
-      'interpolate', ['linear'], ['get', 'count_total'],
-      0, '#f0f7f4', 250, '#95d5b2',
-      1000, '#40916c', 3000, '#1b4332'
+      'step',
+      ['get', 'total_planetree'],
+      '#eef2f9',
+      147,
+      '#c2cfe6',
+      269,
+      '#8098cc',
+      434,
+      '#3366b3',
+      697,
+      '#0033a1',
     ],
-    'fill-opacity': 0.7
+    'fill-opacity': 0.7,
   }}
   popup={(feature) => {
     const p = feature.properties;
-    const rankLine = p.rank === 1
-      ? `<strong>#1 species in this neighborhood</strong>`
-      : `London planetree ranks #${p.rank} — top species is ${p.top_species[0].name} (${p.top_species[0].count.toLocaleString()})`;
-    return `
-      <strong>${p.ntaname}</strong><br>
-      ${p.count_total.toLocaleString()} London planetrees<br>
-      ${rankLine}<br>
-      <em>${p.count_good.toLocaleString()} Good · ${p.count_fair.toLocaleString()} Fair · ${p.count_poor.toLocaleString()} Poor</em>
-    `;
+    return `<strong>${p.ntaname}</strong><br/>${p.total_planetree} plane trees`;
   }}
 />
 ```
 
-Save and click around. Each NTA now tells you three things: how many London planetrees it holds, where that tree ranks among all species growing there, and how those planetrees are faring healthwise.
+Save and click around. Each NTA now tells you how many plane trees it has.
 
 <Screenshot
   src="/screenshots/week-11/nta-popup.png"
-  alt="A popup over a Brooklyn NTA reading 'Bedford-Stuyvesant (West): 1,847 London planetrees, London planetree ranks #2 — top species is honeylocust (2,104), and a health breakdown of 1,312 Good · 421 Fair · 114 Poor'"
-  chromeTitle="The trees of New York"
+  alt="A popup showing how many plane trees live in the Kips Bay neighborhood of Manhattan"
+  chromeTitle="The Plane trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-That `rank` field is where the story gets interesting. Flick around the map and find the NTAs where Moses's tree is *not* #1. Some of the outer-borough neighborhoods — parts of Staten Island, corners of Eastern Queens — show honeylocust or pin oak as the champion instead, with the planetree trailing at #3 or #4. You are looking at the limits of one man's reach.
+As a final flourish, let's update our headline and lead-in to reflect the shift in subject. Drop this in above the map, but inside of the container div.
+
+```svelte
+  <ArticleHeader
+    headline="Where to find the London plane, New York's most common tree"
+    byline="NYCity News Service"
+    pubDate="2026-04-20"
+  />
+
+  <p>
+    Every ten years, thousands of volunteers canvass the city's street trees,
+    recording their species, trunk diameter, health, and exact location. In the
+    2015 survey, they found more than 600,000 trees and 133 different species.
+  </p>
+
+  <p>
+    One tree dominates the count: the London plane. It was the tree favored by
+    Robert Moses, the unelected "power broker" who controlled city parks for
+    decades in the mid 20th century. He made sure the hearty hybrid was planted
+    everywhere in New York, where it can be found in every borough and on nearly
+    every block.
+  </p>
+
+  <p>
+    According to the 2015 census, there are more than 87,000 London plane
+    trees on New York's streets, 12% of the city's population of street trees.
+    Here's where the most London planes are found:
+  </p>
+```
+
+Voila. You've done it, you've made a data-driven map.
+
+<Screenshot
+  src="/screenshots/week-11/london-final.png"
+  alt="The finished London plane tree choropleth with the article header, introduction, and green-shaded NTAs across the five boroughs"
+  chromeTitle="The Trees of New York"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
 ## Homework
 
