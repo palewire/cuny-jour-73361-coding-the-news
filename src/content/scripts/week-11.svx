@@ -1,6 +1,6 @@
 ---
 title: "Interactive Map"
-summary: "A point map of NYC's Great Trees and a choropleth of Moses's planetrees"
+summary: "How to invite readers to explore geographic data"
 date: "Apr. 20, 2026"
 week: 11
 locked: true
@@ -9,7 +9,6 @@ locked: true
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import Screenshot from '$lib/components/Screenshot.svelte';
-  import { get } from 'node:http';
 </script>
 
 In the summer of 2024, reporters at Gothamist published ["NYPD data shows most shootings occur on the same blocks, year after year"](https://gothamist.com/news/hot-spots-nypd-data-shows-most-shootings-occur-on-the-same-blocks-year-after-year), a data-driven investigation into gun violence in New York City.
@@ -306,7 +305,7 @@ You can experiment with other paint properties in the [MapLibre Style Specificat
 
 The dots are nice, but they don't tell you anything about the trees. In practice, most maps like offer a way to click on a feature and get more information about it.
 
-Luck for you, our `MapLayer` component accepts a `popup` property that will handle all the code for you. All you need to do is provide a function that takes a feature and returns the HTML you want to show in the popup.
+Our `MapLayer` component accepts a `popup` property that will handle all the code for you. All you need to do is provide a function that takes a feature and returns the HTML you want to show in the popup.
 
 Add a simple `popup` to your `MapLayer`:
 
@@ -324,56 +323,53 @@ Add a simple `popup` to your `MapLayer`:
     }}
     popup={(feature) => {
       const p = feature.properties;
-      return `<strong>${p.species || 'Great Tree'}</strong><br>${p.description}`;
+      return `<strong>${p.species}</strong><br>${p.description}`;
     }}
   />
 ```
 
-The `popup` prop is a *function*, not a string. MapLayer calls it every time a tree is clicked and passes it the full feature, so you can build whatever HTML the data deserves. We're keeping it simple for now: the species on top, the location underneath.
+MapLayer calls the function every time a dot is clicked and passes it the full feature, so you can build whatever HTML you'd like around the data. Keep it simple for now: the species on top, the location underneath.
 
-Save. Click one of the amber dots. A popup should appear.
+Save. Click one of the blue dots. A popup should appear.
 
 <Screenshot
   src="/screenshots/week-11/great-tree-popup.png"
   alt="A zoomed-in map showing an amber dot over Prospect Park with a popup reading 'Camperdown elm' above a line about its location south of the Boathouse"
-  chromeTitle="The trees of New York"
+  chromeTitle="The Great Trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
 ## Part 3: Searching by location
 
-A map centered on the whole city is fine, but a reader doesn't live in the whole city. They live in Bed-Stuy, or Flushing, or Mott Haven, or upstate somewhere and they're homesick. Let's give them a way to point the map at the place they care about.
+A zoomed map centered on the whole city is fine for seeing the overall distribution, but it doesn't make it easy for readers to find the trees near them. We can solve that problem by adding a search box that lets readers type in an address and fly the map to that location.
 
-### What is geocoding?
+The process of turning a human-readable place, like Kips Bay or Flushing, into coordinates pinned to a map is a common problem in cartography. The technical term for it is geocoding. Every interactive map with a search box you have ever used is leaning on a geocoder under the hood to turn your query into a point on the map.
 
-The trick is called **geocoding** — turning a human-readable place ("122 West 27th Street" or "Central Park") into the numeric coordinates our map understands. Every interactive map with a search box you have ever used is leaning on a geocoder under the hood.
+Most newsrooms pay a commercial geocoding provider like Google Maps or Mapbox for this service, but there are also free and open-source geocoders available that do the same thing without charging you for every search. They just aren't as good.
 
-There are commercial geocoders (Google Places, Mapbox) and open ones. The class template uses [Nominatim](https://nominatim.openstreetmap.org/), the open-source geocoder run by the OpenStreetMap project. It's free to use at modest volumes, no API key required.
+The class template uses [Nominatim](https://nominatim.openstreetmap.org/), the open-source geocoder run by the OpenStreetMap project. It's free to use at modest volumes with no API key required.
 
-### The Geocoder component
-
-You don't need to talk to Nominatim directly. The template's [`Geocoder`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-geocoder--docs) component wraps it in a styled autocomplete search box. Preview it in Storybook before you wire it up.
+The template's [`Geocoder`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-geocoder--docs) component wraps it in a styled search box.
 
 <Screenshot
   src="/screenshots/week-11/geocoder-storybook.png"
-  alt="The Storybook documentation page for the Geocoder component, showing a live search box with dropdown results and its props table"
+  alt="The Storybook documentation page for the Geocoder component"
   chromeTitle="Geocoder – Storybook"
   chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-geocoder--docs"
   maxWidth="960px"
 />
 
-When a user picks a result, `Geocoder` fires an `onresult` callback with its coordinates. All we have to do is hand those coordinates to our `Map`.
+When a user picks a result, `Geocoder` fires an `onresult` callback with its coordinates. All you have to do is hand those coordinates to our `Map`.
 
-### Wire it up
+You can can do that in `+page.svelte`, import the component and add reactive state variables for the coordinates and zoom:
 
-In `+page.svelte`, import the component and add reactive state variables for the coordinates and zoom:
-
-```svelte {emphasize-lines="4,7-9"}
+```svelte {emphasize-lines="5,9-11"}
 <script>
-  import Map from '$lib/components/Map.svelte';
-  import MapLayer from '$lib/components/MapLayer.svelte';
-  import Geocoder from '$lib/components/Geocoder.svelte';
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/maps/Map.svelte';
+  import MapLayer from '$lib/components/maps/MapLayer.svelte';
+  import Geocoder from '$lib/components/maps/Geocoder.svelte';
 
   let { data } = $props();
   const greatTrees = data.greatTrees;
@@ -386,46 +382,48 @@ In `+page.svelte`, import the component and add reactive state variables for the
 Now replace the hard-coded numbers in the `<Map>` tag with those state variables, and add a `<Geocoder>` above the map with a callback that updates them.
 
 ```svelte {emphasize-lines="3-10,14-16"}
-<h1>The trees of New York</h1>
+  <p>
+    The agency called on the public to nominate "trees of unusual size, species,
+    form or historical association." Volunteers from all five boroughs wrote in
+    with trees of unusual size, rare species, strange form, or deep historical
+    association. Explore them here and see if you can find any near you.
+  </p>
 
-<Geocoder
-  label="Find your neighborhood"
-  placeholder="Enter an address in New York…"
-  onresult={(result) => {
-    longitude = result.lng;
-    latitude = result.lat;
-    zoom = 15;
-  }}
-/>
+  <Geocoder
+    label="Find your neighborhood"
+    placeholder="Enter an address in New York…"
+    onresult={(result) => {
+      longitude = result.lng;
+      latitude = result.lat;
+      zoom = 15;
+    }}
+  />
 
-<Map
-  {longitude}
-  {latitude}
-  {zoom}
-  theme="positron"
-  caption="The Great Trees of New York City."
->
-  <!-- the MapLayer you added in Part 2 stays as-is -->
-</Map>
+  <Map
+    {longitude}
+    {latitude}
+    {zoom}
+    height={600}
+    theme="positron"
+    credit="OpenFreeMap / OpenStreetMap contributors"
+  >
+    <!-- the MapLayer you added earlier stays as-is -->
+  </Map>
 ```
 
-Notice the shorthand `{longitude}` — that's the same as writing `longitude={longitude}`. Svelte lets you skip the repetition when the prop name matches the variable name.
-
-Save and try it. Type your home address into the search box, pick a result from the dropdown, and watch the map glide over to your block. Any time those props change, the underlying MapLibre map calls `flyTo` with a smooth easing curve.
+Save and try it. Type a New York City address into the search box, pick a result from the dropdown and watch the map glide over to your block.
 
 <Screenshot
   src="/screenshots/week-11/geocoder-in-action.png"
-  alt="The page showing a search box with the query 'Newmark Graduate School of Journalism', a dropdown of matching results, and a map that has flown to Midtown Manhattan"
-  chromeTitle="The trees of New York"
+  alt="The page showing a search box zoomed in after a location query"
+  chromeTitle="The Great Trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-This is the reactive pattern you know, now connected to cartography. The Geocoder updates three state variables. Those variables flow into the Map as props. The Map reacts by animating to the new location. No imperative code, no manual event wiring.
+This is the reactive pattern you know from previous lessons, now connected to a map. The Geocoder updates three state variables. Those variables flow into the Map as properties. The Map reacts by animating to the new location.
 
-Try searching for a few addresses outside Manhattan. Search for your childhood home. Search for a place you've always been curious about. This kind of personal, place-based interaction is one of the most engaging tools a journalist has. The reader enters the story through their own front door.
-
-## Part 4: Swap in the planetree choropleth
+## Part 4: Using data to style polygons
 
 In 2015, NYC Parks ran its third decadal street tree census — a citizen science effort called [TreesCount!](https://www.nycgovparks.org/trees/treescount). Over 2,200 volunteers walked every block in the five boroughs with tablets, identifying every street tree they found and recording its species, trunk diameter, health, and exact location. They found 666,134 trees of 132 different species.
 
