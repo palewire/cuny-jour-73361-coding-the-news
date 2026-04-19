@@ -448,7 +448,7 @@ According to the 2015 census, there are more than 87,000 London plane trees on N
 
 That's far too many points to put on a single map, but we can still tell a story by aggregating the data to a higher level, just as the Gothamist reporters did with shootings and Census blocks.
 
-In this case, we'll aggregate the trees to the level of Neighborhood Tabulation Areas devised by city planners to group together similar neighborhoods for analysis. There are more than 100 NTAs, covering every inch of the city. It's a lot of data, but not so much that it will overwhelm the average web browser.
+In this case, we'll aggregate the trees to the level of Neighborhood Tabulation Areas devised by city planners to group together similar neighborhoods for analysis. There were 195 NTAs in 1995, covering every inch of the city. It's a lot of data, but not so much that it will overwhelm the average web browser.
 
 <Screenshot
   src="/screenshots/week-11/nta-maps.png"
@@ -680,7 +680,7 @@ Your project must have:
 
 - A `Map` component with data plotted from your chosen dataset
 - A `Geocoder` for navigation
-- A headline, introductory paragraph, and a source credit or methodology box that presents the map as a journalistic product
+- A headline, introductory paragraph, and a methodology box that presents the map as a journalistic product
 - At least one feature we didn't cover in class, like a custom popup, a data filter or a more complex paint style
 
 Deploy to GitHub Pages and send me the link.
