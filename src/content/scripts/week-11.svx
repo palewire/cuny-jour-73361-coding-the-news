@@ -42,55 +42,24 @@ Today you are going to learn how to do just that. We'll cover how to plot points
 
 Like Gothamist, our source will be the New York City data portal. But instead of crime, we'll be mapping the city's massive population of trees.
 
-## Part 1: Two lists of trees
+## Part 1: Making your first map
 
-In 2015, NYC Parks ran its third decadal street tree census — a citizen science effort called [TreesCount!](https://www.nycgovparks.org/trees/treescount). Over 2,200 volunteers walked every block in the five boroughs with tablets, identifying every street tree they found and recording its species, trunk diameter, health, and exact location. They found 666,134 trees of 132 different species.
-
-<Screenshot
-  src="/screenshots/week-11/treescount-homepage.png"
-  alt="The NYC Parks TreesCount! 2015 homepage showing data visualizations about New York's street trees"
-  chromeTitle="TreesCount! 2015"
-  chromeUrl="https://www.nycgovparks.org/trees/treescount"
-  maxWidth="960px"
-/>
-
-That dataset is a goldmine of potential journalism, but today it's only half our subject. The other half is a much shorter list from the same department — compiled decades earlier and updated for the first time in October 2024.
-
-The first story is **the Great Trees of New York City**. In 1985, NYC Parks put out a call for nominations: send us the trees in your neighborhood that matter. Volunteers and arborists from every borough wrote in with their candidates — trees of unusual size, rare species, strange form, or deep historical association. The department chose 120 of them and called them the Great Trees. Nearly forty years later, Parks ran the search again and updated the list: 59 of the original trees were still standing, and the committee added 61 new ones from 270 public nominations. The full roster today is 120 named, story-rich trees across the five boroughs. It includes the Camperdown elm south of the Prospect Park Boathouse, a tree Marianne Moore wrote a poem to help save in the 1960s. It includes the two American beeches at Maple Grove Cemetery in Queens that shade the grave of Jacob Riis's wife. And it includes an American sycamore behind the Conference House at the southern tip of Staten Island, the colonial-era building where British envoys met with John Adams and Ben Franklin in 1776. Each one is a small piece of New York history, kept alive because someone noticed.
-
-The second story is **the London planetree**, and for this one we go back to the census. That's the tree Robert Moses, the unelected power broker who ran NYC Parks from 1934 to 1960, planted everywhere he built. Along his parkways. In his parks. Up and down street after street. Moses's favorite tree is still the most common street tree in New York — about one in ten of every street tree you pass is a London planetree, a direct artifact of one man's taste imposed on the city seventy years ago. The leaf in the NYC Parks logo is widely believed to depict one.
-
-Two very different trees, two very different stories. And we are going to put them both on the same page.
-
-### The pedagogical shape of today
-
-The Great Trees story uses a small, curated dataset — 120 individual trees, each with a story attached. We can plot every one of them as a dot on the map without the computer breaking a sweat, and give every dot a popup the reader will actually want to click.
-
-The planetree story is different. There are something like 70,000 London planetrees in the census, and plotting each one as an individual dot would produce a file too large to ship cheaply to a reader's browser. For data at that scale we need to summarize — to aggregate each neighborhood's planetrees into a single count, and shade the map accordingly.
-
-This is a real tradeoff every news graphics desk makes. Point maps are expressive and personal — readers can find their own block, their own tree. Aggregated maps are efficient and reveal patterns — readers see the shape of the whole city. Neither is better. They answer different questions.
-
-Today you're going to build both, on the same page, so you can feel the difference.
-
-### Set up your project
+The first step is getting a bare map on the page. Let's begin.
 
 Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
-Click "Use this template" and create a new repository called `nyc-trees`. Clone it, open it in Visual Studio Code, and install the dependencies you know so well:
+<Screenshot
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
+
+Click "Use this template" and create a new repository called `nyc-tree-map`. Clone it, open it in Visual Studio Code, and install the dependencies.
 
 ```bash
 npm install
 ```
-
-Then install one more package we need this week — [MapLibre GL JS](https://maplibre.org/), the open-source mapping library that powers our map:
-
-```bash
-npm install maplibre-gl
-```
-
-This is the first time we've added a dependency beyond what the template ships with. Before, `npm install` was pulling down whatever the template's `package.json` declared. Now we are asking npm to add something new to that list. If you open `package.json` you should see `maplibre-gl` there now. When a classmate clones your repository later and runs `npm install`, they'll get MapLibre automatically.
-
-Now grab the data. I've posted two files in the class chat: `great-trees.json` and `planetrees-by-nta.json`. Create a `src/lib/data/` folder in your project and drop both files in there. GeoJSON is valid JSON, so we're saving them with a `.json` extension to let Vite import them directly.
 
 Start the development server:
 
@@ -100,165 +69,189 @@ npm run dev
 
 And open [localhost:5173](http://localhost:5173) in your browser.
 
-## Part 2: Your first map
+### Meet MapLibre
 
-The class template already ships with the components we need: `Map`, `MapLayer`, and `Geocoder`. You'll find them in `src/lib/components/`. Open `Map.svelte` and read the comment block at the top. It explains what the component does and how to use it.
+[MapLibre GL JS](https://maplibre.org/) is an open-source library for rendering vector maps in the browser. Give it some coordinates, a zoom level and a style for its base map, and it draws a fully interactive map. It's free to use, it integrates nicely with SvelteKit and, thus, it powers many of the maps you see on news sites.
 
 <Screenshot
-  src="/screenshots/week-11/vscode-map-component.png"
-  alt="VS Code showing the Map.svelte component's opening comment block with its USAGE EXAMPLE"
-  showChrome={false}
-  maxWidth="960px"
+  src="/screenshots/week-11/maplibre-homepage.png"
+  alt="The MapLibre homepage describing the open-source mapping library"
+  chromeTitle="MapLibre"
+  chromeUrl="https://maplibre.org/"
 />
 
-`Map` is a wrapper around MapLibre. It handles the fiddly parts — creating the map, loading the basemap tiles, re-initializing on theme changes, cleaning up on unmount — so you don't have to. All you need to give it is a center, a zoom level, and an optional theme. It will render whatever you put inside it as a layer on top of the base map.
+MapLibre has an extensive set of Node.JS tools governing every aspect of map rendering and interaction. Putting together a map like the one Gothamist publishes can require writing hundreds of lines of carefully constructed code. It can be a little daunting.
 
-Let's see it in action.
+Rather than force everyone to climb the learning curve and rewrite similar code snippets for every project, well organized newsrooms build reusable components that encapsulate the most common pattern. That way, a newsroom developer can drop a map on the page with a few lines of code, and then customize it as needed.
 
-Open `src/routes/+page.svelte` and replace the contents with:
+As in past weeks, your class template already includes the components we'll use this week. Like the rest of the library, they're documented on the [Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/) site.
+
+<Screenshot
+  src="/screenshots/week-11/storybook-map-components.png"
+  alt="The class template's Storybook showing the Map, MapLayer, and Geocoder components in the sidebar"
+  chromeTitle="Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/compositions-interactive-map--docs"
+/>
+
+The key ones this week are:
+
+| Component | Description |
+|-----------|-------------|
+| [`Map`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-map--docs) | The container for your map, as well as its base configuration. |
+| [`MapLayer`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-maplayer--docs) | A single data layer. Drop it inside `<Map>` to plot points, lines and polygons. |
+| [`Geocoder`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-geocoder--docs) | A search box that turns an address into coordinates.  |
+
+Open Storybook and poke at each one before moving on.
+
+### Creating a blank map
+
+Open `src/routes/+page.svelte` and replace the boilerplate with this:
 
 ```svelte
 <script>
-  import Map from '$lib/components/Map.svelte';
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/maps/Map.svelte';
 </script>
 
-<h1>The trees of New York</h1>
+<div class="container">
+  <ArticleHeader
+    headline="The Trees of New York"
+    byline="NYCity News Service"
+    pubDate="2026-04-20"
+  />
 
-<Map
-  longitude={-73.968}
-  latitude={40.785}
-  zoom={12}
-  theme="positron"
-  caption="Central Park and a chunk of Manhattan, waiting for trees."
-  credit="OpenFreeMap / OpenStreetMap contributors"
-/>
+  <Map
+    longitude={-74.0}
+    latitude={40.7}
+    zoom={9.5}
+    height={600}
+    theme="positron"
+    credit="OpenFreeMap / OpenStreetMap contributors"
+  />
+</div>
 ```
 
-Save the file and check your browser. You should see a clean pale-gray map of Manhattan with a caption underneath.
+Save the file and check your browser. You should see a clean pale-gray map of New York City in our standard template.
 
 <Screenshot
   src="/screenshots/week-11/bare-map.png"
-  alt="A pale-gray map of Manhattan with no data overlaid, sitting below an H1 reading 'The trees of New York'"
+  alt="A pale-gray map of New York City with no data overlaid, sitting below an article header reading 'The Trees of New York' with a byline"
   chromeTitle="The trees of New York"
   chromeUrl="http://localhost:5173"
-  maxWidth="960px"
 />
 
 Play with it a little. Drag the map around. Zoom in and out with the scroll wheel. Then try changing the `theme` prop to `"liberty"` or `"bright"` and save — the basemap should swap without you reloading the page.
 
-Change `longitude`, `latitude`, and `zoom` and watch the map fly to the new location. These aren't just initial values; they are live, reactive props. Remember everything you already know about `$state` and reactive props from weeks past. That knowledge now controls a map.
+## Part 2: Putting points on the map
 
-## Part 3: Add a geocoder
+Our map has geography, but no story. Let's give it one.
 
-A map that starts centered on Midtown is nice, but a reader doesn't live in Midtown. They live in Bed-Stuy, or Flushing, or Mott Haven, or upstate somewhere and they're homesick. Let's give them a way to point the map at the place they care about.
+### The Great Trees of New York City
 
-The template includes a third component called `Geocoder`. It's a search box that translates a typed address into geographic coordinates using the free [Nominatim](https://nominatim.openstreetmap.org/) service, the open-source alternative to Google Places. When the user picks a result, it fires an `onresult` callback with the coordinates.
+In 1985, NYC Parks put out a call for nominations: send us the trees in your neighborhood that matter. Volunteers and arborists from every borough wrote in with their candidates — trees of unusual size, rare species, strange form, or deep historical association. The department chose 120 of them and called them **the Great Trees of New York City**.
 
-Let's wire it up.
+Nearly forty years later, Parks ran the search again and updated the list: 59 of the original trees were still standing, and the committee added 61 new ones from 270 public nominations. The full roster today is 120 named, story-rich trees across the five boroughs. It includes the Camperdown elm south of the Prospect Park Boathouse, a tree Marianne Moore wrote a poem to help save in the 1960s. It includes the two American beeches at Maple Grove Cemetery in Queens that shade the grave of Jacob Riis's wife. And it includes an American sycamore behind the Conference House at the southern tip of Staten Island, the colonial-era building where British envoys met with John Adams and Ben Franklin in 1776. Each one is a small piece of New York history, kept alive because someone noticed.
 
-In `+page.svelte`, add the import and three reactive state variables for the coordinates and zoom:
-
-```svelte {emphasize-lines="3,6-8"}
-<script>
-  import Map from '$lib/components/Map.svelte';
-  import Geocoder from '$lib/components/Geocoder.svelte';
-
-  // Start centered on the middle of Manhattan.
-  let longitude = $state(-73.968);
-  let latitude = $state(40.785);
-  let zoom = $state(12);
-</script>
-```
-
-Now replace the hard-coded numbers in the `<Map>` tag with the state variables, and add a `<Geocoder>` above the map with a callback that updates them.
-
-```svelte {emphasize-lines="3-10,14-16"}
-<h1>The trees of New York</h1>
-
-<Geocoder
-  label="Find your neighborhood"
-  placeholder="Enter an address in New York…"
-  onresult={(result) => {
-    longitude = result.lng;
-    latitude = result.lat;
-    zoom = 15;
-  }}
-/>
-
-<Map
-  {longitude}
-  {latitude}
-  {zoom}
-  theme="positron"
-  caption="Central Park and a chunk of Manhattan, waiting for trees."
-/>
-```
-
-Notice the shorthand `{longitude}` — that's the same as writing `longitude={longitude}`. Svelte lets you skip the repetition when the prop name matches the variable name. We've been using this pattern since week three.
-
-Save and try it. Type your home address into the search box, pick a result from the dropdown, and watch the map glide over to your block. The animated transition is built into MapLibre — any time those props change, the underlying map calls `flyTo` with a smooth easing curve.
+Every tree has its own entry on the [NYC Parks website](https://www.nycgovparks.org/facilities/great-trees) — species, location, description, and often a photograph.
 
 <Screenshot
-  src="/screenshots/week-11/geocoder-in-action.png"
-  alt="The page showing a search box with the query 'Newmark Graduate School of Journalism', a dropdown of matching results, and a map that has flown to Midtown Manhattan"
-  chromeTitle="The trees of New York"
-  chromeUrl="http://localhost:5173"
+  src="/screenshots/week-11/nyc-parks-great-trees.png"
+  alt="The NYC Parks Great Trees page listing the full roster with photos, species, and neighborhoods"
+  chromeTitle="Great Trees of New York City"
+  chromeUrl="https://www.nycgovparks.org/facilities/great-trees"
   maxWidth="960px"
 />
 
-This is the reactive pattern you know, now connected to cartography. The Geocoder updates three state variables. Those variables flow into the Map as props. The Map reacts to the change by animating to the new location. No imperative code, no manual event wiring. You describe what should be true, and Svelte and MapLibre work out how to get there.
+I scraped those entries into a single GeoJSON file and hosted it for you. You can find it at:
 
-Try searching for a few addresses outside Manhattan. Search for your childhood home. Search for a place you've always been curious about. This kind of personal, place-based interaction is one of the most engaging tools a journalist has. The reader enters the story through their own front door.
+```
+https://palewi.re/data/nyc-trees/great-trees.geojson
+```
 
-## Part 4: Add the Great Tree points
+Open it in a new browser tab if you want to see the raw data.
 
-So far our map is empty. Let's change that. We'll start with the smaller of our two datasets — the Great Trees — and plot every one of them as an individual point.
+### A quick word on GeoJSON
+
+[GeoJSON](https://geojson.org/) is a standard format for encoding geographic data. It looks like regular JSON, but with a specific structure: a `FeatureCollection` containing `Feature` objects, each with a `properties` bag (the data about the thing) and a `geometry` (where the thing is). Here's a simplified version of one tree:
+
+```json
+{
+  "type": "Feature",
+  "properties": {
+    "id": 12,
+    "species": "Camperdown elm",
+    "description": "South of the Prospect Park Boathouse"
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [-73.9697, 40.6648]
+  }
+}
+```
+
+Two things to notice. First, the coordinates are `[longitude, latitude]` — the opposite of how most people write them. Swapping them is one of the most common mistakes new mappers make. Second, the `properties` bag can carry whatever metadata you want, which is going to come in handy when we build our popup.
 
 ### Load the data
 
-Because the data file lives inside your project, you can import it directly. Vite will bake it into the build as a plain JavaScript object — no network request, no loading state, no `+page.js`. The data is just *there* when the page renders.
+We'll fetch the file using the same [`+page.js`](https://svelte.dev/docs/kit/routing#page-page-js) load function pattern you've used in previous weeks. Create `src/routes/+page.js`:
 
-Update the `<script>` block in `+page.svelte` to import the file:
+```js
+export async function load({ fetch }) {
+  const response = await fetch('https://palewi.re/data/nyc-trees/great-trees.geojson');
+  const greatTrees = await response.json();
+  return { greatTrees };
+}
+```
 
-```svelte {emphasize-lines="4"}
+SvelteKit will run this before rendering, pass the result into `+page.svelte` through the `data` prop, and bake the fetched file into your static build so the reader never has to wait on the network at page load.
+
+Update the `<script>` block in `+page.svelte` to receive it:
+
+```svelte {emphasize-lines="4-5"}
 <script>
   import Map from '$lib/components/Map.svelte';
-  import Geocoder from '$lib/components/Geocoder.svelte';
-  import greatTrees from '$lib/data/great-trees.json';
 
-  let longitude = $state(-73.968);
-  let latitude = $state(40.785);
-  let zoom = $state(12);
+  let { data } = $props();
+  const greatTrees = data.greatTrees;
 </script>
 ```
 
-Before we plot anything, let's confirm the data is really there. Add a `console.log` at the top of the script block:
+Drop in a `console.log` to confirm the data arrived:
 
 ```js
-console.log('great trees:', greatTrees.features.length, 'points');
+console.log('great trees:', greatTrees.features.length, 'features');
 ```
 
-Save, open your browser's developer console (Cmd+Option+J on Mac, Ctrl+Shift+J on Windows), and refresh. You should see:
+Refresh the page and open the browser's developer console (Cmd+Option+J on Mac, Ctrl+Shift+J on Windows). You should see:
 
 ```
-great trees: 119 points
+great trees: 119 features
 ```
 
-NYC Parks lists 120 Great Trees on their site; the scraper that pulled our file missed one. This is normal. Scraping almost always leaks a record or two, and it's worth knowing about your own data's gaps before a reader finds them for you.
+NYC Parks lists 120 Great Trees on their site; the scraper that pulled our file missed one. Scraping almost always leaks a record or two, and it's worth knowing about your own data's gaps before a reader finds them for you.
 
 ### Plot the points
 
-Time to plant some trees. The template's `MapLayer` component takes a GeoJSON collection and a MapLibre paint object and renders the data on the parent map. Place it as a child of `<Map>`:
+The template's `MapLayer` component takes a GeoJSON collection and a MapLibre paint object and renders the data on the parent map. Import it and drop it as a child of `<Map>`:
 
-```svelte {emphasize-lines="2,10-19"}
+```svelte {emphasize-lines="3,13-24"}
 <script>
+  import Map from '$lib/components/Map.svelte';
   import MapLayer from '$lib/components/MapLayer.svelte';
-  // ...existing imports and state...
+
+  let { data } = $props();
+  const greatTrees = data.greatTrees;
 </script>
 
-<!-- Geocoder -->
+<h1>The trees of New York</h1>
 
-<Map {longitude} {latitude} {zoom} theme="positron" caption="The Great Trees of New York City, named by NYC Parks for their historical, botanical, and cultural significance.">
+<Map
+  longitude={-74.006}
+  latitude={40.7128}
+  zoom={11}
+  theme="positron"
+  caption="The Great Trees of New York City, named by NYC Parks for their historical, botanical, and cultural significance."
+>
   <MapLayer
     id="great-trees"
     type="circle"
@@ -286,19 +279,15 @@ Save. Your map should now be studded with amber dots.
 
 Zoom out and look at how the dots distribute across the city. The big parks each hold a handful — Central Park, Prospect Park, Van Cortlandt, Forest Park. But many are not in parks at all. You'll find dots in church graveyards, inside historic cemeteries, in the courtyards of old houses, and on stretches of regular sidewalk where a neighborhood rallied to keep one giant tree alive through decades of street work.
 
-The density itself tells a story. There's no "Great Trees district" — they're sprinkled where New Yorkers happened to nominate them. A block in Mapes Park in the Bronx has one because residents fought to protect an American Elm during park renovations. A corner of Maple Grove Cemetery in Queens has two because a local historian pointed out they shade the grave of Jacob Riis's wife. Each dot is an act of attention, not a statistical sample.
-
-This is exactly the kind of dataset a point map was built for. Every record is a named, locatable, story-bearing thing. The count is small enough that MapLibre can render all of them instantly. And because every tree has a narrative attached, every dot is an invitation for the reader to click — which is what we'll build next.
-
 ### Add a popup
 
-Readers always want to click things. Let's reward that instinct. Each of the Great Trees in our file arrives with its species and a precise description of where to find it. About half also come with a photograph of the tree itself. And from the tree's ID we can construct a link back to the full entry on NYC Parks.
+Readers always want to click things. Let's reward that instinct.
 
 `MapLayer` accepts a `popup` prop: a function that takes a clicked feature and returns an HTML string. MapLayer handles the rest — positioning the popup, wiring the click handler, changing the cursor on hover.
 
-Add a `popup` function to your `MapLayer`:
+Add a simple `popup` to your `MapLayer`:
 
-```svelte {emphasize-lines="10-22"}
+```svelte {emphasize-lines="12-18"}
 <MapLayer
   id="great-trees"
   type="circle"
@@ -312,40 +301,123 @@ Add a `popup` function to your `MapLayer`:
   }}
   popup={(feature) => {
     const p = feature.properties;
-    const parksUrl = `https://www.nycgovparks.org/facilities/great-trees/${p.id}`;
     return `
-      <strong>${p.species || 'Great Tree'}</strong>
-      <p style="max-width: 240px; margin: 0.25em 0;">${p.description}</p>
-      ${p.image ? `<img src="${p.image}" style="max-width: 240px; height: auto; display: block; margin: 0.5em 0;">` : ''}
-      <a href="${parksUrl}" target="_blank" rel="noopener">Read on NYC Parks →</a>
+      <strong>${p.species || 'Great Tree'}</strong><br>
+      ${p.description}
     `;
   }}
 />
 ```
 
-Save. Click one of the amber dots. A popup should appear with the tree's species, its location, a photo if one exists, and a link back to the full NYC Parks page.
+The `popup` prop is a *function*, not a string. MapLayer calls it every time a tree is clicked and passes it the full feature, so you can build whatever HTML the data deserves. We're keeping it simple for now: the species on top, the location underneath.
+
+Save. Click one of the amber dots. A popup should appear.
 
 <Screenshot
   src="/screenshots/week-11/great-tree-popup.png"
-  alt="A zoomed-in map showing an amber dot over Prospect Park with a popup reading 'Camperdown elm' above a line about its location south of the Boathouse, a photo of the sprawling tree, and a link back to NYC Parks"
+  alt="A zoomed-in map showing an amber dot over Prospect Park with a popup reading 'Camperdown elm' above a line about its location south of the Boathouse"
   chromeTitle="The trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-A few things worth noticing about the `popup` prop.
+## Part 3: Searching by location
 
-It's a *function*, not a string. That's the key to making popups flexible. You pass in a template function, and MapLayer calls it every time a tree is clicked. Because the function has access to the clicked feature's full properties object, you can construct whatever HTML makes sense for the data at hand.
+A map centered on the whole city is fine, but a reader doesn't live in the whole city. They live in Bed-Stuy, or Flushing, or Mott Haven, or upstate somewhere and they're homesick. Let's give them a way to point the map at the place they care about.
 
-It returns ordinary HTML as a string. That's why we use backtick [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) here — they let us interpolate variables right into the markup with the `${}` syntax. You can put inline styling, nested markup, and outbound links in here. Notice the inline `max-width` and `height: auto` on the photo tag to keep it from overflowing the popup or squishing its aspect ratio.
+### What is geocoding?
 
-Notice also that we are not storing the NYC Parks URL in our data file. We construct it from the tree's `id` with another template literal one line up. This is a small but powerful habit: when a value can be derived, don't store it. The file stays smaller, the data stays honest, and if NYC Parks ever restructures their URLs we only have one line to change.
+The trick is called **geocoding** — turning a human-readable place ("122 West 27th Street" or "Central Park") into the numeric coordinates our map understands. Every interactive map with a search box you have ever used is leaning on a geocoder under the hood.
 
-And it gracefully handles missing data. About half of the trees don't have a photo in the scraped file. The ternary `? :` guard means the `<img>` tag only appears when `p.image` is a real string. The reader never sees a broken image icon, and we never ship an `<img src="null">` to the page. This kind of defensive formatting separates professional work from a prototype.
+There are commercial geocoders (Google Places, Mapbox) and open ones. The class template uses [Nominatim](https://nominatim.openstreetmap.org/), the open-source geocoder run by the OpenStreetMap project. It's free to use at modest volumes, no API key required.
 
-That's all the point-map form has to teach us. A small curated list, one MapLayer, one popup template. Clean and direct. Now let's see what happens when the dataset gets bigger.
+### The Geocoder component
 
-## Part 5: Swap in the planetree choropleth
+You don't need to talk to Nominatim directly. The template's [`Geocoder`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-geocoder--docs) component wraps it in a styled autocomplete search box. Preview it in Storybook before you wire it up.
+
+<Screenshot
+  src="/screenshots/week-11/geocoder-storybook.png"
+  alt="The Storybook documentation page for the Geocoder component, showing a live search box with dropdown results and its props table"
+  chromeTitle="Geocoder – Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-geocoder--docs"
+  maxWidth="960px"
+/>
+
+When a user picks a result, `Geocoder` fires an `onresult` callback with its coordinates. All we have to do is hand those coordinates to our `Map`.
+
+### Wire it up
+
+In `+page.svelte`, import the component and add reactive state variables for the coordinates and zoom:
+
+```svelte {emphasize-lines="4,7-9"}
+<script>
+  import Map from '$lib/components/Map.svelte';
+  import MapLayer from '$lib/components/MapLayer.svelte';
+  import Geocoder from '$lib/components/Geocoder.svelte';
+
+  let { data } = $props();
+  const greatTrees = data.greatTrees;
+  let longitude = $state(-74.006);
+  let latitude = $state(40.7128);
+  let zoom = $state(11);
+</script>
+```
+
+Now replace the hard-coded numbers in the `<Map>` tag with those state variables, and add a `<Geocoder>` above the map with a callback that updates them.
+
+```svelte {emphasize-lines="3-10,14-16"}
+<h1>The trees of New York</h1>
+
+<Geocoder
+  label="Find your neighborhood"
+  placeholder="Enter an address in New York…"
+  onresult={(result) => {
+    longitude = result.lng;
+    latitude = result.lat;
+    zoom = 15;
+  }}
+/>
+
+<Map
+  {longitude}
+  {latitude}
+  {zoom}
+  theme="positron"
+  caption="The Great Trees of New York City."
+>
+  <!-- the MapLayer you added in Part 2 stays as-is -->
+</Map>
+```
+
+Notice the shorthand `{longitude}` — that's the same as writing `longitude={longitude}`. Svelte lets you skip the repetition when the prop name matches the variable name.
+
+Save and try it. Type your home address into the search box, pick a result from the dropdown, and watch the map glide over to your block. Any time those props change, the underlying MapLibre map calls `flyTo` with a smooth easing curve.
+
+<Screenshot
+  src="/screenshots/week-11/geocoder-in-action.png"
+  alt="The page showing a search box with the query 'Newmark Graduate School of Journalism', a dropdown of matching results, and a map that has flown to Midtown Manhattan"
+  chromeTitle="The trees of New York"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+This is the reactive pattern you know, now connected to cartography. The Geocoder updates three state variables. Those variables flow into the Map as props. The Map reacts by animating to the new location. No imperative code, no manual event wiring.
+
+Try searching for a few addresses outside Manhattan. Search for your childhood home. Search for a place you've always been curious about. This kind of personal, place-based interaction is one of the most engaging tools a journalist has. The reader enters the story through their own front door.
+
+## Part 4: Swap in the planetree choropleth
+
+In 2015, NYC Parks ran its third decadal street tree census — a citizen science effort called [TreesCount!](https://www.nycgovparks.org/trees/treescount). Over 2,200 volunteers walked every block in the five boroughs with tablets, identifying every street tree they found and recording its species, trunk diameter, health, and exact location. They found 666,134 trees of 132 different species.
+
+<Screenshot
+  src="/screenshots/week-11/treescount-homepage.png"
+  alt="The NYC Parks TreesCount! 2015 homepage showing data visualizations about New York's street trees"
+  chromeTitle="TreesCount! 2015"
+  chromeUrl="https://www.nycgovparks.org/trees/treescount"
+  maxWidth="960px"
+/>
+
+One tree dominates that census: **the London planetree**. It's the tree Robert Moses, the unelected power broker who ran NYC Parks from 1934 to 1960, planted everywhere he built. Along his parkways. In his parks. Up and down street after street. Moses's favorite tree is still the most common street tree in New York — about one in ten of every street tree you pass is a London planetree, a direct artifact of one man's taste imposed on the city seventy years ago. The leaf in the NYC Parks logo is widely believed to depict one.
 
 The Great Trees were easy: a tiny handful of points, nowhere near a megabyte, no trouble at all for MapLibre to render.
 
@@ -359,15 +431,31 @@ When a dataset is too big to ship as individual points, you have a few options. 
 
 Gothamist aggregated their shootings data to census blocks. We're going to aggregate our planetree data to a different administrative unit: the **Neighborhood Tabulation Area**, or NTA. NYC's Department of City Planning created NTAs to approximate the neighborhoods most New Yorkers recognize — "Park Slope-Gowanus," "Astoria-Ditmars-Steinway," "Washington Heights North" — by grouping census tracts into medium-sized statistical geographies. There are 195 of them, compared to 666,000 trees. The compression ratio is immense.
 
-The `planetrees-by-nta.geojson` file I posted in the class chat is the result of that aggregation. Every one of the 195 NTA polygons arrives with a London planetree count already baked into its properties — along with richer context we'll get to in a moment.
+I've hosted the result of that aggregation at:
+
+```
+https://palewi.re/data/nyc-trees/planetrees-by-nta.geojson
+```
+
+Every one of the 195 NTA polygons arrives with a London planetree count already baked into its properties — along with richer context we'll get to in a moment.
 
 ### Load the second file
 
-Add a second import in `+page.svelte` alongside the Great Trees:
+Fetch it alongside the Great Trees in `src/routes/+page.js`:
+
+```js {emphasize-lines="3,4"}
+export async function load({ fetch }) {
+  const greatTrees = await fetch('https://palewi.re/data/nyc-trees/great-trees.geojson').then((r) => r.json());
+  const planetrees = await fetch('https://palewi.re/data/nyc-trees/planetrees-by-nta.geojson').then((r) => r.json());
+  return { greatTrees, planetrees };
+}
+```
+
+And pull it out of the `data` prop in `+page.svelte`:
 
 ```svelte {emphasize-lines="2"}
-import greatTrees from '$lib/data/great-trees.json';
-import planetrees from '$lib/data/planetrees-by-nta.json';
+const greatTrees = data.greatTrees;
+const planetrees = data.planetrees;
 ```
 
 Pop open your browser console and inspect one of the NTA features:
@@ -577,7 +665,7 @@ Take a moment to notice what just happened. We changed **one reactive variable**
 
 Worth noting what you *cannot* do with this approach, because the tradeoff matters editorially. The choropleth can only show slices that were pre-computed into the data file. We could not, at runtime, ask "shade by poor-health planetrees that are also large-trunked." We'd have to go back to the Python that produced this file, add a `count_poor_large` property, regenerate, and redeploy. For many graphics projects, that's fine — the fixed menu is the whole story. For others you'd keep the raw data and aggregate in the browser. Always worth knowing which side of that line you're on before you start.
 
-## Part 6: Editorial framing and sources
+## Part 5: Editorial framing and sources
 
 Two maps on one page, and nothing yet explains what the reader is looking at or where any of it came from. Let's fix that.
 
