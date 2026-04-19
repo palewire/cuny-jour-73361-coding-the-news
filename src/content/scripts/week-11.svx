@@ -154,7 +154,7 @@ In 1985, the New York City Parks Department began an ambitious new venture. They
   maxWidth="960px"
 />
 
-Forty years later, an update roster listed 199 noteworthy trees, each a small piece of New York history.
+Forty years later, an update roster listed 119 noteworthy trees, each a small piece of New York history.
 
 I scraped those entries from the city website and converted them the format prefered by MapLibre: GeoJSON.
 
@@ -182,7 +182,7 @@ Notice the coordinates are `[longitude, latitude]` with the x-axis position firs
 
 We'll fetch the file using the same [`+page.js`](https://svelte.dev/docs/kit/routing#page-page-js) load function pattern you've used in previous weeks.
 
-First download the file I've prepared from [this link](https://gist.githubusercontent.com/palewire/ecb68c32c9172ba76d9a07e701de0cbd/raw/ccf6c6fdd801b4dd04119a3d33d87e9145d21f24/nyc-great-trees.geojson) and place it in `src/data/great-trees.json` in your project.
+First download the file I've prepared from [this link](https://gist.githubusercontent.com/palewire/ecb68c32c9172ba76d9a07e701de0cbd/raw/ccf6c6fdd801b4dd04119a3d33d87e9145d21f24/nyc-great-trees.geojson) and place it in `lib/data/great-trees.json` in your project.
 
 Create `src/routes/+page.js`:
 
@@ -234,7 +234,7 @@ Here's a fully functioning example with some simple styles and a new top to the 
 
 <div class="container">
   <ArticleHeader
-    headline="The GreatTrees of New York"
+    headline="The Great Trees of New York"
     byline="NYCity News Service"
     pubDate="2026-04-20"
   />
@@ -356,8 +356,7 @@ The template's [`Geocoder`](https://palewire.github.io/cuny-jour-static-site-tem
   src="/screenshots/week-11/geocoder-storybook.png"
   alt="The Storybook documentation page for the Geocoder component"
   chromeTitle="Geocoder – Storybook"
-  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/components-geocoder--docs"
-  maxWidth="960px"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-geocoder--docs"
 />
 
 When a user picks a result, `Geocoder` fires an `onresult` callback with its coordinates. All you have to do is hand those coordinates to our `Map`.
@@ -613,145 +612,18 @@ Save and click around. Each NTA now tells you three things: how many London plan
 
 That `rank` field is where the story gets interesting. Flick around the map and find the NTAs where Moses's tree is *not* #1. Some of the outer-borough neighborhoods — parts of Staten Island, corners of Eastern Queens — show honeylocust or pin oak as the champion instead, with the planetree trailing at #3 or #4. You are looking at the limits of one man's reach.
 
-### Let the reader switch slices
-
-Our choropleth colors every NTA by its total London planetree count. But the data file has other slices baked in — `count_good`, `count_fair`, `count_poor`, plus three buckets by trunk size. Each slice tells a different story.
-
-Let's let the reader switch between them.
-
-Add a state variable for the active slice and a dropdown that sets it:
-
-```svelte
-<script>
-  // ...existing imports and state...
-  let colorBy = $state('count_total');
-</script>
-
-<!-- Somewhere above the map: -->
-<label>
-  Color neighborhoods by:
-  <select bind:value={colorBy}>
-    <option value="count_total">Total London planetrees</option>
-    <option value="count_good">Good-health only</option>
-    <option value="count_fair">Fair-health only</option>
-    <option value="count_poor">Poor-health only</option>
-    <option value="count_large">Large trunks (30″+)</option>
-    <option value="count_medium">Medium trunks (10–29″)</option>
-    <option value="count_small">Small trunks (under 10″)</option>
-  </select>
-</label>
-```
-
-Now derive a `paint` object that references the selected property:
-
-```js
-let fillPaint = $derived({
-  'fill-color': [
-    'interpolate', ['linear'], ['get', colorBy],
-    0, '#f0f7f4',
-    50, '#95d5b2',
-    250, '#40916c',
-    1000, '#1b4332'
-  ],
-  'fill-opacity': 0.7
-});
-```
-
-And pass that derived paint object to the fill layer instead of the inline version:
-
-```svelte {emphasize-lines="4"}
-<MapLayer
-  id="nta-fill"
-  type="fill"
-  paint={fillPaint}
-  data={planetrees}
-  popup={/* same as before */}
-/>
-```
-
-Save and try the dropdown. Switch to "Poor-health only" and watch the map re-color around the neighborhoods carrying the highest count of struggling planetrees — which, in theory, could correlate with heat, soil compaction, or neglect. Switch to "Large trunks" and you'll see the NTAs where Moses's original mid-century plantings still dominate, versus places where the canopy has been turned over.
-
-<Screenshot
-  src="/screenshots/week-11/color-by-large.png"
-  alt="The map re-colored to show only London planetrees with trunk diameters of 30 inches or more, revealing Moses's mid-century planting corridors concentrated along Riverside Drive, Ocean Parkway, and the grand boulevards of the Bronx"
-  chromeTitle="The trees of New York"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-Take a moment to notice what just happened. We changed **one reactive variable** — `colorBy` — and the map re-colored itself across 195 polygons. No imperative redraw calls, no manual event listeners. Svelte saw that the `paint` prop of the `MapLayer` depended on `colorBy`, and `MapLayer` saw that its own paint had changed, and MapLibre saw that the layer's style had changed. Every piece of the stack held up its end of the reactive contract.
-
-Worth noting what you *cannot* do with this approach, because the tradeoff matters editorially. The choropleth can only show slices that were pre-computed into the data file. We could not, at runtime, ask "shade by poor-health planetrees that are also large-trunked." We'd have to go back to the Python that produced this file, add a `count_poor_large` property, regenerate, and redeploy. For many graphics projects, that's fine — the fixed menu is the whole story. For others you'd keep the raw data and aggregate in the browser. Always worth knowing which side of that line you're on before you start.
-
-## Part 5: Editorial framing and sources
-
-Two maps on one page, and nothing yet explains what the reader is looking at or where any of it came from. Let's fix that.
-
-Replace the bare `<h1>` with a proper framing, and add a source credit at the bottom:
-
-```svelte
-<h1>The trees of New York</h1>
-
-<p>
-  In 1985, NYC Parks asked New Yorkers to nominate the trees in their
-  neighborhoods that mattered. The agency returned to the list in
-  October 2024 and named 120 of them — the Great Trees of New York.
-  Meanwhile, the most common tree on the city's streets remains the
-  London planetree, planted by the thousands decades earlier under
-  Parks Commissioner Robert Moses. One list is stories; the other is
-  scale. Both still shape the canopy of the five boroughs. Find yours
-  on the map.
-</p>
-
-<!-- Geocoder, filters, and map go here -->
-
-<footer>
-  <p>
-    Sources: NYC Parks'
-    <a href="https://www.nycgovparks.org/facilities/great-trees" target="_blank">Great Trees of New York City</a>
-    list, updated October 2024; and the NYC Parks
-    <a href="https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh" target="_blank">2015 Street Tree Census</a>,
-    via NYC Open Data.
-    Neighborhood boundaries from the
-    <a href="https://data.cityofnewyork.us/City-Government/2010-Neighborhood-Tabulation-Areas-NTAs-/cpf4-rkhq" target="_blank">2010 NTA dataset</a>.
-    Address geocoding by
-    <a href="https://nominatim.openstreetmap.org/" target="_blank">Nominatim</a>.
-    Basemap tiles by <a href="https://openfreemap.org/" target="_blank">OpenFreeMap</a>.
-  </p>
-  <p>
-    The 2015 census is the most recent complete inventory of New York's
-    street trees. Some have been removed or replaced since, and new trees
-    have been planted. This map is a snapshot of what volunteers recorded
-    a decade ago, not a live registry. Species counts per neighborhood
-    were pre-computed from the raw census; filters showing different
-    slices rely on those pre-computed values, not on ad-hoc queries
-    against the full dataset.
-  </p>
-</footer>
-```
-
 ## Homework
 
-### Task 1: Build your own two-view map
+### Task 1: Publish an interactive map
 
-Find a point dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/) or another public source that includes latitude and longitude. Build a page with two map views of it: a point map for the raw records, and an aggregated view for a broader pattern.
+Find a point or polygon dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/). Build a page in your project that maps it with MapLibre, using the components in the template.
 
 Your project must have:
 
 - A `Map` component with data plotted from your chosen dataset
 - A `Geocoder` for navigation
-- At least one point-data `MapLayer` with a `popup` template
-- At least one aggregated `MapLayer` (you may pre-aggregate in Python, or aggregate in the browser using `$derived.by`)
-- An interactive control (dropdown, checkbox, or slider) that changes what the map shows
-- An editorial frame: a headline, an introductory paragraph, and a source credit with a methodology caveat
-
-Some datasets that could work well:
-
-- NYC Film Permits (aggregate by neighborhood)
-- Motor Vehicle Crashes (points for individual incidents, choropleth for totals)
-- 311 Noise Complaints from the past month (points for specific complaints, choropleth for volume)
-- Restaurant Inspections (points for individual restaurants, choropleth for grade distribution)
-- A different tree species from the same census (Callery pear has an invasive-tree angle; ginkgo has the stinky-female-tree angle)
+- A headline, introductory paragraph, and a source credit that present the map as a journalistic product, not just a demo.
+- At least one feature we didn't cover in class, like a custom popup, a data filter or a more complex paint style.
 
 Deploy to GitHub Pages and send me the link.
 
@@ -759,13 +631,5 @@ Deploy to GitHub Pages and send me the link.
 
 Be ready to walk the class through your map and explain:
 
-- The dataset you chose and what story the geography tells
-- Why you chose to aggregate what you aggregated, and what the tradeoffs were
-- At least one editorial decision you made about what to show and what to leave out — and why
-- Anything you got from an AI assistant that you had to modify or rewrite yourself
-
-### Task 3: Look at it on your phone
-
-Before you present, open your live site on your phone. Does the map fill the screen? Do the controls stack cleanly? Can you tap a polygon with your thumb?
-
-Most readers of most interactive news maps will encounter them on a phone. A map that only works on a laptop is a map that fails most of its readers. Fix anything that isn't working before next class.
+- The dataset you chose and why
+- At least one editorial decision you made about what to show and what to leave out
