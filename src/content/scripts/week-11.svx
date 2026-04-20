@@ -80,7 +80,7 @@ And open [localhost:5173](http://localhost:5173) in your browser.
   chromeUrl="https://maplibre.org/"
 />
 
-MapLibre has an extensive set of Node.JS tools governing every aspect of map rendering and interaction. Putting together a map like the one Gothamist publishes can require writing hundreds of lines of carefully constructed code. It can be a little daunting.
+MapLibre has an extensive JavaScript API governing every aspect of map rendering and interaction. Putting together a map like the one Gothamist publishes can require writing hundreds of lines of carefully constructed code. It can be a little daunting.
 
 Rather than force everyone to climb the learning curve and rewrite similar code snippets for every project, well organized newsrooms build reusable components that encapsulate the most common patterns. That way, a newsroom developer can drop a map on the page with a few lines of code, and then customize it as needed.
 
@@ -145,7 +145,7 @@ Play with it a little. Drag the map around. Zoom in and out with the scroll whee
 
 ## Part 2: Putting points on the map
 
-In 1985, the New York City Parks Department began an ambitious new venture. They called it the Great Tree Search, where the agency called on the public to nominate "trees of unusual size, species, form or historical association." Volunteers from all five boroughs wrote in with trees of rare species, strange form or historical association.
+In 1985, the New York City Parks Department began an ambitious new venture. They called it the Great Tree Search, where the agency called on the public to nominate "trees of unusual size, species, form or historical association."
 
 <Screenshot
   src="/screenshots/week-11/nyc-parks-great-trees.png"
@@ -247,9 +247,7 @@ Here's a fully functioning example with some simple styles and a new top to the 
 
   <p>
     The agency called on the public to nominate "trees of unusual size, species,
-    form or historical association." Volunteers from all five boroughs wrote in
-    with trees of unusual size, rare species, strange form, or deep historical
-    association. Explore them here and see if you can find any near you.
+    form or historical association." Explore them here and see if you can find any near you.
   </p>
 
   <Map
@@ -384,9 +382,7 @@ Now replace the hard-coded numbers in the `<Map>` tag with those state variables
 ```svelte {emphasize-lines="8-16,18-25"}
   <p>
     The agency called on the public to nominate "trees of unusual size, species,
-    form or historical association." Volunteers from all five boroughs wrote in
-    with trees of unusual size, rare species, strange form, or deep historical
-    association. Explore them here and see if you can find any near you.
+    form or historical association." Explore them here and see if you can find any near you.
   </p>
 
   <Geocoder
@@ -449,7 +445,7 @@ According to the 2015 census, there are more than 87,000 London plane trees on N
 
 That's far too many points to put on a single map, but we can still tell a story by aggregating the data to a higher level, just as the Gothamist reporters did with shootings and Census blocks.
 
-In this case, we'll aggregate the trees to the level of Neighborhood Tabulation Areas devised by city planners to group together similar neighborhoods for analysis. There were 195 NTAs in 1995, covering every inch of the city. It's a lot of data, but not so much that it will overwhelm the average web browser.
+In this case, we'll aggregate the trees to the level of Neighborhood Tabulation Areas devised by city planners to group together similar neighborhoods for analysis. There were 195 NTAs in 2015, covering every inch of the city. It's a lot of data, but not so much that it will overwhelm the average web browser.
 
 <Screenshot
   src="/screenshots/week-11/nta-maps.png"
@@ -584,12 +580,12 @@ In this example, the `paint` input gets considerably more complex. The `fill-col
 
 The first color, `#eef2f9`, is for NTAs with 0 to 146 plane trees. The second color, `#c2cfe6`, is for NTAs with 147 to 268 plane trees, and so on up to the darkest shade, `#0033a1`, which is for NTAs with 697 or more plane trees. This is meant to break them, roughly, into quintiles, with each color representing about 20% of the NTAs.
 
-Save. The blue dots are gone, and the city now fills with varying shades of green.
+Save. The blue dots are gone, and the city now fills with varying shades of blue.
 
 <Screenshot
   src="/screenshots/week-11/choropleth.png"
   alt="A map of NYC with neighborhoods shaded from light to dark blue by London plane tree count."
-  chromeTitle="The Plane trees of New York"
+  chromeTitle="Where to find the London plane, New York's most common tree"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -633,7 +629,7 @@ Save and click around. Each NTA now tells you how many plane trees it has.
 <Screenshot
   src="/screenshots/week-11/nta-popup.png"
   alt="A popup showing how many plane trees live in the Kips Bay neighborhood of Manhattan"
-  chromeTitle="The Plane trees of New York"
+  chromeTitle="Where to find the London plane, New York's most common tree"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -670,7 +666,7 @@ Update our headline and lead-in to reflect the shift in subject. Drop this in ab
 
 <Screenshot
   src="/screenshots/week-11/london-final.png"
-  alt="The finished London plane tree choropleth with the article header, introduction, and green-shaded NTAs across the five boroughs"
+  alt="The finished London plane tree choropleth with the article header, introduction, and blue-shaded NTAs across the five boroughs"
   chromeTitle="Where to find the London plane, New York's most common tree"
   chromeUrl="http://localhost:5173"
 />
