@@ -11,7 +11,7 @@ locked: false
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
-In the summer of 2024, reporters at Gothamist published ["NYPD data shows most shootings occur on the same blocks, year after year"](https://gothamist.com/news/hot-spots-nypd-data-shows-most-shootings-occur-on-the-same-blocks-year-after-year), a data-driven investigation into gun violence in New York City.
+In the summer of 2024, reporters at Gothamist published ["NYPD data shows most shootings occur on the same blocks, year after year,"](https://gothamist.com/news/hot-spots-nypd-data-shows-most-shootings-occur-on-the-same-blocks-year-after-year) a data-driven investigation into gun violence in New York City.
 
 The analysis, by reporters Brittany Kriegstein and Jaclyn Jeffrey-Wilensky, showed that shooting incidents were not, as some might assume, a widespread problem that reached every corner of the city.
 
@@ -23,7 +23,7 @@ The analysis, by reporters Brittany Kriegstein and Jaclyn Jeffrey-Wilensky, show
   maxWidth="960px"
 />
 
-Instead, by downloading and mapping the data published to [the city's open data portal](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8/data_preview), they found that gunfire was concentrated in a small number of areas, with nine areas accounting for a massive share of shootings.
+Instead, by downloading and mapping the data published to [the city's open data portal](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8/data_preview), they found that gunfire was concentrated in a small number of areas, with nine zones accounting for a massive share of shootings.
 
 "Just 4% of New York City’s 120,000 blocks account for nearly all of the city's shootings," the story reported. "Life even two or three blocks away from these nine hot spots can be dramatically different, with less violence, fewer crimes and residents who say they feel relatively safe."
 
@@ -82,7 +82,7 @@ And open [localhost:5173](http://localhost:5173) in your browser.
 
 MapLibre has an extensive set of Node.JS tools governing every aspect of map rendering and interaction. Putting together a map like the one Gothamist publishes can require writing hundreds of lines of carefully constructed code. It can be a little daunting.
 
-Rather than force everyone to climb the learning curve and rewrite similar code snippets for every project, well organized newsrooms build reusable components that encapsulate the most common pattern. That way, a newsroom developer can drop a map on the page with a few lines of code, and then customize it as needed.
+Rather than force everyone to climb the learning curve and rewrite similar code snippets for every project, well organized newsrooms build reusable components that encapsulate the most common patterns. That way, a newsroom developer can drop a map on the page with a few lines of code, and then customize it as needed.
 
 As in past weeks, your class template already includes the components we'll use this week. Like the rest of the library, they're documented on the [Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/) site.
 
@@ -111,7 +111,7 @@ Open `src/routes/+page.svelte` and replace the boilerplate with this:
 ```svelte
 <script>
   import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
-  import Map from '$lib/components/maps/Map.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
 </script>
 
 <div class="container">
@@ -145,7 +145,7 @@ Play with it a little. Drag the map around. Zoom in and out with the scroll whee
 
 ## Part 2: Putting points on the map
 
-In 1985, the New York City Parks Department began an ambitious new venture. They called it the Great Tree Search, where the agency called on the public to nominate "trees of unusual size, species, form or historical association." Volunteers from all five boroughs wrote in with trees of unusual size, rare species, strange form, or deep historical association.
+In 1985, the New York City Parks Department began an ambitious new venture. They called it the Great Tree Search, where the agency called on the public to nominate "trees of unusual size, species, form or historical association." Volunteers from all five boroughs wrote in with trees of rare species, strange form or historical association.
 
 <Screenshot
   src="/screenshots/week-11/nyc-parks-great-trees.png"
@@ -155,7 +155,7 @@ In 1985, the New York City Parks Department began an ambitious new venture. They
   maxWidth="960px"
 />
 
-Forty years later, an updated roster listed 119 noteworthy trees, each a small piece of New York history.
+Forty years later, an updated roster lists 119 noteworthy trees, each a small piece of New York history.
 
 I scraped those entries from the city website and converted them to the format preferred by MapLibre: GeoJSON.
 
@@ -206,7 +206,7 @@ Update the `<script>` block in `+page.svelte` to receive it:
 ```svelte {emphasize-lines="5-7"}
 <script>
   import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
-  import Map from '$lib/components/maps/Map.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
 
   let { data } = $props();
   const greatTrees = data.greatTrees;
@@ -225,8 +225,8 @@ Here's a fully functioning example with some simple styles and a new top to the 
 ```svelte
 <script>
   import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
-  import Map from '$lib/components/maps/Map.svelte';
-  import MapLayer from '$lib/components/maps/MapLayer.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
+  import MapLayer from '$lib/components/Maps/MapLayer.svelte';
 
   let { data } = $props();
   const greatTrees = data.greatTrees;
@@ -281,7 +281,7 @@ Save. Your map should now be studded with blue dots.
 <Screenshot
   src="/screenshots/week-11/great-tree-dots.png"
   alt="A pale-gray map of the five boroughs studded with blue dots"
-  chromeTitle="The trees of New York"
+  chromeTitle="The Great Trees of New York"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
@@ -310,7 +310,7 @@ Our `MapLayer` component accepts a `popup` property that will handle all the cod
 
 Add a simple `popup` to your `MapLayer`:
 
-```svelte {emphasize-lines="12-18"}
+```svelte {emphasize-lines="12-15"}
   <MapLayer
     id="great-trees"
     type="circle"
@@ -367,9 +367,9 @@ You can do that in `+page.svelte`. Import the component and add reactive state v
 ```svelte {emphasize-lines="5,9-11"}
 <script>
   import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
-  import Map from '$lib/components/maps/Map.svelte';
-  import MapLayer from '$lib/components/maps/MapLayer.svelte';
-  import Geocoder from '$lib/components/maps/Geocoder.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
+  import MapLayer from '$lib/components/Maps/MapLayer.svelte';
+  import Geocoder from '$lib/components/Maps/Geocoder.svelte';
 
   let { data } = $props();
   const greatTrees = data.greatTrees;
@@ -381,7 +381,7 @@ You can do that in `+page.svelte`. Import the component and add reactive state v
 
 Now replace the hard-coded numbers in the `<Map>` tag with those state variables, and add a `<Geocoder>` above the map with a callback that updates them.
 
-```svelte {emphasize-lines="3-10,14-16"}
+```svelte {emphasize-lines="8-16,18-25"}
   <p>
     The agency called on the public to nominate "trees of unusual size, species,
     form or historical association." Volunteers from all five boroughs wrote in
@@ -520,9 +520,9 @@ And pull it out of the `data` prop in `+page.svelte`:
 ```svelte {emphasize-lines="9"}
 <script>
   import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
-  import Map from '$lib/components/maps/Map.svelte';
-  import MapLayer from '$lib/components/maps/MapLayer.svelte';
-  import Geocoder from '$lib/components/maps/Geocoder.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
+  import MapLayer from '$lib/components/Maps/MapLayer.svelte';
+  import Geocoder from '$lib/components/Maps/Geocoder.svelte';
 
   let { data } = $props();
   const greatTrees = data.greatTrees;
@@ -538,8 +538,15 @@ We're going to replace our points with a [choropleth map](https://en.wikipedia.o
 
 Remove the Great Tree `MapLayer` from inside your `<Map>` block. In its place, add two new `MapLayer`s: one that fills each NTA with a color based on its London plane tree count, and one that draws the outlines between them.
 
-```svelte
-  <Map {longitude} {latitude} {zoom} theme="positron">
+```svelte {emphasize-lines="9-38"}
+  <Map
+    {longitude}
+    {latitude}
+    {zoom}
+    height={600}
+    theme="positron"
+    credit="OpenFreeMap / OpenStreetMap contributors"
+  >
     <MapLayer
       id="nta-fill"
       type="fill"
@@ -591,9 +598,9 @@ You're now looking at Moses's New York. The darkest polygons are the NTAs where 
 
 ### Adding a popup
 
-Finally, let's make those polygons clickable. Add a `popup` to the fill layer that tells the reader what they're looking at:
+Finally, let's make those polygons clickable. Add a `popup` to the fill layer that tells the reader what they're looking at.
 
-```svelte
+```svelte {emphasize-lines="21-24"}
 <MapLayer
   id="nta-fill"
   type="fill"
@@ -672,12 +679,15 @@ The only thing missing is a legend to explain the colors. You can add one with t
 
 First import the component at the top of your script tag.
 
-```svelte {emphasize-lines="5"}
+```svelte {emphasize-lines="6"}
+<script>
   import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
   import Geocoder from '$lib/components/Maps/Geocoder.svelte';
   import Map from '$lib/components/Maps/Map.svelte';
   import MapLayer from '$lib/components/Maps/MapLayer.svelte';
   import Legend from '$lib/components/Maps/Legend.svelte';
+  // ...
+</script>
 ```
 
 Then add it at the bottom of the page, but just before the closing `</div>` tag. Pass it an array of objects with `label` and `color` properties that match the breaks you used in your fill layer.
