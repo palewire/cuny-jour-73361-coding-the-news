@@ -100,6 +100,7 @@ The key ones this week are:
 | [`Map`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-map--docs) | The container for your map, as well as its base configuration. |
 | [`MapLayer`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-maplayer--docs) | A single data layer. Drop it inside `<Map>` to plot points, lines and polygons. |
 | [`Geocoder`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-geocoder--docs) | A search box that turns an address into coordinates.  |
+| [`Legend`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-legend--docs) | A styled box for explaining the map's symbology. |
 
 Open Storybook and poke at each one before moving on.
 
@@ -630,7 +631,7 @@ Save and click around. Each NTA now tells you how many plane trees it has.
   maxWidth="960px"
 />
 
-As a final flourish, let's update our headline and lead-in to reflect the shift in subject. Drop this in above the map, but inside of the container div.
+Update our headline and lead-in to reflect the shift in subject. Drop this in above the map, but inside of the container div.
 
 ```svelte
   <ArticleHeader
@@ -660,21 +661,73 @@ As a final flourish, let's update our headline and lead-in to reflect the shift 
   </p>
 ```
 
-Voila. You've done it, you've made a data-driven map.
-
 <Screenshot
   src="/screenshots/week-11/london-final.png"
   alt="The finished London plane tree choropleth with the article header, introduction, and green-shaded NTAs across the five boroughs"
-  chromeTitle="The Trees of New York"
+  chromeTitle="Where to find the London plane, New York's most common tree"
   chromeUrl="http://localhost:5173"
-  maxWidth="960px"
+/>
+
+The only thing missing is a legend to explain the colors. You can add one with the `Legend` component, which takes an array of labels and colors and renders a styled box.
+
+First import the component at the top of your script tag.
+
+```svelte {emphasize-lines="5"}
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Geocoder from '$lib/components/Maps/Geocoder.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
+  import MapLayer from '$lib/components/Maps/MapLayer.svelte';
+  import Legend from '$lib/components/Maps/Legend.svelte';
+```
+
+Then add it at the bottom of the page, but just before the closing `</div>` tag. Pass it an array of objects with `label` and `color` properties that match the breaks you used in your fill layer.
+
+```svelte
+  <Legend
+    title="London plane trees"
+    mode="threshold"
+    items={[
+      {
+        color: '#eef2f9',
+        to: 146,
+      },
+      {
+        color: '#c2cfe6',
+        from: 147,
+        to: 268,
+      },
+      {
+        color: '#8098cc',
+        from: 269,
+        to: 433,
+      },
+      {
+        color: '#3366b3',
+        from: 434,
+        to: 696,
+      },
+      {
+        color: '#0033a1',
+        from: 697,
+      },
+    ]}
+  />
+```
+
+Voila. You've done it, you've made a data-driven map.
+
+<Screenshot
+  src="/screenshots/week-11/london-legend.png"
+  alt="The finished London plane tree choropleth with a legend at the bottom"
+  chromeTitle="Where to find the London plane, New York's most common tree"
+  chromeUrl="http://localhost:5173"
 />
 
 ## Homework
 
 ### Task 1: Publish an interactive map
 
-Find a point or polygon dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/). Build a page in your project that maps it with MapLibre, using the components in the template.
+Find a point or polygon dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/), or choose one from your own work. Build a page in your project that maps it with MapLibre, using the components in the template.
 
 Your project must have:
 
