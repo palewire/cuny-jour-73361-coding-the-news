@@ -379,7 +379,7 @@ You can do that in `+page.svelte`. Import the component and add reactive state v
 
 Now replace the hard-coded numbers in the `<Map>` tag with those state variables, and add a `<Geocoder>` above the map with a callback that updates them.
 
-```svelte {emphasize-lines="8-16,18-25"}
+```svelte
   <p>
     The agency called on the public to nominate "trees of unusual size, species,
     form or historical association." Explore them here and see if you can find any near you.
