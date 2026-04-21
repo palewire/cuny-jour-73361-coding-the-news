@@ -739,7 +739,7 @@ Your project must have:
 
 - A `Map` component with data plotted from your chosen dataset
 - A `Geocoder` for navigation
-- A headline, introductory paragraph, and a methodology box that presents the map as a journalistic product
+- A headline, an introductory paragraph, a legend and a methodology box that presents the map as a journalistic product
 - At least one feature we didn't cover in class, like a custom popup, a data filter or a more complex paint style
 
 Deploy to GitHub Pages and send me the link.
@@ -750,4 +750,4 @@ Be ready to walk the class through your map and explain:
 
 - The dataset you chose and why
 - At least one editorial decision you made about what to show and what to leave out
-- Something you added to the map that we didn't cover in class, how you built it and why it's a good fit for you page
+- Something you added to the map that we didn't cover in class, how you built it and why it's a good fit for your page
