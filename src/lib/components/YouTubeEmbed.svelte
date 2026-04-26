@@ -6,7 +6,7 @@
   } = $props<{ url: string; title?: string; allow?: string }>();
 </script>
 
-<div class="youtube-embed">
+<div class="youtube-embed" data-title={title}>
   <iframe src={url} {title} {allow} allowfullscreen loading="lazy"></iframe>
 </div>
 

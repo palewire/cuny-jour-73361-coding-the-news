@@ -1,9 +1,9 @@
 ---
 title: "Interactive Map"
-summary: "How to build a geographic visualization that lets readers explore data"
+summary: "How to invite readers to explore geographic data"
 date: "Apr. 20, 2026"
 week: 11
-locked: true
+locked: false
 ---
 
 <script>
@@ -11,970 +11,743 @@ locked: true
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
-Two weeks ago we built a database explorer and put a tiny locator map on each building's detail page. Today we're making the map the main event.
+In the summer of 2024, reporters at Gothamist published ["NYPD data shows most shootings occur on the same blocks, year after year,"](https://gothamist.com/news/hot-spots-nypd-data-shows-most-shootings-occur-on-the-same-blocks-year-after-year) a data-driven investigation into gun violence in New York City.
 
-We're going to build a full interactive map of shooting incidents in New York City using [MapLibre GL JS](https://maplibre.org/), an open-source mapping library, with free tiles from [OpenFreeMap](https://openfreemap.org/). The data comes from the NYPD's public dataset on NYC Open Data.
-
-Before we write any code, we need to talk about what we're mapping and why it matters.
-
-## Part 1: Mapping responsibly
-
-The NYPD publishes data on every shooting incident in New York City, going back to 2006. Each record includes the date, time, location, borough, and whether the incident was fatal. It also includes latitude and longitude, which means we can plot every shooting on a map.
-
-This is powerful data for journalism. It can reveal patterns — which neighborhoods are most affected, whether shootings are rising or falling, what time of day they happen. But it can also mislead if you're not careful.
+The analysis, by reporters Brittany Kriegstein and Jaclyn Jeffrey-Wilensky, showed that shooting incidents were not, as some might assume, a widespread problem that reached every corner of the city.
 
 <Screenshot
-  src="/screenshots/week-11/nypd-data-portal.png"
-  alt="The NYPD Shooting Incident Data on the NYC Open Data portal, showing a table of incident records"
-  chromeTitle="NYPD Shooting Incident Data (Historic)"
-  chromeUrl="https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8"
+  src="/screenshots/week-11/gothamist-story.png"
+  alt="Gothamist's 'Hot spots: NYPD data shows most shootings occur on the same blocks, year after year' story page"
+  chromeTitle="Hot spots: NYPD data shows most shootings occur on the same blocks, year after year"
+  chromeUrl="https://gothamist.com/news/hot-spots-nypd-data-shows-most-shootings-occur-on-the-same-blocks-year-after-year"
   maxWidth="960px"
 />
 
-A dot map of shootings can be informative, but it can also stigmatize communities. When you put a cluster of red dots on a neighborhood, you are attaching a label to that place. People who live there will see their home defined by its worst moments.
+Instead, by downloading and mapping the data published to [the city's open data portal](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8/data_preview), they found that gunfire was concentrated in a small number of areas, with nine zones accounting for a massive share of shootings.
 
-Good data journalists think about this. They ask questions like: Does showing individual points serve the reader better than showing borough-level totals? Should we aggregate by precinct or neighborhood instead of plotting exact locations? Do we need to show the entire historical dataset, or would the most recent year tell a clearer story?
+"Just 4% of New York City’s 120,000 blocks account for nearly all of the city's shootings," the story reported. "Life even two or three blocks away from these nine hot spots can be dramatically different, with less violence, fewer crimes and residents who say they feel relatively safe."
 
-There's no single right answer. But the conversation matters, and we'll keep it in mind as we build.
+Alongside the story, Gothamist published [an interactive map](https://gothamist.com/news/new-york-city-gun-violence-map) that allowed readers to see their findings and explore the data for themselves. It shaded every Census block in the five boroughs by how many shooting incidents the NYPD recorded there over the previous four years.
 
-For today's class, I've prepared a GeoJSON file of shooting incidents from the most recent complete year. We'll plot them on a map, add filters, and build popups that show details when you click an incident.
+<Screenshot
+  src="/screenshots/week-11/gothamist-gun-violence.png"
+  alt="Gothamist's 'Map: Where New York City's shootings happen' showing a map of the five boroughs shaded by census block, with the darkest blocks concentrated in parts of the Bronx, Brooklyn, and Harlem"
+  chromeTitle="Map: Where New York City's shootings happen"
+  chromeUrl="https://gothamist.com/news/new-york-city-gun-violence-map"
+/>
 
-### Set up your project
+Their work follows a common model for data journalism: Mapping a dataset to reveal patterns and steer reporting, then publishing an interactive version to let readers place themselves in the story, regardless of where they live.
 
-Create a new repository from the class template. Call it `nyc-shootings-map`. Clone it, open it in VS Code, and run:
+Today you are going to learn how to do just that. We'll cover how to plot points, shade areas and invite users to interact with the data.
+
+Like Gothamist, our source will be the New York City data portal. But instead of crime, we'll be mapping the city's massive population of trees.
+
+## Part 1: Making your first map
+
+The first step is getting a bare map on the page. Let's begin.
+
+Open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+
+<Screenshot
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
+
+Click "Use this template" and create a new repository called `nyc-tree-map`. Clone it, open it in Visual Studio Code, and install the dependencies.
 
 ```bash
 npm install
 ```
 
-This time, we also need to install one additional package — the MapLibre GL JS library:
-
-```bash
-npm install maplibre-gl
-```
-
-This is the first time we've installed an external package beyond what's in the template. The `npm install maplibre-gl` command downloads the library and adds it to your project's `package.json` file. When you run `npm install` in the future, it will be included automatically.
-
-Now start the development server:
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Download the data file I've posted in the class chat and save it as `src/lib/data/shootings.geojson`.
+And open [localhost:5173](http://localhost:5173) in your browser.
 
-Open it and take a look. [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) is a standard format for encoding geographic data. It looks like regular JSON, but with a specific structure. Here's a simplified version of one record:
+### Meet MapLibre
+
+[MapLibre GL JS](https://maplibre.org/) is an open-source library for rendering vector maps in the browser. Give it some coordinates, a zoom level and a style for its base map, and it draws a fully interactive map. It's free to use, it integrates nicely with SvelteKit and, thus, it powers many of the maps you see on news sites.
+
+<Screenshot
+  src="/screenshots/week-11/maplibre-homepage.png"
+  alt="The MapLibre homepage describing the open-source mapping library"
+  chromeTitle="MapLibre"
+  chromeUrl="https://maplibre.org/"
+/>
+
+MapLibre has an extensive JavaScript API governing every aspect of map rendering and interaction. Putting together a map like the one Gothamist publishes can require writing hundreds of lines of carefully constructed code. It can be a little daunting.
+
+Rather than force everyone to climb the learning curve and rewrite similar code snippets for every project, well organized newsrooms build reusable components that encapsulate the most common patterns. That way, a newsroom developer can drop a map on the page with a few lines of code, and then customize it as needed.
+
+As in past weeks, your class template already includes the components we'll use this week. Like the rest of the library, they're documented on the [Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/) site.
+
+<Screenshot
+  src="/screenshots/week-11/storybook-map-components.png"
+  alt="The class template's Storybook showing the Map, MapLayer, and Geocoder components in the sidebar"
+  chromeTitle="Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/compositions-interactive-map--docs"
+/>
+
+The key ones this week are:
+
+| Component | Description |
+|-----------|-------------|
+| [`Map`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-map--docs) | The container for your map, as well as its base configuration. |
+| [`MapLayer`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-maplayer--docs) | A single data layer. Drop it inside `<Map>` to plot points, lines and polygons. |
+| [`Geocoder`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-geocoder--docs) | A search box that turns an address into coordinates.  |
+| [`Legend`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-legend--docs) | A styled box for explaining the map's symbology. |
+
+Open Storybook and poke at each one before moving on.
+
+### Creating a blank map
+
+Open `src/routes/+page.svelte` and replace the boilerplate with this:
+
+```svelte
+<script>
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
+</script>
+
+<div class="container">
+  <ArticleHeader
+    headline="The Trees of New York"
+    byline="NYCity News Service"
+    pubDate="2026-04-20"
+  />
+
+  <Map
+    longitude={-74.0}
+    latitude={40.7}
+    zoom={9.5}
+    height={600}
+    theme="positron"
+    credit="OpenFreeMap / OpenStreetMap contributors"
+  />
+</div>
+```
+
+Save the file and check your browser. You should see a clean pale-gray map of New York City in our standard template.
+
+<Screenshot
+  src="/screenshots/week-11/bare-map.png"
+  alt="A pale-gray map of New York City with no data overlaid, sitting below an article header reading 'The Trees of New York' with a byline"
+  chromeTitle="The trees of New York"
+  chromeUrl="http://localhost:5173"
+/>
+
+Play with it a little. Drag the map around. Zoom in and out with the scroll wheel. Then try changing the `theme` prop to `"liberty"` or `"bright"` and save — the basemap should swap without you reloading the page.
+
+## Part 2: Putting points on the map
+
+In 1985, the New York City Parks Department began an ambitious new venture. They called it the Great Tree Search, where the agency called on the public to nominate "trees of unusual size, species, form or historical association."
+
+<Screenshot
+  src="/screenshots/week-11/nyc-parks-great-trees.png"
+  alt="The NYC Parks Great Trees page listing the full roster with photos, species, and neighborhoods"
+  chromeTitle="Great Trees of New York City"
+  chromeUrl="https://www.nycgovparks.org/facilities/great-trees"
+  maxWidth="960px"
+/>
+
+Forty years later, an updated roster lists 119 noteworthy trees, each a small piece of New York history.
+
+I scraped those entries from the city website and converted them to the format preferred by MapLibre: GeoJSON.
+
+[GeoJSON](https://geojson.org/) is a standard format for encoding geographic data. It looks like regular JSON, but with a specific structure: a `FeatureCollection` containing `Feature` objects, each with `properties` and `geometry` that describe what the thing is and where it sits on the map.
+
+Here's one example from the file:
 
 ```json
 {
   "type": "Feature",
-  "properties": {
-    "date": "2025-07-04",
-    "time": "23:45:00",
-    "borough": "BROOKLYN",
-    "precinct": 75,
-    "fatal": false
-  },
   "geometry": {
     "type": "Point",
-    "coordinates": [-73.8743, 40.6505]
+    "coordinates": [-73.9843, 40.7342]
+  },
+  "properties": {
+    "id": 34,
+    "species": "English elm",
+    "description": "Western gate of Stuyvesant Square Park",
+    "image": "https://www.nycgovparks.org/images/facilities/uploads/small/54dd2a39155b4.jpg"
   }
 }
 ```
 
-Each record is a "Feature" with two parts: `properties` (the data about the incident) and `geometry` (the location). The coordinates are longitude first, then latitude — the opposite of how most people think about it, and one of the most common mistakes new mappers make.
+Notice the coordinates are `[longitude, latitude]` with the x-axis position first. This is the standard for GeoJSON, but it's the opposite of how some other mapping programs store geographic data. Be sure you get that order right when you build your own GeoJSON files.
 
-## Part 2: Your first map
+We'll fetch the file using the same [`+page.js`](https://svelte.dev/docs/kit/routing#page-page-js) load function pattern you've used in previous weeks.
 
-Let's get a map on the page. We're going to build a Svelte component that wraps MapLibre GL JS.
+First download the file I've prepared from [this link](https://gist.githubusercontent.com/palewire/ecb68c32c9172ba76d9a07e701de0cbd/raw/f763671fed463d095f7ef2dc897c3895aac64076/nyc-great-trees.json) and place it in `lib/data/great-trees.json` in your project.
 
-Create `src/lib/components/Map.svelte`:
+Create `src/routes/+page.js`:
 
-```svelte
-<script>
-  import maplibregl from 'maplibre-gl';
-  import 'maplibre-gl/dist/maplibre-gl.css';
+```js
+import greatTrees from '$lib/data/great-trees.json';
 
-  let container;
-
-  $effect(() => {
-    const map = new maplibregl.Map({
-      container: container,
-      style: 'https://tiles.openfreemap.org/styles/liberty',
-      center: [-73.95, 40.75],
-      zoom: 10
-    });
-
-    map.addControl(new maplibregl.NavigationControl());
-
-    return () => map.remove();
-  });
-</script>
-
-<div class="map" bind:this={container}></div>
-
-<style>
-  .map {
-    width: 100%;
-    height: 500px;
-  }
-</style>
+export function load() {
+  return {
+    showHeader: true,
+    showFooter: true,
+    greatTrees,
+  };
+}
 ```
 
-There's a new Svelte feature here: [`$effect`](https://svelte.dev/docs/svelte/$effect). It's similar to `$derived`, but instead of creating a value, it runs a block of code after the component renders. We need this because MapLibre requires a DOM element to exist before it can draw a map inside it.
+Now, as in past weeks, we can add a `$props` line to our script in `+page.svelte` to receive the data.
 
-Let's walk through the code:
+Update the `<script>` block in `+page.svelte` to receive it:
 
-`import maplibregl from 'maplibre-gl'` brings in the mapping library we just installed. The second import loads its CSS, which is necessary for the map controls and popups to look right.
-
-`let container` declares a variable that will hold a reference to the `<div>` element where the map will be drawn. The `bind:this={container}` attribute on the `<div>` connects this variable to the actual DOM element — so when Svelte renders the page, `container` will point to that `<div>`.
-
-Inside `$effect`, we create a new `maplibregl.Map` with four options:
-- `container` — the DOM element to draw the map in
-- `style` — the URL for our map tiles. We're using [OpenFreeMap](https://openfreemap.org/), a free service that provides beautiful map tiles with no API key required. The `liberty` style gives us a clean, readable base map.
-- `center` — the starting position of the map, as `[longitude, latitude]`. These coordinates center the map on Manhattan.
-- `zoom` — how close the map starts. 10 shows the full city; 12 would zoom into a borough; 15 would show a neighborhood.
-
-The `addControl` line adds zoom buttons to the map. The `return () => map.remove()` line cleans up the map when the component is removed from the page — this prevents memory leaks.
-
-Now let's use the component. Open `src/routes/+page.svelte` and replace everything with:
-
-```svelte
+```svelte {emphasize-lines="5-7"}
 <script>
-  import Map from '$lib/components/Map.svelte';
-</script>
-
-<h1>NYC Shooting Incidents</h1>
-<Map />
-```
-
-Save and check your browser. You should see a headline and an interactive map of New York City underneath it.
-
-<Screenshot
-  src="/screenshots/week-11/first-map.png"
-  alt="A MapLibre map centered on New York City showing streets, parks, and water features with zoom controls in the top right"
-  chromeTitle="NYC Shooting Incidents"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-Drag the map. Zoom in and out. Double-click to zoom. This is a full interactive vector map running in your browser, using free tiles, with no API key. Try doing that with Google Maps.
-
-## Part 3: Plotting the data
-
-A map without data is just a pretty picture. Let's add our shooting incidents.
-
-Update `Map.svelte` to accept the data as a prop and plot it on the map:
-
-```svelte
-<script>
-  import maplibregl from 'maplibre-gl';
-  import 'maplibre-gl/dist/maplibre-gl.css';
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
 
   let { data } = $props();
-  let container;
-
-  $effect(() => {
-    const map = new maplibregl.Map({
-      container: container,
-      style: 'https://tiles.openfreemap.org/styles/liberty',
-      center: [-73.95, 40.75],
-      zoom: 10
-    });
-
-    map.addControl(new maplibregl.NavigationControl());
-
-    map.on('load', () => {
-      map.addSource('shootings', {
-        type: 'geojson',
-        data: data
-      });
-
-      map.addLayer({
-        id: 'shootings-layer',
-        type: 'circle',
-        source: 'shootings',
-        paint: {
-          'circle-radius': 4,
-          'circle-color': '#e74c3c',
-          'circle-opacity': 0.6
-        }
-      });
-    });
-
-    return () => map.remove();
-  });
-</script>
-
-<div class="map" bind:this={container}></div>
-
-<style>
-  .map {
-    width: 100%;
-    height: 500px;
-  }
-</style>
-```
-
-We've made three changes. First, we added `let { data } = $props()` so the component accepts GeoJSON data from its parent. Second, we wrapped the data logic in `map.on('load', ...)` — this is MapLibre's way of saying "wait until the base map is fully loaded before adding anything." Third, inside that handler, we added a source and a layer.
-
-`map.addSource` tells MapLibre about our data. We give it a name (`'shootings'`) and tell it the data is in GeoJSON format.
-
-`map.addLayer` tells MapLibre how to display that data. A [circle layer](https://maplibre.org/maplibre-style-spec/layers/#circle) draws a circle at each point. The `paint` object controls the appearance: a red circle, 4 pixels in radius, at 60% opacity. The partial opacity is important — it lets you see when multiple incidents overlap.
-
-Now update `+page.svelte` to pass the data in:
-
-```svelte
-<script>
-  import Map from '$lib/components/Map.svelte';
-  import shootings from '$lib/data/shootings.geojson';
-</script>
-
-<h1>NYC Shooting Incidents</h1>
-<Map data={shootings} />
-```
-
-Save and check your browser. You should see red dots scattered across the city.
-
-<Screenshot
-  src="/screenshots/week-11/dots-on-map.png"
-  alt="A map of New York City covered in semi-transparent red dots representing shooting incidents, with visible concentrations in the Bronx, northern Manhattan, Brooklyn, and Queens"
-  chromeTitle="NYC Shooting Incidents"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-Take a moment to zoom in and explore. The patterns are striking. Some neighborhoods are dense with incidents. Others have almost none. This is the power of mapping data — the geography tells a story that a table of numbers cannot.
-
-## Part 4: Adding popups
-
-When a reader sees a dot on the map, their first instinct is to click it. Let's reward that instinct by showing a popup with the incident details.
-
-Add this code inside the `map.on('load', ...)` handler in `Map.svelte`, after the `addLayer` call:
-
-```js
-map.on('click', 'shootings-layer', (e) => {
-  const feature = e.features[0];
-  const props = feature.properties;
-  const coords = feature.geometry.coordinates;
-
-  new maplibregl.Popup()
-    .setLngLat(coords)
-    .setHTML(`
-      <strong>${props.date}</strong><br>
-      ${props.time}<br>
-      ${props.borough}, Precinct ${props.precinct}<br>
-      ${props.fatal ? '<span style="color: #e74c3c; font-weight: bold;">Fatal</span>' : 'Non-fatal'}
-    `)
-    .addTo(map);
-});
-
-map.on('mouseenter', 'shootings-layer', () => {
-  map.getCanvas().style.cursor = 'pointer';
-});
-
-map.on('mouseleave', 'shootings-layer', () => {
-  map.getCanvas().style.cursor = '';
-});
-```
-
-The first block listens for clicks on the `shootings-layer`. When a user clicks a dot, MapLibre provides the features at that point. We take the first one, extract its properties, and create a popup showing the date, time, borough, precinct, and whether the incident was fatal.
-
-The second and third blocks change the cursor to a pointer when hovering over a dot — a visual cue that it's clickable, just like a link.
-
-Save and click on a dot. A popup should appear with the incident details.
-
-<Screenshot
-  src="/screenshots/week-11/popup.png"
-  alt="A map zoomed into a Brooklyn neighborhood showing a popup over a red dot with the date, time, borough, precinct, and 'Non-fatal' text"
-  chromeTitle="NYC Shooting Incidents"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-## Part 5: Filtering the map
-
-An interactive map becomes much more useful when readers can slice the data. Let's add a borough filter and a toggle for fatal-only incidents.
-
-This is where we connect the reactive tools you already know — `$state` and `$derived` — to MapLibre's filtering system.
-
-### Wiring filters to the map component
-
-First, let's update `Map.svelte` to accept a `filter` prop and apply it to the layer. The challenge is that we need to update the map whenever the filter changes, but we don't want to rebuild the entire map. MapLibre has a method called `setFilter` that handles this efficiently.
-
-Update `Map.svelte`:
-
-```svelte
-<script>
-  import maplibregl from 'maplibre-gl';
-  import 'maplibre-gl/dist/maplibre-gl.css';
-
-  let { data, filter = null } = $props();
-  let container;
-
-  $effect(() => {
-    const map = new maplibregl.Map({
-      container: container,
-      style: 'https://tiles.openfreemap.org/styles/liberty',
-      center: [-73.95, 40.75],
-      zoom: 10
-    });
-
-    map.addControl(new maplibregl.NavigationControl());
-
-    map.on('load', () => {
-      map.addSource('shootings', {
-        type: 'geojson',
-        data: data
-      });
-
-      map.addLayer({
-        id: 'shootings-layer',
-        type: 'circle',
-        source: 'shootings',
-        paint: {
-          'circle-radius': 4,
-          'circle-color': '#e74c3c',
-          'circle-opacity': 0.6
-        }
-      });
-
-      map.on('click', 'shootings-layer', (e) => {
-        const feature = e.features[0];
-        const props = feature.properties;
-        const coords = feature.geometry.coordinates;
-
-        new maplibregl.Popup()
-          .setLngLat(coords)
-          .setHTML(`
-            <strong>${props.date}</strong><br>
-            ${props.time}<br>
-            ${props.borough}, Precinct ${props.precinct}<br>
-            ${props.fatal ? '<span style="color: #e74c3c; font-weight: bold;">Fatal</span>' : 'Non-fatal'}
-          `)
-          .addTo(map);
-      });
-
-      map.on('mouseenter', 'shootings-layer', () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-
-      map.on('mouseleave', 'shootings-layer', () => {
-        map.getCanvas().style.cursor = '';
-      });
-    });
-
-    return () => map.remove();
-  });
-
-  $effect(() => {
-    if (!container) return;
-    const map = container._map;
-    if (!map || !map.getLayer('shootings-layer')) return;
-    map.setFilter('shootings-layer', filter);
-  });
-</script>
-
-<div class="map" bind:this={container}></div>
-
-<style>
-  .map {
-    width: 100%;
-    height: 500px;
-  }
-</style>
-```
-
-Wait — there's a problem. The second `$effect` needs access to the map object, but the map was created inside the first `$effect`. Let's restructure to store the map reference:
-
-```svelte
-<script>
-  import maplibregl from 'maplibre-gl';
-  import 'maplibre-gl/dist/maplibre-gl.css';
-
-  let { data, filter = null } = $props();
-  let container;
-  let map;
-  let loaded = $state(false);
-
-  $effect(() => {
-    map = new maplibregl.Map({
-      container: container,
-      style: 'https://tiles.openfreemap.org/styles/liberty',
-      center: [-73.95, 40.75],
-      zoom: 10
-    });
-
-    map.addControl(new maplibregl.NavigationControl());
-
-    map.on('load', () => {
-      map.addSource('shootings', {
-        type: 'geojson',
-        data: data
-      });
-
-      map.addLayer({
-        id: 'shootings-layer',
-        type: 'circle',
-        source: 'shootings',
-        paint: {
-          'circle-radius': 4,
-          'circle-color': '#e74c3c',
-          'circle-opacity': 0.6
-        }
-      });
-
-      map.on('click', 'shootings-layer', (e) => {
-        const feature = e.features[0];
-        const props = feature.properties;
-        const coords = feature.geometry.coordinates;
-
-        new maplibregl.Popup()
-          .setLngLat(coords)
-          .setHTML(`
-            <strong>${props.date}</strong><br>
-            ${props.time}<br>
-            ${props.borough}, Precinct ${props.precinct}<br>
-            ${props.fatal ? '<span style="color: #e74c3c; font-weight: bold;">Fatal</span>' : 'Non-fatal'}
-          `)
-          .addTo(map);
-      });
-
-      map.on('mouseenter', 'shootings-layer', () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-
-      map.on('mouseleave', 'shootings-layer', () => {
-        map.getCanvas().style.cursor = '';
-      });
-
-      loaded = true;
-    });
-
-    return () => map.remove();
-  });
-
-  $effect(() => {
-    if (!loaded) return;
-    map.setFilter('shootings-layer', filter);
-  });
-</script>
-
-<div class="map" bind:this={container}></div>
-
-<style>
-  .map {
-    width: 100%;
-    height: 500px;
-  }
-</style>
-```
-
-The restructured version stores the map in a component-level variable and uses a `loaded` state variable to track when the map is ready. The second `$effect` watches `loaded` and `filter` — whenever either changes, it updates the map's filter. When `filter` is `null`, MapLibre shows all features.
-
-### Building the filter controls
-
-Now let's add the controls in `+page.svelte`:
-
-```svelte
-<script>
-  import Map from '$lib/components/Map.svelte';
-  import shootings from '$lib/data/shootings.geojson';
-
-  let boroughFilter = $state('all');
-  let fatalOnly = $state(false);
-
-  let mapFilter = $derived(() => {
-    let conditions = [];
-
-    if (boroughFilter !== 'all') {
-      conditions.push(['==', ['get', 'borough'], boroughFilter]);
-    }
-
-    if (fatalOnly) {
-      conditions.push(['==', ['get', 'fatal'], true]);
-    }
-
-    if (conditions.length === 0) return null;
-    if (conditions.length === 1) return conditions[0];
-    return ['all', ...conditions];
-  });
-</script>
-
-<h1>NYC Shooting Incidents</h1>
-
-<div class="controls">
-  <select bind:value={boroughFilter}>
-    <option value="all">All boroughs</option>
-    <option value="BRONX">Bronx</option>
-    <option value="BROOKLYN">Brooklyn</option>
-    <option value="MANHATTAN">Manhattan</option>
-    <option value="QUEENS">Queens</option>
-    <option value="STATEN ISLAND">Staten Island</option>
-  </select>
-
-  <label>
-    <input type="checkbox" bind:checked={fatalOnly} />
-    Fatal incidents only
-  </label>
-</div>
-
-<Map data={shootings} filter={mapFilter} />
-```
-
-The `mapFilter` is a `$derived` value that builds a MapLibre [filter expression](https://maplibre.org/maplibre-style-spec/expressions/). These expressions use a Lisp-like syntax that looks odd at first:
-
-- `['==', ['get', 'borough'], 'BRONX']` means "where the `borough` property equals 'BRONX'"
-- `['all', expr1, expr2]` means "both conditions must be true"
-- `null` means "no filter — show everything"
-
-This syntax is specific to MapLibre. You don't need to memorize it — this is one of those cases where asking an AI assistant "how do I filter a MapLibre layer by a property value" will get you the right answer instantly.
-
-Add some styles:
-
-```css
-.controls {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin: 1rem 0;
-}
-
-select {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 2px solid #ddd;
-}
-
-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9375rem;
-}
-```
-
-Save and try the filters. Select "Bronx" from the dropdown and watch the dots outside the Bronx disappear. Check the "Fatal incidents only" box and see the map thin out further.
-
-<Screenshot
-  src="/screenshots/week-11/filters-working.png"
-  alt="The map showing only Bronx shooting incidents after selecting 'Bronx' from the borough dropdown, with fewer dots visible and the fatal-only checkbox unchecked"
-  chromeTitle="NYC Shooting Incidents"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-This is the same reactive pattern you've used all semester — `$state` tracks the user's input, `$derived` computes a value from it, and the UI updates automatically. The only new part is that instead of filtering a list of HTML cards, we're filtering a layer on a map.
-
-## Part 6: Adding an incident count
-
-Let's show the reader how many incidents they're looking at. This connects the filters to a visible number that updates as they narrow the data.
-
-We can count the filtered features using plain JavaScript. In `+page.svelte`, add a derived count:
-
-```svelte {emphasize-lines="8-17"}
-<script>
-  import Map from '$lib/components/Map.svelte';
-  import shootings from '$lib/data/shootings.geojson';
-
-  let boroughFilter = $state('all');
-  let fatalOnly = $state(false);
-
-  let filteredCount = $derived(
-    shootings.features.filter(f => {
-      if (boroughFilter !== 'all' && f.properties.borough !== boroughFilter) return false;
-      if (fatalOnly && !f.properties.fatal) return false;
-      return true;
-    }).length
-  );
-
-  let mapFilter = $derived(() => {
-    let conditions = [];
-
-    if (boroughFilter !== 'all') {
-      conditions.push(['==', ['get', 'borough'], boroughFilter]);
-    }
-
-    if (fatalOnly) {
-      conditions.push(['==', ['get', 'fatal'], true]);
-    }
-
-    if (conditions.length === 0) return null;
-    if (conditions.length === 1) return conditions[0];
-    return ['all', ...conditions];
-  });
+  const greatTrees = data.greatTrees;
+  console.log(greatTrees);
 </script>
 ```
 
-Display the count between the controls and the map:
+Refresh the page and open the browser's developer console. You should see the full GeoJSON object logged there, with a `features` array containing 119 entries.
 
-```svelte
-<p class="count">{filteredCount.toLocaleString()} incidents</p>
-```
+### Adding a layer
 
-The `.toLocaleString()` method adds commas to large numbers — so `1247` becomes `1,247`.
+The template's `MapLayer` component takes a GeoJSON collection and a MapLibre paint object and renders the data on the parent map. You want to import it and drop it as a child of `<Map>`, which tells MapLibre to render it as a layer on top of the basemap.
 
-Style the count:
-
-```css
-.count {
-  font-size: 1.125rem;
-  font-weight: bold;
-  margin: 0 0 0.5rem;
-}
-```
-
-Save and toggle the filters. The count should update instantly as you change the borough or toggle fatal-only.
-
-<Screenshot
-  src="/screenshots/week-11/with-count.png"
-  alt="The page showing '247 incidents' in bold text between the filter controls and the map, with 'BROOKLYN' selected in the dropdown"
-  chromeTitle="NYC Shooting Incidents"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-## Part 7: Editorial framing
-
-Like every project this semester, the data needs a frame. Add an introduction and source credit to `+page.svelte`.
-
-Before the controls:
-
-```svelte
-<h1>NYC Shooting Incidents</h1>
-
-<p class="intro">
-  The New York Police Department records every shooting incident in the
-  city and publishes the data on NYC Open Data. Each dot on the map
-  below represents one incident from the most recent complete year.
-  Use the filters to explore the data by borough and severity.
-</p>
-```
-
-After the map:
-
-```svelte
-<footer class="source">
-  <p>
-    Source: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8" target="_blank">NYPD Shooting Incident Data</a>,
-    via NYC Open Data. Map tiles from <a href="https://openfreemap.org/" target="_blank">OpenFreeMap</a>.
-  </p>
-  <p>
-    Locations represent the approximate coordinates recorded by the NYPD
-    at the time of each incident. Some coordinates may be imprecise or
-    adjusted to protect privacy.
-  </p>
-</footer>
-```
-
-Style them:
-
-```css
-.intro {
-  font-size: 1.0625rem;
-  line-height: 1.6;
-  max-width: 640px;
-}
-
-.source {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #ddd;
-  font-size: 0.8125rem;
-  color: #666;
-}
-```
-
-Note the second paragraph in the source credit. It's a data caveat — an honest acknowledgment that the coordinates are approximate. This kind of transparency is a hallmark of good data journalism.
-
-<Screenshot
-  src="/screenshots/week-11/final-page.png"
-  alt="The finished map page showing a headline, introductory paragraph, filter controls, incident count, the interactive map with red dots, and a source credit at the bottom"
-  chromeTitle="NYC Shooting Incidents"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-Save and check your live site.
-
-## Part 8: A choropleth view
-
-The dot map shows every individual incident. That's powerful, but it can also overwhelm — a dense cluster of dots in one neighborhood blends together into a red blob that's hard to read. And as we discussed in Part 1, individual dots can stigmatize specific locations in ways that aggregated data does not.
-
-A [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map) offers a different perspective. Instead of plotting individual points, it divides the map into regions and colors each region by a count or rate. Think of the election maps you see on TV — red and blue states shaded by vote margins. Same idea, applied to shootings by police precinct.
-
-Our shooting data already has a `precinct` field, and the city publishes a GeoJSON file of NYPD precinct boundaries. I've prepared this file for you — download `precincts.geojson` from the class chat and save it to `src/lib/data/`.
-
-### Aggregating the data
-
-First, we need to count how many incidents happened in each precinct and attach that count to the precinct polygons. We'll do this in JavaScript when the page loads.
-
-In `+page.svelte`, import the precinct boundaries and compute the counts:
-
-```js
-import precincts from '$lib/data/precincts.geojson';
-```
-
-Then build the aggregated data as a `$derived` value:
-
-```js
-let precinctData = $derived(() => {
-  // Count incidents per precinct, respecting current filters
-  let counts = {};
-  for (let feature of shootings.features) {
-    let p = feature.properties;
-    if (boroughFilter !== 'all' && p.borough !== boroughFilter) continue;
-    if (fatalOnly && !p.fatal) continue;
-    counts[p.precinct] = (counts[p.precinct] || 0) + 1;
-  }
-
-  // Attach counts to precinct polygons
-  let enriched = JSON.parse(JSON.stringify(precincts));
-  for (let feature of enriched.features) {
-    let id = feature.properties.precinct;
-    feature.properties.count = counts[id] || 0;
-  }
-  return enriched;
-});
-```
-
-This loops through the shooting incidents (respecting whatever borough and fatal filters are active), tallies the count per precinct, and then copies the precinct GeoJSON and attaches a `count` property to each polygon. The `JSON.parse(JSON.stringify(...))` is a quick way to make a deep copy — we don't want to modify the original data.
-
-### Creating a ChoroplethMap component
-
-Create `src/lib/components/ChoroplethMap.svelte`:
+Here's a fully functioning example with some simple styles and a new top to the page.
 
 ```svelte
 <script>
-  import maplibregl from 'maplibre-gl';
-  import 'maplibre-gl/dist/maplibre-gl.css';
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
+  import MapLayer from '$lib/components/Maps/MapLayer.svelte';
 
   let { data } = $props();
-  let container;
-  let map;
-  let loaded = $state(false);
-
-  $effect(() => {
-    map = new maplibregl.Map({
-      container: container,
-      style: 'https://tiles.openfreemap.org/styles/liberty',
-      center: [-73.95, 40.75],
-      zoom: 10
-    });
-
-    map.addControl(new maplibregl.NavigationControl());
-
-    map.on('load', () => {
-      map.addSource('precincts', {
-        type: 'geojson',
-        data: data
-      });
-
-      map.addLayer({
-        id: 'precincts-fill',
-        type: 'fill',
-        source: 'precincts',
-        paint: {
-          'fill-color': [
-            'interpolate',
-            ['linear'],
-            ['get', 'count'],
-            0, '#f7fbff',
-            10, '#c6dbef',
-            25, '#6baed6',
-            50, '#2171b5',
-            100, '#08306b'
-          ],
-          'fill-opacity': 0.7
-        }
-      });
-
-      map.addLayer({
-        id: 'precincts-outline',
-        type: 'line',
-        source: 'precincts',
-        paint: {
-          'line-color': '#333',
-          'line-width': 1
-        }
-      });
-
-      map.on('click', 'precincts-fill', (e) => {
-        const props = e.features[0].properties;
-        new maplibregl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(`
-            <strong>Precinct ${props.precinct}</strong><br>
-            ${props.count} shooting incidents
-          `)
-          .addTo(map);
-      });
-
-      map.on('mouseenter', 'precincts-fill', () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-
-      map.on('mouseleave', 'precincts-fill', () => {
-        map.getCanvas().style.cursor = '';
-      });
-
-      loaded = true;
-    });
-
-    return () => map.remove();
-  });
-
-  $effect(() => {
-    if (!loaded) return;
-    map.getSource('precincts').setData(data);
-  });
+  const greatTrees = data.greatTrees;
+  console.log(greatTrees);
 </script>
 
-<div class="map" bind:this={container}></div>
+<div class="container">
+  <ArticleHeader
+    headline="The Great Trees of New York"
+    byline="NYCity News Service"
+    pubDate="2026-04-20"
+  />
 
-<style>
-  .map {
-    width: 100%;
-    height: 500px;
-  }
-</style>
-```
+  <p>
+    In 1985, the New York City Parks Department began an ambitious new venture.
+    They called it the Great Tree Search.
+  </p>
 
-Most of this follows the same pattern as the dot map. The two key differences are in the layer configuration.
+  <p>
+    The agency called on the public to nominate "trees of unusual size, species,
+    form or historical association." Explore them here and see if you can find any near you.
+  </p>
 
-Instead of `type: 'circle'`, we're using `type: 'fill'`, which draws filled polygons. The paint expression is more complex — it uses MapLibre's [`interpolate`](https://maplibre.org/maplibre-style-spec/expressions/#interpolate) function to create a color ramp. Reading it from the inside out: get the `count` property from each polygon, and map it linearly across a blue color scale — from nearly white (0 incidents) through light blue (10) to dark navy (100+). This is the same kind of sequential color scale you'd see in any professional choropleth.
-
-The second `$effect` watches for changes to the `data` prop and calls `setData` on the source. This is how the choropleth updates when the user changes a filter — instead of re-filtering a layer (like we did with the dots), we pass in a whole new GeoJSON object with updated counts.
-
-### Adding it to the page
-
-Let's give readers a way to toggle between the two views. In `+page.svelte`, add a state variable for the view mode and import the new component:
-
-```js
-import ChoroplethMap from '$lib/components/ChoroplethMap.svelte';
-
-let viewMode = $state('dots');
-```
-
-Add a toggle control alongside the existing filters:
-
-```svelte
-<div class="controls">
-  <select bind:value={boroughFilter}>
-    <option value="all">All boroughs</option>
-    <option value="BRONX">Bronx</option>
-    <option value="BROOKLYN">Brooklyn</option>
-    <option value="MANHATTAN">Manhattan</option>
-    <option value="QUEENS">Queens</option>
-    <option value="STATEN ISLAND">Staten Island</option>
-  </select>
-
-  <label>
-    <input type="checkbox" bind:checked={fatalOnly} />
-    Fatal incidents only
-  </label>
-
-  <div class="view-toggle">
-    <button
-      class:active={viewMode === 'dots'}
-      onclick={() => viewMode = 'dots'}
-    >Incidents</button>
-    <button
-      class:active={viewMode === 'precinct'}
-      onclick={() => viewMode = 'precinct'}
-    >By precinct</button>
-  </div>
+  <Map
+    longitude={-74.0}
+    latitude={40.7}
+    zoom={9.5}
+    height={600}
+    theme="positron"
+    credit="OpenFreeMap / OpenStreetMap contributors"
+  >
+    <MapLayer
+      id="great-trees"
+      type="circle"
+      data={greatTrees}
+      paint={{
+        'circle-color': '#0033a1',
+        'circle-radius': 5,
+        'circle-stroke-color': '#1a1a1a',
+        'circle-stroke-width': 1,
+        'circle-opacity': 0.9,
+      }}
+    />
+  </Map>
 </div>
 ```
 
-Use an `{#if}` block to swap between the two maps:
+Save. Your map should now be studded with blue dots.
+
+<Screenshot
+  src="/screenshots/week-11/great-tree-dots.png"
+  alt="A pale-gray map of the five boroughs studded with blue dots"
+  chromeTitle="The Great Trees of New York"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+The `type` property in `MapLayer` tells MapLibre how to draw the data. Since our GeoJSON features are points, we use the `circle` type, which draws a simple circle at each point's coordinates. If our data had lines or polygons, we would use the `line` or `fill` types instead.
+
+The `data` property is where you pass the GeoJSON collection. MapLibre reads the coordinates and properties of each feature and draws them on the map.
+
+They're styled by the `paint` object you passed to `MapLayer`. MapLibre has a huge catalog of styling options for every type of layer. The ones we used here are:
+
+| Property | Description |
+|----------|-------------|
+| `circle-color` | The fill color of each point. |
+| `circle-radius` | The size of each point, in pixels. |
+| `circle-stroke-color` | The color of the outline around each point. |
+| `circle-stroke-width` | The width of the outline, in pixels. |
+| `circle-opacity` | The opacity of the whole point, from 0 to 1. |
+
+You can experiment with other paint properties in the [MapLibre Style Specification](https://maplibre.org/maplibre-style-spec/layers/#layer-properties) to customize the look of your points. Try tweaking the color, size and opacity to see how it changes the map.
+
+### Adding a popup
+
+The dots are nice, but they don't tell you anything about the trees. In practice, most maps offer a way to click on a feature and get more information about it.
+
+Our `MapLayer` component accepts a `popup` property that will handle all the code for you. All you need to do is provide a function that takes a feature and returns the HTML you want to show in the popup.
+
+Add a simple `popup` to your `MapLayer`:
+
+```svelte {emphasize-lines="12-15"}
+  <MapLayer
+    id="great-trees"
+    type="circle"
+    data={greatTrees}
+    paint={{
+      'circle-color': '#0033a1',
+      'circle-radius': 5,
+      'circle-stroke-color': '#1a1a1a',
+      'circle-stroke-width': 1,
+      'circle-opacity': 0.9,
+    }}
+    popup={(feature) => {
+      const p = feature.properties;
+      return `<strong>${p.species}</strong><br>${p.description}`;
+    }}
+  />
+```
+
+MapLayer calls the function every time a dot is clicked and passes it the full feature, so you can build whatever HTML you'd like around the data. Keep it simple for now: the species on top, the location underneath.
+
+Save. Click one of the blue dots. A popup should appear.
+
+<Screenshot
+  src="/screenshots/week-11/great-tree-popup.png"
+  alt="A zoomed-in map showing a blue dot over Prospect Park with a popup reading 'Camperdown elm' above a line about its location south of the Boathouse"
+  chromeTitle="The Great Trees of New York"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+## Part 3: Searching by location
+
+A zoomed map centered on the whole city is fine for seeing the overall distribution, but it doesn't make it easy for readers to find the trees near them. We can solve that problem by adding a search box that lets readers type in an address and fly the map to that location.
+
+The process of turning a human-readable place, like Kips Bay or Flushing, into coordinates pinned to a map is a common problem in cartography. The technical term for it is geocoding. Every interactive map with a search box you have ever used is leaning on a geocoder under the hood to turn your query into a point on the map.
+
+Most newsrooms pay a commercial geocoding provider like Google Maps or Mapbox for this service, but there are also free and open-source geocoders available that do the same thing without charging you for every search. They just aren't as good.
+
+The class template uses [Nominatim](https://nominatim.openstreetmap.org/), the open-source geocoder run by the OpenStreetMap project. It's free to use at modest volumes with no API key required.
+
+The template's [`Geocoder`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-geocoder--docs) component wraps it in a styled search box.
+
+<Screenshot
+  src="/screenshots/week-11/geocoder-storybook.png"
+  alt="The Storybook documentation page for the Geocoder component"
+  chromeTitle="Geocoder – Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/maps-geocoder--docs"
+/>
+
+When a user picks a result, `Geocoder` fires an `onresult` callback with its coordinates. All you have to do is hand those coordinates to our `Map`.
+
+You can do that in `+page.svelte`. Import the component and add reactive state variables for the coordinates and zoom:
+
+```svelte {emphasize-lines="5,9-11"}
+<script>
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
+  import MapLayer from '$lib/components/Maps/MapLayer.svelte';
+  import Geocoder from '$lib/components/Maps/Geocoder.svelte';
+
+  let { data } = $props();
+  const greatTrees = data.greatTrees;
+  let longitude = $state(-74.0);
+  let latitude = $state(40.7);
+  let zoom = $state(9.5);
+</script>
+```
+
+Now replace the hard-coded numbers in the `<Map>` tag with those state variables, and add a `<Geocoder>` above the map with a callback that updates them.
 
 ```svelte
-{#if viewMode === 'dots'}
-  <Map data={shootings} filter={mapFilter} />
-{:else}
-  <ChoroplethMap data={precinctData} />
-{/if}
+  <p>
+    The agency called on the public to nominate "trees of unusual size, species,
+    form or historical association." Explore them here and see if you can find any near you.
+  </p>
+
+  <Geocoder
+    label="Find your neighborhood"
+    placeholder="Enter an address in New York…"
+    onresult={(result) => {
+      longitude = result.lng;
+      latitude = result.lat;
+      zoom = 15;
+    }}
+  />
+
+  <Map
+    {longitude}
+    {latitude}
+    {zoom}
+    height={600}
+    theme="positron"
+    credit="OpenFreeMap / OpenStreetMap contributors"
+  >
+    <!-- the MapLayer you added earlier stays as-is -->
+  </Map>
 ```
 
-Style the toggle:
+Save and try it. Type a New York City address into the search box, pick a result from the dropdown and watch the map glide over to your block.
 
-```css
-.view-toggle {
-  display: flex;
-  border: 2px solid #ddd;
-}
+<Screenshot
+  src="/screenshots/week-11/geocoder-in-action.png"
+  alt="The page showing a search box zoomed in after a location query"
+  chromeTitle="The Great Trees of New York"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
-.view-toggle button {
-  padding: 0.5rem 1rem;
-  border: none;
-  background: white;
-  font-size: 0.875rem;
-  cursor: pointer;
-}
+This is the reactive pattern you know from previous lessons, now connected to a map. The Geocoder updates three state variables. Those variables flow into the Map as properties. The Map reacts by animating to the new location.
 
-.view-toggle button.active {
-  background: var(--color-accent);
-  color: white;
+## Part 4: Using data to style polygons
+
+Every ten years, the Parks Department leads a citizen science effort called [TreesCount](https://www.nycgovparks.org/trees/treescount). Thousands of volunteers canvass the city's street trees, recording their species, trunk diameter, health, and exact location. In the 2015 survey, they found more than 600,000 trees and 133 different species.
+
+The full data set is, like so much else, available for download on [the city's open data portal](https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data).
+
+<Screenshot
+  src="/screenshots/week-11/treescount-portal.png"
+  alt="The NYC Open Data portal page for the 2015 Street Tree Census, showing a preview of the data and a download button"
+  chromeTitle="2015 Street Tree Census - Tree Data"
+  chromeUrl="https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data"
+/>
+
+One tree dominates that census: the London plane. It was the tree favored by Robert Moses, the unelected "power broker" who controlled city parks for decades in the mid 20th century. He made sure the hearty hybrid was planted everywhere in New York, where it can be found in every borough and on nearly every block.
+
+According to the 2015 census, there are more than 87,000 London plane trees on New York's streets, 12% of the city's population of street trees.
+
+<Screenshot
+  src="/screenshots/week-11/london-plane.png"
+  alt="A London plane tree, the hybrid species Robert Moses planted throughout New York City"
+  chromeTitle="London plane tree | Central Park Conservancy"
+  chromeUrl="https://www.centralparknyc.org/plants/london-plane"
+/>
+
+That's far too many points to put on a single map, but we can still tell a story by aggregating the data to a higher level, just as the Gothamist reporters did with shootings and Census blocks.
+
+In this case, we'll aggregate the trees to the level of Neighborhood Tabulation Areas devised by city planners to group together similar neighborhoods for analysis. There were 195 NTAs in 2015, covering every inch of the city. It's a lot of data, but not so much that it will overwhelm the average web browser.
+
+<Screenshot
+  src="/screenshots/week-11/nta-maps.png"
+  alt="The NYC Department of City Planning page describing Neighborhood Tabulation Areas"
+  chromeTitle="Neighborhood Tabulation Areas"
+  chromeUrl="https://www.nyc.gov/content/planning/pages/resources/datasets/neighborhood-tabulation"
+  maxWidth="960px"
+/>
+
+Before class, I prepared a file that cross referenced the tree census with the NTA boundaries, so that each NTA polygon carries a pre-computed count of how many London plane trees live inside it.
+
+Download the file I've prepared from [this link](https://gist.githubusercontent.com/palewire/31ef926bbe15739d9559eff2562322d3/raw/1388989728ce1fe0f202ae6b6d61b9c446117ba5/planetrees-by-nta.json) and save it as `lib/data/planetrees-by-nta.json` in your project, alongside the Great Trees file.
+
+Each feature in this file is a polygon representing an NTA, with properties that describe the tree population living inside it. Here's an example:
+
+```json
+{
+  "ntacode": "BK44",
+  "ntaname": "Madison",
+  "boroname": "Brooklyn",
+  "total_all": 3437,
+  "no_1_species": "London planetree",
+  "top_species": [
+    {
+      "name": "London planetree",
+      "count": 825
+    },
+    {
+      "name": "Norway maple",
+      "count": 293
+    },
+    {
+      "name": "pin oak",
+      "count": 264
+    },
+    {
+      "name": "Japanese zelkova",
+      "count": 171
+    },
+    {
+      "name": "honeylocust",
+      "count": 169
+    }
+  ],
+  "total_planetree": 825,
+  "rank_planetree": 1
 }
 ```
 
-Save and try it. Click "By precinct" and the map transforms from scattered dots into colored polygons. The filters still work — select a borough and the counts recalculate, shifting the colors across the precincts.
+Once you have the file saved, you should update `+page.js` to import it in `+page.svelte`, just like you did for the great trees.
+
+```js
+import greatTrees from '$lib/data/great-trees.json';
+import planetrees from '$lib/data/planetrees-by-nta.json';
+
+export function load() {
+  return {
+    showHeader: true,
+    showFooter: true,
+    greatTrees,
+    planetrees,
+  };
+}
+```
+
+And pull it out of the `data` prop in `+page.svelte`:
+
+```svelte {emphasize-lines="9"}
+<script>
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
+  import MapLayer from '$lib/components/Maps/MapLayer.svelte';
+  import Geocoder from '$lib/components/Maps/Geocoder.svelte';
+
+  let { data } = $props();
+  const greatTrees = data.greatTrees;
+  const planetrees = data.planetrees;
+
+  let longitude = $state(-74.0);
+  let latitude = $state(40.7);
+  let zoom = $state(9.5);
+</script>
+```
+
+We're going to replace our points with a [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map), which is a technical term for a visualization that shades each region of a map by a numeric value. In this case, we're going to shade each NTA by its `total_planetree`, which contains the count of London plane trees living inside it. The darker the blue, the more plane trees.
+
+Remove the Great Tree `MapLayer` from inside your `<Map>` block. In its place, add two new `MapLayer`s: one that fills each NTA with a color based on its London plane tree count, and one that draws the outlines between them.
+
+```svelte {emphasize-lines="9-38"}
+  <Map
+    {longitude}
+    {latitude}
+    {zoom}
+    height={600}
+    theme="positron"
+    credit="OpenFreeMap / OpenStreetMap contributors"
+  >
+    <MapLayer
+      id="nta-fill"
+      type="fill"
+      data={planetrees}
+      paint={{
+        'fill-color': [
+          'step',
+          ['get', 'total_planetree'],
+          '#eef2f9',
+          147,
+          '#c2cfe6',
+          269,
+          '#8098cc',
+          434,
+          '#3366b3',
+          697,
+          '#0033a1',
+        ],
+        'fill-opacity': 0.7,
+      }}
+    />
+    <MapLayer
+      id="nta-outline"
+      type="line"
+      data={planetrees}
+      paint={{
+        'line-color': '#0033a1',
+        'line-width': 0.5,
+      }}
+    />
+  </Map>
+```
+
+In this example, the `paint` input gets considerably more complex. The `fill-color` property is now an array that tells MapLibre to step through a series of color breaks based on the value of `total_planetree` for each NTA.
+
+The first color, `#eef2f9`, is for NTAs with 0 to 146 plane trees. The second color, `#c2cfe6`, is for NTAs with 147 to 268 plane trees, and so on up to the darkest shade, `#0033a1`, which is for NTAs with 697 or more plane trees. This is meant to break them, roughly, into quintiles, with each color representing about 20% of the NTAs.
+
+Save. The blue dots are gone, and the city now fills with varying shades of blue.
 
 <Screenshot
   src="/screenshots/week-11/choropleth.png"
-  alt="A choropleth map of NYC showing police precincts shaded in varying intensities of blue, with darker precincts indicating more shooting incidents. A popup shows 'Precinct 75 — 87 shooting incidents.'"
-  chromeTitle="NYC Shooting Incidents"
+  alt="A map of NYC with neighborhoods shaded from light to dark blue by London plane tree count."
+  chromeTitle="Where to find the London plane, New York's most common tree"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-Click "Incidents" to switch back to the dots. The two views tell different stories from the same data. The dots show you where specific incidents happened — the human scale. The choropleth shows you which precincts carry the heaviest burden — the institutional scale. Offering both lets the reader choose the lens that serves their question.
+You're now looking at Moses's New York. The darkest polygons are the NTAs where his tree is thickest on the ground.
 
-Save, commit, and push. Check your live site.
+### Adding a popup
 
-## Part 9: Going further with AI
+Finally, let's make those polygons clickable. Add a `popup` to the fill layer that tells the reader what they're looking at.
 
-The map we built today is a solid foundation, but there's a lot more you can do. This is a good time to experiment with AI assistance. Try asking your coding assistant to:
+```svelte {emphasize-lines="21-24"}
+<MapLayer
+  id="nta-fill"
+  type="fill"
+  data={planetrees}
+  paint={{
+    'fill-color': [
+      'step',
+      ['get', 'total_planetree'],
+      '#eef2f9',
+      147,
+      '#c2cfe6',
+      269,
+      '#8098cc',
+      434,
+      '#3366b3',
+      697,
+      '#0033a1',
+    ],
+    'fill-opacity': 0.7,
+  }}
+  popup={(feature) => {
+    const p = feature.properties;
+    return `<strong>${p.ntaname}</strong><br/>${p.total_planetree} plane trees`;
+  }}
+/>
+```
 
-- "Color the dots differently for fatal vs. non-fatal incidents."
-- "Add a heatmap layer as a third view mode."
-- "Cluster nearby incidents into groups that expand when you zoom in."
-- "Add a color legend below the choropleth map that explains the scale."
-- "Add a tooltip that shows the precinct number as I hover, without clicking."
+Save and click around. Each NTA now tells you how many plane trees it has.
 
-MapLibre is a large library with many features, and its documentation can be dense. This is exactly the kind of situation where an AI assistant shines — it can translate your editorial intent ("I want to highlight fatal incidents") into the right API calls (`'circle-color': ['case', ['get', 'fatal'], '#e74c3c', '#3498db']`).
+<Screenshot
+  src="/screenshots/week-11/nta-popup.png"
+  alt="A popup showing how many plane trees live in the Kips Bay neighborhood of Manhattan"
+  chromeTitle="Where to find the London plane, New York's most common tree"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
 
-Try one or two of these experiments before committing your final version.
+Update our headline and lead-in to reflect the shift in subject. Drop this in above the map, but inside of the container div.
+
+```svelte
+  <ArticleHeader
+    headline="Where to find the London plane, New York's most common tree"
+    byline="NYCity News Service"
+    pubDate="2026-04-20"
+  />
+
+  <p>
+    Every ten years, thousands of volunteers canvass the city's street trees,
+    recording their species, trunk diameter, health, and exact location. In the
+    2015 survey, they found more than 600,000 trees and 133 different species.
+  </p>
+
+  <p>
+    One tree dominates the count: the London plane. It was the tree favored by
+    Robert Moses, the unelected "power broker" who controlled city parks for
+    decades in the mid 20th century. He made sure the hearty hybrid was planted
+    everywhere in New York, where it can be found in every borough and on nearly
+    every block.
+  </p>
+
+  <p>
+    According to the 2015 census, there are more than 87,000 London plane
+    trees on New York's streets, 12% of the city's population of street trees.
+    Here's where the most London planes are found:
+  </p>
+```
+
+<Screenshot
+  src="/screenshots/week-11/london-final.png"
+  alt="The finished London plane tree choropleth with the article header, introduction, and blue-shaded NTAs across the five boroughs"
+  chromeTitle="Where to find the London plane, New York's most common tree"
+  chromeUrl="http://localhost:5173"
+/>
+
+The only thing missing is a legend to explain the colors. You can add one with the `Legend` component, which takes an array of labels and colors and renders a styled box.
+
+First import the component at the top of your script tag.
+
+```svelte {emphasize-lines="6"}
+<script>
+  import ArticleHeader from '$lib/components/Article/ArticleHeader.svelte';
+  import Geocoder from '$lib/components/Maps/Geocoder.svelte';
+  import Map from '$lib/components/Maps/Map.svelte';
+  import MapLayer from '$lib/components/Maps/MapLayer.svelte';
+  import Legend from '$lib/components/Maps/Legend.svelte';
+  // ...
+</script>
+```
+
+Then add it at the bottom of the page, but just before the closing `</div>` tag. Pass it an array of objects with `label` and `color` properties that match the breaks you used in your fill layer.
+
+```svelte
+  <Legend
+    title="London plane trees"
+    mode="threshold"
+    items={[
+      {
+        color: '#eef2f9',
+        to: 146,
+      },
+      {
+        color: '#c2cfe6',
+        from: 147,
+        to: 268,
+      },
+      {
+        color: '#8098cc',
+        from: 269,
+        to: 433,
+      },
+      {
+        color: '#3366b3',
+        from: 434,
+        to: 696,
+      },
+      {
+        color: '#0033a1',
+        from: 697,
+      },
+    ]}
+  />
+```
+
+Voila. You've done it, you've made a data-driven map.
+
+<Screenshot
+  src="/screenshots/week-11/london-legend.png"
+  alt="The finished London plane tree choropleth with a legend at the bottom"
+  chromeTitle="Where to find the London plane, New York's most common tree"
+  chromeUrl="http://localhost:5173"
+/>
 
 ## Homework
 
-### Task 1: Build your own interactive map
+### Task 1: Publish an interactive map
 
-Find a dataset on the NYC Open Data portal or another public source that includes latitude and longitude coordinates. Build an interactive map for it.
+Find a point or polygon dataset on the [NYC Open Data portal](https://opendata.cityofnewyork.us/), or choose one from your own work. Build a page in your project that maps it with MapLibre, using the components in the template.
 
 Your project must have:
 
-- A MapLibre map with data points plotted from a real dataset
-- At least one filter or interactive control
-- Click-to-inspect detail for individual points (popups)
-- An editorial frame: headline, introductory text, and source credit
+- A `Map` component with data plotted from your chosen dataset
+- A `Geocoder` for navigation
+- A headline, an introductory paragraph, a legend and a methodology box that presents the map as a journalistic product
+- At least one feature we didn't cover in class, like a custom popup, a data filter or a more complex paint style
 
-Some datasets that could work well:
-
-- NYC WiFi Hotspot Locations (digital access)
-- NYC Community Gardens (urban farming, equity)
-- FDNY Response Times (emergency services)
-- 311 Noise Complaints (quality of life — use a recent month to keep the size manageable)
-- NYC Street Trees (environment — filter to a single borough)
-
-Deploy it to GitHub Pages and send me the link.
+Deploy to GitHub Pages and send me the link.
 
 ### Task 2: Prepare to present
 
-Be ready to share your map with the class and explain how you built it. You should be prepared to:
+Be ready to walk the class through your map and explain:
 
-- Show the dataset you chose and explain what story the geography tells
-- Walk through how you connected Svelte's reactive filters to MapLibre
-- Show it on your phone — does the map work well on a small screen?
-- Discuss what editorial choices you made about what to show and what to leave out
+- The dataset you chose and why
+- At least one editorial decision you made about what to show and what to leave out
+- Something you added to the map that we didn't cover in class, how you built it and why it's a good fit for your page

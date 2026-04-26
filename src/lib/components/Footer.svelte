@@ -1,12 +1,5 @@
 <script lang="ts">
   import { base } from '$app/paths';
-  import {
-    Facebook,
-    Twitter,
-    Youtube,
-    Linkedin,
-    Instagram,
-  } from 'lucide-svelte';
 </script>
 
 <footer>
@@ -110,49 +103,6 @@
   <div class="footer-bottom">
     <div class="container">
       <div class="copyright">Copyright © 2026 Newmark J-School</div>
-
-      <div class="social">
-        <a
-          href="https://www.facebook.com/newmarkjschool"
-          title="Follow us on Facebook"
-          target="_blank"
-          rel="noopener"
-        >
-          <Facebook size={24} />
-        </a>
-        <a
-          href="http://twitter.com/newmarkjschool"
-          title="Follow us on Twitter"
-          target="_blank"
-          rel="noopener"
-        >
-          <Twitter size={24} />
-        </a>
-        <a
-          href="https://www.youtube.com/newmarkjschool"
-          title="Follow us on YouTube"
-          target="_blank"
-          rel="noopener"
-        >
-          <Youtube size={24} />
-        </a>
-        <a
-          href="https://www.linkedin.com/school/newmark-graduate-school-of-journalism-at-cuny/"
-          title="Follow us on LinkedIn"
-          target="_blank"
-          rel="noopener"
-        >
-          <Linkedin size={24} />
-        </a>
-        <a
-          href="https://instagram.com/newmarkjschool/"
-          title="Follow us on Instagram"
-          target="_blank"
-          rel="noopener"
-        >
-          <Instagram size={24} />
-        </a>
-      </div>
     </div>
   </div>
 </footer>
@@ -312,27 +262,6 @@
     order: 2;
   }
 
-  .social {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    flex: 1;
-    gap: 24px;
-    margin-bottom: 30px;
-    order: 1;
-  }
-
-  .social a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-white);
-  }
-
-  .social a:hover {
-    color: var(--color-orange-on-dark);
-  }
-
   /* Desktop Responsive - 960px+ */
   @media (min-width: 960px) {
     .footer-top {
@@ -401,12 +330,6 @@
     .copyright {
       font-size: 16px;
       order: 1;
-    }
-
-    .social {
-      justify-content: flex-end;
-      margin-bottom: 0;
-      order: 2;
     }
   }
 </style>

@@ -16,34 +16,34 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@lhci/cli": "^0.15.1",
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.59.1",
     "@sveltejs/adapter-static": "^3.0.0",
-    "@sveltejs/kit": "^2.55.0",
+    "@sveltejs/kit": "^2.57.1",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^25.5.0",
-    "eslint": "^10.1.0",
+    "@types/node": "^25.6.0",
+    "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-svelte": "^3.16.0",
-    "globals": "^17.4.0",
+    "eslint-plugin-svelte": "^3.17.0",
+    "globals": "^17.5.0",
     "husky": "^9.0.11",
     "lint-staged": "^16.4.0",
     "mdsvex": "^0.12.7",
     "prettier-plugin-svelte": "^3.5.1",
-    "sass-embedded": "^1.97.3",
-    "svelte": "^5.54.1",
-    "svelte-check": "^4.4.5",
-    "typescript-eslint": "^8.57.1",
-    "vite": "^8.0.0"
+    "sass-embedded": "^1.99.0",
+    "svelte": "^5.55.4",
+    "svelte-check": "^4.4.6",
+    "typescript-eslint": "^8.58.2",
+    "vite": "^8.0.9"
   },
   "type": "module",
   "dependencies": {
     "js-yaml": "^4.1.1",
-    "lucide-svelte": "^0.562.0",
+    "lucide-svelte": "^1.0.1",
     "playwright": "^1.57.0",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.3",
     "rehype-slug": "^6.0.0",
-    "shiki": "^3.22.0"
+    "shiki": "^4.0.2"
   },
   "lint-staged": {
     "src/**/*.{svelte,svx,js,ts,jsx,tsx}": [
