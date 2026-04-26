@@ -40,14 +40,30 @@ Take a look at how some of our guest speakers this semester choose to present th
 
 ## Part 2: Start a fresh portfolio project
 
-Create a new repository from the class template. Call it `riis-portfolio`. Clone it, install dependencies, and start the dev server. You know the drill by now.
+As in past weeks, open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
+
+<Screenshot
+  src="/screenshots/week-2/template-repo-homepage.png"
+  alt="GitHub template repository page showing the Use this template button"
+  chromeTitle="cuny-jour-static-site-template"
+  chromeUrl="https://github.com/palewire/cuny-jour-static-site-template"
+/>
+
+Click "Use this template" and create a new repository called `riis-portfolio`. Clone it. Open it in Visual Studio Code.
+
+Install the dependencies.
 
 ```bash
 npm install
+```
+
+Start the dev server.
+
+```bash
 npm run dev
 ```
 
-Open the project in Visual Studio Code and visit [localhost:5173](http://localhost:5173). You'll see the article-style demo page our template ships with — the same one we've been recycling all semester.
+Open [localhost:5173](http://localhost:5173). You'll see the article-style demo page our template ships with — the same one we've been recycling all semester.
 
 A portfolio is not an article. It's something else entirely. So before we start adding new things, we need to clear away the old.
 
@@ -62,13 +78,70 @@ Your homepage should now look something like this:
 
 That's the right starting point. Save and check your browser. The page will be blank. We're going to fill it with something better.
 
-## Part 3: Writing the content in YAML
+## Part 3: Meet the components
 
-A portfolio homepage has two parts that matter: who you are, and what you've made. Before we write any Svelte code, we're going to write all of the content first — in a separate data file that our components will read from.
+A portfolio homepage has two parts that matter: who you are, and what you've made. As in past weeks, your class template already includes the components we'll use. Like the rest of the library, they're documented on the [Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/) site.
+
+<Screenshot
+  src="/screenshots/week-12/storybook-portfolio-components.png"
+  alt="The class template's Storybook showing the Portfolio composition with Profile and Card components"
+  chromeTitle="Storybook"
+  chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/compositions-personal-portfolio--docs"
+/>
+
+The key ones this week are:
+
+| Component | Description |
+|-----------|-------------|
+| [`Profile`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/portfolio-profile--docs) | The personal-branding block: name, tagline, photo, contact links, and a now/next paragraph |
+| [`Card`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/data-card--docs) | A clickable tile with an image, title, and description — one per clip |
+
+Open Storybook and poke at each one before moving on.
+
+### Adding the Profile
+
+Let's start by importing the Profile component and wiring it up with placeholder content, just to see it on screen.
+
+Open `src/routes/+page.svelte` and paste in:
+
+```svelte
+<script>
+  import Profile from '$lib/components/Profile.svelte';
+</script>
+
+<Profile
+  name="Lorem Ipsum"
+  tagline="Data journalist focused on housing, public records, and the city in between."
+  photo="/profile.jpg"
+  photoAlt="Lorem Ipsum, in a portrait taken at the Newmark School."
+  email="lorem@example.com"
+  github="loremipsum"
+  linkedin="loremipsum"
+  nowNext="I'm a graduate student at the Craig Newmark Graduate School of Journalism at CUNY, focusing on data and interactive reporting.
+
+I'm looking for a summer internship at a newsroom doing data-driven accountability journalism."
+/>
+```
+
+Save the file and check your browser. You should see a name as a large headline, a tagline below it, a placeholder photo block, three contact links with little icons, and the now/next paragraph rendered below.
+
+<Screenshot
+  src="/screenshots/week-12/profile-placeholder.png"
+  alt="The Profile component rendered with placeholder content showing a large name headline, a tagline below it, a portrait photo placeholder, contact links for email, GitHub, and LinkedIn, and a two-paragraph now/next statement"
+  chromeTitle="Lorem Ipsum"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+The photo will appear as a grey rectangle since we haven't added the file yet. That's fine for now. The point is to see the shape of the component before we fill it with real content.
+
+Now it's time to replace these placeholders with something real.
+
+## Part 4: Writing the content in YAML
 
 In a real newsroom, content and code live in separate places. The reporter writing the words shouldn't have to touch a Svelte file. The designer changing the layout shouldn't risk breaking a sentence. The page-building system reads the content from one source and the design from another, and the two evolve independently.
 
-We're going to mirror that pattern. Every word that appears on the page — the name, the tagline, the now/next paragraph, the project titles, the case studies — will live in a single content file. The Svelte code stays focused on rendering.
+We're going to mirror that pattern. Every word that appears on the page — the name, the tagline, the now/next paragraph, the clip titles, the case studies — will live in a single content file. The Svelte code stays focused on rendering.
 
 We've used JSON for content in past weeks. Today we'll try something different: [YAML](https://en.wikipedia.org/wiki/YAML).
 
@@ -111,42 +184,13 @@ nowNext: |
   just like they would in a text file.
 ```
 
-The `|` tells YAML to preserve line breaks as written. We'll use this for the now/next paragraph and for the case-study prose on each project page.
-
-### Installing the YAML plugin
-
-SvelteKit doesn't know how to read YAML out of the box. We'll add a Vite plugin called `@modyfi/vite-plugin-yaml` that teaches it how. Once the plugin is installed, you can import a `.yaml` file the same way you'd import JSON — Vite parses it at build time and hands you a ready-to-use JavaScript object.
-
-Stop your dev server with `Ctrl + C` and run:
-
-```bash
-npm install @modyfi/vite-plugin-yaml
-```
-
-Then open `vite.config.js` and register the plugin:
-
-```js {emphasize-lines="2,7"}
-import { sveltekit } from '@sveltejs/kit/vite';
-import yaml from '@modyfi/vite-plugin-yaml';
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  plugins: [
-    yaml(),
-    sveltekit()
-  ]
-});
-```
-
-Restart with `npm run dev`.
+The `|` tells YAML to preserve line breaks as written. We'll use this for the now/next paragraph and for the case-study prose on each clip's detail page.
 
 ### Writing the content file
 
 Create a new folder at `src/lib/data/`. Inside it, make a file called `site.yaml`. This will be the single source of truth for everything that appears on your portfolio.
 
-It has two top-level sections: `profile` and `projects`. We'll fill them in one at a time.
-
-Start with the profile. Find a public-domain portrait of Riis on the [Library of Congress website](https://www.loc.gov/) or [Wikimedia Commons](https://commons.wikimedia.org/), save it to `static/profile.jpg`, and paste this into `site.yaml`:
+We'll build it up piece by piece, adding fields only when we're ready to put them on the page. Start with just the profile. Find a public-domain portrait of Riis on the [Library of Congress website](https://www.loc.gov/) or [Wikimedia Commons](https://commons.wikimedia.org/), save it to `static/profile.jpg`, and paste this into `site.yaml`:
 
 ```yaml
 profile:
@@ -162,7 +206,7 @@ profile:
 
 A few things worth noticing.
 
-I've left out the `email`, `github`, and `linkedin` fields entirely. Riis didn't have any of those. The Profile component handles missing fields gracefully because every contact link is wrapped in an `{#if}` block — write your component to expect any field to be missing, and the page renders cleanly. We'll use the same pattern on the project page in a moment.
+I've left out the `email`, `github`, and `linkedin` fields entirely. Riis didn't have any of those. The Profile component handles missing fields gracefully because every contact link is wrapped in an `{#if}` block — write your component to expect any field to be missing, and the page renders cleanly.
 
 The tagline is a single sentence, sixteen words, that tells you what Riis did and where. It echoes his most famous book without quoting it directly, which gives the line some pull.
 
@@ -181,74 +225,9 @@ The specific version gives an editor or recruiter something concrete to evaluate
 
 The Riis now/next paragraph is written as if he were filling in his own portfolio around 1890. First-person voice, present-tense, period-specific. When you build a portfolio for a real journalist of the past, picking a moment in their career and writing from inside it makes the page feel alive in a way that a museum-plaque biography doesn't.
 
-Now add the projects. Three of Riis's major works:
-
-```yaml
-projects:
-  - slug: police
-    title: Police Headquarters Reporter
-    image: /thumbnails/police.jpg
-    imageAlt: Mulberry Street police headquarters in the late 1880s
-    liveUrl: https://www.loc.gov/collections/jacob-riis/
-    summary: A decade of police-beat reporting at 300 Mulberry Street for the New-York Tribune and the Evening Sun, covering crime, immigration, and the daily life of the Lower East Side.
-    skills:
-      - Late-night police reporting
-      - Source-building across language barriers
-      - Working with the city coroner's records
-      - Daily news pace
-    meaningful: |
-      The police beat is where I learned the city. Mulberry Street headquarters sits on the edge of the worst tenements in New York, and every story I covered as a reporter — every arrest, every fire, every dead body — pulled me deeper into the lives of the people on the other side of the door.
-
-      I didn't yet know I would write a book about what I was seeing. But I was learning the geography, the families, and the patterns. The reform work that came later would have been impossible without the reporting work that came first.
-
-  - slug: how-the-other-half
-    title: How the Other Half Lives
-    image: /thumbnails/bandits-roost.jpg
-    imageAlt: Bandit's Roost, a Riis photograph of an alley off Mulberry Street, 1888
-    liveUrl: https://www.loc.gov/item/06017839/
-    summary: A book-length investigation of New York tenement life, illustrated with my own flash photographs of the city after dark. Published by Charles Scribner's Sons in 1890.
-    skills:
-      - Magnesium-flash photography
-      - Long-form documentary writing
-      - Lantern-slide lecturing
-      - Reporting across class lines
-    meaningful: |
-      The flash powder gave me the picture, but the picture is only half the work. The other half is the words — telling readers in the brownstones uptown what the inside of a Five Points tenement smells like, sounds like, who lives there and how they came to be there.
-
-      The book sold well enough that even Theodore Roosevelt came to find me. He left a note on my door saying he had read the book and had come to help. That was the moment I understood what reporting could do.
-
-  - slug: mulberry-bend
-    title: The Battle for Mulberry Bend
-    image: /thumbnails/mulberry-bend.jpg
-    imageAlt: Mulberry Bend before demolition, photographed in the early 1890s
-    liveUrl: https://www.mcny.org/
-    summary: A sustained reporting and advocacy effort to demolish Mulberry Bend, the most notorious slum block in lower Manhattan, and replace it with a public park. The block came down in 1894. Columbus Park stands there today.
-    skills:
-      - Sustained-focus accountability reporting
-      - Working with city government and reform organizations
-      - Combining photography, writing, and public lectures
-      - Patience
-    meaningful: |
-      The Bend was three acres of the foulest tenement block in the city — narrow alleys where the sun never reached, buildings that should have been condemned a generation earlier, and a death rate among the children many times higher than the city average.
-
-      I wrote about it for years. I photographed it. I lectured on it. Reform is slow. The Bend went from a block I first reported on as a young man to a public park nearly twenty years later.
-```
-
-Read through the YAML. Notice how the multiline `nowNext` and `meaningful` fields render cleanly in your editor — no escaped quotes, no `\n\n`, just paragraphs separated by blank lines. That's the payoff for using YAML.
-
-While you're here, save thumbnail images to `static/thumbnails/police.jpg`, `bandits-roost.jpg`, and `mulberry-bend.jpg` to match the paths above. Riis's photographs are public domain and widely available — try the [Library of Congress Jacob Riis collection](https://www.loc.gov/collections/jacob-riis/), the [Museum of the City of New York](https://collections.mcny.org/), or [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:Photographs_by_Jacob_Riis).
-
-## Part 4: Building the homepage
-
-Now we need to load this YAML and render it. The homepage has two visual parts: a Profile block for the personal branding, and a grid of Card tiles for the projects. Both are prefab components in the class template.
-
-The Profile is brand new. I've added a component to `src/lib/components/` called `Profile.svelte`. It handles the personal-branding block: name, tagline, photo, contact links, and the now/next paragraph.
-
-The Card component you've seen before. The class template includes it along with a `card-grid` layout class — together they handle the project tiles and the responsive grid that holds them. We've used both in earlier weeks.
-
 ### Loading the data
 
-We'll use the `+page.js` load function pattern we established in Week 5. Create a new file at `src/routes/+page.js`:
+Now we need to get this YAML onto the page. We'll use the `+page.js` load function pattern we established in Week 5. Create a new file at `src/routes/+page.js`:
 
 ```js
 import site from '$lib/data/site.yaml';
@@ -258,13 +237,74 @@ export const load = () => {
 };
 ```
 
-Thanks to the YAML plugin we installed earlier, the import reads `site.yaml` and hands us a JavaScript object — already parsed, no extra step needed. Because our YAML has top-level keys `profile` and `projects`, that's the shape the page receives. The page can read `data.profile` and `data.projects` without any extra unpacking.
+The YAML plugin in our template handles the import — it reads `site.yaml` and hands us a JavaScript object, already parsed. Because our YAML has a top-level key `profile`, the page can read `data.profile` without any extra unpacking.
 
-### Rendering the page
+### Wiring up the Profile
 
-Open `src/routes/+page.svelte`. Replace the empty file with this:
+Open `src/routes/+page.svelte`. Replace the hardcoded Profile with data from the YAML file:
 
 ```svelte
+<script>
+  import Profile from '$lib/components/Profile.svelte';
+
+  let { data } = $props();
+</script>
+
+<Profile
+  name={data.profile.name}
+  tagline={data.profile.tagline}
+  photo={data.profile.photo}
+  photoAlt={data.profile.photoAlt}
+  nowNext={data.profile.nowNext}
+/>
+```
+
+Save and check your browser. Riis should now appear on the page — name as headline, tagline below, portrait photo, and the now/next paragraph. All from the YAML file.
+
+<Screenshot
+  src="/screenshots/week-12/profile-real-data.png"
+  alt="The Profile component now showing Jacob Riis with his portrait, tagline, and now/next paragraph — all loaded from the YAML data file"
+  chromeTitle="Jacob Riis"
+  chromeUrl="http://localhost:5173"
+  maxWidth="960px"
+/>
+
+## Part 5: Adding the clip grid
+
+The profile is done. Now we need the second half of the homepage: a grid of cards showing Riis's work.
+
+### Adding clips to the YAML
+
+Open `site.yaml` and add a `clips` section below the profile. For now, each clip only needs the fields that appear on the card — we'll add more later when we build the detail pages.
+
+```yaml
+clips:
+  - slug: police
+    title: Police Headquarters Reporter
+    image: /thumbnails/police.jpg
+    imageAlt: Mulberry Street police headquarters in the late 1880s
+    description: A decade of police-beat reporting at 300 Mulberry Street for the New-York Tribune and the Evening Sun, covering crime, immigration, and the daily life of the Lower East Side.
+
+  - slug: how-the-other-half
+    title: How the Other Half Lives
+    image: /thumbnails/bandits-roost.jpg
+    imageAlt: Bandit's Roost, a Riis photograph of an alley off Mulberry Street, 1888
+    description: A book-length investigation of New York tenement life, illustrated with my own flash photographs of the city after dark. Published by Charles Scribner's Sons in 1890.
+
+  - slug: mulberry-bend
+    title: The Battle for Mulberry Bend
+    image: /thumbnails/mulberry-bend.jpg
+    imageAlt: Mulberry Bend before demolition, photographed in the early 1890s
+    description: A sustained reporting and advocacy effort to demolish Mulberry Bend, the most notorious slum block in lower Manhattan, and replace it with a public park. The block came down in 1894. Columbus Park stands there today.
+```
+
+Save thumbnail images to `static/thumbnails/police.jpg`, `bandits-roost.jpg`, and `mulberry-bend.jpg` to match the paths above. Riis's photographs are public domain and widely available — try the [Library of Congress Jacob Riis collection](https://www.loc.gov/collections/jacob-riis/), the [Museum of the City of New York](https://collections.mcny.org/), or [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:Photographs_by_Jacob_Riis).
+
+### Rendering the card grid
+
+Open `src/routes/+page.svelte`. Import the Card component and add the grid below the Profile:
+
+```svelte {emphasize-lines="3,4,9-18"}
 <script>
   import Profile from '$lib/components/Profile.svelte';
   import Card from '$lib/components/Card.svelte';
@@ -273,291 +313,192 @@ Open `src/routes/+page.svelte`. Replace the empty file with this:
   let { data } = $props();
 </script>
 
-<Profile {...data.profile} />
+<Profile
+  name={data.profile.name}
+  tagline={data.profile.tagline}
+  photo={data.profile.photo}
+  photoAlt={data.profile.photoAlt}
+  nowNext={data.profile.nowNext}
+/>
 
 <div class="card-grid">
-  {#each data.projects as project}
-    <Card
-      href="{base}/projects/{project.slug}"
-      image={project.image}
-      imageAlt={project.imageAlt}
-    >
-      <h3>{project.title}</h3>
-      <p>{project.summary}</p>
+  {#each data.clips as clip (clip.title)}
+    <Card href="{base}/clips/{clip.slug}" image={clip.image} imageAlt={clip.title}>
+      <h3>{clip.title}</h3>
+      <p>{clip.description}</p>
     </Card>
   {/each}
 </div>
 ```
 
-The `{...data.profile}` syntax is Svelte's prop-spreading shorthand. Instead of writing `name={data.profile.name} tagline={data.profile.tagline}` and so on for every field, we just spread the whole object. The Profile component pulls out the props it knows about and ignores the rest.
+The Card component handles the tile layout and the link wrapping. The `card-grid` class handles the responsive arrangement — wide screens get two or three cards per row, phones collapse to a single column. We don't have to write any CSS for either.
 
-Save and check your browser. Riis should appear on the page — name as headline, tagline below, portrait photo, and the three project cards in a grid using his actual photographs.
+Save and check your browser. The Riis profile should appear up top, with three clip cards in a grid below it.
 
 <Screenshot
   src="/screenshots/week-12/homepage-real-data.png"
-  alt="The Riis portfolio homepage now showing Jacob Riis as the subject with his portrait, tagline, now/next paragraph, and three project cards with real Riis photographs as thumbnails — all loaded from the YAML data file"
+  alt="The Riis portfolio homepage now showing Jacob Riis as the subject with his portrait, tagline, now/next paragraph, and three clip cards with real Riis photographs as thumbnails — all loaded from the YAML data file"
   chromeTitle="Jacob Riis"
   chromeUrl="http://localhost:5173"
   maxWidth="960px"
 />
 
-That's the homepage done. Every word that shows up on it lives in `site.yaml`. Want to change the tagline? Edit one line of YAML. Want to add a fourth project? Add a fourth entry to the projects list. The Svelte code stays put.
+That's the homepage done. Every word that shows up on it lives in `site.yaml`. Want to change the tagline? Edit one line of YAML. Want to add a fourth clip? Add a fourth entry to the list. The Svelte code stays put.
 
 Now we need a place for each card to lead.
 
-## Part 5: Project detail pages
+## Part 6: Clip detail pages
 
-Every card on the homepage links to `/projects/[slug]` — a URL that doesn't exist yet. Click any of them and you'll get a 404. Let's fix that.
+Every card on the homepage links to `/clips/[slug]` — a URL that doesn't exist yet. Click any of them and you'll get a 404. Let's fix that.
 
 You've seen this pattern before. Back in [Week 9](/docs/coding-the-news/scripts/week-9), when we built the Bronx Housing Violations database explorer, every building had its own page at `/building/[id]`. We didn't create a separate folder for each building. We created one dynamic route — a folder named `[id]` in square brackets — and SvelteKit matched any URL with the right shape and ran a load function to find the matching record.
 
 We're going to do the same thing here, but with `[slug]` and YAML.
 
-### The folder structure
+### Adding detail fields to the YAML
 
-Create the following folder structure inside `src/routes/`:
+Each detail page needs more than what the card shows. Open `site.yaml` and add three new fields to each clip: `url`, `skills`, and `body`. Your clips section should now look like this:
 
+```yaml
+clips:
+  - slug: police
+    title: Police Headquarters Reporter
+    image: /thumbnails/police.jpg
+    imageAlt: Mulberry Street police headquarters in the late 1880s
+    description: A decade of police-beat reporting at 300 Mulberry Street for the New-York Tribune and the Evening Sun, covering crime, immigration, and the daily life of the Lower East Side.
+    url: https://www.loc.gov/collections/jacob-riis/
+    skills:
+      - Late-night police reporting
+      - Source-building across language barriers
+      - Working with the city coroner's records
+      - Daily news pace
+    body: |
+      The police beat is where I learned the city. Mulberry Street headquarters sits on the edge of the worst tenements in New York, and every story I covered as a reporter — every arrest, every fire, every dead body — pulled me deeper into the lives of the people on the other side of the door.
+
+      I didn't yet know I would write a book about what I was seeing. But I was learning the geography, the families, and the patterns. The reform work that came later would have been impossible without the reporting work that came first.
+
+  - slug: how-the-other-half
+    title: How the Other Half Lives
+    image: /thumbnails/bandits-roost.jpg
+    imageAlt: Bandit's Roost, a Riis photograph of an alley off Mulberry Street, 1888
+    description: A book-length investigation of New York tenement life, illustrated with my own flash photographs of the city after dark. Published by Charles Scribner's Sons in 1890.
+    url: https://www.loc.gov/item/06017839/
+    skills:
+      - Magnesium-flash photography
+      - Long-form documentary writing
+      - Lantern-slide lecturing
+      - Reporting across class lines
+    body: |
+      The flash powder gave me the picture, but the picture is only half the work. The other half is the words — telling readers in the brownstones uptown what the inside of a Five Points tenement smells like, sounds like, who lives there and how they came to be there.
+
+      The book sold well enough that even Theodore Roosevelt came to find me. He left a note on my door saying he had read the book and had come to help. That was the moment I understood what reporting could do.
+
+  - slug: mulberry-bend
+    title: The Battle for Mulberry Bend
+    image: /thumbnails/mulberry-bend.jpg
+    imageAlt: Mulberry Bend before demolition, photographed in the early 1890s
+    description: A sustained reporting and advocacy effort to demolish Mulberry Bend, the most notorious slum block in lower Manhattan, and replace it with a public park. The block came down in 1894. Columbus Park stands there today.
+    url: https://www.mcny.org/
+    skills:
+      - Sustained-focus accountability reporting
+      - Working with city government and reform organizations
+      - Combining photography, writing, and public lectures
+      - Patience
+    body: |
+      The Bend was three acres of the foulest tenement block in the city — narrow alleys where the sun never reached, buildings that should have been condemned a generation earlier, and a death rate among the children many times higher than the city average.
+
+      I wrote about it for years. I photographed it. I lectured on it. Reform is slow. The Bend went from a block I first reported on as a young man to a public park nearly twenty years later.
 ```
-src/routes/
-  +page.svelte           ← your homepage (already exists)
-  +page.js               ← homepage load function (already exists)
-  +layout.svelte         ← site shell (already exists)
-  projects/
-    [slug]/
-      +page.svelte       ← project detail page (new)
-      +page.js           ← detail load function (new)
-```
 
-The square brackets in `[slug]` tell SvelteKit this is a dynamic route. Any URL of the shape `/projects/anything` will be handled by the files inside.
+Notice how the multiline `body` fields render cleanly in your editor — no escaped quotes, no `\n\n`, just paragraphs separated by blank lines. That's the payoff for using YAML block scalars.
 
 ### The load function
 
-Create `src/routes/projects/[slug]/+page.js`:
+Create a new folder at `src/routes/clips/[slug]/` — the square brackets make it a dynamic route, just like `[id]` in Week 9. Then add `+page.js` inside it:
 
 ```js
 import site from '$lib/data/site.yaml';
 import { error } from '@sveltejs/kit';
 
 export const load = ({ params }) => {
-  const project = site.projects.find((p) => p.slug === params.slug);
+  const clip = site.clips.find((c) => c.slug === params.slug);
 
-  if (!project) {
-    error(404, 'Project not found');
+  if (!clip) {
+    error(404, 'Clip not found');
   }
 
-  return { project };
+  return {
+    name: site.profile.name,
+    detail: clip
+  };
 };
 ```
 
 This does three things:
 
-1. Parses the YAML into a site object.
-2. Finds the record inside `site.projects` whose `slug` matches the URL parameter. The `params` object is populated by SvelteKit based on the folder name — `[slug]` becomes `params.slug`.
-3. If no record matches, throws a 404. Otherwise, hands the project record to the page.
+1. Imports the same YAML file the homepage loads from. One source of truth for the whole site.
+2. Finds the record inside `site.clips` whose `slug` matches the URL parameter. The `params` object is populated by SvelteKit based on the folder name — `[slug]` becomes `params.slug`.
+3. If no record matches, throws a 404. Otherwise, hands the clip record to the page as `detail`, along with the profile `name` for the kicker line.
 
-Notice we're reading the same YAML file the homepage loads from. One source of truth for the whole site.
+### Rendering the detail page
 
-## Part 6: Designing the project page
+We have the data flowing into the page. Now we need to render it. This time we'll compose the page directly from template components rather than building a custom one.
 
-We have the data flowing into the page. Now we need to render it.
-
-Like the homepage, we'll use a prefab component to do the heavy lifting and keep the route file thin.
-
-Create `src/lib/components/ProjectPage.svelte`:
+Open `src/routes/clips/[slug]/+page.svelte` and paste in:
 
 ```svelte
 <script>
-  import { base } from '$app/paths';
-  let { project } = $props();
+  import Kicker from '$lib/components/Article/Kicker.svelte';
+  import Headline from '$lib/components/Article/Headline.svelte';
+  import Image from '$lib/components/Media/Image.svelte';
+  import Rule from '$lib/components/Layout/Rule.svelte';
+  import TagList from '$lib/components/Data/TagList.svelte';
+  import ArticleBody from '$lib/components/Article/ArticleBody.svelte';
 
-  let meaningfulParagraphs = $derived(
-    project.meaningful ? project.meaningful.trim().split('\n\n') : []
-  );
-</script>
-
-<article class="project">
-  <a href="{base}/" class="back">← Back to all work</a>
-
-  <h1>{project.title}</h1>
-
-  {#if project.image}
-    <img class="hero" src={project.image} alt={project.imageAlt} />
-  {/if}
-
-  {#if project.summary}
-    <p class="summary">{project.summary}</p>
-  {/if}
-
-  {#if project.skills && project.skills.length > 0}
-    <h2>What it took</h2>
-    <ul class="skills">
-      {#each project.skills as skill}
-        <li>{skill}</li>
-      {/each}
-    </ul>
-  {/if}
-
-  {#if meaningfulParagraphs.length > 0}
-    <h2>Why it mattered</h2>
-    {#each meaningfulParagraphs as para}
-      <p>{para}</p>
-    {/each}
-  {/if}
-
-  <div class="cta">
-    {#if project.liveUrl}
-      <a href={project.liveUrl} target="_blank" rel="noopener" class="button primary">
-        View the work →
-      </a>
-    {/if}
-    {#if project.repoUrl}
-      <a href={project.repoUrl} target="_blank" rel="noopener" class="button">
-        View the code →
-      </a>
-    {/if}
-  </div>
-</article>
-
-<style>
-  .back {
-    display: inline-block;
-    margin-bottom: 1.5rem;
-    font-size: 0.875rem;
-    color: var(--color-dark-gray);
-    text-decoration: none;
-  }
-
-  .back:hover {
-    color: var(--color-black);
-  }
-
-  h1 {
-    margin: 0 0 1.25rem;
-    font-size: 2rem;
-    line-height: 1.15;
-  }
-
-  .hero {
-    width: 100%;
-    border-radius: 4px;
-    margin: 0 0 1.5rem;
-    background: var(--color-light-gray);
-  }
-
-  .summary {
-    font-size: 1.125rem;
-    line-height: 1.6;
-    margin: 0 0 2rem;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-    margin: 2rem 0 0.75rem;
-  }
-
-  .skills {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .skills li {
-    background: var(--color-light-gray);
-    padding: 0.25rem 0.625rem;
-    border-radius: 3px;
-    font-size: 0.875rem;
-  }
-
-  p {
-    line-height: 1.7;
-    margin: 0 0 1rem;
-  }
-
-  .cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 2.5rem;
-  }
-
-  .button {
-    display: inline-block;
-    padding: 0.625rem 1rem;
-    border: 1px solid var(--color-dark-gray);
-    color: var(--color-black);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9375rem;
-  }
-
-  .button:hover {
-    background: var(--color-light-gray);
-  }
-
-  .button.primary {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    color: white;
-  }
-
-  .button.primary:hover {
-    opacity: 0.9;
-    background: var(--color-accent);
-  }
-</style>
-```
-
-It's a long component, but it's doing something simple: take one project record and lay out its parts. Every field is wrapped in an `{#if}` block, so a project missing an optional field — no `repoUrl` because there isn't a code repository for an 1890 book, say — still renders cleanly.
-
-The "← Back to all work" link at the top is the page's navigation. There's nowhere else to go on this site, so a single back-link is the whole nav we need.
-
-The `$derived()` call splits the multiline `meaningful` prose on blank lines into an array of paragraphs. This is the payoff for using YAML block scalars: prose written naturally in the data file renders as proper paragraphs on the page.
-
-### Wiring up the route
-
-All that's left is a thin wrapper file that puts the data and the template together. Open `src/routes/projects/[slug]/+page.svelte` and paste in:
-
-```svelte
-<script>
-  import ProjectPage from '$lib/components/ProjectPage.svelte';
   let { data } = $props();
 </script>
 
-<ProjectPage project={data.project} />
+<Kicker text="{data.name}'s Portfolio" />
+<Headline text={data.detail.title} />
+
+<Image src={data.detail.image} alt={data.detail.title} />
+
+<Rule />
+<TagList label="Skills" tags={data.detail.skills} />
+<TagList
+  label="View Project"
+  tags={[{ text: new URL(data.detail.url).hostname, href: data.detail.url }]}
+/>
+<Rule />
+
+<ArticleBody>
+  {#each data.detail.body.trim().split('\n\n') as paragraph, i (i)}
+    <p>{paragraph}</p>
+  {/each}
+</ArticleBody>
 ```
 
-That's the entire file. The load function fetches the data, the template component renders it, and the wrapper just connects them.
+No custom component file, no CSS to write. Each template component handles its own styling. The `Kicker` shows the subject's name as a breadcrumb-style label above the headline. The two `TagList` components display the skills as pills and the project link as a clickable tag — `new URL(data.detail.url).hostname` extracts just the domain name for a clean label. The `ArticleBody` wraps the prose paragraphs in the same readable column width we've used all semester.
 
-Save and click into one of the project cards on your homepage. You should see a full project page.
+The `.split('\n\n')` call is the payoff for using YAML block scalars: prose written naturally in the data file renders as proper `<p>` tags on the page.
+
+Save and click into one of the cards on your homepage. You should see a full detail page.
 
 <Screenshot
   src="/screenshots/week-12/project-detail.png"
-  alt="A project detail page showing the back-to-work link, the title 'How the Other Half Lives', the Bandit's Roost photograph as hero image, the summary, a skills list rendered as pills, the 'why it mattered' prose section, and a button linking to the Library of Congress digitization"
+  alt="A clip detail page showing the kicker, headline, hero image, skills as tag pills, a link to the original work, and the body prose — all composed from template components"
   chromeTitle="How the Other Half Lives"
-  chromeUrl="http://localhost:5173/projects/how-the-other-half"
+  chromeUrl="http://localhost:5173/clips/how-the-other-half"
   maxWidth="960px"
 />
 
-Click "← Back to all work" to return to the homepage. Click into another project. Same template, different content. All from one component file and one YAML record.
+Click the kicker or use your browser's back button to return to the homepage. Click into another clip. Same template components, different content. All from one YAML file.
 
 ## Part 7: Deploy and beyond
 
 When you're ready, commit and push to GitHub. Watch the Actions tab to make sure the build succeeds.
 
 Once your site is live, share the URL in the class chat. Pull up a few of your classmates' Riis sites. See how differently everyone treated the same source material.
-
-### A note on custom domains
-
-By default, your portfolio lives at `https://yourusername.github.io/riis-portfolio/`. That's a perfectly fine URL. But when you build out your own portfolio in the homework, you might want to point a domain you own — `yourname.com`, `yourname.press`, `yournameisajournalist.nyc` — at GitHub Pages and have it serve your site instead.
-
-The process involves buying a domain from a registrar (Namecheap, Porkbun, and Cloudflare are all reasonable), updating its DNS records to point at GitHub's servers, and adding the domain in your repository's Pages settings. GitHub maintains a [step-by-step guide](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site) that walks through it.
-
-I'll demo the configuration live in class, since DNS is fiddly enough that watching it once is more useful than reading it.
-
-You don't have to do this. A `github.io` URL is professional. But if you've ever wanted to own your name on the web, this is the easiest way to start.
 
 ## Homework
 
@@ -567,11 +508,11 @@ Tonight you built Riis's portfolio with me. Now you'll build one of your own.
 
 You have two options.
 
-**Option A: Build it for yourself.** Replace Riis with you. Edit `site.yaml` so the profile section holds your real name, tagline, photo, contact info, and now/next paragraph, and the projects section holds three of your own projects — your three Module 2 builds are the obvious choice, but you can include outside work if you have it. The result should be something you'd actually send to an editor.
+**Option A: Build it for yourself.** Replace Riis with you. Edit `site.yaml` so the profile section holds your real name, tagline, photo, contact info, and now/next paragraph, and the clips section holds three of your own clips — your three Module 2 builds are the obvious choice, but you can include outside work if you have it. The result should be something you'd actually send to an editor.
 
 **Option B: Build it for a different historical journalist.** Pick a real reporter, columnist, or correspondent from the past and build their portfolio the way we built Riis's. Some candidates: Ida B. Wells, Ida Tarbell, Lincoln Steffens, Nellie Bly, Dorothy Thompson, Ernie Pyle, Willa Cather, John Reed, Gay Talese, William F. Buckley. Pick three of their major works, write the YAML, and find public-domain images to illustrate.
 
-Whichever option you pick, the technical requirements are the same: every field on every project filled in, every Profile field populated where appropriate, every link working, the site deployed to GitHub Pages.
+Whichever option you pick, the technical requirements are the same: every field on every clip filled in, every Profile field populated where appropriate, every link working, the site deployed to GitHub Pages.
 
 ### Task 2: Make it look like the subject
 
@@ -581,10 +522,10 @@ Some directions to play with:
 
 - **Typography.** Swap the default font for something with personality. [Google Fonts](https://fonts.google.com/) is the easiest place to browse. A serif display face with a clean sans for body text is a classic editorial pairing. Riis's site might call for a 19th-century slab serif. Yours might call for something else entirely.
 - **Color.** Pick a palette that fits the subject. Update the CSS variables in `src/app.css` and watch the whole site shift.
-- **Layout.** The Profile photo could go to the side instead of below the name. The project grid could be one column instead of three. The back-link could be replaced with a more prominent nav.
+- **Layout.** The Profile photo could go to the side instead of below the name. The clip grid could be one column instead of three. The back-link could be replaced with a more prominent nav.
 - **Detail.** A subtle hover state on the cards. A custom favicon. A footer with a fake masthead.
 
-This is a good place to lean on your AI coding assistant. Try prompts like "Change the color scheme to feel like a 19th-century newspaper" or "Make the project cards feel more like magazine covers." Iterate until the site feels intentional.
+This is a good place to lean on your AI coding assistant. Try prompts like "Change the color scheme to feel like a 19th-century newspaper" or "Make the clip cards feel more like magazine covers." Iterate until the site feels intentional.
 
 ### Task 3: Prepare to present
 
