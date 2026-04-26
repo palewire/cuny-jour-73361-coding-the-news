@@ -3,7 +3,7 @@ title: "Personal Portfolio"
 summary: "How to build a website that showcases your best work"
 date: "Apr. 27, 2026"
 week: 12
-locked: true
+locked: false
 ---
 
 <script>
@@ -240,7 +240,7 @@ export const load = () => {
 };
 ```
 
-The YAML plugin in our template handles the import — it reads `content.yaml` and hands us a JavaScript object, already parsed. Because our YAML has a top-level key `profile`, the page can read `data.profile` without any extra unpacking.
+The YAML plugin in our template handles the import — it reads `content.yaml` and hands us a JavaScript object, already parsed. Because our YAML has a top-level key `profile`, the page can read `data.content.profile` without any extra unpacking.
 
 ### Wiring up the Profile
 
@@ -307,7 +307,7 @@ clips:
 
 The images have already been added to the `static` folder in the template. The `slug` field is a unique identifier you'll use later.
 
-Open `src/routes/+page.svelte`. Import the Card component and add the grid below the Profile. Use the `$base` variable to construct the links to the detail pages, which we'll get to later.
+Open `src/routes/+page.svelte`. Import the Card component and add the grid below the Profile. Use the `base` variable to construct the links to the detail pages, which we'll get to later.
 
 ```svelte
 <script>
@@ -359,7 +359,7 @@ Save and check your browser. The Riis profile should appear up top, with three c
 
 Want to add a fourth clip? Add a fourth entry to the list. Nothing about your Svelte code needs to change. That's the beauty of this approach.
 
-## Part 6: Creating a detail page for every clip
+## Part 4: Creating a detail page for every clip
 
 Alright. We've got a homepage. But try clicking into one of the cards. You get a 404. We need to fix that by creating a dedicated page for each clip.
 
@@ -369,7 +369,7 @@ You did this by creating one dynamic route — a folder named `[id]` in square b
 
 Today, you're going to do the same thing using our YAML file and its `slug` field as the unique identifier.
 
-Create a new folder at `src/routes/clips/[slug]/` Then add `+page.js` inside it with the following code:
+Create a new folder at `src/routes/clips/[slug]/`. Then add `+page.js` inside it with the following code:
 
 ```js
 import content from '$lib/data/content.yaml';
@@ -531,7 +531,7 @@ Tonight you built Riis's portfolio with me. Now you'll build one of your own.
 
 ### Task 1: Build a portfolio site
 
-You our base template to build a portfolio site. You can choose to build it for yourself or for a historic journalist. There should be:
+Use our base template to build a portfolio site. You can choose to build it for yourself or for a historic journalist. There should be:
 
 - A profile section with a name, tagline, photo, contact links, and a statement of purpose
 - A grid of at least three clips, each with a title, description, and image
