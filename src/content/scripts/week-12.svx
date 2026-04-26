@@ -11,42 +11,32 @@ locked: true
   import Screenshot from '$lib/components/Screenshot.svelte';
 </script>
 
-This is the last week of Module 2. Over the past three weeks you've built a database explorer, a photo essay, and an interactive map. Tonight you'll build a portfolio site that puts work like that on display.
+Like it or not, your online portfolio is one of the most important assignments at this stage of your career. Yes, your work should speak for itself. Ultimately, you want editors and recruiters to evaluate you based on the quality of your journalism, not your skill at self promotion.
 
-We'll work through the tutorial together using Jacob Riis as our subject. His career suits the format — the photographs are public domain, the work is genuinely visual, and he's not around to argue with our design choices. In the homework, you'll either swap in your own three Module 2 projects, or pick another historical journalist and build theirs.
+The reality is that your web presence is the first thing many people will see when they look you up online. Building your own portfolio site is like printing a business card you can hand out to anyone who might be interested in hiring you.
 
-Along the way, we'll cover three new ideas: how to write a one-page personal brand, how to store site content in YAML, and how to use the dynamic-route pattern from the database explorer to give every project its own page.
+And on today's web, it's much more important than a traditional business card. That's because it's one of the few levers you have to control how you're perceived and presented by artificial intelligence systems.
 
-## Part 1: What makes a good portfolio?
+It can also be a useful exercise in self-reflection. Building a portfolio forces you to ask: What do I want to be known for? What work am I most proud of? This process of curation and, yes, self-branding can force you to make tough choices about how you want to craft your identity as a journalist.
 
-Before we code anything, let's look at how working journalists present their work online.
+Take a look at how some of our guest speakers this semester choose to present themselves online. Note what they all have in common. They clearly state who they are, what they do, and give visual examples of their work.
 
 <Screenshot
-  src="/screenshots/week-12/portfolio-examples.png"
-  alt="A grid of four journalist portfolio sites showing different approaches — minimal text-based lists, card grids with thumbnails, full-width featured projects, and magazine-style layouts"
+  src="/screenshots/week-12/portfolio-examples.gif"
+  alt="A rotating showcase of seven journalist portfolio sites from class guest speakers, each showing a different approach to presenting their work online"
   chromeTitle="Portfolio Examples"
   chromeUrl="various"
-  maxWidth="960px"
 />
 
-A few things the best portfolio sites have in common:
-
-**They lead with the work.** The homepage shows projects, not a biography. A short personal greeting is fine. A 500-word "about me" essay is not.
-
-**They're simple.** A portfolio doesn't need animations, parallax scrolling, or fancy transitions. It needs clear typography, readable text, and images that load fast. The work is the design.
-
-**They're current.** A portfolio whose newest project is from 2023 sends a signal, and not a good one. Three to five strong, recent pieces are better than a dozen mediocre ones. (Riis gets a pass.)
-
-**They work on phones.** Editors and recruiters will open your link on their phone. If the layout breaks at 375 pixels wide, you've lost them.
-
-A few portfolio sites worth studying. Look at how they organize their work, what they put up top, and how much (or how little) text they include:
-
-- [Allison McCartney](https://allisonmccartney.com/) — one of our guest speakers this semester
-- [Manas Sharma](https://manassharma.me/) — recent CUNY graduate
-- [Andrew Briz](https://briz.cc/) — another guest speaker
-- [Amelia Wattenberger](https://wattenberger.com/) — data visualization designer
-
-Don't try to copy these. Look at them for structure and inspiration, then build something that fits the work and personality of whoever's portfolio you're making.
+| Name | Self definition |
+|------|-----------|
+| [Allison McCartney](https://amccartney.github.io/) | Story editor on the Graphics team at The New York Times |
+| [Alvin Chang](https://alvinschang.com/) | Data journalist and Professor at the New School |
+| [Armand Emamdjomeh](http://emamd.net/) | Visual Journalist |
+| [Casey Miller](https://caseymmiller.com/) | Turning data sets into easily understandable, engaging experiences for users |
+| [Joe Fox](https://fox.computer/) | Developer and journalist |
+| [Rhyannon Bartlett-Imagadegawa](https://rhyannonbartlettimadegawa.com/) | NYC-based data journalist |
+| [Sarah Almukhtar](https://sarahalmukhtar.github.io/) | Digital designer formerly at The New York Times |
 
 ## Part 2: Start a fresh portfolio project
 
@@ -72,148 +62,13 @@ Your homepage should now look something like this:
 
 That's the right starting point. Save and check your browser. The page will be blank. We're going to fill it with something better.
 
-## Part 3: Building the homepage scaffold
+## Part 3: Writing the content in YAML
 
-A portfolio homepage has two parts that matter: who you are, and what you've made. We'll handle each with a prefab component.
-
-The first one is brand new. I've added a component to `src/lib/components/` called `Profile.svelte`. It handles the personal-branding block: name, tagline, photo, contact links, and a short paragraph about what the subject is doing now and what they're seeking next.
-
-The second one you've seen before. The class template includes a `Card` component and a `card-grid` layout class — together they handle the project tiles and the responsive grid that holds them. We've used both in earlier weeks.
-
-Let's wire them up with placeholder content first. Once we have the shape of the page on screen, we'll come back and fill in the real content.
-
-### Adding the Profile
-
-Open `src/routes/+page.svelte` and import the Profile component:
-
-```svelte
-<script>
-  import Profile from '$lib/components/Profile.svelte';
-</script>
-```
-
-Then drop it into the markup with placeholder props:
-
-```svelte {emphasize-lines="5-15"}
-<script>
-  import Profile from '$lib/components/Profile.svelte';
-</script>
-
-<Profile
-  name="Lorem Ipsum"
-  tagline="Data journalist focused on housing, public records, and the city in between."
-  photo="/profile.jpg"
-  photoAlt="Lorem Ipsum, in a portrait taken at the Newmark School."
-  email="lorem@example.com"
-  github="loremipsum"
-  linkedin="loremipsum"
-  nowNext="I'm a graduate student at the Craig Newmark Graduate School of Journalism at CUNY, focusing on data and interactive reporting.
-
-I'm looking for a summer internship at a newsroom doing data-driven accountability journalism."
-/>
-```
-
-Save the file and check your browser. You should see a name as a large headline, a tagline below it, a placeholder photo block, three contact links with little icons, and the now/next paragraph rendered below.
-
-<Screenshot
-  src="/screenshots/week-12/profile-placeholder.png"
-  alt="The Profile component rendered with placeholder content showing a large name headline, a tagline below it, a portrait photo placeholder, contact links for email, GitHub, and LinkedIn, and a two-paragraph now/next statement"
-  chromeTitle="Lorem Ipsum"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-The photo will appear as a grey rectangle since we haven't added the file yet. That's fine for now.
-
-### A note on the now/next paragraph
-
-That `nowNext` prop is the most important text on the homepage. It's a two-sentence pattern that career advisors call "now / next."
-
-The first sentence says what the subject is doing now: their program, their focus, their current role. The second sentence says what they're seeking next: the kind of work they're looking for, where they'd like to do it, in what area.
-
-Compare a vague version to a specific one:
-
-- *Vague.* "I'm a journalism student interested in storytelling. I'm looking for opportunities to grow."
-- *Specific.* "I'm a graduate student at CUNY focusing on data-driven housing reporting in New York. I'm looking for a summer internship at a newsroom investigating tenant displacement."
-
-The specific version gives an editor or recruiter something concrete to evaluate. The vague version gives them nothing. Specificity is generosity.
-
-We'll put this lesson into practice in Part 4. For now, the placeholder is doing its job.
-
-### Adding the project grid
-
-Below the Profile, we want a grid of cards — one per project. The template's `Card` component handles each tile, and the `card-grid` class wraps them in a responsive grid.
-
-Update your imports and add a placeholder list of projects:
-
-```svelte {emphasize-lines="3,4,6-29"}
-<script>
-  import Profile from '$lib/components/Profile.svelte';
-  import Card from '$lib/components/Card.svelte';
-  import { base } from '$app/paths';
-
-  const projects = [
-    {
-      slug: 'project-one',
-      title: 'Lorem ipsum dolor sit amet',
-      summary: 'Consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
-      image: '/thumbnails/placeholder.jpg',
-      imageAlt: 'Placeholder thumbnail'
-    },
-    {
-      slug: 'project-two',
-      title: 'Ut enim ad minim veniam',
-      summary: 'Quis nostrud exercitation ullamco laboris nisi ut aliquip.',
-      image: '/thumbnails/placeholder.jpg',
-      imageAlt: 'Placeholder thumbnail'
-    },
-    {
-      slug: 'project-three',
-      title: 'Duis aute irure dolor',
-      summary: 'In reprehenderit in voluptate velit esse cillum dolore.',
-      image: '/thumbnails/placeholder.jpg',
-      imageAlt: 'Placeholder thumbnail'
-    }
-  ];
-</script>
-```
-
-Then add the grid markup below the Profile:
-
-```svelte
-<div class="card-grid">
-  {#each projects as project}
-    <Card
-      href="{base}/projects/{project.slug}"
-      image={project.image}
-      imageAlt={project.imageAlt}
-    >
-      <h3>{project.title}</h3>
-      <p>{project.summary}</p>
-    </Card>
-  {/each}
-</div>
-```
-
-Save and check your browser. You should see the placeholder Profile up top and three placeholder project cards below it in a responsive grid.
-
-<Screenshot
-  src="/screenshots/week-12/homepage-scaffold.png"
-  alt="The portfolio homepage with the Profile block at top and three placeholder project cards arranged in a responsive grid below"
-  chromeTitle="Lorem Ipsum"
-  chromeUrl="http://localhost:5173"
-  maxWidth="960px"
-/>
-
-The Card component takes care of the tile layout and the link wrapping. The `card-grid` class handles the responsive arrangement — wide screens get two or three cards per row, phones collapse to a single column. We don't have to write any CSS for either.
-
-The shape of the page is right. The content isn't. Time to fix that.
-
-## Part 4: Moving the content into YAML
+A portfolio homepage has two parts that matter: who you are, and what you've made. Before we write any Svelte code, we're going to write all of the content first — in a separate data file that our components will read from.
 
 In a real newsroom, content and code live in separate places. The reporter writing the words shouldn't have to touch a Svelte file. The designer changing the layout shouldn't risk breaking a sentence. The page-building system reads the content from one source and the design from another, and the two evolve independently.
 
-We're going to mirror that pattern. Every word that appears on the page — the name, the tagline, the now/next paragraph, the project titles, the case studies — will move into a single content file. The Svelte code stays focused on rendering.
+We're going to mirror that pattern. Every word that appears on the page — the name, the tagline, the now/next paragraph, the project titles, the case studies — will live in a single content file. The Svelte code stays focused on rendering.
 
 We've used JSON for content in past weeks. Today we'll try something different: [YAML](https://en.wikipedia.org/wiki/YAML).
 
@@ -258,14 +113,29 @@ nowNext: |
 
 The `|` tells YAML to preserve line breaks as written. We'll use this for the now/next paragraph and for the case-study prose on each project page.
 
-### Installing the parser
+### Installing the YAML plugin
 
-SvelteKit doesn't know how to read YAML out of the box, so we need a small library called `js-yaml` to parse it for us.
+SvelteKit doesn't know how to read YAML out of the box. We'll add a Vite plugin called `@modyfi/vite-plugin-yaml` that teaches it how. Once the plugin is installed, you can import a `.yaml` file the same way you'd import JSON — Vite parses it at build time and hands you a ready-to-use JavaScript object.
 
 Stop your dev server with `Ctrl + C` and run:
 
 ```bash
-npm install js-yaml
+npm install @modyfi/vite-plugin-yaml
+```
+
+Then open `vite.config.js` and register the plugin:
+
+```js {emphasize-lines="2,7"}
+import { sveltekit } from '@sveltejs/kit/vite';
+import yaml from '@modyfi/vite-plugin-yaml';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [
+    yaml(),
+    sveltekit()
+  ]
+});
 ```
 
 Restart with `npm run dev`.
@@ -296,7 +166,20 @@ I've left out the `email`, `github`, and `linkedin` fields entirely. Riis didn't
 
 The tagline is a single sentence, sixteen words, that tells you what Riis did and where. It echoes his most famous book without quoting it directly, which gives the line some pull.
 
-The now/next paragraph is written as if Riis himself were filling in his own portfolio around 1890. First-person voice, present-tense, period-specific. When you build a portfolio for a real journalist of the past, picking a moment in their career and writing from inside it makes the page feel alive in a way that a museum-plaque biography doesn't.
+### A note on the now/next paragraph
+
+The `nowNext` field is the most important text on the homepage. It's a two-sentence pattern that career advisors call "now / next."
+
+The first sentence says what the subject is doing now: their program, their focus, their current role. The second sentence says what they're seeking next: the kind of work they're looking for, where they'd like to do it, in what area.
+
+Compare a vague version to a specific one:
+
+- *Vague.* "I'm a journalism student interested in storytelling. I'm looking for opportunities to grow."
+- *Specific.* "I'm a graduate student at CUNY focusing on data-driven housing reporting in New York. I'm looking for a summer internship at a newsroom investigating tenant displacement."
+
+The specific version gives an editor or recruiter something concrete to evaluate. The vague version gives them nothing. Specificity is generosity.
+
+The Riis now/next paragraph is written as if he were filling in his own portfolio around 1890. First-person voice, present-tense, period-specific. When you build a portfolio for a real journalist of the past, picking a moment in their career and writing from inside it makes the page feel alive in a way that a museum-plaque biography doesn't.
 
 Now add the projects. Three of Riis's major works:
 
@@ -355,30 +238,31 @@ Read through the YAML. Notice how the multiline `nowNext` and `meaningful` field
 
 While you're here, save thumbnail images to `static/thumbnails/police.jpg`, `bandits-roost.jpg`, and `mulberry-bend.jpg` to match the paths above. Riis's photographs are public domain and widely available — try the [Library of Congress Jacob Riis collection](https://www.loc.gov/collections/jacob-riis/), the [Museum of the City of New York](https://collections.mcny.org/), or [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:Photographs_by_Jacob_Riis).
 
+## Part 4: Building the homepage
+
+Now we need to load this YAML and render it. The homepage has two visual parts: a Profile block for the personal branding, and a grid of Card tiles for the projects. Both are prefab components in the class template.
+
+The Profile is brand new. I've added a component to `src/lib/components/` called `Profile.svelte`. It handles the personal-branding block: name, tagline, photo, contact links, and the now/next paragraph.
+
+The Card component you've seen before. The class template includes it along with a `card-grid` layout class — together they handle the project tiles and the responsive grid that holds them. We've used both in earlier weeks.
+
 ### Loading the data
 
-Now we need to read this YAML file from the homepage. We'll use the `+page.js` load function pattern we established in Week 5.
-
-Create a new file at `src/routes/+page.js`:
+We'll use the `+page.js` load function pattern we established in Week 5. Create a new file at `src/routes/+page.js`:
 
 ```js
-import yaml from 'js-yaml';
-import siteYaml from '$lib/data/site.yaml?raw';
+import site from '$lib/data/site.yaml';
 
 export const load = () => {
-  return yaml.load(siteYaml);
+  return site;
 };
 ```
 
-Two things here are worth pausing on.
+Thanks to the YAML plugin we installed earlier, the import reads `site.yaml` and hands us a JavaScript object — already parsed, no extra step needed. Because our YAML has top-level keys `profile` and `projects`, that's the shape the page receives. The page can read `data.profile` and `data.projects` without any extra unpacking.
 
-First, `?raw` at the end of the import is a Vite feature. Normally when you import a file, Vite tries to process it — parse JSON, compile CSS, bundle JavaScript. The `?raw` suffix tells Vite "hand me this file as a plain string and let me deal with it." That's what we want, because we're going to parse the YAML ourselves.
+### Rendering the page
 
-Second, we just return `yaml.load(siteYaml)` directly. Because our YAML has top-level keys `profile` and `projects`, that's the shape the page receives. The page can read `data.profile` and `data.projects` without any extra unpacking.
-
-### Updating the homepage to use the loaded data
-
-Open `src/routes/+page.svelte`. We're going to throw away both inline placeholders — the Lorem Ipsum on the Profile and the lorem-projects array — and feed the components from the loaded data instead.
+Open `src/routes/+page.svelte`. Replace the empty file with this:
 
 ```svelte
 <script>
@@ -407,7 +291,7 @@ Open `src/routes/+page.svelte`. We're going to throw away both inline placeholde
 
 The `{...data.profile}` syntax is Svelte's prop-spreading shorthand. Instead of writing `name={data.profile.name} tagline={data.profile.tagline}` and so on for every field, we just spread the whole object. The Profile component pulls out the props it knows about and ignores the rest.
 
-Save and check your browser. Riis should now appear on the page — name as headline, tagline below, portrait photo, and the three project cards in a grid using his actual photographs.
+Save and check your browser. Riis should appear on the page — name as headline, tagline below, portrait photo, and the three project cards in a grid using his actual photographs.
 
 <Screenshot
   src="/screenshots/week-12/homepage-real-data.png"
@@ -451,12 +335,10 @@ The square brackets in `[slug]` tell SvelteKit this is a dynamic route. Any URL 
 Create `src/routes/projects/[slug]/+page.js`:
 
 ```js
-import yaml from 'js-yaml';
-import siteYaml from '$lib/data/site.yaml?raw';
+import site from '$lib/data/site.yaml';
 import { error } from '@sveltejs/kit';
 
 export const load = ({ params }) => {
-  const site = yaml.load(siteYaml);
   const project = site.projects.find((p) => p.slug === params.slug);
 
   if (!project) {
