@@ -359,7 +359,7 @@ Save and check your browser. The Riis profile should appear up top, with three c
 
 Want to add a fourth clip? Add a fourth entry to the list. Nothing about your Svelte code needs to change. That's the beauty of this approach.
 
-## Part 4: Creating a detail page for every clip
+## Part 4: Templating a detail page for every clip
 
 Alright. We've got a homepage. But try clicking into one of the cards. You get a 404. We need to fix that by creating a dedicated page for each clip.
 
