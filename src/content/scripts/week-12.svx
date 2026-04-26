@@ -38,7 +38,11 @@ Take a look at how some of our guest speakers this semester choose to present th
 | [Rhyannon Bartlett-Imagadegawa](https://rhyannonbartlettimadegawa.com/) | NYC-based data journalist |
 | [Sarah Almukhtar](https://sarahalmukhtar.github.io/) | Digital designer formerly at The New York Times |
 
-## Part 2: Start a fresh portfolio project
+This week you will make a site in this same vein, a simple portfolio that clearly states who you are and what you've done. You'll use the same SvelteKit template we've been working with all semester.
+
+Our demonstration case will be creating a portfolio for [Jacob Riis](https://en.wikipedia.org/wiki/Jacob_Riis), the pioneering chronicler of tenement life in late 19th-century New York.
+
+## Part 1: Creating a simple profile page
 
 As in past weeks, open your browser and navigate to our template repository at <a href="https://github.com/palewire/cuny-jour-static-site-template" target="_blank">github.com/palewire/cuny-jour-static-site-template</a>.
 
@@ -65,22 +69,26 @@ npm run dev
 
 Open [localhost:5173](http://localhost:5173). You'll see the article-style demo page our template ships with — the same one we've been recycling all semester.
 
-A portfolio is not an article. It's something else entirely. So before we start adding new things, we need to clear away the old.
+Open `src/routes/+page.svelte`. Delete everything. We're going to start from a blank slate.
 
-Open `src/routes/+page.svelte`. Delete every component used in the article body — `ArticleHeader`, `ArticleBody`, `Image`, `Blockquote`, `BigNumber`, anything else the template inlines as demo content. Remove their imports from the script block at the top. Leave the file with just an empty script block and an empty body.
+Save and check your browser. The page will be blank, except for the header and footer.
 
-Your homepage should now look something like this:
+We want to delete those too, so let's go into the `+page.js` file and set `showHeader` and `showFooter` to `false`:
 
-```svelte
-<script>
-</script>
+```js
+export const load = () => {
+  return {
+    showHeader: false,
+    showFooter: false
+  };
+};
 ```
 
-That's the right starting point. Save and check your browser. The page will be blank. We're going to fill it with something better.
+Now you should have a completely blank page. This is our canvas.
 
-## Part 3: Meet the components
+As in past weeks, your class template already includes the components you need. Like the rest of the library, they're documented on the [Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/) site.
 
-A portfolio homepage has two parts that matter: who you are, and what you've made. As in past weeks, your class template already includes the components we'll use. Like the rest of the library, they're documented on the [Storybook](https://palewire.github.io/cuny-jour-static-site-template/storybook/) site.
+In the compositions section, you can see a pre-built Portfolio page that shows how the new [Profile](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/portfolio-profile--docs) component and the [Card](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/data-card--docs) component we've used in past weeks work together. The example is a portfolio for [Max Eastman](https://en.wikipedia.org/wiki/Max_Eastman), a controversial editor from the early 20th century who lived in Greenwich Village and published a magazine called [The Masses](https://en.wikipedia.org/wiki/The_Masses).
 
 <Screenshot
   src="/screenshots/week-12/storybook-portfolio-components.png"
@@ -89,155 +97,150 @@ A portfolio homepage has two parts that matter: who you are, and what you've mad
   chromeUrl="https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/compositions-personal-portfolio--docs"
 />
 
-The key ones this week are:
-
-| Component | Description |
-|-----------|-------------|
-| [`Profile`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/portfolio-profile--docs) | The personal-branding block: name, tagline, photo, contact links, and a now/next paragraph |
-| [`Card`](https://palewire.github.io/cuny-jour-static-site-template/storybook/?path=/docs/data-card--docs) | A clickable tile with an image, title, and description — one per clip |
-
-Open Storybook and poke at each one before moving on.
-
-### Adding the Profile
-
 Let's start by importing the Profile component and wiring it up with placeholder content, just to see it on screen.
 
 Open `src/routes/+page.svelte` and paste in:
 
 ```svelte
 <script>
-  import Profile from '$lib/components/Profile.svelte';
+  import Profile from '$lib/components/Portfolio/Profile.svelte';
 </script>
 
+<div class="container wide">
 <Profile
   name="Lorem Ipsum"
-  tagline="Data journalist focused on housing, public records, and the city in between."
-  photo="/profile.jpg"
+  tagline="Data journalist focused on the human impact of government policy"
+  photo="https://picsum.photos/id/103/400/500"
   photoAlt="Lorem Ipsum, in a portrait taken at the Newmark School."
   email="lorem@example.com"
   github="loremipsum"
   linkedin="loremipsum"
-  nowNext="I'm a graduate student at the Craig Newmark Graduate School of Journalism at CUNY, focusing on data and interactive reporting.
+  bio="I'm a graduate student at the Craig Newmark Graduate School of Journalism at CUNY, focusing on using data analysis as the engine for shoeleather reporting on the issues that matter to New Yorkers.
 
-I'm looking for a summer internship at a newsroom doing data-driven accountability journalism."
+I'm looking for a summer internship at a U.S. newsroom doing risk-taking journalism that holds power to account."
 />
+</div>
 ```
 
-Save the file and check your browser. You should see a name as a large headline, a tagline below it, a placeholder photo block, three contact links with little icons, and the now/next paragraph rendered below.
+Save the file and check your browser. You should see a name as a large headline, a tagline below it, a placeholder photo block and the rest of the content.
 
 <Screenshot
   src="/screenshots/week-12/profile-placeholder.png"
   alt="The Profile component rendered with placeholder content showing a large name headline, a tagline below it, a portrait photo placeholder, contact links for email, GitHub, and LinkedIn, and a two-paragraph now/next statement"
   chromeTitle="Lorem Ipsum"
   chromeUrl="http://localhost:5173"
-  maxWidth="960px"
 />
 
-The photo will appear as a grey rectangle since we haven't added the file yet. That's fine for now. The point is to see the shape of the component before we fill it with real content.
+Here you see the key components of any journalist's portfolio: a clear statement of who you are and what you do, a photo, contact links and a statement of what you're doing now, and what you might be looking for next.
 
-Now it's time to replace these placeholders with something real.
+## Part 2: Structuring your content with YAML
 
-## Part 4: Writing the content in YAML
+In a real newsroom, when we're doing things right, content and code live in separate places. You say that in [Week 10](/docs/coding-the-news/scripts/week-10) when your built your multimedia gallery.
 
-In a real newsroom, content and code live in separate places. The reporter writing the words shouldn't have to touch a Svelte file. The designer changing the layout shouldn't risk breaking a sentence. The page-building system reads the content from one source and the design from another, and the two evolve independently.
+In that example, each slide in the story was stored in a JSON file. The Svelte code read that file, looped through the slides, and rendered them with the same template.
 
-We're going to mirror that pattern. Every word that appears on the page — the name, the tagline, the now/next paragraph, the clip titles, the case studies — will live in a single content file. The Svelte code stays focused on rendering.
+Today you'll try something different: [YAML](https://en.wikipedia.org/wiki/YAML).
 
-We've used JSON for content in past weeks. Today we'll try something different: [YAML](https://en.wikipedia.org/wiki/YAML).
+YAML is a data structuring system designed to store information in a way that is easy for people to read and write. It stands for “YAML Ain’t Markup Language” because it does not wrap data in tags like HTML or XML, a technique known as markup.
 
-### Meeting YAML
+Programmers often choose YAML for configuration files because it's more forgiving than JSON and handles long-form text better.
 
 You've actually seen YAML before. Back in Week 2, the GitHub Actions workflow file we activated was YAML. It's popular for content because it's easier to read and write than JSON — no curly braces, no commas at the end of every line, and a clean way to handle long prose.
+
+Here is a simple example of how it stores different types of data:
+
+```yaml
+# This is a comment
+
+# This is a string
+name: Alice
+
+# This is an integer
+age: 25
+
+# This is a list
+colors:
+  - red
+  - green
+  - blue
+
+# This is a nested object
+address:
+  street: 123 Main St.
+  city: Anytown
+  state: CA
+  zip: 99999
+```
 
 Here's the same data in YAML versus JSON:
 
 ```yaml
-title: How the Other Half Lives
-date: 1890
-skills:
-  - Flash photography
-  - Documentary writing
-  - Lantern-slide lecturing
+address:
+  street: 123 Main St.
+  city: Anytown
+  state: CA
+  zip: 99999
 ```
 
 ```json
 {
-  "title": "How the Other Half Lives",
-  "date": 1890,
-  "skills": ["Flash photography", "Documentary writing", "Lantern-slide lecturing"]
+  "address": {
+    "street": "123 Main St.",
+    "city": "Anytown",
+    "state": "CA",
+    "zip": 99999
+  }
 }
 ```
 
-Indentation matters in YAML. Two spaces is the standard — never mix in tabs. Fields look like `key: value`. Lists use dashes. That's most of what you need to know.
+One  reason we're switching to YAML is its handling of long prose. Writing multi-paragraph text inside a JSON string is miserable. Every line break has to be stored as `\n\n`, every quote has to be escaped.
 
-### Multiline strings
+YAML solves this with a feature called [block scalars](https://yaml-multiline.info/). You can put a `|` after the key, indent the content and write whatever you want.Aside
 
-The real reason we're switching to YAML is its handling of long prose. Writing multi-paragraph text inside a JSON string is miserable — every line break is a `\n\n`, every quote has to be escaped, nothing is readable.
-
-YAML solves this with a feature called [block scalars](https://yaml-multiline.info/). Put a `|` after the key, indent the content, and write whatever you want:
+Here's an example:
 
 ```yaml
-nowNext: |
+bio: |
   This is the first paragraph. It can be as long as you want.
 
   This is the second paragraph. Blank lines separate paragraphs,
   just like they would in a text file.
 ```
 
-The `|` tells YAML to preserve line breaks as written. We'll use this for the now/next paragraph and for the case-study prose on each clip's detail page.
+As in past week, create a new folder at `src/lib/data/`. Inside it, make a file called `content.yaml`.
 
-### Writing the content file
-
-Create a new folder at `src/lib/data/`. Inside it, make a file called `site.yaml`. This will be the single source of truth for everything that appears on your portfolio.
-
-We'll build it up piece by piece, adding fields only when we're ready to put them on the page. Start with just the profile. Find a public-domain portrait of Riis on the [Library of Congress website](https://www.loc.gov/) or [Wikimedia Commons](https://commons.wikimedia.org/), save it to `static/profile.jpg`, and paste this into `site.yaml`:
+We'll build it up piece by piece, adding fields only when we're ready to put them on the page. Start with just the profile, which is a single object with fields that match the properties of the Profile component:
 
 ```yaml
 profile:
   name: Jacob Riis
-  tagline: Police reporter and tenement chronicler for the New-York Tribune and Evening Sun, documenting how the other half lives.
-  photo: /profile.jpg
+  tagline: Police reporter and tenement chronicler
+  photo: photos/jacob-riis.jpg
   photoAlt: Jacob Riis, in a portrait taken around 1900.
-  nowNext: |
+  email: jriis@eveningsun.com
+  github: jacob-riis
+  linkedin: jacob-riis
+  bio: |
     I'm a police reporter at Mulberry Street headquarters for the Evening Sun, lecturing each week with lantern slides drawn from the flash photography I've been making in the Lower East Side.
 
     I'm seeking the chance to turn this work into reform — better housing laws, better schools for the children of the poor, and the demolition of Mulberry Bend.
 ```
 
-A few things worth noticing.
-
-I've left out the `email`, `github`, and `linkedin` fields entirely. Riis didn't have any of those. The Profile component handles missing fields gracefully because every contact link is wrapped in an `{#if}` block — write your component to expect any field to be missing, and the page renders cleanly.
-
-The tagline is a single sentence, sixteen words, that tells you what Riis did and where. It echoes his most famous book without quoting it directly, which gives the line some pull.
-
-### A note on the now/next paragraph
-
-The `nowNext` field is the most important text on the homepage. It's a two-sentence pattern that career advisors call "now / next."
-
-The first sentence says what the subject is doing now: their program, their focus, their current role. The second sentence says what they're seeking next: the kind of work they're looking for, where they'd like to do it, in what area.
-
-Compare a vague version to a specific one:
-
-- *Vague.* "I'm a journalism student interested in storytelling. I'm looking for opportunities to grow."
-- *Specific.* "I'm a graduate student at CUNY focusing on data-driven housing reporting in New York. I'm looking for a summer internship at a newsroom investigating tenant displacement."
-
-The specific version gives an editor or recruiter something concrete to evaluate. The vague version gives them nothing. Specificity is generosity.
-
-The Riis now/next paragraph is written as if he were filling in his own portfolio around 1890. First-person voice, present-tense, period-specific. When you build a portfolio for a real journalist of the past, picking a moment in their career and writing from inside it makes the page feel alive in a way that a museum-plaque biography doesn't.
-
-### Loading the data
-
 Now we need to get this YAML onto the page. We'll use the `+page.js` load function pattern we established in Week 5. Create a new file at `src/routes/+page.js`:
 
 ```js
-import site from '$lib/data/site.yaml';
+import content from '$lib/data/content.yaml';
 
 export const load = () => {
-  return site;
+  return {
+    showHeader: false,
+    showFooter: false,
+    content,
+  };
 };
 ```
 
-The YAML plugin in our template handles the import — it reads `site.yaml` and hands us a JavaScript object, already parsed. Because our YAML has a top-level key `profile`, the page can read `data.profile` without any extra unpacking.
+The YAML plugin in our template handles the import — it reads `content.yaml` and hands us a JavaScript object, already parsed. Because our YAML has a top-level key `profile`, the page can read `data.profile` without any extra unpacking.
 
 ### Wiring up the Profile
 
@@ -245,18 +248,25 @@ Open `src/routes/+page.svelte`. Replace the hardcoded Profile with data from the
 
 ```svelte
 <script>
-  import Profile from '$lib/components/Profile.svelte';
+  import Profile from '$lib/components/Portfolio/Profile.svelte';
 
   let { data } = $props();
+  const content = data.content;
 </script>
 
-<Profile
-  name={data.profile.name}
-  tagline={data.profile.tagline}
-  photo={data.profile.photo}
-  photoAlt={data.profile.photoAlt}
-  nowNext={data.profile.nowNext}
-/>
+<div class="container wide">
+  <Profile
+    name={content.profile.name}
+    tagline={content.profile.tagline}
+    photo={content.profile.photo}
+    photoAlt={content.profile.photoAlt}
+    email={content.profile.email}
+    github={content.profile.github}
+    linkedin={content.profile.linkedin}
+    bio={content.profile.bio}
+  />
+</div>
+
 ```
 
 Save and check your browser. Riis should now appear on the page — name as headline, tagline below, portrait photo, and the now/next paragraph. All from the YAML file.
@@ -266,7 +276,6 @@ Save and check your browser. Riis should now appear on the page — name as head
   alt="The Profile component now showing Jacob Riis with his portrait, tagline, and now/next paragraph — all loaded from the YAML data file"
   chromeTitle="Jacob Riis"
   chromeUrl="http://localhost:5173"
-  maxWidth="960px"
 />
 
 ## Part 5: Adding the clip grid
@@ -275,7 +284,7 @@ The profile is done. Now we need the second half of the homepage: a grid of card
 
 ### Adding clips to the YAML
 
-Open `site.yaml` and add a `clips` section below the profile. For now, each clip only needs the fields that appear on the card — we'll add more later when we build the detail pages.
+Open `content.yaml` and add a `clips` section below the profile. For now, each clip only needs the fields that appear on the card — we'll add more later when we build the detail pages.
 
 ```yaml
 clips:
@@ -306,19 +315,20 @@ Open `src/routes/+page.svelte`. Import the Card component and add the grid below
 
 ```svelte {emphasize-lines="3,4,9-18"}
 <script>
-  import Profile from '$lib/components/Profile.svelte';
+  import Profile from '$lib/components/Portfolio/Profile.svelte';
   import Card from '$lib/components/Card.svelte';
   import { base } from '$app/paths';
 
   let { data } = $props();
 </script>
 
+<div class="container wide">
 <Profile
   name={data.profile.name}
   tagline={data.profile.tagline}
   photo={data.profile.photo}
   photoAlt={data.profile.photoAlt}
-  nowNext={data.profile.nowNext}
+  bio={data.profile.bio}
 />
 
 <div class="card-grid">
@@ -328,6 +338,7 @@ Open `src/routes/+page.svelte`. Import the Card component and add the grid below
       <p>{clip.description}</p>
     </Card>
   {/each}
+</div>
 </div>
 ```
 
@@ -343,7 +354,7 @@ Save and check your browser. The Riis profile should appear up top, with three c
   maxWidth="960px"
 />
 
-That's the homepage done. Every word that shows up on it lives in `site.yaml`. Want to change the tagline? Edit one line of YAML. Want to add a fourth clip? Add a fourth entry to the list. The Svelte code stays put.
+That's the homepage done. Every word that shows up on it lives in `content.yaml`. Want to change the tagline? Edit one line of YAML. Want to add a fourth clip? Add a fourth entry to the list. The Svelte code stays put.
 
 Now we need a place for each card to lead.
 
@@ -357,7 +368,7 @@ We're going to do the same thing here, but with `[slug]` and YAML.
 
 ### Adding detail fields to the YAML
 
-Each detail page needs more than what the card shows. Open `site.yaml` and add three new fields to each clip: `url`, `skills`, and `body`. Your clips section should now look like this:
+Each detail page needs more than what the card shows. Open `content.yaml` and add three new fields to each clip: `url`, `skills`, and `body`. Your clips section should now look like this:
 
 ```yaml
 clips:
@@ -417,18 +428,18 @@ Notice how the multiline `body` fields render cleanly in your editor — no esca
 Create a new folder at `src/routes/clips/[slug]/` — the square brackets make it a dynamic route, just like `[id]` in Week 9. Then add `+page.js` inside it:
 
 ```js
-import site from '$lib/data/site.yaml';
+import content from '$lib/data/content.yaml';
 import { error } from '@sveltejs/kit';
 
 export const load = ({ params }) => {
-  const clip = site.clips.find((c) => c.slug === params.slug);
+  const clip = content.clips.find((c) => c.slug === params.slug);
 
   if (!clip) {
     error(404, 'Clip not found');
   }
 
   return {
-    name: site.profile.name,
+    name: content.profile.name,
     detail: clip
   };
 };
@@ -437,7 +448,7 @@ export const load = ({ params }) => {
 This does three things:
 
 1. Imports the same YAML file the homepage loads from. One source of truth for the whole site.
-2. Finds the record inside `site.clips` whose `slug` matches the URL parameter. The `params` object is populated by SvelteKit based on the folder name — `[slug]` becomes `params.slug`.
+2. Finds the record inside `content.clips` whose `slug` matches the URL parameter. The `params` object is populated by SvelteKit based on the folder name — `[slug]` becomes `params.slug`.
 3. If no record matches, throws a 404. Otherwise, hands the clip record to the page as `detail`, along with the profile `name` for the kicker line.
 
 ### Rendering the detail page
@@ -458,6 +469,7 @@ Open `src/routes/clips/[slug]/+page.svelte` and paste in:
   let { data } = $props();
 </script>
 
+<div class="container">
 <Kicker text="{data.name}'s Portfolio" />
 <Headline text={data.detail.title} />
 
@@ -476,6 +488,7 @@ Open `src/routes/clips/[slug]/+page.svelte` and paste in:
     <p>{paragraph}</p>
   {/each}
 </ArticleBody>
+</div>
 ```
 
 No custom component file, no CSS to write. Each template component handles its own styling. The `Kicker` shows the subject's name as a breadcrumb-style label above the headline. The two `TagList` components display the skills as pills and the project link as a clickable tag — `new URL(data.detail.url).hostname` extracts just the domain name for a clean label. The `ArticleBody` wraps the prose paragraphs in the same readable column width we've used all semester.
@@ -508,7 +521,7 @@ Tonight you built Riis's portfolio with me. Now you'll build one of your own.
 
 You have two options.
 
-**Option A: Build it for yourself.** Replace Riis with you. Edit `site.yaml` so the profile section holds your real name, tagline, photo, contact info, and now/next paragraph, and the clips section holds three of your own clips — your three Module 2 builds are the obvious choice, but you can include outside work if you have it. The result should be something you'd actually send to an editor.
+**Option A: Build it for yourself.** Replace Riis with you. Edit `content.yaml` so the profile section holds your real name, tagline, photo, contact info, and now/next paragraph, and the clips section holds three of your own clips — your three Module 2 builds are the obvious choice, but you can include outside work if you have it. The result should be something you'd actually send to an editor.
 
 **Option B: Build it for a different historical journalist.** Pick a real reporter, columnist, or correspondent from the past and build their portfolio the way we built Riis's. Some candidates: Ida B. Wells, Ida Tarbell, Lincoln Steffens, Nellie Bly, Dorothy Thompson, Ernie Pyle, Willa Cather, John Reed, Gay Talese, William F. Buckley. Pick three of their major works, write the YAML, and find public-domain images to illustrate.
 
