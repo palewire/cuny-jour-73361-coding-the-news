@@ -269,7 +269,7 @@ Open `src/routes/+page.svelte`. Replace the hardcoded Profile with data from the
 
 ```
 
-Save and check your browser. Riis should now appear on the page — name as headline, tagline below, portrait photo, and the now/next paragraph. All from the YAML file.
+Save and check your browser. Riis should now appear on the page, with all the data drawn from our YAML file.
 
 <Screenshot
   src="/screenshots/week-12/profile-real-data.png"
@@ -320,25 +320,29 @@ Open `src/routes/+page.svelte`. Import the Card component and add the grid below
   import { base } from '$app/paths';
 
   let { data } = $props();
+  const content = data.content;
 </script>
 
 <div class="container wide">
-<Profile
-  name={data.profile.name}
-  tagline={data.profile.tagline}
-  photo={data.profile.photo}
-  photoAlt={data.profile.photoAlt}
-  bio={data.profile.bio}
-/>
+  <Profile
+    name={content.profile.name}
+    tagline={content.profile.tagline}
+    photo={content.profile.photo}
+    photoAlt={content.profile.photoAlt}
+    email={content.profile.email}
+    github={content.profile.github}
+    linkedin={content.profile.linkedin}
+    bio={content.profile.bio}
+  />
 
-<div class="card-grid">
-  {#each data.clips as clip (clip.title)}
-    <Card href="{base}/clips/{clip.slug}" image={clip.image} imageAlt={clip.title}>
-      <h3>{clip.title}</h3>
-      <p>{clip.description}</p>
-    </Card>
-  {/each}
-</div>
+  <div class="card-grid">
+    {#each content.clips as clip (clip.title)}
+      <Card href="{base}/clips/{clip.slug}" image={clip.image} imageAlt={clip.title}>
+        <h3>{clip.title}</h3>
+        <p>{clip.description}</p>
+      </Card>
+    {/each}
+  </div>
 </div>
 ```
 
