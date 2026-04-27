@@ -547,3 +547,15 @@ Be ready to walk the class through your portfolio. You should be prepared to:
 - Discuss how you decided to frame your portfolio's identity and message
 - Explain one change you made to how the data is structured
 - Explain one design choice you made and why
+
+### Task 3: Outline your final project 
+
+You will also be expected to present your plans for your final project. You should have answers prepared for the following questions, which you will share with the class.
+
+- What is the central question of your project? 
+- What data or other assets are you going to use to tell the story?
+- Who do you imagine as the audience?
+- What will the audience be able to discover that they couldn't from a traditional text article?
+- What will the main interactive or visual element be?
+- How will Svelte's reactive capabilities enhance the project?
+- What Svelte components will you use?
