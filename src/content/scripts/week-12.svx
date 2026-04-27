@@ -73,7 +73,7 @@ Open `src/routes/+page.svelte`. Delete everything. We're going to start from a b
 
 Save and check your browser. The page will be blank, except for the header and footer.
 
-We want to delete those too, so let's go into the `+page.js` file and set `showHeader` and `showFooter` to `false`:
+We want to delete those too, so let's go into the `+page.js` file alongside it and set `showHeader` and `showFooter` to `false`:
 
 ```js
 export const load = () => {
@@ -226,7 +226,7 @@ profile:
     I'm seeking the chance to turn this work into reform — better housing laws, better schools for the children of the poor, and the demolition of Mulberry Bend.
 ```
 
-Now we need to get this YAML onto the page. We'll use the `+page.js` load function pattern we established in Week 5. Create a new file at `src/routes/+page.js`:
+Now we need to get this YAML onto the page. We'll use the `+page.js` load function pattern we established in Week 5. Update `src/routes/+page.js` to import the YAML file and return it alongside the layout settings:
 
 ```js
 import content from '$lib/data/content.yaml';
