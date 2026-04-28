@@ -73,9 +73,9 @@ Open `src/routes/+page.svelte`. Delete everything. We're going to start from a b
 
 Save and check your browser. The page will be blank, except for the header and footer.
 
-We want to delete those too, so let's go into the `+page.js` file and set `showHeader` and `showFooter` to `false`:
+We want to delete those too, so let's go into the `+page.js` file alongside it and set `showHeader` and `showFooter` to `false`:
 
-```js
+```js  {emphasize-lines="3,4"}
 export const load = () => {
   return {
     showHeader: false,
@@ -107,18 +107,18 @@ Open `src/routes/+page.svelte` and paste in:
 </script>
 
 <div class="container wide">
-<Profile
-  name="Lorem Ipsum"
-  tagline="Data journalist focused on the human impact of government policy"
-  photo="https://picsum.photos/id/103/400/500"
-  photoAlt="Lorem Ipsum, in a portrait taken at the Newmark School."
-  email="lorem@example.com"
-  github="loremipsum"
-  linkedin="loremipsum"
-  bio="I'm a graduate student at the Craig Newmark Graduate School of Journalism at CUNY, focusing on using data analysis as the engine for shoeleather reporting on the issues that matter to New Yorkers.
+  <Profile
+    name="Lorem Ipsum"
+    tagline="Data journalist focused on the human impact of government policy"
+    photo="https://picsum.photos/id/103/400/500"
+    photoAlt="Lorem Ipsum, in a portrait taken at the Newmark School."
+    email="lorem@example.com"
+    github="loremipsum"
+    linkedin="loremipsum"
+    bio="I'm a graduate student at the Craig Newmark Graduate School of Journalism at CUNY, focusing on using data analysis as the engine for shoeleather reporting on the issues that matter to New Yorkers.
 
 I'm looking for a summer internship at a U.S. newsroom doing risk-taking journalism that holds power to account."
-/>
+  />
 </div>
 ```
 
@@ -226,9 +226,9 @@ profile:
     I'm seeking the chance to turn this work into reform — better housing laws, better schools for the children of the poor, and the demolition of Mulberry Bend.
 ```
 
-Now we need to get this YAML onto the page. We'll use the `+page.js` load function pattern we established in Week 5. Create a new file at `src/routes/+page.js`:
+Now we need to get this YAML onto the page. We'll use the `+page.js` load function pattern we established in Week 5. Update `src/routes/+page.js` to import the YAML file and return it alongside the layout settings:
 
-```js
+```js {emphasize-lines="1,5-7"}
 import content from '$lib/data/content.yaml';
 
 export const load = () => {
@@ -246,7 +246,7 @@ The YAML plugin in our template handles the import — it reads `content.yaml` a
 
 Open `src/routes/+page.svelte`. Replace the hardcoded Profile with data from the YAML file:
 
-```svelte
+```svelte {emphasize-lines="4-5,9-18"}
 <script>
   import Profile from '$lib/components/Portfolio/Profile.svelte';
 
@@ -284,7 +284,19 @@ That's a nice start, but if there's one thing that's universal about journalist 
 
 Open `content.yaml` and add a `clips` section below the profile. We will include fields that match, exactly, the inputs to our Card component.
 
-```yaml
+```yaml {emphasize-lines="13-30"}
+profile:
+  name: Jacob Riis
+  tagline: Police reporter and tenement chronicler
+  photo: photos/jacob-riis.jpg
+  photoAlt: Jacob Riis, in a portrait taken around 1900.
+  email: jriis@eveningsun.com
+  github: jacob-riis
+  linkedin: jacob-riis
+  bio: |
+    I'm a police reporter at Mulberry Street headquarters for the Evening Sun, lecturing each week with lantern slides drawn from the flash photography I've been making in the Lower East Side.
+
+    I'm seeking the chance to turn this work into reform — better housing laws, better schools for the children of the poor, and the demolition of Mulberry Bend.
 clips:
   - slug: police
     title: Police Headquarters Reporter
@@ -309,7 +321,7 @@ The images have already been added to the `static` folder in the template. The `
 
 Open `src/routes/+page.svelte`. Import the Card component and add the grid below the Profile. Use the `base` variable to construct the links to the detail pages, which we'll get to later.
 
-```svelte
+```svelte {emphasize-lines="3-5,23-34"}
 <script>
   import Profile from '$lib/components/Portfolio/Profile.svelte';
   import Card from '$lib/components/Data/Card.svelte';
@@ -478,7 +490,7 @@ Notice the multiline `body` fields at work. That's the payoff for using YAML blo
 
 Now update `src/routes/clips/[slug]/+page.svelte` to use the new fields. Pull out a couple more components from the library to help with the layout: `Rule` for horizontal dividers, `TagList` for the skills and project link, and your old friend `ArticleBody` to wrap the prose.
 
-```svelte
+```svelte {emphasize-lines="5-7,19-31"}
 <script>
   import Kicker from '$lib/components/Article/Kicker.svelte';
   import Headline from '$lib/components/Article/Headline.svelte';
@@ -547,3 +559,15 @@ Be ready to walk the class through your portfolio. You should be prepared to:
 - Discuss how you decided to frame your portfolio's identity and message
 - Explain one change you made to how the data is structured
 - Explain one design choice you made and why
+
+### Task 3: Outline your final project
+
+You will also be expected to present your plans for your final project. You should have answers prepared for the following questions, which you will share with the class.
+
+- What is the central question of your project?
+- What data or other assets are you going to use to tell the story?
+- Who do you imagine as the audience?
+- What will the audience be able to discover that they couldn't from a traditional text article?
+- What will the main interactive or visual element be?
+- How will Svelte's reactive capabilities enhance the project?
+- What Svelte components will you use?
