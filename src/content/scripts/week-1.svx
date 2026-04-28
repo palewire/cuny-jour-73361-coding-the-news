@@ -71,7 +71,7 @@ Click it and type `README.md` as the file name, then press Enter. The new file w
 
 Since the 1970s, software developers have included an explanatory file named [README](https://en.wikipedia.org/wiki/README) to describe their projects. Today, those files are commonly called README.md to signal that they are formatted in [Markdown](https://en.wikipedia.org/wiki/Markdown), which provides a simple way to add headings, lists and links.
 
-Add a little content to your README. Start by adding a headline at the top, which is done in Markdown by using the `#` symbol followed by a space and the headline text. Body copy can be written in plan text. The `##` symbols create a subheading. Hyperlinks are created by wrapping the link text in square brackets `[]` followed by the URL in parentheses `()`.
+Add a little content to your README. Start by adding a headline at the top, which is done in Markdown by using the `#` symbol followed by a space and the headline text. Body copy can be written in plain text. The `##` symbols create a subheading. Hyperlinks are created by wrapping the link text in square brackets `[]` followed by the URL in parentheses `()`.
 
 ```markdown
 # Coding the News Week 1
@@ -407,6 +407,6 @@ Use Visual Studio Code to clone and use Copilot to help you understand what each
 
 Copy the text from each chat panel and paste it into a Markdown file. Commit the text to a fourth public project on GitHub. Send me the repository link before next Monday's class.
 
-### Task 3: Be prepared to present
+### Task 3: Prepare to present
 
 Be prepared to present what you learned about one of the repositories to the class next week. You'll be expected to share what the project does, what it would take to install it and who contributed to it.

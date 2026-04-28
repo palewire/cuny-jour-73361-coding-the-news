@@ -545,7 +545,7 @@ Here are some ideas. You should come up with at least one on your own.
 - A key takeaways box that lists bullet points in a highlighted container
 - A card that links out to a related story with a thumbnail and headline
 - A correction or update box for editor's notes
-- A methodology section that explains where the data sources and analysis methods in the story
+- A methodology section that explains the data sources and analysis methods used in the story
 - A diptych parent component that places two related images side by side with captions
 - A timeline component that lists events in chronological order with dates and descriptions
 - A profile card for a person or organization mentioned in the story
@@ -560,5 +560,5 @@ Pick one of your original components to present in class next week. Send me a li
 Be prepared to:
 
 - Show the component and code to the class
-- Explain how it works. If you had AI assistance writing the code, you should do whatever research is necessary to understand it  well enough to explain it in your own words.
+- Explain how it works. If you had AI assistance writing the code, you should do whatever research is necessary to understand it well enough to explain it in your own words.
 - Discuss how you used AI and share what worked, what didn't, and what you learned from the process

@@ -366,7 +366,7 @@ You have a website running on your computer, but how do you share it with the wo
 
 It might not sound like much, but this simple, generous service is used by developers to host a gigantic number of websites, ranging from personal portfolios and open-source documentation to highly sophisticated commercial sites.
 
-I routinely use to publish hobby projects, like [cummings.ee](https://cummings.ee/), [moneyinpolitics.wtf](https://moneyinpolitics.wtf) and [studs.show](https://studs.show/).
+I routinely use it to publish hobby projects, like [cummings.ee](https://cummings.ee/), [moneyinpolitics.wtf](https://moneyinpolitics.wtf) and [studs.show](https://studs.show/).
 
 <Screenshot
   src="/screenshots/week-2/hobby-sites.gif"
@@ -496,6 +496,6 @@ Don't spend more than an hour or two on it. It's okay if you fail. These tools a
 
 Document your process in a README file. What worked? What didn't? What did you learn?
 
-### Task 3: Be prepared to present
+### Task 3: Prepare to present
 
 Be ready to talk about your experience exploring another newsroom's template. What challenges did you face? What did you learn?

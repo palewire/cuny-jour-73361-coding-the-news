@@ -263,7 +263,7 @@ Replace your `story.json` file with this updated version, which adds a new `"tex
     "type": "photo",
     "filename": "parks-harlem-03.jpg",
     "title": "Shooting the streetscape",
-    "caption": "He spent weeks photographing residents from all walks of life. He shot his subjects as found them: Sitting on stoops, leaning against fences, hanging out windows.",
+    "caption": "He spent weeks photographing residents from all walks of life. He shot his subjects as he found them: Sitting on stoops, leaning against fences, hanging out windows.",
     "credit": "Gordon Parks / Library of Congress"
  },
  {
@@ -343,7 +343,7 @@ Open `story.json` one more time and add the final three entries.
     "type": "photo",
     "filename": "parks-harlem-03.jpg",
     "title": "Shooting the streetscape",
-    "caption": "He spent weeks photographing residents from all walks of life. His shot his subjects as found them: Sitting on stoops, leaning against fences, hanging out windows.",
+    "caption": "He spent weeks photographing residents from all walks of life. He shot his subjects as he found them: Sitting on stoops, leaning against fences, hanging out windows.",
     "credit": "Gordon Parks / Library of Congress"
  },
  {

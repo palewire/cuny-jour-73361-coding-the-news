@@ -47,7 +47,7 @@ Start the development server with `npm run dev` and open your browser to [localh
 
 ## Part 1: Variables
 
-In Week 5, you wrote a Node.js script to download restaurant inspection data You're going to do the same thing here with film permits. This time you'll take it slow and I'll talk through every line of code, so you understand exactly what's happening, and learn some JavaScript along the way.
+In Week 5, you wrote a Node.js script to download restaurant inspection data. You're going to do the same thing here with film permits. This time you'll take it slow and I'll talk through every line of code, so you understand exactly what's happening, and learn some JavaScript along the way.
 
 Create a new file in the root of your project called `fetch-data.js`. Start with this:
 
@@ -114,7 +114,7 @@ To see them, run the script again:
 node fetch-data.js
 ```
 
-You should see see a list of 25 permit objects printed in your terminal. Here's what the top of that looks like.
+You should see a list of 25 permit objects printed in your terminal. Here's what the top of that looks like.
 
 ```bash
 $ node fetch-data.js
