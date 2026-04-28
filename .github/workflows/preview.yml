@@ -62,7 +62,7 @@ jobs:
 
       - name: Set preview URL
         id: preview-url
-        run: echo "url=${{ secrets.DOCS_PREVIEW_URL }}/pr-${{ github.event.pull_request.number }}/" >> "$GITHUB_OUTPUT"
+        run: echo "url=${{ vars.DOCS_PREVIEW_URL }}/pr-${{ github.event.pull_request.number }}/" >> "$GITHUB_OUTPUT"
 
       - name: Post preview URL comment
         uses: actions/github-script@v7

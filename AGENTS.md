@@ -261,10 +261,10 @@ The `BASE_PATH` environment variable in `svelte.config.js` controls SvelteKit's 
 
 Required repository secrets for previews:
 
-| Secret | Purpose | Example |
-|--------|---------|---------|
-| `DOCS_PREVIEW_BASE_PATH` | SvelteKit base path prefix for previews | `/docs/coding-the-news/preview` |
-| `DOCS_PREVIEW_URL` | Full URL prefix for preview links | `https://palewi.re/docs/coding-the-news/preview` |
+| Type | Name | Purpose | Example |
+|------|------|---------|---------|
+| Secret | `DOCS_PREVIEW_BASE_PATH` | SvelteKit base path prefix for previews | `/docs/coding-the-news/preview` |
+| Variable | `DOCS_PREVIEW_URL` | Full URL prefix for preview links (must be a **variable**, not a secret, so the "View deployment" button works) | `https://palewi.re/docs/coding-the-news/preview` |
 
 The workflow also reuses the existing AWS secrets: `DOCS_AWS_ACCESS_KEY_ID`, `DOCS_AWS_SECRET_ACCESS_KEY`, `DOCS_AWS_REGION`, `DOCS_AWS_BUCKET`, `DOCS_AWS_BASE_PATH`.
 
