@@ -1,0 +1,21 @@
+name: Copilot Gatekeeper
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  verify-copilot-approval:
+    if: contains(github.event.comment.user.login, 'copilot') # Adjust if the bot name is different
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for Approval Keyword
+        id: check
+        run: |
+          # Check if the comment contains "ready to merge" or "approved"
+          if [[ "${{ github.event.comment.body }}" =~ "ready to merge" || "${{ github.event.comment.body }}" =~ "LGTM" ]]; then
+            echo "Copilot approved the PR."
+            exit 0
+          else
+            echo "Copilot has not approved yet."
+            exit 1
+          fi

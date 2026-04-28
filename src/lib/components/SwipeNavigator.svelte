@@ -97,6 +97,7 @@
 <div
   bind:this={container}
   class="swipe-container"
+  role="region"
   ontouchstart={onTouchStart}
   ontouchmove={onTouchMove}
   ontouchend={onTouchEnd}
