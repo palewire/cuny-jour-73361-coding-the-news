@@ -32,7 +32,7 @@ A famous example is ["How Y’all, Youse and You Guys Talk,"](https://www.nytime
   maxWidth="960px"
 />
 
-It asks readers a series of questions about the words they choose — do you say "sneakers" or "tennis shoes"? — and then generates a personalized heat map that pinpoints where they are likely to have grown up. It rocketed across the web, ranking as the The Times' [most popular page of the year](https://www.nytco.com/press/the-new-york-timess-most-visited-content-of-2013/), and [earning Katz](https://knightlab.northwestern.edu/2014/01/20/behind-the-dialect-map-interactive-how-an-intern-created-the-new-york-times-most-popular-piece-of-content-in-2013/), who authored it as an intern, a full-time job.
+It asks readers a series of questions about the words they choose — do you say "sneakers" or "tennis shoes"? — and then generates a personalized heat map that pinpoints where they are likely to have grown up. It rocketed across the web, ranking as The Times' [most popular page of the year](https://www.nytco.com/press/the-new-york-timess-most-visited-content-of-2013/), and [earning Katz](https://knightlab.northwestern.edu/2014/01/20/behind-the-dialect-map-interactive-how-an-intern-created-the-new-york-times-most-popular-piece-of-content-in-2013/), who authored it as an intern, a full-time job.
 
 <Blockquote
   quote="I’m pretty blown away by the response to the whole thing."
@@ -968,7 +968,7 @@ Some examples of what this might look like:
 
 ### Task 2: Prepare to present
 
-Be ready to share you interactive component with the class and explain how you built it. You should be prepared to:
+Be ready to share your interactive component with the class and explain how you built it. You should be prepared to:
 
 * Show the story that inspired it and explain what editorial problem the component solves.
 * Trace the reactive flow: what state does it track, what user actions change it, and what values derive from it.
