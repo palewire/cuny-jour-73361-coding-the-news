@@ -127,7 +127,7 @@ const config = {
   ],
   kit: {
     paths: {
-      base: '/docs/coding-the-news',
+      base: process.env.BASE_PATH ?? '/docs/coding-the-news',
     },
     adapter: adapter({
       pages: 'build',
