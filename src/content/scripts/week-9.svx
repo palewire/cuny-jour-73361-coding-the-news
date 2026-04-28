@@ -772,7 +772,7 @@ Now create the page that will display the building's details. Open `src/routes/b
   </MethodologyBox>
 </div>
 
-<style type="scss">
+<style lang="scss">
   .container {
     max-width: var(--max-width-wide);
     margin: 0 auto;

@@ -32,7 +32,7 @@ A great example of a mature design system is the component library published by 
 
 Every component in the library draws from the same set of shared variables, which call for the same typeface, the same spacing scale, the same palette. Change one variable and the entire system updates for every story going forward. This kind of library is sometimes called a design system, or a visual vocabulary.
 
-You can see it in action in ["Maps and charts of the Iran crisis](https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/), a page the department published in the days after the US and Israel launched an attack. The design system provides all the fundamentals, allowing the journalists to focus on a tight deadline.
+You can see it in action in ["Maps and charts of the Iran crisis"](https://www.reuters.com/graphics/IRAN-CRISIS/MAPS/znpnmelervl/), a page the department published in the days after the US and Israel launched an attack. The design system provides all the fundamentals, allowing the journalists to focus on a tight deadline.
 
 <Screenshot
   src="/screenshots/week-6/reuters-iran-maps.png"
