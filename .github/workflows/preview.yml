@@ -1,0 +1,144 @@
+name: Preview
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened, closed]
+
+permissions:
+  contents: read
+  pull-requests: write
+  deployments: write
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-preview:
+    name: Build and deploy preview
+    if: >
+      github.event.action != 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    environment:
+      name: preview-pr-${{ github.event.pull_request.number }}
+      url: ${{ steps.preview-url.outputs.url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+        env:
+          BASE_PATH: '${{ secrets.DOCS_PREVIEW_BASE_PATH }}/pr-${{ github.event.pull_request.number }}'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.DOCS_AWS_REGION }}
+
+      - name: Deploy preview to S3
+        uses: datadesk/delivery-deploy-action@v1
+        with:
+          bucket: ${{ secrets.DOCS_AWS_BUCKET }}
+          base-path: '${{ vars.DOCS_AWS_BASE_PATH }}/preview/pr-${{ github.event.pull_request.number }}'
+          dir: ./build/
+          should-cache: false
+          use-accelerate-endpoint: false
+          public: true
+
+      - name: Set preview URL
+        id: preview-url
+        run: echo "url=${{ vars.DOCS_PREVIEW_URL }}/pr-${{ github.event.pull_request.number }}/" >> "$GITHUB_OUTPUT"
+
+      - name: Post preview URL comment
+        uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: ${{ steps.preview-url.outputs.url }}
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const previewUrl = process.env.PREVIEW_URL;
+            const sha = context.payload.pull_request.head.sha.substring(0, 7);
+            const marker = '<!-- preview-deploy -->';
+            const body = [
+              marker,
+              `| | |`,
+              `|---|---|`,
+              `| 🚀 **Preview** | [View deployment](${previewUrl}) |`,
+              `| **Commit** | ${sha} |`,
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+            });
+
+            const existing = comments.find(c => c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body,
+              });
+            }
+
+  cleanup-preview:
+    name: Clean up preview
+    if: >
+      github.event.action == 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.DOCS_AWS_REGION }}
+
+      - name: Delete preview from S3
+        run: |
+          aws s3 rm "s3://${{ secrets.DOCS_AWS_BUCKET }}/${{ vars.DOCS_AWS_BASE_PATH }}/preview/pr-${{ github.event.pull_request.number }}/" --recursive
+
+      - name: Deactivate deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const envName = `preview-pr-${context.payload.pull_request.number}`;
+            const { data: deployments } = await github.rest.repos.listDeployments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              environment: envName,
+            });
+            for (const deployment of deployments) {
+              await github.rest.repos.createDeploymentStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                deployment_id: deployment.id,
+                state: 'inactive',
+              });
+            }
+

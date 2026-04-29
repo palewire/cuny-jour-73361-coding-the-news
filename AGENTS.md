@@ -237,6 +237,44 @@ static/screenshots/
 
 Note: It is OK for scripts that are locked/unpublished to reference screenshots that don't exist yet. Those missing assets may show up as 404s during local preview or Playwright web server logging, and should not be treated as a required fix unless the script is being published.
 
+## Deployment
+
+### Production
+
+The production site is deployed to S3 via `.github/workflows/deploy.yml`, triggered on pushes to `main`. The site is served at `https://palewi.re/docs/coding-the-news/`.
+
+### PR Preview Deployments
+
+Each pull request automatically gets an isolated preview deployment via `.github/workflows/preview.yml`. This uses the same S3 infrastructure as production but deploys to a PR-specific path so multiple previews can coexist without clobbering each other.
+
+**How it works:**
+
+- **Build:** The site is built with a PR-specific `BASE_PATH` (`{DOCS_PREVIEW_BASE_PATH}/pr-{number}`) so all internal links resolve correctly in the preview.
+- **Deploy:** The build output is uploaded to `{DOCS_AWS_BASE_PATH}/preview/pr-{number}/` on S3.
+- **Environment:** A GitHub deployment environment (`preview-pr-{number}`) is created with the preview URL, which adds a "View deployment" button to the PR timeline.
+- **Comment:** A PR comment with a clickable link to the preview is posted (or updated on subsequent pushes).
+- **Cleanup:** When the PR is closed, the preview files are deleted from S3 and the deployment environment is deactivated.
+
+**Configuration:**
+
+The `BASE_PATH` environment variable in `svelte.config.js` controls SvelteKit's base path. It defaults to `/docs/coding-the-news` for production. Preview builds override it via the `DOCS_PREVIEW_BASE_PATH` secret.
+
+Required repository secrets for previews:
+
+| Type | Name | Purpose | Example |
+|------|------|---------|---------|
+| Secret | `DOCS_PREVIEW_BASE_PATH` | SvelteKit base path prefix for previews | `/docs/coding-the-news/preview` |
+| Variable | `DOCS_PREVIEW_URL` | Full URL prefix for preview links (must be a **variable**, not a secret, so the "View deployment" button works) | `https://palewi.re/docs/coding-the-news/preview` |
+
+The workflow also reuses the existing AWS secrets: `DOCS_AWS_ACCESS_KEY_ID`, `DOCS_AWS_SECRET_ACCESS_KEY`, `DOCS_AWS_REGION`, `DOCS_AWS_BUCKET`, and the variable `DOCS_AWS_BASE_PATH`.
+
+**Note:** `DOCS_AWS_BASE_PATH` must be a repository **variable** (`vars.*`), not a secret. If it were a secret, GitHub would detect its value as a substring of the preview URL and refuse to set the deployment environment URL, preventing the "View deployment" button from appearing.
+
+**Notes:**
+
+- Fork PRs are automatically skipped since `GITHUB_TOKEN` is read-only in that context.
+- The concurrency group ensures only one preview build runs per PR at a time.
+
 ## Testing
 
 - Run `npm run lint` for typechecking + ESLint.

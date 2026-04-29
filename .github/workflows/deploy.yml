@@ -93,7 +93,7 @@ jobs:
         uses: datadesk/delivery-deploy-action@v1
         with:
           bucket: ${{ secrets.DOCS_AWS_BUCKET }}
-          base-path: ${{ secrets.DOCS_AWS_BASE_PATH }}
+          base-path: ${{ vars.DOCS_AWS_BASE_PATH }}
           dir: ./build/
           should-cache: false
           use-accelerate-endpoint: false
