@@ -266,7 +266,9 @@ Required repository secrets for previews:
 | Secret | `DOCS_PREVIEW_BASE_PATH` | SvelteKit base path prefix for previews | `/docs/coding-the-news/preview` |
 | Variable | `DOCS_PREVIEW_URL` | Full URL prefix for preview links (must be a **variable**, not a secret, so the "View deployment" button works) | `https://palewi.re/docs/coding-the-news/preview` |
 
-The workflow also reuses the existing AWS secrets: `DOCS_AWS_ACCESS_KEY_ID`, `DOCS_AWS_SECRET_ACCESS_KEY`, `DOCS_AWS_REGION`, `DOCS_AWS_BUCKET`, `DOCS_AWS_BASE_PATH`.
+The workflow also reuses the existing AWS secrets: `DOCS_AWS_ACCESS_KEY_ID`, `DOCS_AWS_SECRET_ACCESS_KEY`, `DOCS_AWS_REGION`, `DOCS_AWS_BUCKET`, and the variable `DOCS_AWS_BASE_PATH`.
+
+**Note:** `DOCS_AWS_BASE_PATH` must be a repository **variable** (`vars.*`), not a secret. If it were a secret, GitHub would detect its value as a substring of the preview URL and refuse to set the deployment environment URL, preventing the "View deployment" button from appearing.
 
 **Notes:**
 
