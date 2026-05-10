@@ -65,7 +65,7 @@ jobs:
         run: echo "url=${{ vars.DOCS_PREVIEW_URL }}/pr-${{ github.event.pull_request.number }}/" >> "$GITHUB_OUTPUT"
 
       - name: Post preview URL comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           PREVIEW_URL: ${{ steps.preview-url.outputs.url }}
         with:
@@ -124,7 +124,7 @@ jobs:
           aws s3 rm "s3://${{ secrets.DOCS_AWS_BUCKET }}/${{ vars.DOCS_AWS_BASE_PATH }}/preview/pr-${{ github.event.pull_request.number }}/" --recursive
 
       - name: Deactivate deployment
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const envName = `preview-pr-${context.payload.pull_request.number}`;
