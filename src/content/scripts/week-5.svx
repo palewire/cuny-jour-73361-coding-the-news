@@ -590,7 +590,7 @@ Dropdowns work well when the options are finite and known in advance. But what i
 
 The good news: it uses the exact same `bind:value` pattern you already know. The only new thing is the JavaScript to match text.
 
-Add a state variable for the search query at the stop of `+page.svelte`:
+Add a state variable for the search query at the top of `+page.svelte`:
 
 ```js {emphasize-lines="6"}
 let { data } = $props();
