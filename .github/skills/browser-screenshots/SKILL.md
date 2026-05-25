@@ -44,6 +44,8 @@ node .github/skills/browser-screenshots/scripts/capture.cjs \
 | `--wait` | Milliseconds to wait before capture | 500 |
 | `--dark` | Use dark color scheme | false |
 | `--phone` | Use mobile phone viewport (375x812) | false |
+| `--browserChrome` | Add simulated macOS browser chrome around the page | false |
+| `--title` | Custom browser title bar text for `--browserChrome` | Page title |
 
 ### Examples
 
@@ -86,6 +88,15 @@ node .github/skills/browser-screenshots/scripts/capture.cjs \
   --url https://example.com \
   --fullpage \
   --output static/screenshots/week-1/full-page.png
+```
+
+**Screenshot with browser chrome:**
+```bash
+node .github/skills/browser-screenshots/scripts/capture.cjs \
+  --url https://example.com \
+  --browserChrome \
+  --title "Example Project" \
+  --output static/screenshots/week-1/example-browser.png
 ```
 
 ## Saving Screenshots

@@ -22,6 +22,8 @@
  *   --deviceScale   Device scale factor (default: 2 for retina)
  *   --session       Named session to use for authenticated captures
  *   --phone         Use mobile phone viewport (375x812)
+ *   --browserChrome Add simulated macOS browser chrome around the page
+ *   --title         Custom browser title bar text (default: auto from page)
  */
 
 const { chromium } = require('playwright');
@@ -31,6 +33,214 @@ const os = require('os');
 
 // Session storage directory
 const SESSION_DIR = path.join(os.homedir(), '.playwright-sessions');
+const CHROME_HEIGHT = 64;
+const CHROME_BORDER = 5;
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function getBrowserChromeOverlay(title, displayUrl) {
+  return {
+    css: `
+      #browser-chrome-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: ${CHROME_HEIGHT}px;
+        z-index: 2147483647;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+        background: linear-gradient(180deg, #e8e6e8 0%, #dcdadc 100%);
+      }
+
+      #browser-chrome-overlay * {
+        box-sizing: border-box;
+      }
+
+      #browser-chrome-overlay .title-bar {
+        display: flex;
+        align-items: center;
+        height: 28px;
+        padding: 0 12px;
+        position: relative;
+      }
+
+      #browser-chrome-overlay .traffic-lights {
+        display: flex;
+        gap: 8px;
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      #browser-chrome-overlay .traffic-light {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.15);
+      }
+
+      #browser-chrome-overlay .traffic-light.close {
+        background: #ff5f57;
+      }
+
+      #browser-chrome-overlay .traffic-light.minimize {
+        background: #febc2e;
+      }
+
+      #browser-chrome-overlay .traffic-light.maximize {
+        background: #28c840;
+      }
+
+      #browser-chrome-overlay .title {
+        flex: 1;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 500;
+        color: #4d4d4d;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 0 80px;
+        line-height: 28px;
+      }
+
+      #browser-chrome-overlay .address-bar-container {
+        padding: 4px 8px 8px 8px;
+      }
+
+      #browser-chrome-overlay .address-bar {
+        background: #ffffff;
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: 1px solid #c4c4c4;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 28px;
+      }
+
+      #browser-chrome-overlay .lock-icon {
+        width: 12px;
+        height: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #browser-chrome-overlay .lock-icon svg {
+        width: 10px;
+        height: 10px;
+        fill: #666;
+      }
+
+      #browser-chrome-overlay .url-text {
+        font-size: 12px;
+        color: #333333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1;
+      }
+
+      #browser-frame-left,
+      #browser-frame-right,
+      #browser-frame-bottom {
+        position: fixed;
+        background: #dcdadc;
+        z-index: 2147483646;
+      }
+
+      #browser-frame-left {
+        top: ${CHROME_HEIGHT}px;
+        left: 0;
+        width: ${CHROME_BORDER}px;
+        bottom: 0;
+      }
+
+      #browser-frame-right {
+        top: ${CHROME_HEIGHT}px;
+        right: 0;
+        width: ${CHROME_BORDER}px;
+        bottom: 0;
+      }
+
+      #browser-frame-bottom {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: ${CHROME_BORDER}px;
+      }
+
+      html {
+        margin-top: ${CHROME_HEIGHT}px !important;
+        margin-left: ${CHROME_BORDER}px !important;
+        margin-right: ${CHROME_BORDER}px !important;
+        margin-bottom: ${CHROME_BORDER}px !important;
+      }
+
+      body {
+        margin-top: 0 !important;
+      }
+    `,
+    html: `
+      <div id="browser-chrome-overlay">
+        <div class="title-bar">
+          <div class="traffic-lights">
+            <div class="traffic-light close"></div>
+            <div class="traffic-light minimize"></div>
+            <div class="traffic-light maximize"></div>
+          </div>
+          <div class="title">${escapeHtml(title)}</div>
+        </div>
+        <div class="address-bar-container">
+          <div class="address-bar">
+            <span class="lock-icon">
+              <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.5 5H9V3.5C9 1.57 7.43 0 5.5 0S2 1.57 2 3.5V5h-.5C.67 5 0 5.67 0 6.5v4c0 .83.67 1.5 1.5 1.5h8c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5zM3.5 3.5C3.5 2.4 4.4 1.5 5.5 1.5S7.5 2.4 7.5 3.5V5h-4V3.5z"/>
+              </svg>
+            </span>
+            <span class="url-text">${escapeHtml(displayUrl)}</span>
+          </div>
+        </div>
+      </div>
+      <div id="browser-frame-left"></div>
+      <div id="browser-frame-right"></div>
+      <div id="browser-frame-bottom"></div>
+    `,
+  };
+}
+
+async function injectBrowserChrome(page, title, displayUrl) {
+  const chrome = getBrowserChromeOverlay(title, displayUrl);
+
+  await page.evaluate((css) => {
+    if (document.getElementById('__pw_browser_chrome_css')) return;
+    const style = document.createElement('style');
+    style.id = '__pw_browser_chrome_css';
+    style.textContent = css;
+    (document.head || document.documentElement).appendChild(style);
+  }, chrome.css);
+
+  await page.evaluate((html) => {
+    if (document.getElementById('browser-chrome-overlay')) return;
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    while (container.firstElementChild) {
+      document.body.insertBefore(
+        container.firstElementChild,
+        document.body.firstChild
+      );
+    }
+  }, chrome.html);
+}
 
 /**
  * Generate a WebP copy of an image using cwebp (if available).
@@ -72,6 +282,8 @@ function parseArgs(args) {
     deviceScale: 2,
     session: null,
     phone: false,
+    browserChrome: false,
+    title: null,
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -121,6 +333,12 @@ function parseArgs(args) {
         break;
       case '--phone':
         options.phone = true;
+        break;
+      case '--browserChrome':
+        options.browserChrome = true;
+        break;
+      case '--title':
+        options.title = args[++i];
         break;
     }
   }
@@ -206,6 +424,15 @@ async function captureScreenshot(options) {
       await page.waitForTimeout(options.wait);
     }
 
+    if (options.browserChrome) {
+      const urlObj = new URL(options.url);
+      const displayUrl = urlObj.hostname + urlObj.pathname;
+      const pageTitle = options.title || (await page.title());
+      console.log('Adding browser chrome...');
+      await injectBrowserChrome(page, pageTitle, displayUrl);
+      await page.waitForTimeout(300);
+    }
+
     // Add highlight styling if specified
     if (options.highlight) {
       console.log(`Highlighting element: ${options.highlight}`);
@@ -284,6 +511,8 @@ Options:
   --deviceScale   Device scale factor for retina (default: 2)
   --session       Named session for authenticated captures (use save-session.cjs first)
   --phone         Use mobile phone viewport (375x812)
+  --browserChrome Add simulated macOS browser chrome around the page
+  --title         Custom browser title bar text
 
 Examples:
   # Basic screenshot

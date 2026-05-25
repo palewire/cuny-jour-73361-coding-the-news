@@ -10,7 +10,7 @@ The site is deployed to `https://palewi.re/docs/coding-the-news/`.
 
 All editorial content lives in `src/content/`:
 
-- **homepage.yaml** - Homepage data (course metadata, modules, evaluation criteria, guest speakers, instructor info)
+- **homepage.yaml** - Homepage data (course metadata, modules, final project links, evaluation criteria, guest speakers, instructor info)
 - **scripts/\*.svx** - Weekly script pages in MDsveX format (Markdown + Svelte)
 - **grading/\*.svx** - Grading rubric pages in MDsveX format (one per module)
 
